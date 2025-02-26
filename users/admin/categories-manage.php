@@ -62,7 +62,7 @@
 							</li>
 						</ul>
 					</li>
-					<li class="dropdown">
+					<!-- <li class="dropdown">
 						<a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 						<i class="material-icons">payments</i><span>Expenses</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu5">
@@ -76,7 +76,7 @@
 					</li>
 					<li class="">
 						<a href="charts.php" class="dashboard"><i class="material-icons">equalizer</i><span>Charts</span></a>
-					</li>
+					</li> -->
  
 					<li class="dropdown">
 						<a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
