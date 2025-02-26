@@ -139,7 +139,7 @@
 						$province = $_POST['province'];
 						$country = $_POST['country'];
 						$zipcode = $_POST['zipcode'];
-						$branch = $branch;
+						$branch = $_POST['branch'];
 						$role = $_POST['role'];
 						$username = $_POST['username'];
 						$email = $_POST['email'];
