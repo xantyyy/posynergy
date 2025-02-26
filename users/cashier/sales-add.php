@@ -193,98 +193,103 @@
                     </form>
                 </div>
                 <script>
-                    function fetchProductPrice(selectElement) {
-                        var productId = selectElement.value;
-                        var priceInput = selectElement.parentNode.parentNode.querySelector(".price");
+function fetchProductPrice(selectElement) {
+    var productId = selectElement.value;
+    var row = selectElement.parentNode.parentNode;
+    var priceInput = row.querySelector(".price");
+    var quantityInput = row.querySelector(".quantity");
 
-                        // Send an AJAX request to fetch the product price based on the selected product ID
-                        var xhr = new XMLHttpRequest();
-                        xhr.onreadystatechange = function() {
-                            if (xhr.readyState == 4 && xhr.status == 200) {
-                                // Update the price input with the fetched product price
-                                priceInput.value = xhr.responseText;
-                            }
-                        };
-                        xhr.open("POST", "sales-get-price.php", true);
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                        xhr.send("product_id=" + productId);
-                    }
+    // Send an AJAX request to fetch the product price and quantity based on the selected product ID
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var response = JSON.parse(xhr.responseText);
+            // Update the price input with the fetched product price
+            priceInput.value = response.price;
+            // Update the max attribute of the quantity input with the fetched product quantity
+            quantityInput.max = response.quantity;
+        }
+    };
+    xhr.open("POST", "sales-get-price.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send("product_id=" + productId);
+}
 
-                    // Calculate subtotal for row
-					$('#product-table').on('input', '.quantity, .discount', function() {
-						var row = $(this).closest('tr');
-						calculateSubtotal(row);
-						calculateTotals();
-					});
+// Calculate subtotal for row
+$('#product-table').on('input', '.quantity, .discount', function() {
+    var row = $(this).closest('tr');
+    calculateSubtotal(row);
+    calculateTotals();
+});
 
-                    // Calculate totals for all products
-					function calculateTotals() {
-						var subtotal = 0;
-						$('.subtotal').each(function() {
-							subtotal += parseFloat($(this).val());
-						});
-						$('#subtotal').val(subtotal.toFixed(2));
+// Calculate totals for all products
+function calculateTotals() {
+    var subtotal = 0;
+    $('.subtotal').each(function() {
+        subtotal += parseFloat($(this).val());
+    });
+    $('#subtotal').val(subtotal.toFixed(2));
 
-						var total = subtotal;
-						$('#total').val(total.toFixed(2));
-					}
+    var total = subtotal;
+    $('#total').val(total.toFixed(2));
+}
 
-                    // Calculate subtotal for all the info in table
-					function calculateSubtotal(row) {
-						var quantity = row.find('.quantity').val();
-						var price = row.find('.price').val();
-						var discount = row.find('.discount').val();
-						var subtotal = quantity * price * (1 - discount / 100);
-						row.find('.subtotal').val(subtotal.toFixed(2));
-					}
+// Calculate subtotal for all the info in table
+function calculateSubtotal(row) {
+    var quantity = row.find('.quantity').val();
+    var price = row.find('.price').val();
+    var discount = row.find('.discount').val();
+    var subtotal = quantity * price * (1 - discount / 100);
+    row.find('.subtotal').val(subtotal.toFixed(2));
+}
 
-                    // Add product row
-					$('#add-product').click(function() {
-                        $.ajax({
-                            url: 'sales-add-rows.php', // Replace with the URL of your PHP file
-                            method: 'GET', // Use the appropriate HTTP method (GET/POST) as needed
-                            success: function(responseHTML) {
-                                // Append the response HTML to the product table tbody
-                                $('#product-table tbody').append(responseHTML);
-                            },
-                            error: function(xhr, textStatus, errorThrown) {
-                                // Handle any error that occurs during the AJAX request
-                                console.error('Error: ' + textStatus + ' ' + errorThrown);
-                            }
-                        });
-                    });
+// Add product row
+$('#add-product').click(function() {
+    $.ajax({
+        url: 'sales-add-rows.php', // Replace with the URL of your PHP file
+        method: 'GET', // Use the appropriate HTTP method (GET/POST) as needed
+        success: function(responseHTML) {
+            // Append the response HTML to the product table tbody
+            $('#product-table tbody').append(responseHTML);
+        },
+        error: function(xhr, textStatus, errorThrown) {
+            // Handle any error that occurs during the AJAX request
+            console.error('Error: ' + textStatus + ' ' + errorThrown);
+        }
+    });
+});
 
-                    // Delete product row
-					$('#product-table').on('click', '.delete-product', function() {
-						$(this).closest('tr').remove();
-						calculateTotals();
-					});
+// Delete product row
+$('#product-table').on('click', '.delete-product', function() {
+    $(this).closest('tr').remove();
+    calculateTotals();
+});
 
-                    $(document).ready(function() {
-                        // When category select tag changes
-                        $(document).on("change", ".category", function() {
-                            // Get selected category_id
-                            var category_id = $(this).val();
-                            
-                            // Find the closest row
-                            var row = $(this).closest("tr");
-                            
-                            // Find the name select element within the current row
-                            var nameSelect = row.find(".name");
-                            
-                            // Send AJAX request to fetch products with the selected category_id
-                            $.ajax({
-                                url: "sales-get-products.php", // Replace with your PHP file that fetches products from database
-                                type: "POST",
-                                data: {category_id: category_id},
-                                success: function(data) {
-                                    // Replace options of the name select tag with fetched products for the current row only
-                                    nameSelect.html(data);
-                                }
-                            });
-                        });
-                    });
-                </script>
+$(document).ready(function() {
+    // When category select tag changes
+    $(document).on("change", ".category", function() {
+        // Get selected category_id
+        var category_id = $(this).val();
+        
+        // Find the closest row
+        var row = $(this).closest("tr");
+        
+        // Find the name select element within the current row
+        var nameSelect = row.find(".name");
+        
+        // Send AJAX request to fetch products with the selected category_id
+        $.ajax({
+            url: "sales-get-products.php", // Replace with your PHP file that fetches products from database
+            type: "POST",
+            data: {category_id: category_id},
+            success: function(data) {
+                // Replace options of the name select tag with fetched products for the current row only
+                nameSelect.html(data);
+            }
+        });
+    });
+});
+</script>
 
 
 <?php include_once 'footer.php'; ?>

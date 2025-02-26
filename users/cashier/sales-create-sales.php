@@ -4,8 +4,7 @@ include '../../includes/config.php';
 
 // Prepare and bind statement for inserting sales data
 $stmt = $conn->prepare("INSERT INTO sales (invoice_number, invoice_date, product_id, category_id, quantity, price, subtotal_amount, discount, user_id, branch_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("sssiiddiii", $invoice_number, $invoice_date, $name, $category_id, $quantity, $price, $subtotal_amount, $discount, $user_id, $branch_id);
-
+$stmt->bind_param("sssiiddiii", $invoice_number, $invoice_date, $product_id, $category_id, $quantity, $price, $subtotal_amount, $discount, $user_id, $branch_id);
 
 // Get the current date and time
 $date = new DateTime();
@@ -23,7 +22,7 @@ $invoice_date = $_POST["date"];
 // Loop through each product in the table and insert into database
 for ($i = 0; $i < count($_POST["category"]); $i++) {
     $category_id = $_POST["category"][$i];
-    $name = $_POST["name"][$i];
+    $product_id = $_POST["name"][$i];
     $quantity = $_POST["quantity"][$i];
     $price = $_POST["price"][$i];
     $discount = $_POST["discount"][$i];
@@ -31,6 +30,12 @@ for ($i = 0; $i < count($_POST["category"]); $i++) {
 
     // Insert sales data into the sales table
     $stmt->execute();
+
+    // Update product quantity
+    $update_quantity = $conn->prepare("UPDATE products SET product_quantity = product_quantity - ? WHERE product_id = ?");
+    $update_quantity->bind_param("ii", $quantity, $product_id);
+    $update_quantity->execute();
+    $update_quantity->close();
 }
 
 // Close statement and database connection
@@ -39,7 +44,6 @@ $conn->close();
 
 // Redirect back to the form page
 if($stmt){
-    
     echo "<script>alert('You have successfully added a new sale!');</script>";
     echo "<script>document.location='sales-manage.php';</script>";
 }
