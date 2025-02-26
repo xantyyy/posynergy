@@ -8,7 +8,7 @@
 		  	<div class="panel-heading panel-login">
 		  		<h1 class="text-center">
 					<center>
-						<img src="assets/images/logo.png" class="img-responsive img-fluid mx-auto d-block">
+						<img src="assets/images/isynergies.png" class="img-responsive img-fluid mx-auto d-block">
 					</center>
 				</h1>
 		 	</div>
