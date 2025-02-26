@@ -135,10 +135,11 @@
 						$name = $_POST['name'];
 						$category = $_POST['category'];
 						$price = $_POST['price'];
-
-						$sql = mysqli_query($conn, "INSERT INTO products(name, category_id, price) 
-							VALUES ('$name', '$category', '$price')");
-
+						$quantity = $_POST['quantity'];
+					
+						$sql = mysqli_query($conn, "INSERT INTO products(name, category_id, price, product_quantity) 
+							VALUES ('$name', '$category', '$price', '$quantity')");
+					
 						if ($sql) {
 							echo "<script>alert('New record successfully added!!!');</script>";
 							echo "<script>document.location='products-manage.php';</script>";
@@ -165,9 +166,13 @@
 						<h4>Product Information: </h4>
 
 						<div class="row">
-							<div class="col-md-12">
+							<div class="col-md-6">
 								<label>Name:</label>
 								<input type="text" name="name" class="form-control" required>
+							</div>
+							<div class="col-md-6">
+								<label>Quantity:</label>
+								<input type="number" name="quantity[]" class="form-control quantity" min="1" required>
 							</div>
 						</div>
 						<div class="row">

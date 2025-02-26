@@ -183,6 +183,7 @@
                                             <th scope="col">Name</th>
                                             <th scope="col">Category</th>
                                             <th scope="col">Price</th>
+                                            <th scope="col">Quantity</th>
                                             <th scope="col" class="no-print">Actions</th>
                                         </tr>
                                     </thead> 
@@ -191,7 +192,7 @@
 
                                             include '../../includes/config.php';
 
-                                            $sql = "SELECT * FROM (products INNER JOIN categories ON products.category_id = categories.category_id) ORDER BY product_id";								
+                                            $sql = "SELECT products.*, categories.category_description FROM products INNER JOIN categories ON products.category_id = categories.category_id ORDER BY product_id";								
                                             $result = mysqli_query($conn, $sql);
 
                                             while($row = mysqli_fetch_assoc($result)) {
@@ -202,6 +203,7 @@
                                                 <td><strong><?php echo $row['name']; ?></strong></td>
                                                 <td><?php echo $row['category_description']; ?></td>
                                                 <td>₱<?php echo $row['price']; ?></td>
+                                                <td><?php echo $row['product_quantity']; ?></td>
                                                 <td>
                                                     <a href="products-edit.php?id=<?php echo htmlentities($row['product_id']); ?>" class="btn btn-primary btn-sm"> Edit </a>
                                                     <a href="products-manage.php?delid=<?php echo htmlentities($row['product_id']); ?>" onclick="return confirm('Do you really want to delete this record?');" class="btn btn-danger btn-sm"> Delete </a>
