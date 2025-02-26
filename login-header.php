@@ -11,7 +11,7 @@
         <title>iSynergies Inc. | POS System</title>
 
         <!-- CSS -->
-        <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+        <link rel="icon" type="image/x-icon" href="assets/images/aski.png">
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/css/login.css">
 
