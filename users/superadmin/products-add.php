@@ -172,7 +172,7 @@
 							</div>
 							<div class="col-md-6">
 								<label>Quantity:</label>
-								<input type="number" name="quantity[]" class="form-control quantity" min="1" required>
+								<input type="number" name="quantity" class="form-control quantity" min="1" required>
 							</div>
 						</div>
 						<div class="row">
