@@ -131,16 +131,20 @@
                 <?php 
 					require_once '../../includes/config.php';
 
-					if(isset($_POST['update'])) {
+					if (isset($_POST['update'])) {
 						$id = $_GET['id'];
-
 						$name = $_POST['name'];
 						$category = $_POST['category'];
 						$price = $_POST['price'];
-						$quantity = $_POST['quantity'];
-
-						$sql = mysqli_query($conn, "UPDATE products SET name='$name', category_id='$category', price='$price', product_quantity='$quantity' WHERE product_id='$id'");
-						if($sql) {
+					
+						$sql_fetch = mysqli_query($conn, "SELECT discount, product_quantity FROM products WHERE product_id = '$id'");
+						$row = mysqli_fetch_assoc($sql_fetch);
+					
+						$discount = isset($_POST['discount']) && $_POST['discount'] !== '' ? $_POST['discount'] : $row['discount'];
+						$quantity = isset($_POST['quantity']) && $_POST['quantity'] !== '' ? $_POST['quantity'] : $row['product_quantity'];
+					
+						$sql = mysqli_query($conn, "UPDATE products SET name='$name', category_id='$category', price='$price', product_quantity='$quantity', discount='$discount' WHERE product_id='$id'");
+						if ($sql) {
 							echo "<script>alert('You have successfully updated the record!');</script>";
 							echo "<script>document.location='products-manage.php';</script>";
 						}
@@ -174,12 +178,6 @@
 								<input type="text" name="name" value="<?php echo $row['name']; ?>" class="form-control" required>
 							</div>
 							<div class="col-md-6">
-								<label>Quantity:</label>
-								<input type="number" name="quantity" value="<?php echo $row['product_quantity']; ?>" class="form-control quantity" min="1" required>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
 								<label>Category:</label>
 								<select class='form-select' name='category' required>
 									<option selected hidden value="<?php echo $row['category_id']; ?>"><?php echo $row['category_description']; } ?></option>
@@ -192,8 +190,29 @@
 										}
 									?>
 								</select>
-							</div>
-                            <div class="col-md-6">
+							</div>							
+						</div>
+						<div class="row">
+							<?php 
+								$id = $_GET['id'];
+								$sql1 = mysqli_query($conn, "SELECT * FROM products WHERE product_id = '$id'");
+
+								if ($row = mysqli_fetch_assoc($sql1)) {
+								?>
+								<div class="col-md-4">
+									<label>Discount:</label>
+									<input type="number" name="discount" class="form-control discount" value="<?php echo htmlspecialchars($row['discount'], ENT_QUOTES, 'UTF-8'); ?>" step="1" min="0" max="100">
+								</div>
+								<div class="col-md-4">
+									<label>Quantity:</label>
+									<input type="number" name="quantity" class="form-control quantity" value="<?php echo htmlspecialchars($row['product_quantity'], ENT_QUOTES, 'UTF-8'); ?>" min="1">
+								</div>
+								<?php 
+								} else {
+									echo "<p>No product found with the given ID.</p>";
+								}
+							?>
+                            <div class="col-md-4">
                                 <label>Price:</label>
                                 <?php 
 									$id = $_GET['id'];

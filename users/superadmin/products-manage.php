@@ -182,6 +182,7 @@
                                         <tr>
                                             <th scope="col">Name</th>
                                             <th scope="col">Category</th>
+                                            <th scope="col">Discount</th>
                                             <th scope="col">Price</th>
                                             <th scope="col">Quantity</th>
                                             <th scope="col" class="no-print">Actions</th>
@@ -202,6 +203,7 @@
                                             <tr>
                                                 <td><strong><?php echo $row['name']; ?></strong></td>
                                                 <td><?php echo $row['category_description']; ?></td>
+                                                <td><?php echo $row['discount']; ?>%</td>
                                                 <td>₱<?php echo $row['price']; ?></td>
                                                 <td><?php echo $row['product_quantity']; ?></td>
                                                 <td>

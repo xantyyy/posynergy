@@ -136,16 +136,19 @@
 						$category = $_POST['category'];
 						$price = $_POST['price'];
 						$quantity = $_POST['quantity'];
+						$discount = $_POST['discount'][0]; // Assuming single discount value
 					
-						$sql = mysqli_query($conn, "INSERT INTO products(name, category_id, price, product_quantity) 
-							VALUES ('$name', '$category', '$price', '$quantity')");
+						$stmt = $conn->prepare("INSERT INTO products (name, category_id, price, product_quantity, discount) VALUES (?, ?, ?, ?, ?)");
+						$stmt->bind_param("sidii", $name, $category, $price, $quantity, $discount);
 					
-						if ($sql) {
+						if ($stmt->execute()) {
 							echo "<script>alert('New record successfully added!!!');</script>";
 							echo "<script>document.location='products-manage.php';</script>";
 						} else {
 							echo "<script>alert('Something went wrong!');</script>";
 						}
+					
+						$stmt->close();
 					}
 				
 				?>
@@ -171,12 +174,6 @@
 								<input type="text" name="name" class="form-control" required>
 							</div>
 							<div class="col-md-6">
-								<label>Quantity:</label>
-								<input type="number" name="quantity" class="form-control quantity" min="1" required>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
 								<label>Category</label>
 								<select class='form-select' name='category' required>
 									<option selected hidden value="">Select Here... </option>
@@ -192,9 +189,20 @@
 									?>
 								</select>
 							</div>
-							<div class="col-md-6">
+							
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								<label>Discount:</label>
+								<input type="number" name="discount[]" class="form-control discount" value="0" step="1" min="0" max="100">
+							</div>
+							<div class="col-md-4">
+								<label>Quantity:</label>
+								<input type="number" name="quantity" class="form-control quantity" value="0" min="1" required>
+							</div>
+							<div class="col-md-4">
 								<label>Price:</label>
-								<input type="text" name="price" class="form-control" required>
+								<input type="text" name="price" class="form-control" placeholder="0" required>
 							</div>
 						</div><br />
 
