@@ -103,17 +103,51 @@
 
                             ?>
                             
-                            <div class="col-md-2">
+                            <div class="col-md-3">
                                 <input type="text" name="user" readonly hidden value="<?php echo $user_id; ?>" class="form-control">
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                                 <input type="text" name="branch" readonly hidden value="<?php echo $branch_id; ?>" class="form-control">
                             </div>
-                            <div class="col-md-4">
-                                <label>Date: </label>
-                                <input type="text" name="date" readonly value="<?php echo date("Y-m-d"); ?>" class="form-control">
+                            <div class="col-md-2">
+                                <label>Type of ID: </label>
+                                <div class="d-flex align-items-center">
+                                    <input type="checkbox" id="type_id_checkbox" name="has_id" class="me-2">
+                                    <select name="type_id" id="type_id" class="form-control" disabled required>
+                                        <option selected hidden value="">Select ID Type</option>
+                                        <option value="PWD">PWD</option>
+                                        <option value="Senior Citizen">Senior Citizen</option>
+                                        <option value="Solo Parent">Solo Parent</option>
+                                        <option value="Gift Card">Gift Card</option>
+                                    </select>
+                                </div>
                             </div>
-                        </div>
+
+                            <div class="col-md-4">
+                                <label>Beneficiaries Name: </label>
+                                <input type="text" name="benefit" id="benefit" class="form-control" disabled required>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label>ID Number: </label>
+                                <input type="text" name="id_no" id="id_no" class="form-control" disabled required>
+                            </div>
+
+                            <script>
+                                document.getElementById("type_id_checkbox").addEventListener("change", function() {
+                                    let isChecked = this.checked;
+                                    
+                                    document.getElementById("type_id").disabled = !isChecked;
+                                    document.getElementById("benefit").disabled = !isChecked;
+                                    document.getElementById("id_no").disabled = !isChecked;
+                                });
+                            </script>
+
+                                <div class="col-md-3">
+                                    <label>Date: </label>
+                                    <input type="text" name="date" readonly value="<?php echo date("Y-m-d"); ?>" class="form-control">
+                                </div>
+                            </div>
 
                         <div class="row">
                             <div class="col-md-4">
@@ -192,112 +226,158 @@
                         </div>
                     </form>
                 </div>
-                <script>
-                    function fetchProductPrice(selectElement) {
-                        var productId = selectElement.value;
-                        var row = selectElement.parentNode.parentNode;
-                        var priceInput = row.querySelector(".price");
-                        var quantityInput = row.querySelector(".quantity");
-                        var discountInput = row.querySelector(".discount");
+                    <script>
+                        function fetchProductPrice(selectElement) {
+                            var productId = selectElement.value;
+                            var row = selectElement.closest("tr"); // Get the row element
+                            var priceInput = row.querySelector(".price");
+                            var quantityInput = row.querySelector(".quantity");
+                            var discountInput = row.querySelector(".discount");
 
-                        // Send an AJAX request to fetch product details (price, quantity, discount)
-                        var xhr = new XMLHttpRequest();
-                        xhr.onreadystatechange = function () {
-                            if (xhr.readyState == 4 && xhr.status == 200) {
-                                var response = JSON.parse(xhr.responseText);
-                                
-                                // Update inputs with fetched values
-                                priceInput.value = response.price;
-                                quantityInput.max = response.quantity;
-                                discountInput.value = response.discount;
+                            // Send an AJAX request to fetch product details (price, quantity, discount)
+                            var xhr = new XMLHttpRequest();
+                            xhr.onreadystatechange = function () {
+                                if (xhr.readyState == 4 && xhr.status == 200) {
+                                    var response = JSON.parse(xhr.responseText);
 
-                                // Disable discount input to prevent manual editing
+                                    // Update price and quantity
+                                    priceInput.value = response.price;
+                                    quantityInput.max = response.quantity;
+
+                                    // Fetch discount from database
+                                    discountInput.value = response.discount;
+                                    discountInput.setAttribute("readonly", true); // Ensure discount field is readonly
+                                    discountInput.classList.add("disabled"); // Optional: Add CSS class for styling
+
+                                    // Apply additional discount based on ID type (if applicable)
+                                    applyDiscount(row);
+
+                                    // Calculate updated subtotal and total
+                                    calculateSubtotal(row);
+                                    calculateTotals();
+                                }
+                            };
+                            xhr.open("POST", "sales-get-price.php", true);
+                            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                            xhr.send("product_id=" + productId);
+                        }
+
+                        // Function to apply automatic discount based on selected ID
+                        function applyDiscount(discountInput) {
+                            var idType = document.querySelector('input[name="id_type"]:checked'); // Get selected ID type
+
+                            if (idType) {
+                                var discountValue = 0;
+                                if (idType.value === "PWD" || idType.value === "Senior Citizen") {
+                                    discountValue = 20; // 20% discount
+                                } else if (idType.value === "Solo Parent" || idType.value === "Gift Card") {
+                                    discountValue = 10; // 10% discount
+                                }
+
+                                // Apply discount and disable manual editing
+                                discountInput.value = discountValue;
                                 discountInput.setAttribute("readonly", true);
                                 discountInput.classList.add("disabled"); // Optional styling
-
-                                calculateSubtotal(row);
+                            } else {
+                                discountInput.value = 0; // No discount
+                                discountInput.removeAttribute("readonly");
+                                discountInput.classList.remove("disabled");
                             }
-                        };
-                        xhr.open("POST", "sales-get-price.php", true);
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                        xhr.send("product_id=" + productId);
-                    }
+                        }
 
-                    // Calculate subtotal for row
-                    $('#product-table').on('input', '.quantity, .discount', function() {
-                        var row = $(this).closest('tr');
-                        calculateSubtotal(row);
-                        calculateTotals();
-                    });
-
-                    // Calculate totals for all products
-                    function calculateTotals() {
-                        var subtotal = 0;
-                        $('.subtotal').each(function() {
-                            subtotal += parseFloat($(this).val());
+                        // Recalculate when ID type is changed
+                        document.querySelectorAll('input[name="id_type"]').forEach((radio) => {
+                            radio.addEventListener("change", function () {
+                                document.querySelectorAll(".discount").forEach((discountInput) => {
+                                    applyDiscount(discountInput);
+                                });
+                                calculateTotals();
+                            });
                         });
-                        $('#subtotal').val(subtotal.toFixed(2));
 
-                        var total = subtotal;
-                        $('#total').val(total.toFixed(2));
-                    }
-
-                    // Calculate subtotal for all the info in table
-                    function calculateSubtotal(row) {
-                        var quantity = row.find('.quantity').val();
-                        var price = row.find('.price').val();
-                        var discount = row.find('.discount').val();
-                        var subtotal = quantity * price * (1 - discount / 100);
-                        row.find('.subtotal').val(subtotal.toFixed(2));
-                    }
-
-                    // Add product row
-                    $('#add-product').click(function() {
-                        $.ajax({
-                            url: 'sales-add-rows.php', // Replace with the URL of your PHP file
-                            method: 'GET', // Use the appropriate HTTP method (GET/POST) as needed
-                            success: function(responseHTML) {
-                                // Append the response HTML to the product table tbody
-                                $('#product-table tbody').append(responseHTML);
-                            },
-                            error: function(xhr, textStatus, errorThrown) {
-                                // Handle any error that occurs during the AJAX request
-                                console.error('Error: ' + textStatus + ' ' + errorThrown);
-                            }
+                        // Calculate subtotal when quantity or discount changes
+                        $('#product-table').on('input', '.quantity, .discount', function() {
+                            var row = $(this).closest('tr');
+                            calculateSubtotal(row);
+                            calculateTotals();
                         });
-                    });
 
-                    // Delete product row
-                    $('#product-table').on('click', '.delete-product', function() {
-                        $(this).closest('tr').remove();
-                        calculateTotals();
-                    });
+                        // Calculate total price
+                        function calculateTotals() {
+                            var subtotal = 0;
+                            $('.subtotal').each(function() {
+                                subtotal += parseFloat($(this).val());
+                            });
+                            $('#subtotal').val(subtotal.toFixed(2));
 
-                    $(document).ready(function() {
-                        // When category select tag changes
-                        $(document).on("change", ".category", function() {
-                            // Get selected category_id
-                            var category_id = $(this).val();
-                            
-                            // Find the closest row
-                            var row = $(this).closest("tr");
-                            
-                            // Find the name select element within the current row
-                            var nameSelect = row.find(".name");
-                            
-                            // Send AJAX request to fetch products with the selected category_id
+                            var total = subtotal;
+                            $('#total').val(total.toFixed(2));
+                        }
+
+                        // Calculate subtotal for each row
+                        function calculateSubtotal(row) {
+                            var quantity = row.find('.quantity').val();
+                            var price = row.find('.price').val();
+                            var discount = row.find('.discount').val();
+                            var subtotal = quantity * price * (1 - discount / 100);
+                            row.find('.subtotal').val(subtotal.toFixed(2));
+                        }
+
+                        // Add product row via AJAX
+                        $('#add-product').click(function() {
                             $.ajax({
-                                url: "sales-get-products.php", // Replace with your PHP file that fetches products from database
-                                type: "POST",
-                                data: {category_id: category_id},
-                                success: function(data) {
-                                    // Replace options of the name select tag with fetched products for the current row only
-                                    nameSelect.html(data);
+                                url: 'sales-add-rows.php',
+                                method: 'GET',
+                                success: function(responseHTML) {
+                                    $('#product-table tbody').append(responseHTML);
+                                },
+                                error: function(xhr, textStatus, errorThrown) {
+                                    console.error('Error: ' + textStatus + ' ' + errorThrown);
                                 }
                             });
                         });
-                    });
-                </script>
 
+                        // Delete product row
+                        $('#product-table').on('click', '.delete-product', function() {
+                            $(this).closest('tr').remove();
+                            calculateTotals();
+                        });
+
+                        // When category changes, fetch corresponding products
+                        $(document).ready(function() {
+                            $(document).on("change", ".category", function() {
+                                var category_id = $(this).val();
+                                var row = $(this).closest("tr");
+                                var nameSelect = row.find(".name");
+
+                                $.ajax({
+                                    url: "sales-get-products.php",
+                                    type: "POST",
+                                    data: {category_id: category_id},
+                                    success: function(data) {
+                                        nameSelect.html(data);
+                                    }
+                                });
+                            });
+                        });
+
+                        // Ensure correct total is sent to the database
+                        $('#create-sale').click(function() {
+                            var totalAmount = $('#total').val();
+                            
+                            $.ajax({
+                                url: "sales-create.php",
+                                type: "POST",
+                                data: {total: totalAmount},
+                                success: function(response) {
+                                    alert("Sale created successfully!"); // Replace with proper UI feedback
+                                    location.reload(); // Reload the page to reset form
+                                },
+                                error: function(xhr, textStatus, errorThrown) {
+                                    console.error('Error: ' + textStatus + ' ' + errorThrown);
+                                }
+                            });
+                        });
+                    </script>
 
 <?php include_once 'footer.php'; ?>
