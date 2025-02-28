@@ -11,7 +11,7 @@ $date = new DateTime();
 $timestamp = $date->format('YmdHis');
 
 // Generate a random number
-$rand = rand(1000, 9999); 
+$rand = rand(1000, 9999);
 
 // Get form data
 $invoice_number = "INV-" . $timestamp . "-" . $rand;
@@ -25,8 +25,18 @@ for ($i = 0; $i < count($_POST["category"]); $i++) {
     $product_id = $_POST["name"][$i];
     $quantity = $_POST["quantity"][$i];
     $price = $_POST["price"][$i];
-    $discount = $_POST["discount"][$i];
-    $subtotal_amount = $_POST["subtotal"][$i];
+
+    // Fetch discount from database
+    $discount_query = $conn->prepare("SELECT discount FROM products WHERE product_id = ?");
+    $discount_query->bind_param("i", $product_id);
+    $discount_query->execute();
+    $discount_result = $discount_query->get_result();
+    $discount_row = $discount_result->fetch_assoc();
+    $discount = $discount_row['discount'];
+    $discount_query->close();
+
+    // Calculate subtotal after applying discount
+    $subtotal_amount = $price * $quantity * (1 - ($discount / 100));
 
     // Insert sales data into the sales table
     $stmt->execute();
