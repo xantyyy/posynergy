@@ -105,20 +105,27 @@
 								$currentInvoiceNumber = null;
 								$total = 0;
 
-								while($row = mysqli_fetch_assoc($result)) {
-
-									// Add the row data to the table
+								while ($row = mysqli_fetch_assoc($result)) {
 									echo "<tr>";
-									echo "<td><strong>".$row['invoice_number']."</strong></td>";
-									echo "<td>".$row['quantity']."</td>";
-									echo "<td>".$row['name']."</td>";
-									echo "<td>".$row['category_description']."</td>";
-									echo "<td>".$row['price']."</td>";
-									echo "<td>".$row['discount']."</td>";
-									echo "<td>".$row['subtotal_amount']."</td>";
-									echo "<td>". substr($row['first_name'], 0, 1). ". " . substr($row['last_name'], 0, 1) .".</td>";
+									echo "<td><strong>" . $row['invoice_number'] . "</strong></td>";
+									echo "<td>" . $row['quantity'] . "</td>";
+									echo "<td>" . $row['name'] . "</td>";
+									echo "<td>" . $row['category_description'] . "</td>";
+									echo "<td>" . $row['price'] . "</td>";
+								
+									// Check if discount is empty or zero
+									if (empty($row['discount']) || $row['discount'] == 0) {
+										// Display the type_id value if there's no discount
+										echo "<td>" . $row['type_id'] . "</td>";
+									} else {
+										// Otherwise, display the discount value
+										echo "<td>" . $row['discount'] . "%</td>";
+									}
+								
+									echo "<td>" . $row['subtotal_amount'] . "</td>";
+									echo "<td>" . substr($row['first_name'], 0, 1) . ". " . substr($row['last_name'], 0, 1) . ".</td>";
 									echo "</tr>";
-								}
+								}								
 								
 								mysqli_close($conn);
 							?>
