@@ -27,7 +27,7 @@
 						
 					</li>
 						
-					<li class="dropdown">
+					<!--<li class="dropdown">
 						<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 						<i class="material-icons">point_of_sale</i><span>Sales</span></a>
 						<ul class="collapse list-unstyled menu" id="homeSubmenu1">
@@ -38,7 +38,7 @@
 								<a href="sales-manage.php">Manage Sales</a>
 							</li>
 						</ul>
-					</li>
+					</li>-->
 					<li class="dropdown active">
 						<a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 						<i class="material-icons">inventory</i><span>Products</span></a>
@@ -63,7 +63,7 @@
 							</li>
 						</ul>
 					</li>
-					<li class="dropdown">
+					<!--<li class="dropdown">
 						<a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 						<i class="material-icons">local_shipping</i><span>Branches</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu4">
@@ -86,7 +86,7 @@
 								<a href="expenses-manage.php">Manage Expenses</a>
 							</li>
 						</ul>
-					</li>
+					</li>-->
 					<li class="">
 						<a href="charts.php" class="dashboard"><i class="material-icons">equalizer</i><span>Charts</span></a>
 					</li>
