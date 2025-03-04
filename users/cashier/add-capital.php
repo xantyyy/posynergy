@@ -1,3 +1,27 @@
+<?php
+// Start the session
+session_start();
+
+// Include database connection
+include '../../includes/config.php';
+
+// Check if a capital entry already exists for today
+$today = date('Y-m-d');
+$sql = "SELECT * FROM cashier_monitor WHERE date = '$today'";
+$result = $conn->query($sql);
+
+// If a capital entry exists, redirect to the dashboard
+if ($result->num_rows > 0) {
+    header("Location: index.php"); // Redirect to the dashboard
+    exit();
+}
+
+// Prevent caching of this page
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,13 +45,6 @@
             <button type="submit" class="btn btn-success">Save Capital</button>
             <a href="index.php" class="btn btn-secondary">Back to Dashboard</a>
         </form>
-
-        <!-- Response Message -->
-        <?php if (isset($_GET['success'])): ?>
-            <div class="alert alert-success mt-3">Capital successfully added!</div>
-        <?php elseif (isset($_GET['error'])): ?>
-            <div class="alert alert-danger mt-3">An error occurred. Please try again.</div>
-        <?php endif; ?>
     </div>
 
     <!-- Bootstrap JS -->

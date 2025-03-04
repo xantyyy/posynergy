@@ -1,40 +1,36 @@
-<?php 
-
-// Include the database configuration
+<?php
+// Include the database connection
 include '../../includes/config.php';
 
-// Check if the form is submitted using POST method
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve the capital amount from the form
     $capital = isset($_POST["capital"]) ? floatval($_POST["capital"]) : 0;
 
-    // Validate that the capital amount is greater than 0
+    // Validate the input
     if ($capital > 0) {
-        // Prepare the SQL query to insert into the database
-        $stmt = $conn->prepare("INSERT INTO cashier_monitor (capital, daily_sale, date) VALUES (?, 0, NOW())");
-        $stmt->bind_param("d", $capital); // "d" is for double/float data type
+        // Insert or update the record for today's capital
+        $today = date('Y-m-d');
+        $sql = "INSERT INTO cashier_monitor (capital, daily_sale, date) VALUES (?, 0, ?) ON DUPLICATE KEY UPDATE capital = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("dss", $capital, $today, $capital);
 
-        // Execute the query and check for success
         if ($stmt->execute()) {
-            // Redirect back with success
-            header("Location: add-capital.php?success=true");
+            // Redirect to index.php after successful submission
+            header("Location: index.php");
+            exit();
         } else {
-            // Redirect back with an error
+            // Redirect back with an error message
             header("Location: add-capital.php?error=true");
+            exit();
         }
-
-        // Close the statement
-        $stmt->close();
     } else {
-        // Redirect back with an error for invalid input
+        // Redirect back with an error message for invalid input
         header("Location: add-capital.php?error=true");
+        exit();
     }
 } else {
-    // Redirect if accessed directly
+    // Redirect to the form if accessed directly
     header("Location: add-capital.php");
     exit();
 }
-
-// Close the database connection
-$conn->close();
 ?>
