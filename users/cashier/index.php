@@ -185,42 +185,53 @@
 								</div>
 
 								<?php 
-									include '../../includes/config.php';
+								// Include the database connection
+								include '../../includes/config.php';
 
-									$admin = $_SESSION['cashier_name'];
-									$sql1 = "SELECT * FROM users WHERE username = '$admin'";
-									$result = $conn->query($sql1);
-									while($row = $result->fetch_assoc()) {
-										$branch = $row['branch_id'];
-									}
+								// Check if a capital entry exists for today
+								$today = date('Y-m-d');
+								$sql = "SELECT * FROM cashier_monitor WHERE date = '$today'";
+								$result = $conn->query($sql);
 
-									$sql = "SELECT SUM(amount) AS total_amount FROM expenses WHERE branch_id = '$branch'";
-									$result = $conn->query($sql);
-									
-									if ($result->num_rows > 0) {
-										// output data of each row
-										while($row = $result->fetch_assoc()) {
+								if ($result->num_rows > 0) {
+									// Capital already added for today
+									$capitalAdded = true;
+									$row = $result->fetch_assoc();
+									$capital = $row['capital'];
+									$capitalDate = $row['date'];
+								} else {
+									// No capital added yet for today
+									$capitalAdded = false;
+									$capital = 0; // Default value if no records are found
+									$capitalDate = null; // Default value for date
+								}
 
+								// Close the database connection
+								$conn->close();
 								?>
 
 								<div class="card-content">
-									<p class="category"><strong>Expenses (<?php echo $currentMonthWord; ?>)</strong></p>
-									<h4 class="card-title">₱<?php echo number_format($row['total_amount']); ?></h4>
+									<p class="category">
+										<strong>Capital (<?php echo isset($capitalDate) ? date("F j, Y", strtotime($capitalDate)) : 'N/A'; ?>)</strong>
+									</p>
+									<h4 class="card-title">
+										₱<?php echo number_format($capital, 2); ?>
+									</h4>
 								</div>
-
-								<?php 
-										}
-									}
-
-									$conn->close();
-
-								?>
 
 								<div class="card-footer">
 									<div class="stats">
-										<i class="material-icons">date_range</i> Total Sales Amount
+										<i class="material-icons text-info">info</i>
+										<?php if ($capitalAdded): ?>
+											<!-- If capital already added, show disabled text -->
+											<span style="color: gray; text-decoration: none;">Capital Already Added</span>
+										<?php else: ?>
+											<!-- Show active link to add capital -->
+											<a href="add-capital.php">Add Daily Capital</a>
+										<?php endif; ?>
 									</div>
 								</div>
+								
 							</div>
 						</div>
 
