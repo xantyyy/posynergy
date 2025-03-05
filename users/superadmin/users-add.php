@@ -129,38 +129,40 @@
 				<!-- PHP to ADD NEW USER -->
 				<?php 
 
-					require_once '../../includes/config.php';
+				require_once '../../includes/config.php';
 
-					if(isset($_POST['submit'])) {
-						$first_name = $_POST['first_name'];
-						$middle_name = $_POST['middle_name'];
-						$last_name = $_POST['last_name'];
-						$sex = $_POST['sex'];
-						$birthdate = $_POST['birthdate'];
-						$phone_number = $_POST['phone_number'];
-						$street_address = $_POST['street_address'];
-						$barangay = $_POST['barangay'];
-						$city = $_POST['city'];
-						$province = $_POST['province'];
-						$country = $_POST['country'];
-						$zipcode = $_POST['zipcode'];
-						$branch = $_POST['branch'];
-						$role = $_POST['role'];
-						$username = $_POST['username'];
-						$email = $_POST['email'];
-						$password = $_POST['password'];
-						$password = md5($password);
+				if(isset($_POST['submit'])) {
+					$first_name = $_POST['first_name'];
+					$middle_name = $_POST['middle_name'];
+					$last_name = $_POST['last_name'];
+					$sex = $_POST['sex'];
+					$birthdate = $_POST['birthdate'];
+					$phone_number = $_POST['phone_number'];
+					$street_address = $_POST['street_address'];
+					$barangay = $_POST['barangay'];
+					$city = $_POST['city'];
+					$province = $_POST['province'];
+					$country = $_POST['country'];
+					$zipcode = $_POST['zipcode'];
+					$branch = $_POST['branch'];
+					$role = $_POST['role'];
+					$username = $_POST['username'];
+					$email = $_POST['email'];
+					$password = $_POST['password'];
 
-						$sql = mysqli_query($conn, "INSERT INTO users(role, first_name, middle_name, last_name, sex, birthdate, phone_number, street_address, barangay, city, province, country, zipcode, username, email, password, branch_id) VALUES ('$role', '$first_name', '$middle_name', '$last_name', '$sex', '$birthdate', '$phone_number', '$street_address', '$barangay', '$city', '$province', '$country', '$zipcode', '$username', '$email', '$password', '$branch')");
+					// Hash the password using Blowfish algorithm
+					$hashed_password = password_hash($password, PASSWORD_BCRYPT);
 
-						if ($sql) {
-							echo "<script>alert('New record successfully added!!!');</script>";
-							echo "<script>document.location='users-manage.php';</script>";
-						} else {
-							echo "<script>alert('Something went wrong!');</script>";
-						}
+					$sql = mysqli_query($conn, "INSERT INTO users(role, first_name, middle_name, last_name, sex, birthdate, phone_number, street_address, barangay, city, province, country, zipcode, username, email, password, branch_id) VALUES ('$role', '$first_name', '$middle_name', '$last_name', '$sex', '$birthdate', '$phone_number', '$street_address', '$barangay', '$city', '$province', '$country', '$zipcode', '$username', '$email', '$hashed_password', '$branch')");
+
+					if ($sql) {
+						echo "<script>alert('New record successfully added!!!');</script>";
+						echo "<script>document.location='users-manage.php';</script>";
+					} else {
+						echo "<script>alert('Something went wrong!');</script>";
 					}
-				
+				}
+
 				?>
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
