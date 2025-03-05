@@ -1,0 +1,35 @@
+<?php
+require_once '../../includes/config.php';
+
+// Get the JSON input
+$input = json_decode(file_get_contents('php://input'), true);
+$barcode = $input['barcode'] ?? '';
+
+if (!empty($barcode)) {
+    // Check if the barcode already exists
+    $stmt = $conn->prepare("SELECT * FROM products WHERE barcode = ?");
+    $stmt->bind_param("s", $barcode);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Barcode already exists
+        echo json_encode(['success' => false, 'message' => 'This barcode is already registered.']);
+    } else {
+        // Insert new barcode into the database
+        $stmt = $conn->prepare("INSERT INTO products (barcode) VALUES (?)");
+        $stmt->bind_param("s", $barcode);
+
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true, 'message' => 'Barcode registered successfully.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to register barcode.']);
+        }
+    }
+    $stmt->close();
+} else {
+    echo json_encode(['success' => false, 'message' => 'No barcode provided.']);
+}
+
+$conn->close();
+?>

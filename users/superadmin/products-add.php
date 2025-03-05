@@ -127,30 +127,29 @@
 				</div>	  
 
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
-				<?php 
-
+				<?php
 					require_once '../../includes/config.php';
 
-					if(isset($_POST['submit'])) {
+					if (isset($_POST['submit'])) {
+						$barcode = trim($_POST['barcode']);
 						$name = $_POST['name'];
 						$category = $_POST['category'];
 						$price = $_POST['price'];
 						$quantity = $_POST['quantity'];
-						$discount = $_POST['discount'][0]; // Assuming single discount value
-					
-						$stmt = $conn->prepare("INSERT INTO products (name, category_id, price, product_quantity, discount) VALUES (?, ?, ?, ?, ?)");
-						$stmt->bind_param("sidii", $name, $category, $price, $quantity, $discount);
-					
+						$discount = $_POST['discount'][0];
+
+						$stmt = $conn->prepare("INSERT INTO products (barcode, name, category_id, price, product_quantity, discount) VALUES (?, ?, ?, ?, ?, ?)");
+						$stmt->bind_param("ssidii", $barcode, $name, $category, $price, $quantity, $discount);
+
 						if ($stmt->execute()) {
-							echo "<script>alert('New record successfully added!!!');</script>";
+							echo "<script>alert('New product successfully added!');</script>";
 							echo "<script>document.location='products-manage.php';</script>";
 						} else {
-							echo "<script>alert('Something went wrong!');</script>";
+							echo "<script>alert('Something went wrong! Please try again.');</script>";
 						}
-					
+
 						$stmt->close();
 					}
-				
 				?>
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
@@ -169,6 +168,13 @@
 						<h4>Product Information: </h4>
 
 						<div class="row">
+
+							<!-- Barcode Input -->
+							<div class="col-md-4" style="margin-left: 66.7%">
+								<label>Barcode:</label>
+								<input type="text" id="barcodeInput" name="barcode" class="form-control" placeholder="Scan barcode here" required>
+							</div>
+
 							<div class="col-md-6">
 								<label>Name:</label>
 								<input type="text" name="name" class="form-control" required>
@@ -217,6 +223,50 @@
 					</form>
 				</div>
 
+				<script>
+					document.addEventListener('DOMContentLoaded', function () {
+						const barcodeInput = document.getElementById('barcodeInput');
+						const allInputs = document.querySelectorAll('input, select'); // Target all inputs and selects
 
+						// Autofocus the barcode input on page load
+						barcodeInput.focus();
+
+						// Disable all fields except the barcode input on page load
+						allInputs.forEach((input) => {
+							if (input.id !== 'barcodeInput') {
+								input.disabled = true;
+							}
+						});
+
+						// Listen for barcode scanning (Enter key after scanning)
+						barcodeInput.addEventListener('keypress', function (e) {
+							if (e.key === 'Enter') {
+								e.preventDefault(); // Prevent form submission
+
+								const scannedBarcode = barcodeInput.value.trim(); // Get the scanned barcode
+
+								if (scannedBarcode) {
+									// Make the barcode input readonly (to include in form submission)
+									barcodeInput.readOnly = true;
+
+									// Enable all other input fields for editing
+									allInputs.forEach((input) => {
+										if (input.id !== 'barcodeInput') {
+											input.disabled = false;
+										}
+									});
+
+									// Move focus to the next input field (e.g., Product Name)
+									const productNameInput = document.querySelector('input[name="name"]');
+									if (productNameInput) {
+										productNameInput.focus();
+									}
+								} else {
+									alert('Please scan a valid barcode.');
+								}
+							}
+						});
+					});
+    			</script>
                 
 <?php include_once 'footer.php'; ?>
