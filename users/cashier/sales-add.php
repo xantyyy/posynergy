@@ -347,15 +347,23 @@ if ($result->num_rows > 0) {
             row.find('.subtotal').val(subtotal.toFixed(2));
         }
 
-        // Add product row via AJAX
-        $('#add-product').click(function() {
+        $('#add-product').click(function () {
             $.ajax({
                 url: 'sales-add-rows.php',
                 method: 'GET',
-                success: function(responseHTML) {
+                success: function (responseHTML) {
+                    // Append the new row to the table
                     $('#product-table tbody').append(responseHTML);
+
+                    // Find the newly added row and apply readonly attribute and class to discount input
+                    var newRow = $('#product-table tbody tr:last');
+                    var discountInput = newRow.find('.discount');
+
+                    // Set the discount field to readonly and add the "disabled" class
+                    discountInput.attr('readonly', true);
+                    discountInput.addClass('disabled');
                 },
-                error: function(xhr, textStatus, errorThrown) {
+                error: function (xhr, textStatus, errorThrown) {
                     console.error('Error: ' + textStatus + ' ' + errorThrown);
                 }
             });
