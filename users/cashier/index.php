@@ -128,32 +128,53 @@
                             $row = $result->fetch_assoc();
                             $dailySale = $row['daily_sale']; // Fetch the daily sale value
                             $saleDate = $row['date']; // Fetch the date
+                            $remitted = $row['remitted']; // Fetch the remitted value
+                            $capitalAdded = $row['capital'] > 0; // Check if capital is added
                         } else {
                             // No daily sale recorded for today
                             $saleRecorded = false;
-                            $dailySale = 0; // Default value if no records are found
-                            $saleDate = null; // Default value for date
+                            $dailySale = 0;
+                            $saleDate = null;
+                            $remitted = 0;
+                            $capitalAdded = false;
                         }
 
                         // Close the database connection
                         $conn->close();
-                    ?>
+                        ?>
 
-                    <div class="card-content">
-                        <p class="category">
-                            <strong>Sales (<?php echo isset($saleDate) ? date("F j, Y", strtotime($saleDate)) : 'N/A'; ?>)</strong>
-                        </p>
-                        <h4 class="card-title">
-                            ₱<?php echo number_format($dailySale, 2); ?>
-                        </h4>
-                    </div>
-
-                    <div class="card-footer">
-                        <div class="stats">
-                            <i class="material-icons">local_offer</i>
-                            product-wise sales
+                        <?php if ($remitted == 0): ?>
+                        <div class="card-content">
+                            <p class="category">
+                                <strong>Sales (<?php echo isset($saleDate) ? date("F j, Y", strtotime($saleDate)) : 'N/A'; ?>)</strong>
+                            </p>
+                            <h4 class="card-title">
+                                ₱<?php echo number_format($dailySale, 2); ?>
+                            </h4>
                         </div>
-                    </div>
+                        <?php else: ?>
+                        <div class="card-content">
+                            <p class="category">
+                                <strong>Sales (<?php echo isset($saleDate) ? date("F j, Y", strtotime($saleDate)) : 'N/A'; ?>)</strong>
+                            </p>
+                            <h4 class="card-title">
+                                N/A
+                            </h4>
+                        </div>
+                        <?php endif; ?>
+
+                        <div class="card-footer">
+                            <div class="stats">
+                                <i class="material-icons">local_offer</i>
+                                <?php if ($remitted == 1): ?>
+                                    <span style="color: gray; text-decoration: none;">Remit Successful</span>
+                                <?php elseif (!$capitalAdded): ?>
+                                    <span style="color: gray; text-decoration: none;">Remit Sales</span>
+                                <?php else: ?>
+                                    <a href="remit-sales.php">Remit Sales</a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                     
                 </div>
             </div>
@@ -167,45 +188,64 @@
                     </div>
 
                     <?php 
-						include '../../includes/config.php';
+                        include '../../includes/config.php';
 
-							$today = date('Y-m-d');
-							$sql = "SELECT * FROM cashier_monitor WHERE date = '$today'";
-							$result = $conn->query($sql);
+                        $today = date('Y-m-d');
+                        $sql = "SELECT * FROM cashier_monitor WHERE date = '$today'";
+                        $result = $conn->query($sql);
 
-							if ($result->num_rows > 0) {
-								$capitalAdded = true;
-								$row = $result->fetch_assoc();
-								$capital = $row['capital'];
-								$capitalDate = $row['date'];
-							} else {
-								$capitalAdded = false;
-								$capital = 0;
-								$capitalDate = null;
-							}
+                        if ($result->num_rows > 0) {
+                            $capitalAdded = true;
+                            $row = $result->fetch_assoc();
+                            $capital = $row['capital'];
+                            $capitalDate = $row['date'];
+                            $remitted = $row['remitted']; // Fetch the remitted value
+                        } else {
+                            $capitalAdded = false;
+                            $capital = 0;
+                            $capitalDate = null;
+                            $remitted = 0; // Default value for remitted
+                        }
 
-							$conn->close();
-							?>
+                        $conn->close();
+                    ?>
 
-							<div class="card-content">
-								<p class="category">
-									<strong>Capital (<?php echo isset($capitalDate) ? date("F j, Y", strtotime($capitalDate)) : 'N/A'; ?>)</strong>
-								</p>
-								<h4 class="card-title">
-									₱<?php echo number_format($capital, 2); ?>
-								</h4>
-							</div>
+                    <?php if ($remitted == 0): ?>
+                    <div class="card-content">
+                        <p class="category">
+                            <strong>Capital (<?php echo isset($capitalDate) ? date("F j, Y", strtotime($capitalDate)) : 'N/A'; ?>)</strong>
+                        </p>
+                        <h4 class="card-title">
+                            ₱<?php echo number_format($capital, 2); ?>
+                        </h4>
+                    </div>
+                    <?php else: ?>
+                    <div class="card-content">
+                        <p class="category">
+                            <strong>Capital (<?php echo isset($capitalDate) ? date("F j, Y", strtotime($capitalDate)) : 'N/A'; ?>)</strong>
+                        </p>
+                        <h4 class="card-title">
+                            N/A
+                        </h4>
+                    </div>
+                    <?php endif; ?>
 
-							<div class="card-footer">
-								<div class="stats">
-									<i class="material-icons text-info">info</i>
-								<?php if ($capitalAdded): ?>
-									<span style="color: gray; text-decoration: none;">Capital Already Added</span>
-								<?php else: ?>
-								<a href="add-capital.php">Add Daily Capital</a>
-							<?php endif; ?>
-						</div>
-					</div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons text-info">info</i>
+                            <?php if ($capitalAdded && $remitted == 0): ?>
+                                <span style="color: gray; text-decoration: none;">Capital Already Added</span>
+                            <?php elseif ($remitted == 1): ?>
+                                <?php if ($today == $capitalDate): ?>
+                                    <span style="color: gray; text-decoration: none;">You can add capital tomorrow</span>
+                                <?php else: ?>
+                                    <a href="add-capital.php">Add Daily Capital</a>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <a href="add-capital.php">Add Daily Capital</a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                     
                 </div>
             </div>
