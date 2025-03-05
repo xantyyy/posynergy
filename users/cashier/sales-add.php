@@ -113,12 +113,28 @@ if ($result->num_rows > 0) {
                     }
                 ?>
                 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <input type="text" name="user" readonly hidden value="<?php echo $user_id; ?>" class="form-control">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-8">
                     <input type="text" name="branch" readonly hidden value="<?php echo $branch_id; ?>" class="form-control">
                 </div>
+                
+                <div class="col-md-4 position-relative">
+                    <label for="productSearch">Search Product:</label>
+                    <input 
+                        type="text" 
+                        id="productSearch" 
+                        class="form-control" 
+                        style="margin-bottom: 20px; margin-right: 40px;" 
+                        placeholder="Enter Product Name" 
+                        autocomplete="off" 
+                    >
+                    <ul id="searchResults" class="list-group position-absolute" style="z-index: 1000; width: 100%; display: none;">
+                        <!-- Search results will appear here -->
+                    </ul>
+                </div>
+
                 <div class="col-md-2">
                     <label>Type of ID: </label>
                     <div class="d-flex align-items-center">
@@ -407,6 +423,73 @@ if ($result->num_rows > 0) {
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     console.error('Error: ' + textStatus + ' ' + errorThrown);
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const productSearch = document.getElementById('productSearch');
+            const searchResults = document.getElementById('searchResults');
+
+            productSearch.addEventListener('input', function () {
+                const query = this.value.trim();
+                console.log("Search query:", query); // Debugging: log the input value
+
+                if (query.length > 0) {
+                    // Send AJAX request to fetch matching products
+                    fetch('fetch-products.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: `query=${encodeURIComponent(query)}`,
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Response data:", data); // Debugging: log the fetched data
+
+                            // Clear existing results
+                            searchResults.innerHTML = '';
+                            searchResults.style.display = 'block';
+
+                            if (data.length > 0) {
+                                data.forEach(product => {
+                                    const li = document.createElement('li');
+                                    li.classList.add('list-group-item', 'search-result-item');
+                                    
+                                    // Format the output as per the desired structure
+                                    li.innerHTML = `
+                                        <strong>${product.name}</strong><br>
+                                        <small>Category: ${product.category}</small><br>
+                                        <small>Price: ₱${parseFloat(product.price).toLocaleString()}</small>
+                                    `;
+                                    li.dataset.productId = product.id;
+
+                                    // Add click event to select the product
+                                    li.addEventListener('click', function () {
+                                        productSearch.value = product.name;
+                                        searchResults.style.display = 'none'; // Hide results after selection
+                                    });
+
+                                    searchResults.appendChild(li);
+                                });
+                            } else {
+                                const li = document.createElement('li');
+                                li.classList.add('list-group-item');
+                                li.textContent = 'No results found.';
+                                searchResults.appendChild(li);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching products:", error);
+                        });
+                } else {
+                    searchResults.style.display = 'none'; // Hide results if query is empty
+                }
+            });
+
+            // Hide results when clicking outside the input field or results
+            document.addEventListener('click', function (e) {
+                if (!productSearch.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.style.display = 'none';
                 }
             });
         });
