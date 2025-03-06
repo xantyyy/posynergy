@@ -15,6 +15,15 @@
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/css/login.css">
 
+        <style>
+            body{
+                background-image: url('assets/images/ISYN.png');
+                background-size: 1550px 870px;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+        </style>
+        
         <!-- JS -->
         <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>

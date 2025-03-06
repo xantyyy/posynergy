@@ -143,7 +143,7 @@
 
 						if ($stmt->execute()) {
 							echo "<script>alert('New product successfully added!');</script>";
-							echo "<script>document.location='products-manage.php';</script>";
+							echo "<script>document.location='products-add.php';</script>";
 						} else {
 							echo "<script>alert('Something went wrong! Please try again.');</script>";
 						}

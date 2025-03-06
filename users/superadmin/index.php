@@ -450,4 +450,11 @@
 					});
 				</script>
 
+<style>
+	.navbar{
+	background-color:#1137a9;
+	color:#fff;
+}
+</style>
+
 <?php include_once 'footer.php'; ?>

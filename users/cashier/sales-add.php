@@ -251,48 +251,38 @@ if ($result->num_rows > 0) {
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             if (!capitalAdded) {
-                // Disable all input fields
                 document.querySelectorAll('input, select, button').forEach(function(element) {
                     if (element.type !== 'button' && element.type !== 'submit') {
                         element.disabled = true;
                     }
                 });
 
-                // Disable Add Product and Create Sales buttons
                 document.getElementById('add-product').disabled = true;
                 document.getElementById('create-sale').disabled = true;
 
-                // Show a message to the user
                 alert('Please add capital for today before proceeding with sales.');
             }
         });
 
         function fetchProductPrice(selectElement) {
             var productId = selectElement.value;
-            var row = selectElement.closest("tr"); // Get the row element
+            var row = selectElement.closest("tr");
             var priceInput = row.querySelector(".price");
             var quantityInput = row.querySelector(".quantity");
             var discountInput = row.querySelector(".discount");
 
-            // Send an AJAX request to fetch product details (price, quantity, discount)
             var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     var response = JSON.parse(xhr.responseText);
 
-                    // Update price and quantity
                     priceInput.value = response.price;
                     quantityInput.max = response.quantity;
-
-                    // Fetch discount from database
                     discountInput.value = response.discount;
-                    discountInput.setAttribute("readonly", true); // Ensure discount field is readonly
-                    discountInput.classList.add("disabled"); // Optional: Add CSS class for styling
+                    discountInput.setAttribute("readonly", true);
+                    discountInput.classList.add("disabled");
 
-                    // Apply additional discount based on ID type (if applicable)
                     applyDiscount(row);
-
-                    // Calculate updated subtotal and total
                     calculateSubtotal(row);
                     calculateTotals();
                 }
@@ -302,22 +292,20 @@ if ($result->num_rows > 0) {
             xhr.send("product_id=" + productId);
         }
 
-        // Function to apply automatic discount based on selected ID
         function applyDiscount(discountInput) {
-            var idType = document.querySelector('input[name="id_type"]:checked'); // Get selected ID type
+            var idType = document.querySelector('input[name="id_type"]:checked');
 
             if (idType) {
                 var discountValue = 0;
                 if (idType.value === "PWD" || idType.value === "Senior Citizen") {
-                    discountValue = 20; // 20% discount
+                    discountValue = 20;
                 } else if (idType.value === "Solo Parent" || idType.value === "Gift Card") {
-                    discountValue = 10; // 10% discount
+                    discountValue = 10;
                 }
 
-                // Apply discount and disable manual editing
                 discountInput.value = discountValue;
                 discountInput.setAttribute("readonly", true);
-                discountInput.classList.add("disabled"); // Optional styling
+                discountInput.classList.add("disabled");
             } else {
                 discountInput.value = 0; // No discount
                 discountInput.removeAttribute("readonly");
@@ -325,7 +313,6 @@ if ($result->num_rows > 0) {
             }
         }
 
-        // Recalculate when ID type is changed
         document.querySelectorAll('input[name="id_type"]').forEach((radio) => {
             radio.addEventListener("change", function () {
                 document.querySelectorAll(".discount").forEach((discountInput) => {
@@ -335,14 +322,12 @@ if ($result->num_rows > 0) {
             });
         });
 
-        // Calculate subtotal when quantity or discount changes
         $('#product-table').on('input', '.quantity, .discount', function() {
             var row = $(this).closest('tr');
             calculateSubtotal(row);
             calculateTotals();
         });
 
-        // Calculate total price
         function calculateTotals() {
             var subtotal = 0;
             $('.subtotal').each(function() {
@@ -354,7 +339,6 @@ if ($result->num_rows > 0) {
             $('#total').val(total.toFixed(2));
         }
 
-        // Calculate subtotal for each row
         function calculateSubtotal(row) {
             var quantity = row.find('.quantity').val();
             var price = row.find('.price').val();
@@ -368,14 +352,11 @@ if ($result->num_rows > 0) {
                 url: 'sales-add-rows.php',
                 method: 'GET',
                 success: function (responseHTML) {
-                    // Append the new row to the table
                     $('#product-table tbody').append(responseHTML);
 
-                    // Find the newly added row and apply readonly attribute and class to discount input
                     var newRow = $('#product-table tbody tr:last');
                     var discountInput = newRow.find('.discount');
 
-                    // Set the discount field to readonly and add the "disabled" class
                     discountInput.attr('readonly', true);
                     discountInput.addClass('disabled');
                 },
@@ -385,13 +366,11 @@ if ($result->num_rows > 0) {
             });
         });
 
-        // Delete product row
         $('#product-table').on('click', '.delete-product', function() {
             $(this).closest('tr').remove();
             calculateTotals();
         });
 
-        // When category changes, fetch corresponding products
         $(document).ready(function() {
             $(document).on("change", ".category", function() {
                 var category_id = $(this).val();
@@ -409,7 +388,6 @@ if ($result->num_rows > 0) {
             });
         });
 
-        // Ensure correct total is sent to the database
         $('#create-sale').click(function() {
             var totalAmount = $('#total').val();
             
@@ -418,8 +396,8 @@ if ($result->num_rows > 0) {
                 type: "POST",
                 data: {total: totalAmount},
                 success: function(response) {
-                    alert("Sale created successfully!"); // Replace with proper UI feedback
-                    location.reload(); // Reload the page to reset form
+                    alert("Sale created successfully!");
+                    location.reload();
                 },
                 error: function(xhr, textStatus, errorThrown) {
                     console.error('Error: ' + textStatus + ' ' + errorThrown);
@@ -433,7 +411,7 @@ if ($result->num_rows > 0) {
 
             productSearch.addEventListener('input', function () {
                 const query = this.value.trim();
-                console.log("Search query:", query); // Debugging: log the input value
+                console.log("Search query:", query);
 
                 if (query.length > 0) {
                     // Send AJAX request to fetch matching products
@@ -444,9 +422,8 @@ if ($result->num_rows > 0) {
                     })
                         .then(response => response.json())
                         .then(data => {
-                            console.log("Response data:", data); // Debugging: log the fetched data
+                            console.log("Response data:", data);
 
-                            // Clear existing results
                             searchResults.innerHTML = '';
                             searchResults.style.display = 'block';
 
@@ -455,7 +432,6 @@ if ($result->num_rows > 0) {
                                     const li = document.createElement('li');
                                     li.classList.add('list-group-item', 'search-result-item');
                                     
-                                    // Format the output as per the desired structure
                                     li.innerHTML = `
                                         <strong>${product.name}</strong><br>
                                         <small>Category: ${product.category}</small><br>
@@ -463,10 +439,9 @@ if ($result->num_rows > 0) {
                                     `;
                                     li.dataset.productId = product.id;
 
-                                    // Add click event to select the product
                                     li.addEventListener('click', function () {
                                         productSearch.value = product.name;
-                                        searchResults.style.display = 'none'; // Hide results after selection
+                                        searchResults.style.display = 'none';
                                     });
 
                                     searchResults.appendChild(li);
@@ -482,21 +457,153 @@ if ($result->num_rows > 0) {
                             console.error("Error fetching products:", error);
                         });
                 } else {
-                    searchResults.style.display = 'none'; // Hide results if query is empty
+                    searchResults.style.display = 'none';
                 }
             });
 
-            // Hide results when clicking outside the input field or results
             document.addEventListener('click', function (e) {
                 if (!productSearch.contains(e.target) && !searchResults.contains(e.target)) {
                     searchResults.style.display = 'none';
                 }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            let barcodeBuffer = '';
+            let scanning = false;
+
+            document.addEventListener('keydown', function (event) {
+                if (!scanning) scanning = true;
+
+                if (event.key === 'Enter') {
+                    const trimmedBarcode = barcodeBuffer.trim();
+                    processBarcode(trimmedBarcode);
+                    barcodeBuffer = '';
+                    scanning = false;
+                } else {
+                    barcodeBuffer += event.key;
+                }
+            });
+
+            function processBarcode(barcode) {
+                fetch('sales-fetch-barcode.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `barcode=${encodeURIComponent(barcode)}`,
+                })
+                .then(response => response.json())
+                .then(product => {
+                    if (product.error) {
+                        alert('Product not found!');
+                        return;
+                    }
+
+                    addOrUpdateProductRow(product);
+                })
+                .catch(error => {
+                    console.error('Error fetching product by barcode:', error);
+                });
+            }
+
+            function addOrUpdateProductRow(product) {
+                const tableBody = document.querySelector('#product-table tbody');
+
+                removeEmptyRows();
+
+                const existingRow = findExistingRow(product.product_id);
+
+                if (existingRow) {
+                    updateRow(existingRow, product);
+                } else {
+                    const newRowHTML = createNewRowHTML(product);
+                    tableBody.insertAdjacentHTML('beforeend', newRowHTML);
+                }
+
+                calculateTotals();
+            }
+
+            function removeEmptyRows() {
+                const rows = document.querySelectorAll('#product-table tbody tr');
+                rows.forEach(row => {
+                    const nameSelect = row.querySelector('.name');
+                    if (!nameSelect || nameSelect.value.trim() === '') {
+                        row.remove();
+                    }
+                });
+            }
+
+            function findExistingRow(productId) {
+                const rows = document.querySelectorAll('#product-table tbody tr');
+                return Array.from(rows).find(row => {
+                    const nameSelect = row.querySelector('.name');
+                    return nameSelect && nameSelect.value === productId.toString();
+                });
+            }
+
+            function updateRow(row, product) {
+                const quantityInput = row.querySelector('.quantity');
+                const subtotalInput = row.querySelector('.subtotal');
+                const price = parseFloat(row.querySelector('.price').value);
+                const discount = parseFloat(row.querySelector('.discount').value);
+
+                quantityInput.value = parseInt(quantityInput.value) + 1;
+                subtotalInput.value = (
+                    parseInt(quantityInput.value) *
+                    price *
+                    (1 - discount / 100)
+                ).toFixed(2);
+            }
+
+            function createNewRowHTML(product) {
+                return `
+                    <tr>
+                        <td>
+                            <select name="category[]" class="form-select category" required>
+                                <option selected value="${product.category_id}">${product.category}</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="name[]" class="form-select name" required>
+                                <option selected value="${product.product_id}">${product.name}</option>
+                            </select>
+                        </td>
+                        <td><input type="number" name="quantity[]" class="form-control quantity" value="1" min="1"></td>
+                        <td><input type="number" name="price[]" class="form-control price" value="${product.price}" readonly></td>
+                        <td><input type="number" name="discount[]" class="form-control discount" value="${product.discount}" readonly></td>
+                        <td><input type="number" name="subtotal[]" class="form-control subtotal" value="${(product.price * (1 - product.discount / 100)).toFixed(2)}" readonly></td>
+                        <td><button type="button" class="btn btn-danger delete-product"><i class="fa fa-trash"></i></button></td>
+                    </tr>
+                `;
+            }
+
+            function calculateTotals() {
+                let total = 0;
+
+                document.querySelectorAll('.subtotal').forEach(input => {
+                    total += parseFloat(input.value) || 0;
+                });
+
+                document.querySelector('#total').value = total.toFixed(2);
+            }
+
+            document.querySelector('#product-table').addEventListener('click', function (event) {
+                if (event.target.classList.contains('delete-product')) {
+                    const row = event.target.closest('tr');
+                    row.remove();
+                    calculateTotals();
+                }
+            });
+        });
     </script>
 
+<style>
+	.navbar{
+	background-color:#2DAA9E;
+	color:#fff;
+}
+</style>
+
 <?php 
-// Close the database connection at the end of the script
 $conn->close();
 include_once 'footer.php'; 
 ?>
