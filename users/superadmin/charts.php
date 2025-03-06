@@ -126,12 +126,80 @@
 				</div>
 
                 <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <br /><br />
-                            <h2 style="margin: 0 20px;">Total Sales per Branch</h2>
-                            <br />
-                        </div>
+    <div class="row">
+        <div class="col-md-12">
+            <br /><br />
+            <h2 style="margin: 0 20px;">Total Sales per Branch</h2>
+            <br />
+        </div>
+    </div>
+    <div class="row">
+        <!-- First Column -->
+        <div class="col-md-6">
+            <div class="card" style="padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <h4 style="text-align: center;">Branch A</h4>
+                <canvas id="chartBranchA"></canvas>
+            </div>
+        </div>
+        <!-- Second Column -->
+        <div class="col-md-6">
+            <div class="card" style="padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <h4 style="text-align: center;">Branch B</h4>
+                <canvas id="chartBranchB"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Chart for Branch A
+    const ctxA = document.getElementById('chartBranchA').getContext('2d');
+    new Chart(ctxA, {
+        type: 'bar',
+        data: {
+            labels: ['January', 'February', 'March', 'April'],
+            datasets: [{
+                label: 'Sales',
+                data: [120, 150, 180, 200],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true },
+            }
+        }
+    });
+
+    // Chart for Branch B
+    const ctxB = document.getElementById('chartBranchB').getContext('2d');
+    new Chart(ctxB, {
+        type: 'line',
+        data: {
+            labels: ['January', 'February', 'March', 'April'],
+            datasets: [{
+                label: 'Sales',
+                data: [100, 130, 170, 190],
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true },
+            }
+        }
+    });
+</script>
+
                         <!-- TOTAL SALES CHART -->
                         <?php
                             // Fetch data from 'sales' table using your database connection
@@ -323,5 +391,10 @@
                     }
                     });
                 </script>
-
+            <style>
+					.navbar{
+					background-color:#1137a9;
+					color:#fff;
+				}
+				</style>
 <?php include_once 'footer.php'; ?>

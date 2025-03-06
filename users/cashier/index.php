@@ -457,8 +457,10 @@
 
 <style>
 	.navbar{
-	background-color:#2DAA9E;
-	color:#fff;
+        background: linear-gradient(to right,rgb(235, 110, 110),rgb(142, 188, 225),rgb(128, 135, 141));
+                background-size: 1550px 870px;
+                background-position: center;
+                background-repeat: no-repeat;
 }
 </style>
 

@@ -11,16 +11,17 @@
         <title>iSynergies Inc. | POS System</title>
 
         <!-- CSS -->
-        <link rel="icon" type="image/x-icon" href="assets/images/aski.png">
+        <link rel="icon" type="image/x-icon" href="assets/images/isynergiesinc.png">
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/css/login.css">
 
         <style>
             body{
-                background-image: url('assets/images/ISYN.png');
+                background: linear-gradient(to right,rgb(235, 110, 110),rgb(142, 188, 225),rgb(200, 223, 243));
                 background-size: 1550px 870px;
                 background-position: center;
                 background-repeat: no-repeat;
+                
             }
         </style>
         
@@ -33,6 +34,19 @@
             body, h1, h2, h3, h4, h5, h6{
                 font-family: 'Open Sans', sans-serif;
             }
+
+            .btn-success {
+                background-color:rgb(44, 146, 187);
+                border-color:rgb(44, 146, 187);
+                color: white;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: rgb(11, 55, 73);
+    border-color: rgb(30, 100, 130);
+}
+
         </style>
 
     </head>
