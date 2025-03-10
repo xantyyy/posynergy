@@ -1,5 +1,6 @@
 <?php include_once 'header.php'; ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<?php include_once 'modals.php'; ?>
+
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -183,13 +184,13 @@
                                 <div class="card-body">
                                     <h5>Details</h5>
                                     <form>
-                                        <button type="button" class="btn btn-primary" style="width: 80px; margin-right: 3px; font-size: 10px;">
+                                        <button type="button" class="btn btn-primary" style="width: 80px; font-size: 10px;">
                                             <i class="fas fa-plus"></i> New
                                         </button>
-                                        <button type="button" class="btn btn-success" style="width: 80px; margin-right: 3px; font-size: 10px;">
+                                        <button type="button" class="btn btn-success" style="width: 80px; font-size: 10px;">
                                             <i class="fas fa-save"></i> Save
                                         </button>
-                                        <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 3px; font-size: 10px;">
+                                        <button type="button" class="btn btn-danger" style="width: 80px; font-size: 10px;">
                                             <i class="fas fa-times"></i> Cancel
                                         </button>
                                         <div class="form-row">
@@ -198,7 +199,7 @@
                                                 <input type="text" class="form-control" id="barCode">
                                             </div>
                                             <div class="form-group col-md-12">
-                                                <label for="pujCode">PUJ Code</label>
+                                                <label for="pujCode">PLU Code</label>
                                                 <input type="text" class="form-control" id="pujCode">
                                             </div>
                                         </div>
@@ -238,11 +239,11 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Costing Details</h5>
-                                    <button type="button" class="btn btn-primary" style="width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-plus"></i> New
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" style="width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn btn-success" style="width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-save"></i> Save
+                                    <button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <i class="fas fa-save"></i> Edit
                                     </button>
                                     <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;">
                                         <i class="fas fa-trash"></i> Delete
@@ -272,10 +273,10 @@
                                 <div class="card-body">
                                     <h5>Retail Details</h5>
                                     <button type="button" class="btn btn-primary" style="width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-plus"></i> New
+                                        <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn btn-success" style="width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-save"></i> Save
+                                    <button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <i class="fas fa-save"></i> Edit
                                     </button>
                                     <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;">
                                         <i class="fas fa-trash"></i> Delete
@@ -312,8 +313,12 @@
             
             <style>
 				.navbar{
-				background-color:#1137a9;
-				color:#fff;
+				background-color: #1137a9;
+				color: #fff;
 				}
+
+                .navbar-brand{
+                    color: #fff;
+                }
 			</style>
 <?php include_once 'footer.php'; ?>

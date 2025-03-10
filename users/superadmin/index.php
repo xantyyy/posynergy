@@ -48,7 +48,7 @@
 								<a href="product-entry.php">Product Entry</a>
 							</li>
 							<li>
-								<a href="#">Product Search</a>
+								<a href="product-search.php">Product Search</a>
 							</li>
 						</ul>
 					</li>
@@ -481,7 +481,7 @@
 
 <style>
 	.navbar{
-	background-color:#1137a9;
+	background-color: #1137a9;
 	color:#fff;
 }
 
