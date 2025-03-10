@@ -464,37 +464,35 @@
 					}
 
 					updateChart();
-
-					//SCRIPT FOR THE HIGHEST SELLING PRODUCTS
+					
 					$(document).ready(function() {
-						// Add event listener to branch filter
-						$('#branch_filter').change(function() {
-							// Get selected branch filter value
-							var branch_filter = $(this).val();
-
-							// Make AJAX request to get products data
-							$.ajax({
-								url: 'get-products.php',
-								data: {
-									'branch_filter': branch_filter
-								},
-								success: function(data) {
-									// Replace table content with new data
-									$('#products_table tbody').html(data);
-								}
-							});
+						$('.dropdown-toggle').on('click', function() {
+							$('.dropdown-toggle').removeClass('active');
+							$(this).addClass('active');
 						});
 
-						// Load initial data
-						$('#branch_filter').trigger('change');
+						$(document).on('click', function(event) {
+							if (!$(event.target).closest('.dropdown').length) {
+								$('.dropdown-toggle').removeClass('active');
+							}
+						});
 					});
-					
 				</script>
 
 <style>
 	.navbar{
 	background-color:#1137a9;
 	color:#fff;
+}
+
+	.dropdown-toggle:hover {
+		background-color: #f0f0f0;
+		color: #000;
+	}
+
+	.dropdown-toggle.active {
+		background-color: #f0f0f0;
+		color: #000;
 }
 </style>
 
