@@ -27,119 +27,79 @@
 						
 					</li>
 						
-					<li class="dropdown">
+					<!-- <li class="dropdown">
 						<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">warehouse</i><span>Inventory</span></a>
+						<i class="material-icons">point_of_sale</i><span>Sales</span></a>
 						<ul class="collapse list-unstyled menu" id="homeSubmenu1">
 							<li>
-								<a href="#">Incoming</a>
+								<a href="sales-add.php">Add New Sale</a>
 							</li>
 							<li>
-								<a href="#">Adjustment</a>
+								<a href="sales-manage.php">Manage Sales</a>
 							</li>
 						</ul>
-					</li>
-
+					</li> -->
 					<li class="dropdown">
 						<a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">inventory</i><span>Product Profile</span></a>
+						<i class="material-icons">inventory</i><span>Products</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu2">
 							<li>
-								<a href="#">Product Entry</a>
+								<a href="products-add.php">Add New Product</a>
 							</li>
 							<li>
-								<a href="#">Product Search</a>
+								<a href="products-manage.php">Manage Products</a>
 							</li>
 						</ul>
 					</li>
-
 					<li class="dropdown">
 						<a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">payment</i><span>Other Transaction</span></a>
+						<i class="material-icons">group</i><span>Categories</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu3">
 							<li>
-								<a href="#">Enroll Card</a>
+								<a href="categories-add.php">Add New Category</a>
 							</li>
 							<li>
-								<a href="#">Document Reprinter</a>
-							</li>
-							<li>
-								<a href="#">Discount Setup</a>
+								<a href="categories-manage.php">Manage Categories</a>
 							</li>
 						</ul>
 					</li>
-
-					<li class="dropdown">
+					<!-- <li class="dropdown">
 						<a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">search</i><span>Search</span></a>
+						<i class="material-icons">local_shipping</i><span>Branches</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu4">
 							<li>
-								<a href="#">Inventory</a>
+								<a href="branches-add.php">Add New Branch</a>
 							</li>
 							<li>
-								<a href="#">Sales</a>
-							</li>
-							<li>
-								<a href="#">Discounts</a>
-							</li>
-							<li>
-								<a href="#">Adjustemnt / Incoming</a>
-							</li>
-							<li>
-								<a href="#">Product SL</a>
-							</li>
-							<li>
-								<a href="#">Return</a>
-							</li>
-							<li>
-								<a href="#">E-Journal</a>
-							</li>
-							<li>
-								<a href="#">Voided Transaction</a>
-							</li>
-							<li>
-								<a href="#">Suki Points</a>
-							</li>
-							<li>
-								<a href="#">System Log</a>
+								<a href="branches-manage.php">Manage Branches</a>
 							</li>
 						</ul>
 					</li>
-
 					<li class="dropdown">
 						<a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">settings</i><span>Configuration</span></a>
+						<i class="material-icons">payments</i><span>Expenses</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu5">
 							<li>
-								<a href="#">Supplier</a>
+								<a href="expenses-add.php">Add New Expenses</a>
 							</li>
 							<li>
-								<a href="#">List Maintenance</a>
-							</li>
-							<li>
-								<a href="#">Branch Setup</a>
-							</li>
-							<li>
-								<a href="#">SI No. & Txn No.</a>
-							</li>
-							<li>
-								<a href="#">User Accounts</a>
-							</li>
-							<li>
-								<a href="#">Permissions</a>
+								<a href="expenses-manage.php">Manage Expenses</a>
 							</li>
 						</ul>
+					</li> -->
+					<li class="">
+						<a href="charts.php" class="dashboard"><i class="material-icons">equalizer</i><span>Charts</span></a>
 					</li>
  
 					<li class="dropdown">
 						<a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">build</i><span>Utilities</span></a>
+						<i class="material-icons">account_circle</i><span>Manage Users</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu7">
 							<li>
-								<a href="#">Close Today's Transaction</a>
+								<a href="users-add.php">Add New User</a>
 							</li>
 							<li>
-								<a href="#">Data Back-up</a>
+								<a href="users-manage.php">Manage Users</a>
 							</li>
 						</ul>
 					</li>
@@ -488,7 +448,6 @@
 						// Load initial data
 						$('#branch_filter').trigger('change');
 					});
-					
 				</script>
 
 <style>
