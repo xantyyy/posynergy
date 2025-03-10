@@ -32,7 +32,7 @@
 						<i class="material-icons">warehouse</i><span>Inventory</span></a>
 						<ul class="collapse list-unstyled menu" id="homeSubmenu1">
 							<li>
-								<a href="#">Incoming</a>
+								<a href="incoming.php">Incoming</a>
 							</li>
 							<li>
 								<a href="#">Adjustment</a>
@@ -45,7 +45,7 @@
 						<i class="material-icons">inventory</i><span>Product Profile</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu2">
 							<li>
-								<a href="#">Product Entry</a>
+								<a href="product-entry.php">Product Entry</a>
 							</li>
 							<li>
 								<a href="#">Product Search</a>
