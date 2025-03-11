@@ -172,19 +172,128 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Adjustment Incoming Sales</h2>
+							<h2 style="margin: 0 20px; margin-top: 15px;">Incoming Inventory</h2>
 						</div>
 					</div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                    
-            </div>
+					<div class="row">
+                        <!-- Left Side - Product Data Entry Form -->
+                        <div class="col-md-4">
+                            <div class="card">
+								<div class="card-body">
+                                    <h6>Search Parameters</h6>
+                                    <form class="d-flex align-items-center">
+                                        <input type="text" class="form-control me-3" style="width: 100%;" id="searchInput" placeholder="Search here...">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
 
-            <style>
-				.navbar{
-				background-color:#1137a9;
-				color:#fff;
-				}
-			</style>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table table-bordered" style="margin-top: 10px;">
+                                        <thead class="fw-bold fs-6 fst-italic">
+                                            <tr>
+												<th>#</th>
+                                                <th>Adj. Number</th>
+                                                <th>Adj. Date</th>
+                                                <th>Supplier</th>
+                                                <th>Net Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+													<td><input type="radio" name="selectItem" value="1"></td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+									<button type="button" class="btn btn-primary" onclick="location.href='adjust-item.php';" data-bs-toggle="modal" data-bs-target="#" style="width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <i class="fas fa-plus"></i> New
+                                    </button>
+                                    <button type="button" class="btn btn-success" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#editModalcost">
+										<i class="fas fa-save"></i> Open
+									</button>
+                                    <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#deleteModalcost">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+            </div>
+			
+			<script>
+				const currentUrl = window.location.pathname.split('/').pop();
+				document.querySelectorAll('.list-unstyled a').forEach(link => {
+					if (link.getAttribute('href') === currentUrl) {
+						link.classList.add('active');
+
+						if (link.closest('.dashboard')) {
+							link.closest('.dashboard').classList.add('active');
+						} else {
+							document.querySelector('.dashboard')?.classList.remove('active');
+						}
+
+						const parentMenu = link.closest('.collapse');
+						if (parentMenu) {
+							parentMenu.classList.add('show');
+
+							const dropdownToggle = parentMenu.previousElementSibling;
+							if (dropdownToggle) {
+								dropdownToggle.setAttribute('aria-expanded', 'true');
+							}
+						}
+					}
+				});
+			</script>
+
+				<style>
+					.navbar{
+					background-color: #1137a9;
+					color: #fff;
+					}
+
+					.navbar-brand{
+						color: #fff;
+					}
+					.sidebar {
+						width: 250px;
+						background-color: #f8f9fa;
+						padding: 10px;
+						height: 100vh;
+						position: fixed;
+					}
+
+					.nav-link {
+						color: #333;
+						font-size: 14px;
+					}
+
+					.nav-link:hover, .nav-link.active {
+						color: #007bff;
+						font-weight: bold;
+					}
+
+					.collapse.show {
+						background-color: #e9ecef;
+						padding: 5px 10px;
+						border-left: 4px solid #007bff;
+					}
+
+					.list-unstyled a.active {
+						background-color: #f0f0f0;
+						color: #000;
+						font-weight: bold;
+					}
+
+					.dropdown-toggle[aria-expanded="true"] {
+						background-color: #e0e0e0;
+						font-weight: bold;
+					}
+				</style>
 <?php include_once 'footer.php'; ?>

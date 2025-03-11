@@ -42,7 +42,7 @@
 								<a href="incoming.php">Incoming</a>
 							</li>
 							<li>
-								<a href="#">Adjustment</a>
+								<a href="adjustment-item.php">Adjustment</a>
 							</li>
 						</ul>
 					</li>
@@ -52,10 +52,10 @@
 						<i class="material-icons">inventory</i><span>Product Profile</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu2">
 							<li>
-								<a href="#">Product Entry</a>
+								<a href="product-entry.php">Product Entry</a>
 							</li>
 							<li>
-								<a href="#">Product Search</a>
+								<a href="product-search.php">Product Search</a>
 							</li>
 						</ul>
 					</li>
@@ -65,13 +65,13 @@
 						<i class="material-icons">payment</i><span>Other Transaction</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu3">
 							<li>
-								<a href="#">Enroll Card</a>
+								<a href="enroll-card.php">Enroll Card</a>
 							</li>
 							<li>
-								<a href="#">Document Reprinter</a>
+								<a href="document-reprinter.php">Document Reprinter</a>
 							</li>
 							<li>
-								<a href="#">Discount Setup</a>
+								<a href="discount-setup.php">Discount Setup</a>
 							</li>
 						</ul>
 					</li>
@@ -81,34 +81,34 @@
 						<i class="material-icons">search</i><span>Search</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu4">
 							<li>
-								<a href="#">Inventory</a>
+								<a href="inventory.php">Inventory</a>
 							</li>
 							<li>
-								<a href="#">Sales</a>
+								<a href="sales.php">Sales</a>
 							</li>
 							<li>
-								<a href="#">Discounts</a>
+								<a href="discounts.php">Discounts</a>
 							</li>
 							<li>
-								<a href="#">Adjustemnt / Incoming</a>
+								<a href="adjustment-incoming.php">Adjustemnt / Incoming</a>
 							</li>
 							<li>
-								<a href="#">Product SL</a>
+								<a href="product-SL.php">Product SL</a>
 							</li>
 							<li>
-								<a href="#">Return</a>
+								<a href="return.php">Return</a>
 							</li>
 							<li>
-								<a href="#">E-Journal</a>
+								<a href="e-journal.php">E-Journal</a>
 							</li>
 							<li>
-								<a href="#">Voided Transaction</a>
+								<a href="voided-transaction.php">Voided Transaction</a>
 							</li>
 							<li>
-								<a href="#">Suki Points</a>
+								<a href="suki-points.php">Suki Points</a>
 							</li>
 							<li>
-								<a href="#">System Log</a>
+								<a href="system-log.php">System Log</a>
 							</li>
 						</ul>
 					</li>
@@ -118,22 +118,22 @@
 						<i class="material-icons">settings</i><span>Configuration</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu5">
 							<li>
-								<a href="#">Supplier</a>
+								<a href="supplier.php">Supplier</a>
 							</li>
 							<li>
-								<a href="#">List Maintenance</a>
+								<a href="list-maintenance.php">List Maintenance</a>
 							</li>
 							<li>
-								<a href="#">Branch Setup</a>
+								<a href="branch-setup.php">Branch Setup</a>
 							</li>
 							<li>
-								<a href="#">SI No. & Txn No.</a>
+								<a href="si-no.-txn-no.php">SI No. & Txn No.</a>
 							</li>
 							<li>
-								<a href="#">User Accounts</a>
+								<a href="user-accounts.php">User Accounts</a>
 							</li>
 							<li>
-								<a href="#">Permissions</a>
+								<a href="permissions.php">Permissions</a>
 							</li>
 						</ul>
 					</li>
@@ -143,10 +143,10 @@
 						<i class="material-icons">build</i><span>Utilities</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu7">
 							<li>
-								<a href="#">Close Today's Transaction</a>
+								<a href="close-todays-transaction.php">Close Today's Transaction</a>
 							</li>
 							<li>
-								<a href="#">Data Back-up</a>
+								<a href="data-backup.php">Data Back-up</a>
 							</li>
 						</ul>
 					</li>
@@ -164,7 +164,7 @@
 						<span class="material-icons"></span>
 						</button>
 						
-						<a class="navbar-brand" href="#">Dashboard</a>
+						<a class="navbar-brand" href="#">Product Profile</a>
 						<button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
 						data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
 							<span class="material-icons">menu</span>
@@ -292,7 +292,7 @@
                                                 </tr>
                                             </tbody>                                            
                                         </table>
-                                        <button type="button" class="btn btn-primary" style="width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <button type="button" class="btn btn-primary" style="width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
                                             <i class="fas fa-plus"></i> New
                                         </button>
                                         <button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;">
@@ -306,87 +306,75 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <script>
-                        $(document).ready(function() {
-                            $('#example').DataTable( {
-                                dom: 'Bfrtip',
-                                buttons: [
-                                    {
-                                        extend: 'copy',
-                                        exportOptions: {
-                                            columns: ':visible:not(.no-print)'
-                                        }
-                                    },
-                                    {
-                                        extend: 'csv',
-                                        exportOptions: {
-                                            columns: ':visible:not(.no-print)'
-                                        }
-                                    },
-                                    {
-                                        extend: 'excel',
-                                        exportOptions: {
-                                            columns: ':visible:not(.no-print)'
-                                        }
-                                    },
-                                    {
-                                        extend: 'pdf',
-                                        exportOptions: {
-                                            columns: ':visible:not(.no-print)'
-                                        }
-                                    },
-                                    {
-                                        extend: 'print',
-                                        customize: function ( win ) {
-                                            $(win.document.body)
-                                                .find('.no-print')
-                                                .remove();
-                                        }
-                                    }
-                                ],
-                                columnDefs: [
-                                    {
-                                        targets: [12], // replace 2 with the index of the column you want to exclude
-                                        visible: true,
-                                        className: 'no-print'
-                                    }
-                                ]
-                            } );
-                        });
+				const currentUrl = window.location.pathname.split('/').pop();
+				document.querySelectorAll('.list-unstyled a').forEach(link => {
+					if (link.getAttribute('href') === currentUrl) {
+						link.classList.add('active');
 
-                        $(document).ready(function() {
-                            var table = $('#example').DataTable();
+						if (link.closest('.dashboard')) {
+							link.closest('.dashboard').classList.add('active');
+						} else {
+							document.querySelector('.dashboard')?.classList.remove('active');
+						}
 
-                            // Add a custom filter function
-                            $.fn.dataTable.ext.search.push(
-                                function(settings, data, dataIndex) {
-                                var branch = $('#branch-filter').val();
-                                var role = $('#role-filter').val();
-                                var branchData = data[0];
-                                var roleData = data[1];
+						const parentMenu = link.closest('.collapse');
+						if (parentMenu) {
+							parentMenu.classList.add('show');
 
-                                // If the date column is empty, don't show the row
-                                if (branchData === "" || roleData === "") {
-                                    return false;
-                                }
+							const dropdownToggle = parentMenu.previousElementSibling;
+							if (dropdownToggle) {
+								dropdownToggle.setAttribute('aria-expanded', 'true');
+							}
+						}
+					}
+				});
+			</script>
 
-                                // Compare the branch with the user input date range
-                                if (branch === "" || branch === branchData) {
-                                    if (role === "" || role === roleData) {
-                                        return true;
-                                    }
-                                }
+				<style>
+					.navbar{
+					background-color: #1137a9;
+					color: #fff;
+					}
 
-                                return false;
-                                }
-                            );
+					.navbar-brand{
+						color: #fff;
+					}
+					.sidebar {
+						width: 250px;
+						background-color: #f8f9fa;
+						padding: 10px;
+						height: 100vh;
+						position: fixed;
+					}
 
-                            // Trigger the filtering when the user changes the date range
-                            $('#branch-filter, #role-filter').change(function() {
-                                table.draw();
-                            });
-                        });
-                    </script>
+					.nav-link {
+						color: #333;
+						font-size: 14px;
+					}
+
+					.nav-link:hover, .nav-link.active {
+						color: #007bff;
+						font-weight: bold;
+					}
+
+					.collapse.show {
+						background-color: #e9ecef;
+						padding: 5px 10px;
+						border-left: 4px solid #007bff;
+					}
+
+					.list-unstyled a.active {
+						background-color: #f0f0f0;
+						color: #000;
+						font-weight: bold;
+					}
+
+					.dropdown-toggle[aria-expanded="true"] {
+						background-color: #e0e0e0;
+						font-weight: bold;
+					}
+				</style>
 
 <?php include_once 'footer.php'; ?>
