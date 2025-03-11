@@ -157,7 +157,7 @@
 						<span class="material-icons"></span>
 						</button>
 						
-						<a class="navbar-brand" href="#">Inventory</a>
+						<a class="navbar-brand" href="#">Search</a>
 						<button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
 						data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
 							<span class="material-icons">menu</span>
@@ -236,10 +236,73 @@
 </div>
             </div>
 
-            <style>
-				.navbar{
-				background-color:#1137a9;
-				color:#fff;
-				}
-			</style>
+			<script>
+				const currentUrl = window.location.pathname.split('/').pop();
+				document.querySelectorAll('.list-unstyled a').forEach(link => {
+					if (link.getAttribute('href') === currentUrl) {
+						link.classList.add('active');
+
+						if (link.closest('.dashboard')) {
+							link.closest('.dashboard').classList.add('active');
+						} else {
+							document.querySelector('.dashboard')?.classList.remove('active');
+						}
+
+						const parentMenu = link.closest('.collapse');
+						if (parentMenu) {
+							parentMenu.classList.add('show');
+
+							const dropdownToggle = parentMenu.previousElementSibling;
+							if (dropdownToggle) {
+								dropdownToggle.setAttribute('aria-expanded', 'true');
+							}
+						}
+					}
+				});
+			</script>
+
+            	<style>
+					.navbar{
+					background-color: #1137a9;
+					color: #fff;
+					}
+
+					.navbar-brand{
+						color: #fff;
+					}
+					.sidebar {
+						width: 250px;
+						background-color: #f8f9fa;
+						padding: 10px;
+						height: 100vh;
+						position: fixed;
+					}
+
+					.nav-link {
+						color: #333;
+						font-size: 14px;
+					}
+
+					.nav-link:hover, .nav-link.active {
+						color: #007bff;
+						font-weight: bold;
+					}
+
+					.collapse.show {
+						background-color: #e9ecef;
+						padding: 5px 10px;
+						border-left: 4px solid #007bff;
+					}
+
+					.list-unstyled a.active {
+						background-color: #f0f0f0;
+						color: #000;
+						font-weight: bold;
+					}
+
+					.dropdown-toggle[aria-expanded="true"] {
+						background-color: #e0e0e0;
+						font-weight: bold;
+					}
+				</style>
 <?php include_once 'footer.php'; ?>
