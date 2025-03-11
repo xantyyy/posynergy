@@ -172,16 +172,57 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Adjustment/Incoming Report</h2>
 						</div>
 					</div>
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 style="margin: 20px 0;">Adjustment/Incoming Report</h2>
+                <div class="card p-3">
+                    <form>
+                        <div class="form-group">
+                            <label>Select</label>
+                            <div>
+                                <input type="radio" name="reportType" value="adjustment"> Adjustment
+                                <input type="radio" name="reportType" value="incoming" class="ml-3"> Incoming
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Supplier</label>
+                            <select class="form-control">
+                                <option>Select Supplier</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date Filter</label>
+                            <div class="d-flex">
+                                <input type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                <span class="mx-2">to</span>
+                                <input type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Print Summary</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
 
             <style>
+                 .navbar {
+        background-color: #1137a9;
+        color: #fff;
+    }
+    .card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
 				.navbar{
 				background-color:#1137a9;
 				color:#fff;

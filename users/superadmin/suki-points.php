@@ -178,7 +178,56 @@
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                <div class="container-fluid">
+    <div class="row">
+        <!-- Search Section -->
+        <div class="col-md-3 border-right p-3">
+            <h5>Search</h5>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Quick Search">
+            </div>
+            <hr>
+            <h6>Value Search</h6>
+            <div class="form-group">
+                <select class="form-control">
+                    <option>Field</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control">
+                    <option>Operator</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Value">
+            </div>
+            <button class="btn btn-primary btn-block">Search</button>
+        </div>
+        
+        <!-- List Section -->
+        <div class="col-md-9 p-3">
+            <h5>List</h5>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Card No.</th>
+                        <th>Fullname</th>
+                        <th>Civil Status</th>
+                        <th>Birthday</th>
+                        <th>Gender</th>
+                        <th>Points Earned</th>
+                        <th>Points Used</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Dynamic Data Here -->
+                </tbody>
+            </table>
+            <button class="btn btn-success">Print</button>
+        </div>
+    </div>
+</div>
+
             </div>
 
             <style>

@@ -178,7 +178,84 @@
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                <div class="container-fluid mt-3">
+        <div class="row">
+            <!-- Search Section -->
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <h5>Search</h5>
+                    <form method="GET" action="sales-report.php">
+                        <label>Transaction Date</label>
+                        <input type="date" name="from_date" class="form-control mb-2">
+                        <input type="date" name="to_date" class="form-control mb-3">
+
+                        <label>Value Search</label>
+                        <select name="field" class="form-control mb-2">
+                            <option value="barcode">Barcode</option>
+                            <option value="product_name">Product Name</option>
+                        </select>
+                        <input type="text" name="value" class="form-control mb-3" placeholder="Enter value">
+
+                        <button type="submit" class="btn btn-primary btn-block">Search</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Sales Summary & Table Section -->
+            <div class="col-md-9">
+                <div class="card p-3">
+                    <h5>Sales Summary</h5>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>No. of Transactions:</td>
+                            <td>0</td>
+                            <td>Gross Sales:</td>
+                            <td>₱0.00</td>
+                        </tr>
+                        <tr>
+                            <td>No. of Items:</td>
+                            <td>0</td>
+                            <td>Discount:</td>
+                            <td>₱0.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td>Net of Sales:</td>
+                            <td>₱0.00</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <!-- Sales Table -->
+                <div class="card p-3 mt-3">
+                    <h5>List</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Barcode</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>SRP</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Sales Data Here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Print Options -->
+                <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-info mx-1">BIR Sales</button>
+                    <button class="btn btn-success mx-1">Vatable</button>
+                    <button class="btn btn-warning mx-1">Non-Vat</button>
+                    <button class="btn btn-primary mx-1">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
 
             <style>

@@ -178,10 +178,55 @@
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                <div class="container mt-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5>Voided Transactions</h5>
+            </div>
+            <div class="card-body">
+                <form class="form-inline mb-3">
+                    <label class="mr-2">Transaction Date:</label>
+                    <input type="date" class="form-control mr-2" id="fromDate">
+                    <label class="mr-2">to</label>
+                    <input type="date" class="form-control mr-2" id="toDate">
+                    <button type="button" class="btn btn-primary">Search</button>
+                </form>
+                
+                <table class="table table-bordered text-center">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Transaction Date</th>
+                            <th>Cashier</th>
+                            <th>Barcode</th>
+                            <th>Product Name</th>
+                            <th>SRP</th>
+                            <th>Discount</th>
+                            <th>Qty</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="8" class="text-center">No records found</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <button class="btn btn-secondary float-right">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
 
             <style>
+                .navbar {
+        background-color: #1137a9;
+        color: #fff;
+    }
+    .card-header {
+        background-color: #1137a9;
+    }
 				.navbar{
 				background-color:#1137a9;
 				color:#fff;

@@ -172,16 +172,73 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Return Search</h2>
 						</div>
 					</div>
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                <div class="container mt-4">
+        <h2 class="mb-3">Return Search</h2>
+        <div class="card p-3 shadow-sm">
+            <form method="POST" action="return-search.php">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="returnID">Return ID</label>
+                        <input type="text" class="form-control" name="returnID" placeholder="Enter Return ID">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="dateRange">Date Range</label>
+                        <input type="date" class="form-control" name="dateRange">
+                    </div>
+                    <div class="col-md-4">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-primary btn-block">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search Results Table -->
+        <div class="card mt-3 shadow-sm">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead class="bg-primary text-white">
+                        <tr>
+                            <th>Reference</th>
+                            <th>Barcode</th>
+                            <th>Product Name</th>
+                            <th>SRP</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>R12345</td>
+                            <td>Sample Product</td>
+                            <td>2</td>
+                            <td>Defective</td>
+                            <td>2024-03-11</td>
+                        </tr>
+                        <tr>
+                            <td>R12346</td>
+                            <td>Another Product</td>
+                            <td>1</td>
+                            <td>Incorrect Item</td>
+                            <td>2024-03-10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
 
             <style>
+                .navbar { background-color: #1137a9; color: #fff; }
+    .card { border-radius: 10px; }
+    .table-striped tbody tr:nth-of-type(odd) { background-color: #f2f2f2; }
 				.navbar{
 				background-color:#1137a9;
 				color:#fff;

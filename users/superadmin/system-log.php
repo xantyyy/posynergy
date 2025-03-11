@@ -178,10 +178,64 @@
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                    </div>
+                </div>
+
+                <!-- Filter Section -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label for="logType">Logs</label>
+                        <select class="form-control" id="logType">
+                            <option value="">Select Type</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Date Filter:</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control">
+                            <span class="input-group-text">To</span>
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2 align-self-end">
+                        <button class="btn btn-success">Search</button>
+                    </div>
+                </div>
+
+                <!-- Log Table -->
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Remarks</th>
+                                <th>Control</th>
+                                <th>User</th>
+                                <th>Application</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic Logs Here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
             </div>
 
             <style>
+                .navbar {
+                background-color: #1137a9;
+                color: #fff;
+                }
 				.navbar{
 				background-color:#1137a9;
 				color:#fff;

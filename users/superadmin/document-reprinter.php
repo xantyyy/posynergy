@@ -15,6 +15,7 @@
 							$role = $row['role'];
 						
 					?>
+                    
 
 					<div class="ml-auto" id="userInfo">
 						<p class="text-right"><?php echo $name . " | " . $role; ?></p>
@@ -26,7 +27,7 @@
 						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
 						
 					</li>
-						
+                            
 					<li class="dropdown">
 						<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 						<i class="material-icons">warehouse</i><span>Inventory</span></a>
@@ -178,7 +179,71 @@
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                     <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="POST" action="">
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Date Range</label>
+                            <div class="col-sm-4">
+                                <input type="date" class="form-control" name="start_date" required>
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="date" class="form-control" name="end_date" required>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Transaction No.</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                                $start_date = $_POST['start_date'];
+                                $end_date = $_POST['end_date'];
+
+                                $sql = "SELECT * FROM transactions WHERE date BETWEEN '$start_date' AND '$end_date'";
+                                $result = $conn->query($sql);
+                                
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<td>" . $row['date'] . "</td>";
+                                        echo "<td>" . $row['transaction_no'] . "</td>";
+                                        echo "<td>₱" . number_format($row['amount'], 2) . "</td>";
+                                        echo "<td><button class='btn btn-info'>Reprint</button></td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='4' class='text-center'>No records found.</td></tr>";
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .navbar{
+        background-color:#1137a9;
+        color:#fff;
+    }
+</style>
             </div>
 
             <style>

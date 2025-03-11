@@ -178,7 +178,62 @@
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                <div class="container-fluid mt-3">
+        <div class="row">
+            <!-- Search Section -->
+            <div class="col-md-3">
+                <div class="card p-3">
+                    <h5>Search</h5>
+                    <form method="GET" action="inventory.php">
+                        <label>Type:</label>
+                        <select name="type" class="form-control mb-2">
+                            <option value="">Select Type</option>
+                            <option value="consignment">Include Consignment</option>
+                        </select>
+                        <label>Date:</label>
+                        <input type="date" name="from_date" class="form-control mb-2">
+                        <input type="date" name="to_date" class="form-control mb-3">
+                        <label>Value Search</label>
+                        <select name="field" class="form-control mb-2">
+                            <option value="barcode">Barcode</option>
+                            <option value="product_name">Product Name</option>
+                        </select>
+                        <input type="text" name="value" class="form-control mb-3" placeholder="Enter value">
+                        <button type="submit" class="btn btn-primary btn-block">Search</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Inventory Table Section -->
+            <div class="col-md-9">
+                <div class="card p-3">
+                    <h5>List</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Barcode</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Cost Price</th>
+                                <th>Selling Price</th>
+                                <th>Total Cost Price</th>
+                                <th>Total Selling Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Inventory Data Here -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Print Button -->
+                <div class="d-flex justify-content-end mt-3">
+                    <button class="btn btn-primary">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
 
             <style>

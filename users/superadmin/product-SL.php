@@ -172,16 +172,78 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Product Subsidiary</h2>
 						</div>
 					</div>
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mt-3">Product Subsidiary</h2>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <label for="date_from">From:</label>
+                <input type="date" id="date_from" class="form-control" value="<?php echo date('Y-m-01'); ?>">
+            </div>
+            <div class="col-md-3">
+                <label for="date_to">To:</label>
+                <input type="date" id="date_to" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary mt-4">Search</button>
+                <button class="btn btn-secondary mt-4">Clear</button>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-4">
+                <h5>Product List</h5>
+                <input type="text" class="form-control" placeholder="Search Product...">
+                <ul class="list-group mt-2" style="max-height: 300px; overflow-y: auto;">
+                    <li class="list-group-item">Product 1</li>
+                    <li class="list-group-item">Product 2</li>
+                    <li class="list-group-item">Product 3</li>
+                </ul>
+            </div>
+            <div class="col-md-8">
+                <h5>Product Summary</h5>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Purpose</th>
+                            <th>Transaction No</th>
+                            <th>Reference</th>
+                            <th>IN</th>
+                            <th>OUT</th>
+                            <th>Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2025-03-11</td>
+                            <td>Purchase</td>
+                            <td>Stock In</td>
+                            <td>TXN12345</td>
+                            <td>Ref001</td>
+                            <td>50</td>
+                            <td>0</td>
+                            <td>50</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-success">Print</button>
+            </div>
+        </div>
+    </div>
+</div>
             </div>
 
             <style>
+                .navbar { background-color: #1137a9; color: #fff; }
 				.navbar{
 				background-color:#1137a9;
 				color:#fff;

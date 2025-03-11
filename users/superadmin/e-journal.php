@@ -172,16 +172,46 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">E-Journal</h2>
 						</div>
 					</div>
 				</div>
                 <!-- Table Here -->
                 <div class="container">
-                    
+                <div class="container mt-4">
+    <h2 class="mb-4">E-Journal</h2>
+    
+    <!-- Date Range Selection -->
+    <div class="card p-3 shadow-sm" style="max-width: 400px;">
+        <h5>Date</h5>
+        <form method="POST" action="e-journal.php">
+            <div class="form-group">
+                <label for="fromDate">From</label>
+                <input type="date" class="form-control" id="fromDate" name="fromDate" required>
+            </div>
+            <div class="form-group">
+                <label for="toDate">To</label>
+                <input type="date" class="form-control" id="toDate" name="toDate" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-3">
+                <i class="material-icons">search</i> Search
+            </button>
+        </form>
+    </div>
+</div>
             </div>
 
             <style>
+                .btn-primary {
+        background-color: #1137a9;
+        border-color: #1137a9;
+    }
+    .btn-primary:hover {
+        background-color: #0d2c87;
+        border-color: #0d2c87;
+    }
+    .card {
+        border-radius: 8px;
+    }
 				.navbar{
 				background-color:#1137a9;
 				color:#fff;
