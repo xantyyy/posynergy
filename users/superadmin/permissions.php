@@ -157,7 +157,7 @@
 						<span class="material-icons"></span>
 						</button>
 						
-						<a class="navbar-brand" href="#">Inventory</a>
+						<a class="navbar-brand" href="#">Configuration</a>
 						<button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
 						data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
 							<span class="material-icons">menu</span>
@@ -183,8 +183,12 @@
 
             <style>
 				.navbar{
-				background-color:#1137a9;
-				color:#fff;
+				background-color: #1137a9;
+				color: #fff;
 				}
+
+                .navbar-brand{
+                    color: #fff;
+                }
 			</style>
 <?php include_once 'footer.php'; ?>

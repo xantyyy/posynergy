@@ -479,21 +479,15 @@
 					});
 				</script>
 
-<style>
-	.navbar{
-	background-color: #1137a9;
-	color:#fff;
-}
+				<style>
+					.navbar{
+					background-color: #1137a9;
+					color: #fff;
+					}
 
-	.dropdown-toggle:hover {
-		background-color: #f0f0f0;
-		color: #000;
-	}
-
-	.dropdown-toggle.active {
-		background-color: #f0f0f0;
-		color: #000;
-}
-</style>
+					.navbar-brand{
+						color: #fff;
+					}
+				</style>
 
 <?php include_once 'footer.php'; ?>

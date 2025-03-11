@@ -37,7 +37,7 @@
 								<a href="incoming.php">Incoming</a>
 							</li>
 							<li>
-								<a href="#">Adjustment</a>
+								<a href="adjustment-item.php">Adjustment</a>
 							</li>
 						</ul>
 					</li>
@@ -47,10 +47,10 @@
 						<i class="material-icons">inventory</i><span>Product Profile</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu2">
 							<li>
-								<a href="#">Product Entry</a>
+								<a href="product-entry.php">Product Entry</a>
 							</li>
 							<li>
-								<a href="#">Product Search</a>
+								<a href="product-search.php">Product Search</a>
 							</li>
 						</ul>
 					</li>
@@ -60,13 +60,13 @@
 						<i class="material-icons">payment</i><span>Other Transaction</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu3">
 							<li>
-								<a href="#">Enroll Card</a>
+								<a href="enroll-card.php">Enroll Card</a>
 							</li>
 							<li>
-								<a href="#">Document Reprinter</a>
+								<a href="document-reprinter.php">Document Reprinter</a>
 							</li>
 							<li>
-								<a href="#">Discount Setup</a>
+								<a href="discount-setup.php">Discount Setup</a>
 							</li>
 						</ul>
 					</li>
@@ -76,34 +76,34 @@
 						<i class="material-icons">search</i><span>Search</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu4">
 							<li>
-								<a href="#">Inventory</a>
+								<a href="inventory.php">Inventory</a>
 							</li>
 							<li>
-								<a href="#">Sales</a>
+								<a href="sales.php">Sales</a>
 							</li>
 							<li>
-								<a href="#">Discounts</a>
+								<a href="discounts.php">Discounts</a>
 							</li>
 							<li>
-								<a href="#">Adjustemnt / Incoming</a>
+								<a href="adjustment-incoming.php">Adjustemnt / Incoming</a>
 							</li>
 							<li>
-								<a href="#">Product SL</a>
+								<a href="product-SL.php">Product SL</a>
 							</li>
 							<li>
-								<a href="#">Return</a>
+								<a href="return.php">Return</a>
 							</li>
 							<li>
-								<a href="#">E-Journal</a>
+								<a href="e-journal.php">E-Journal</a>
 							</li>
 							<li>
-								<a href="#">Voided Transaction</a>
+								<a href="voided-transaction.php">Voided Transaction</a>
 							</li>
 							<li>
-								<a href="#">Suki Points</a>
+								<a href="suki-points.php">Suki Points</a>
 							</li>
 							<li>
-								<a href="#">System Log</a>
+								<a href="system-log.php">System Log</a>
 							</li>
 						</ul>
 					</li>
@@ -113,22 +113,22 @@
 						<i class="material-icons">settings</i><span>Configuration</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu5">
 							<li>
-								<a href="#">Supplier</a>
+								<a href="supplier.php">Supplier</a>
 							</li>
 							<li>
-								<a href="#">List Maintenance</a>
+								<a href="list-maintenance.php">List Maintenance</a>
 							</li>
 							<li>
-								<a href="#">Branch Setup</a>
+								<a href="branch-setup.php">Branch Setup</a>
 							</li>
 							<li>
-								<a href="#">SI No. & Txn No.</a>
+								<a href="si-no.-txn-no.php">SI No. & Txn No.</a>
 							</li>
 							<li>
-								<a href="#">User Accounts</a>
+								<a href="user-accounts.php">User Accounts</a>
 							</li>
 							<li>
-								<a href="#">Permissions</a>
+								<a href="permissions.php">Permissions</a>
 							</li>
 						</ul>
 					</li>
@@ -138,10 +138,10 @@
 						<i class="material-icons">build</i><span>Utilities</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu7">
 							<li>
-								<a href="#">Close Today's Transaction</a>
+								<a href="close-todays-transaction.php">Close Today's Transaction</a>
 							</li>
 							<li>
-								<a href="#">Data Back-up</a>
+								<a href="data-backup.php">Data Back-up</a>
 							</li>
 						</ul>
 					</li>
@@ -159,7 +159,7 @@
 						<span class="material-icons"></span>
 						</button>
 						
-						<a class="navbar-brand" href="#">Inventory</a>
+						<a class="navbar-brand" href="#">Product Profile</a>
 						<button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
 						data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
 							<span class="material-icons">menu</span>
@@ -242,15 +242,16 @@
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" style="width: 80px; margin-right: 5px; font-size: 10px;">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-save"></i> Edit
-                                    </button>
-                                    <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;">
+                                    <button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#editModalcost">
+										<i class="fas fa-save"></i> Edit
+									</button>
+                                    <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#deleteModalcost">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                     <table class="table table-bordered" style="margin-top: 10px;">
                                         <thead>
                                             <tr>
+												<th>#</th>
                                                 <th>Supplier Name</th>
                                                 <th>Cost</th>
                                                 <th>UOM</th>
@@ -259,6 +260,7 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
+													<td><input type="radio" name="selectItem" value="1"></td>
                                                     <td>Sample</td>
                                                     <td>Sample</td>
                                                     <td>Sample</td>
@@ -270,41 +272,44 @@
                             </div>
 
                             <div class="card">
-                                <div class="card-body">
-                                    <h5>Retail Details</h5>
-                                    <button type="button" class="btn btn-primary" style="width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-plus"></i> Add
-                                    </button>
-                                    <button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-save"></i> Edit
-                                    </button>
-                                    <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                    <table class="table table-bordered" style="margin-top: 10px;">
-                                        <thead>
-                                            <tr>
-                                                <th>Price Type</th>
-                                                <th>Barcode</th>
-                                                <th>Product Name</th>
-                                                <th>UOM</th>
-                                                <th>Quantity</th>
-                                                <th>Selling Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Sample</td>
-                                                <td>Sample</td>
-                                                <td>Sample</td>
-                                                <td>Sample</td>
-                                                <td>Sample</td>
-                                                <td>Sample</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+								<div class="card-body">
+									<h5>Retail Details</h5>
+									<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal" style="width: 80px; margin-right: 5px; font-size: 10px;">
+										<i class="fas fa-plus"></i> Add
+									</button>
+									<button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#editModalprice">
+										<i class="fas fa-save"></i> Edit
+									</button>
+									<button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#deleteModalsrp">
+										<i class="fas fa-trash"></i> Delete
+									</button>
+
+									<table class="table table-bordered" style="margin-top: 10px;">
+										<thead>
+											<tr>
+												<th>#</th>
+												<th>Price Type</th>
+												<th>Barcode</th>
+												<th>Product Name</th>
+												<th>UOM</th>
+												<th>Quantity</th>
+												<th>Selling Price</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td><input type="radio" name="selectItem" value="1"></td>
+												<td>Sample</td>
+												<td>Sample</td>
+												<td>Sample</td>
+												<td>Sample</td>
+												<td>Sample</td>
+												<td>Sample</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
                         </div>
                     </div>
                 </div>
