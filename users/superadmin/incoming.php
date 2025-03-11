@@ -175,6 +175,55 @@
 							<h2 style="margin: 0 20px; margin-top: 15px;">Incoming Inventory</h2>
 						</div>
 					</div>
+					<div class="row">
+                        <!-- Left Side - Product Data Entry Form -->
+                        <div class="col-md-4">
+                            <div class="card">
+								<div class="card-body">
+                                    <h6>Search Parameters</h6>
+                                    <form class="d-flex align-items-center">
+                                        <input type="text" class="form-control me-3" style="width: 100%;" id="searchInput" placeholder="Search here...">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <table class="table table-bordered" style="margin-top: 10px;">
+                                        <thead class="fw-bold fs-6 fst-italic">
+                                            <tr>
+												<th>#</th>
+                                                <th>Inventory No.</th>
+                                                <th>Date Created</th>
+                                                <th>Supplier</th>
+                                                <th>Net Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+													<td><input type="radio" name="selectItem" value="1"></td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+									<button type="button" class="btn btn-primary" onclick="window.location.href='incoming-inv.php';" style="width: 80px; margin-right: 5px; font-size: 10px;">
+										<i class="fas fa-plus"></i> New
+									</button>
+                                    <button type="button" class="btn btn-success" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#editModalcost">
+										<i class="fas fa-save"></i> Open
+									</button>
+                                    <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#deleteModalcost">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 				</div>
                 <!-- Table Here -->
                 <div class="container">
