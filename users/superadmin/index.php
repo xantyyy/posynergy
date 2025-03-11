@@ -35,7 +35,7 @@
 								<a href="incoming.php">Incoming</a>
 							</li>
 							<li>
-								<a href="#">Adjustment</a>
+								<a href="adjustment-item.php">Adjustment</a>
 							</li>
 						</ul>
 					</li>
@@ -58,13 +58,13 @@
 						<i class="material-icons">payment</i><span>Other Transaction</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu3">
 							<li>
-								<a href="#">Enroll Card</a>
+								<a href="enroll-card.php">Enroll Card</a>
 							</li>
 							<li>
-								<a href="#">Document Reprinter</a>
+								<a href="document-reprinter.php">Document Reprinter</a>
 							</li>
 							<li>
-								<a href="#">Discount Setup</a>
+								<a href="discount-setup.php">Discount Setup</a>
 							</li>
 						</ul>
 					</li>
@@ -74,34 +74,34 @@
 						<i class="material-icons">search</i><span>Search</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu4">
 							<li>
-								<a href="#">Inventory</a>
+								<a href="inventory.php">Inventory</a>
 							</li>
 							<li>
-								<a href="#">Sales</a>
+								<a href="sales.php">Sales</a>
 							</li>
 							<li>
-								<a href="#">Discounts</a>
+								<a href="discounts.php">Discounts</a>
 							</li>
 							<li>
-								<a href="#">Adjustemnt / Incoming</a>
+								<a href="adjustment-incoming.php">Adjustemnt / Incoming</a>
 							</li>
 							<li>
-								<a href="#">Product SL</a>
+								<a href="product-SL.php">Product SL</a>
 							</li>
 							<li>
-								<a href="#">Return</a>
+								<a href="return.php">Return</a>
 							</li>
 							<li>
-								<a href="#">E-Journal</a>
+								<a href="e-journal.php">E-Journal</a>
 							</li>
 							<li>
-								<a href="#">Voided Transaction</a>
+								<a href="voided-transaction.php">Voided Transaction</a>
 							</li>
 							<li>
-								<a href="#">Suki Points</a>
+								<a href="suki-points.php">Suki Points</a>
 							</li>
 							<li>
-								<a href="#">System Log</a>
+								<a href="system-log.php">System Log</a>
 							</li>
 						</ul>
 					</li>
@@ -110,23 +110,23 @@
 						<a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 						<i class="material-icons">settings</i><span>Configuration</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu5">
-							<li>
-								<a href="#">Supplier</a>
+						<li>
+								<a href="supplier.php">Supplier</a>
 							</li>
 							<li>
-								<a href="#">List Maintenance</a>
+								<a href="list-maintenance.php">List Maintenance</a>
 							</li>
 							<li>
-								<a href="#">Branch Setup</a>
+								<a href="branch-setup.php">Branch Setup</a>
 							</li>
 							<li>
-								<a href="#">SI No. & Txn No.</a>
+								<a href="si-no.-txn-no.php">SI No. & Txn No.</a>
 							</li>
 							<li>
-								<a href="#">User Accounts</a>
+								<a href="user-accounts.php">User Accounts</a>
 							</li>
 							<li>
-								<a href="#">Permissions</a>
+								<a href="permissions.php">Permissions</a>
 							</li>
 						</ul>
 					</li>

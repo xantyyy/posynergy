@@ -172,7 +172,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Incoming Inventory</h2>
+							<h2 style="margin: 0 20px; margin-top: 15px;">Sales Report</h2>
 						</div>
 					</div>
 				</div>
