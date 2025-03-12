@@ -15,7 +15,6 @@
 							$role = $row['role'];
 						
 					?>
-                    
 
 					<div class="ml-auto" id="userInfo">
 						<p class="text-right"><?php echo $name . " | " . $role; ?></p>
@@ -27,7 +26,7 @@
 						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
 						
 					</li>
-                            
+						
 					<li class="dropdown">
 						<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 						<i class="material-icons">warehouse</i><span>Inventory</span></a>
@@ -176,99 +175,264 @@
 							<h2 style="margin: 0 20px; margin-top: 15px;">Document Reprinter</h2>
 						</div>
 					</div>
+					<div class="row">
+						<!-- Left Side - Fixed Form -->
+						<div class="col-md-5">
+							<div class="card">
+								<div class="card-body">
+									<h6>Date</h6>
+									<form>
+										<div class="d-flex align-items-center mb-3">
+											<div class="form-group me-2" style="flex: 1;">
+												<input type="date" class="form-control" id="startDate">
+											</div>
+											<label class="me-2"> - </label>
+											<div class="form-group me-2" style="flex: 1;">
+												<input type="date" class="form-control" id="endDate">
+											</div>
+											<button type="button" class="btn btn-warning" style="font-size: 12px;" id="enableButton">
+												<i class="#"></i> ✓
+											</button>
+										</div>
+
+										<h6 class="mt-4">Record Search</h6>
+										<div class="d-flex flex-wrap mt-2">
+											<div class="form-check me-4" style="margin-left: 10px;">
+												<input class="form-check-input" type="radio" name="recordSearch" id="receipt" value="receipt" disabled>
+												<label class="form-check-label" for="receipt">Receipt</label>
+											</div>
+											<div class="form-check me-4" style="margin-left: 120px;">
+												<input class="form-check-input" type="radio" name="recordSearch" id="shiftReading" value="shiftReading" disabled>
+												<label class="form-check-label" for="shiftReading">Shift-Reading</label>
+											</div>
+											<div class="form-check me-4 mt-2" style="margin-left: 10px;">
+												<input class="form-check-input" type="radio" name="recordSearch" id="xReading" value="xReading" disabled>
+												<label class="form-check-label" for="xReading">X-Reading</label>
+											</div>
+											<div class="form-check me-4 mt-2" style="margin-left: 99px;">
+												<input class="form-check-input" type="radio" name="recordSearch" id="zReading" value="zReading" disabled>
+												<label class="form-check-label" for="zReading">Z-Reading</label>
+											</div>
+										</div>
+									</form>
+									<hr>
+									<div class="form-group mt-2">
+										<label for="#">Cashier Name:</label>
+										<select class="form-control" id="cashierName" disabled>
+											<option value="option1">Cashier 1</option>
+											<option value="option2">Cashier 2</option>
+										</select>
+									</div>
+									<div class="form-group mt-2">
+										<label for="#">Pay Type:</label>
+										<select class="form-control" id="payType" disabled>
+											<option value="option1">Option 1</option>
+											<option value="option2">Option 2</option>
+										</select>
+									</div>
+									<div class="d-flex mt-3 d-flex justify-content-end">
+										<button type="button" class="btn btn-primary" style="font-size: 12px;" disabled id="searchButton">
+											<i class="fas fa-save"></i> Search
+										</button>
+										<button type="button" class="btn btn-success" style="font-size: 12px; margin-left: 10px;" disabled id="clearButton">
+											<i class="fas fa-times"></i> Clear Search
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-7">
+							<div class="card">
+								<div class="card-body">
+									<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
+										<table class="table table-bordered" id="table-bold">
+											<thead class="fw-bold fs-6 fst-italic">
+												<tr>
+													<th>Date</th>
+													<th>Transaction No.</th>
+													<th>Amount</th>
+												</tr>
+											</thead>
+											<tbody>
+												<!-- Sample rows -->
+												<tr>
+													<td>Sample</td>
+													<td>Sample</td>
+													<td>Sample</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-body">
+								<h5>List</h5>
+								<table class="table table-bordered" style="margin-top: 10px;" id="dynamicTable">
+									<!-- Table headers and rows will be updated dynamically -->
+								</table>
+							</div>
+						</div>
+					</div>
 				</div>
-                <!-- Table Here -->
-                <div class="container">
-                     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <form method="POST" action="">
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Date Range</label>
-                            <div class="col-sm-4">
-                                <input type="date" class="form-control" name="start_date" required>
-                            </div>
-                            <div class="col-sm-4">
-                                <input type="date" class="form-control" name="end_date" required>
-                            </div>
-                            <div class="col-sm-2">
-                                <button type="submit" class="btn btn-primary">Search</button>
-                            </div>
-                        </div>
-                    </form>
 
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Transaction No.</th>
-                                <th>Amount</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                                $start_date = $_POST['start_date'];
-                                $end_date = $_POST['end_date'];
+                <script>
+					const enableButton = document.getElementById("enableButton");
+					const elementsToEnable = [
+						document.getElementById("receipt"),
+						document.getElementById("shiftReading"),
+						document.getElementById("xReading"),
+						document.getElementById("zReading"),
+						document.getElementById("cashierName"),
+						document.getElementById("payType"),
+						document.getElementById("searchButton"),
+						document.getElementById("clearButton"),
+					];
 
-                                $sql = "SELECT * FROM transactions WHERE date BETWEEN '$start_date' AND '$end_date'";
-                                $result = $conn->query($sql);
-                                
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        echo "<tr>";
-                                        echo "<td>" . $row['date'] . "</td>";
-                                        echo "<td>" . $row['transaction_no'] . "</td>";
-                                        echo "<td>₱" . number_format($row['amount'], 2) . "</td>";
-                                        echo "<td><button class='btn btn-info'>Reprint</button></td>";
-                                        echo "</tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='4' class='text-center'>No records found.</td></tr>";
-                                }
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+					enableButton.addEventListener("click", () => {
+						elementsToEnable.forEach((element) => {
+							element.disabled = false;
+						});
+						enableButton.disabled = true;
+					});
 
-<style>
-    .navbar{
-        background-color:#1137a9;
-        color:#fff;
-    }
-</style>
-            </div>
+					function updateTable(type) {
+						const table = document.getElementById("dynamicTable");
+						let tableContent = "";
 
-            <script>
-				const currentUrl = window.location.pathname.split('/').pop();
-				document.querySelectorAll('.list-unstyled a').forEach(link => {
-					if (link.getAttribute('href') === currentUrl) {
-						link.classList.add('active');
+						switch (type) {
+							case "receipt":
+								tableContent = `
+									<thead>
+										<tr>
+											<th>Transaction</th>
+											<th>Barcode</th>
+											<th>Product Name</th>
+											<th>SRP</th>
+											<th>Qty</th>
+											<th>Cost</th>
+											<th>Discount</th>
+											<th>Total Cost</th>
+											<th>Amount</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>TXN001</td>
+											<td>1234567890</td>
+											<td>Product A</td>
+											<td>100.00</td>
+											<td>2</td>
+											<td>90.00</td>
+											<td>5.00</td>
+											<td>180.00</td>
+											<td>200.00</td>
+										</tr>
+									</tbody>`;
+								break;
 
-						if (link.closest('.dashboard')) {
-							link.closest('.dashboard').classList.add('active');
-						} else {
-							document.querySelector('.dashboard')?.classList.remove('active');
+							case "shiftReading":
+								tableContent = `
+									<thead>
+										<tr>
+											<th>POS Type</th>
+											<th>Transaction</th>
+											<th>POS Total Amount</th>
+											<th>Cashier Total Amount</th>
+											<th>Short/Over</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>POS1</td>
+											<td>TXN002</td>
+											<td>3000.00</td>
+											<td>2950.00</td>
+											<td>-50.00</td>
+										</tr>
+									</tbody>`;
+								break;
+
+							case "xReading":
+								tableContent = `
+									<thead>
+										<tr>
+											<th>Category</th>
+											<th>Category Sales Count</th>
+											<th>Total Amount</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Category A</td>
+											<td>15</td>
+											<td>1500.00</td>
+										</tr>
+									</tbody>`;
+								break;
+
+							case "zReading":
+								tableContent = `
+									<thead>
+										<tr>
+											<th>Category</th>
+											<th>Category Sales Count</th>
+											<th>Total Amount</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Category B</td>
+											<td>20</td>
+											<td>2000.00</td>
+										</tr>
+									</tbody>`;
+								break;
+
+							default:
+								tableContent = `<tbody><tr><td colspan="9" class="text-center">No data available</td></tr></tbody>`;
+								break;
 						}
 
-						const parentMenu = link.closest('.collapse');
-						if (parentMenu) {
-							parentMenu.classList.add('show');
+						table.innerHTML = tableContent;
+					}
 
-							const dropdownToggle = parentMenu.previousElementSibling;
-							if (dropdownToggle) {
-								dropdownToggle.setAttribute('aria-expanded', 'true');
+					document.querySelectorAll('input[name="recordSearch"]').forEach((radio) => {
+						radio.addEventListener("change", (event) => {
+							updateTable(event.target.value);
+						});
+					});
+
+					// Initial state: clear the table
+					updateTable("");
+
+					const currentUrl = window.location.pathname.split("/").pop();
+					document.querySelectorAll(".list-unstyled a").forEach((link) => {
+						if (link.getAttribute("href") === currentUrl) {
+							link.classList.add("active");
+
+							if (link.closest(".dashboard")) {
+								link.closest(".dashboard").classList.add("active");
+							} else {
+								document.querySelector(".dashboard")?.classList.remove("active");
+							}
+
+							const parentMenu = link.closest(".collapse");
+							if (parentMenu) {
+								parentMenu.classList.add("show");
+
+								const dropdownToggle = parentMenu.previousElementSibling;
+								if (dropdownToggle) {
+									dropdownToggle.setAttribute("aria-expanded", "true");
+								}
 							}
 						}
-					}
-				});
+					});
 			</script>
 
 				<style>
@@ -313,6 +477,16 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#dynamicTable thead th {
+						font-style: italic;
+						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>

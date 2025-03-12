@@ -175,10 +175,91 @@
 							<h2 style="margin: 0 20px; margin-top: 15px;">Discount Setup</h2>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5>Setup</h5>
+                                    <form>
+										<div class="d-flex align-items-center mt-2">
+											<label for="categoryDropdown" class="me-2">Category:</label>
+											<select class="form-control" id="categoryDropdown">
+												<option value="option1">Option 1</option>
+												<option value="option2">Option 2</option>
+											</select>
+										</div>
+                                    </form>
+									<hr>
+									<div class="row">
+										<div class="col-md-6">
+											<h5>Discount Category</h5>
+											<div class="card">
+												<div class="card-body">
+													<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
+														<table class="table table-bordered" id="table-bold">
+															<thead class="fw-bold fs-6 fst-italic">
+																<tr>
+																	<th>Category</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr>
+																	<td>Sample</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4" style="font-size: 16px;">
+											<h5>Discount Type</h5>
+											<div class="form-check me-4" style="margin-top: 10px;">
+												<input class="form-check-input" type="radio" name="discountType" id="overallDiscount" value="overall">
+												<label class="form-check-label" for="overallDiscount">Overall</label>
+											</div>
+											<div class="form-check me-4" style="margin-top: 10px;">
+												<input class="form-check-input" type="radio" name="discountType" id="seniorDiscount" value="senior">
+												<label class="form-check-label" for="seniorDiscount">Senior</label>
+											</div>
+											<div class="form-check me-4" style="margin-top: 10px;">
+												<input class="form-check-input" type="radio" name="discountType" id="pwdDiscount" value="pwd">
+												<label class="form-check-label" for="pwdDiscount">PWD</label>
+											</div>
+											<div class="form-check me-4" style="margin-top: 10px;">
+												<input class="form-check-input" type="radio" name="discountType" id="naacDiscount" value="naac">
+												<label class="form-check-label" for="naacDiscount">NAAC</label>
+											</div>
+											<div class="form-check me-4" style="margin-top: 10px;">
+												<input class="form-check-input" type="radio" name="discountType" id="soloDiscount" value="solo">
+												<label class="form-check-label" for="soloDiscount">Solo Parent</label>
+											</div>
+											<div class="form-check me-4" style="margin-top: 10px;">
+												<input class="form-check-input" type="radio" name="discountType" id="valorDiscount" value="valor">
+												<label class="form-check-label" for="valorDiscount">Medal of Valor</label>
+											</div>
+											
+											<div class="d-flex flex-column mt-3">
+												<button type="button" class="btn btn-primary mb-2" style="font-size: 15px;" id="addButton">
+													<i class="fas fa-plus"></i> Add
+												</button>
+												<button type="button" class="btn btn-warning mb-2" style="font-size: 15px;" id="editButton">
+													<i class="fas fa-save"></i> Edit
+												</button>
+												<button type="button" class="btn btn-danger mb-2" style="font-size: 15px;" id="deleteButton">
+													<i class="fas fa-trash"></i> Delete
+												</button>
+												<button type="button" class="btn btn-success" style="font-size: 15px;" id="cancelButton">
+													<i class="fas fa-times"></i> Cancel
+												</button>
+											</div>
+										</div>
+									</div>
+                                </div>
+                            </div>
+                        </div>
+					</div>
 				</div>
-                <!-- Table Here -->
-                <div class="container">
-                    
             </div>
 
             <script>
@@ -248,6 +329,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>

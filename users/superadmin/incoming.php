@@ -191,7 +191,7 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <table class="table table-bordered" style="margin-top: 10px;">
+                                    <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
                                         <thead class="fw-bold fs-6 fst-italic">
                                             <tr>
 												<th>#</th>
@@ -297,6 +297,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 				

@@ -248,7 +248,7 @@
                                     <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#deleteModalcost">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
-                                    <table class="table table-bordered" style="margin-top: 10px;">
+                                    <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
                                         <thead>
                                             <tr>
 												<th>#</th>
@@ -284,7 +284,7 @@
 										<i class="fas fa-trash"></i> Delete
 									</button>
 
-									<table class="table table-bordered" style="margin-top: 10px;">
+									<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
 										<thead>
 											<tr>
 												<th>#</th>
@@ -383,6 +383,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>

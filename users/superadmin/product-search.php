@@ -221,7 +221,7 @@
                                     <div class="card-body">
                                         <h5>Product List</h5>
                                         <form>
-                                        <table class="table table-bordered" style="margin-top: 10px;">
+                                        <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
@@ -252,7 +252,7 @@
                                     <div class="card-body">
                                         <h5>Details</h5>
                                         <h6>Category:</h6>
-                                        <table class="table table-bordered" style="margin-top: 10px;">
+                                        <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
                                             <thead>
                                                 <tr>
                                                     <th>Default</th>
@@ -274,7 +274,7 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h5>Selling Price</h5>
-                                        <table class="table table-bordered" style="margin-top: 10px;">
+                                        <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
                                             <thead>
                                                 <tr>
                                                     <th>UOM</th>
@@ -374,6 +374,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 
