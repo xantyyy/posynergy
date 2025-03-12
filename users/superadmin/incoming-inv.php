@@ -234,7 +234,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <div class="card">
+                            <div class="card h-100">
                                 <div class="card-body">
                                     <form>
                                         <div class="form-row">

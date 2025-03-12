@@ -175,11 +175,104 @@
 							<h2 style="margin: 0 20px; margin-top: 15px;">Advantage Card Enrollment Form</h2>
 						</div>
 					</div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                    
-            </div>
+					<div class="row mb-3">
+                        <!-- Left Side - Product Data Entry Form -->
+                        <div class="col-md-12">
+							<div class="card">
+                                <div class="card-body">
+                                    <h6>Personal Information</h6>
+                                    <form>
+										<div class="d-flex align-items-center">
+											<div class="form-group col-md-3 me-4">
+												<label for="#">Last Name:</label>
+												<input type="text" class="form-control" id="#">
+											</div>
+											<div class="form-group col-md-3 me-4">
+												<label for="#">First Name:</label>
+												<input type="text" class="form-control" id="#">
+											</div>
+											<div class="form-group col-md-3 me-4">
+												<label for="#">Middle Name:</label>
+												<input type="text" class="form-control" id="#">
+											</div>
+											<div class="form-group col-md-1 me-4">
+												<label for="#" style="width: 150px;">Extention Name:</label>
+												<select class="form-control" id="#">
+													<option value="option1" selected hidden ></option>
+													<option value="option2">Option 1</option>
+													<option value="option3">Option 2</option>
+												</select>
+                                        	</div>
+										</div>
+										<div class="d-flex align-items-center mt-4">
+											<div class="form-group col-md-3 me-4">
+												<label for="#">Lot/House/Building/#:</label>
+												<input type="text" class="form-control" id="#">
+											</div>
+											<div class="form-group col-md-4 me-4">
+												<label for="#">Street/Purok:</label>
+												<input type="text" class="form-control" id="#">
+											</div>
+											<div class="form-group col-md-4 me-4">
+												<label for="#">Barangay:</label>
+												<input type="text" class="form-control" id="#">
+											</div>
+										</div>
+										<div class="d-flex align-items-center mt-4">
+											<div class="form-group col-md-3 me-4">
+												<label for="#">Town/City:</label>
+												<input type="text" class="form-control" id="#">
+											</div>
+											<div class="form-group col-md-4 me-4">
+												<label for="#">Province:</label>
+												<input type="text" class="form-control" id="#">
+											</div>
+											<div class="form-group col-md-4 me-4">
+												<label for="#">Civil Status:</label>
+												<select class="form-control" id="#">
+													<option value="option1" selected hidden ></option>
+													<option value="option2">Option 1</option>
+													<option value="option3">Option 2</option>
+												</select>
+                                        	</div>
+										</div>
+										<div class="d-flex align-items-center mt-4">
+											<div class="form-group col-md-3 me-4">
+                                                <label for="#">Birthday:</label>
+                                                <input type="date" class="form-control" id="#">
+                                            </div>
+											<label for="#" class="mr-3 me-3 mt-4">Gender:</label>
+											<div class="form-check me-3 mt-4">
+                                                <input class="form-check-input" type="radio" name="#" id="#" value="#" checked>
+                                                <label class="form-check-label" for="#">
+                                                    Male
+                                                </label>
+                                            </div>
+											<div class="form-check me-4 mt-4">
+                                                <input class="form-check-input" type="radio" name="#" id="#" value="#" checked>
+                                                <label class="form-check-label" for="#">
+                                                    Female
+                                                </label>
+                                            </div>
+											<div class="form-group col-md-4 me-2">
+												<label for="#">Card Details:</label>
+												<input type="text" class="form-control" id="#" placeholder="Card #">
+											</div>
+											<button type="button" class="btn btn-primary mt-4" style="width: auto; margin-right: 5px; font-size: 12px;" onclick="window.location.href='product-entry.php';">
+												<i class="fas fa-plus"></i> New
+												</button>
+												<button type="button" class="btn btn-warning mt-4" style="width: auto; margin-right: 5px; font-size: 12px;">
+													<i class="fas fa-save"></i> Save
+												</button>
+												<button type="button" class="btn btn-danger mt-4" style="width: auto; margin-right: 5px; font-size: 12px;">
+													<i class="fas fa-trash"></i> Cancel
+												</button>
+										</div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+					</div>
 
             <script>
 				const currentUrl = window.location.pathname.split('/').pop();
@@ -218,7 +311,7 @@
 					.sidebar {
 						width: 250px;
 						background-color: #f8f9fa;
-						padding: 10px;
+						padding: 5px;
 						height: 100vh;
 						position: fixed;
 					}
@@ -235,7 +328,7 @@
 
 					.collapse.show {
 						background-color: #e9ecef;
-						padding: 5px 10px;
+						padding: 5px 5px;
 						border-left: 4px solid #007bff;
 					}
 
