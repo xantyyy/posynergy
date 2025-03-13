@@ -1,4 +1,6 @@
 <?php include_once 'header.php'; ?>
+<?php include_once 'modals.php'; ?>
+
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -170,95 +172,209 @@
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Sales Report</h2>
-						</div>
-					</div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                <div class="container-fluid mt-3">
-        <div class="row">
-            <!-- Search Section -->
-            <div class="col-md-3">
-                <div class="card p-3">
-                    <h5>Search</h5>
-                    <form method="GET" action="sales-report.php">
-                        <label>Transaction Date</label>
-                        <input type="date" name="from_date" class="form-control mb-2">
-                        <input type="date" name="to_date" class="form-control mb-3">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 style="margin: 0 20px; margin-top: 15px;">Sales</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Left Side - Product Data Entry Form -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+									<form>
+										<button type="button" class="btn btn-info me-2" style="font-size: 13px;" id="quickSearchBtn">
+											<i class="fas fa-search"></i> Quick Search
+										</button>
+										<button type="button" class="btn btn-info me-2" style="font-size: 13px;" id="valueSearchBtn">
+											<i class="fas fa-search"></i> Value Search
+										</button>
+										<button type="button" class="btn btn-info" style="width: 105px; font-size: 13px;">
+											<i class="fas fa-search"></i> Search
+										</button>
+										
+										<div class="form-row mt-3">
+											<h5>Transaction Date:</h5>
+											<div class="form-group col-md-12">
+												<label for="#">From</label>
+												<input type="date" class="form-control" id="fromDate" disabled>
+											</div>
+											<div class="form-group col-md-12 mt-3">
+												<label for="#">To:</label>
+												<input type="date" class="form-control" id="toDate" disabled>
+											</div>
+										</div>
+										<hr>
+										<div class="form-row mt-3">
+											<h5>Value Search</h5>
+											<div class="d-flex mt-3">
+												<div class="form-group col-md-7 me-4">
+													<label for="fieldDropdown">Field:</label>
+													<select class="form-select" id="fieldDropdown" disabled>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+												<div class="form-group col-md-4">
+													<label for="operatorDropdown">Operator:</label>
+													<select class="form-select" id="operatorDropdown" disabled>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+											</div>
+											<div class="d-flex mt-3">
+												<div class="form-group col-md-7 me-4">
+													<label for="valueDropdown">Value:</label>
+													<select class="form-select" id="valueDropdown" disabled>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+												<div class="form-group col-md-4">
+													<label for="andorDropdown">And/Or:</label>
+													<select class="form-select" id="andorDropdown" disabled>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+											</div>
+											<div class="d-flex mt-3">
+												<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+													<thead class="card-header bg-dark opacity-60 text-white">
+														<tr>
+															<th>
+																Current Filter
+																<button type="button" id="addButton" class="btn btn-success me-2" style="font-size: 10px; margin-left: 155px;" disabled>
+																	<i class="fas fa-plus"></i>
+																</button>
+																<button type="button" id="cancelButton" class="btn btn-danger me-2" style="font-size: 10px;" disabled>
+																	<i class="fas fa-times"></i>
+																</button>
+															</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>Sample</td>
+														</tr>
+														<tr>
+															<td>Sample</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<p style="text-transform: none; font-size: 14px;" class="mt-4">
+											Double click on filter to edit search values. 
+											<a href="#" style="color: blue; text-decoration: underline; cursor: pointer;">Reset Filter</a>
+										</p>
+									</form>
+                                </div>
+                            </div>
+                        </div>
 
-                        <label>Value Search</label>
-                        <select name="field" class="form-control mb-2">
-                            <option value="barcode">Barcode</option>
-                            <option value="product_name">Product Name</option>
-                        </select>
-                        <input type="text" name="value" class="form-control mb-3" placeholder="Enter value">
+                        <!-- Right Side - Additional Table -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-body">
+									<div style="overflow-x: auto; white-space: nowrap;">
+										<h5>Sales Summary</h5>
+										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+											<thead class="card-header bg-dark opacity-60 text-white">
+												<tr>
+													<th>No. of Transac.</th>
+													<th>No. of Items</th>
+													<th>Gross of Sales</th>
+													<th>Discount</th>
+													<th>Net of Sales</th>
+												</tr>
+											</thead>
+											<tbody>
+													<tr>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+													</tr>
+											</tbody>
+										</table>
+									</div>
+                                </div>
+                            </div>
+								<button type="button" class="btn btn-light me-2" style="font-size: 13px; margin-left: 51%;">
+									<i class="fas fa-print"></i> BIR Sales
+								</button>
+								<button type="button" class="btn btn-light me-2" style="font-size: 13px;">
+									<i class="fas fa-print"></i> Vatable
+								</button>
+								<button type="button" class="btn btn-light me-2" style="width: 105px; font-size: 13px;">
+									<i class="fas fa-print"></i> Non-Vat
+								</button>
+								<button type="button" class="btn btn-light me-2" style="font-size: 13px;">
+									<i class="fas fa-print"></i> Print
+								</button>
 
-                        <button type="submit" class="btn btn-primary btn-block">Search</button>
-                    </form>
-                </div>
+                            <div class="card">
+								<div class="card-body">
+									<div style="overflow-x: auto; white-space: nowrap;">
+										<h5>List</h5>
+										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+											<thead class="card-header bg-dark opacity-60 text-white">
+												<tr>
+													<th>Barcode</th>
+													<th>Product Name</th>
+													<th>Quantity</th>
+													<th>SRP</th>
+													<th>Total</th>
+												</tr>
+											</thead>
+											<tbody>
+													<tr>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+													</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+                        </div>
+                    </div>
+                </div>    
             </div>
             
-            <!-- Sales Summary & Table Section -->
-            <div class="col-md-9">
-                <div class="card p-3">
-                    <h5>Sales Summary</h5>
-                    <table class="table table-bordered">
-                        <tr>
-                            <td>No. of Transactions:</td>
-                            <td>0</td>
-                            <td>Gross Sales:</td>
-                            <td>₱0.00</td>
-                        </tr>
-                        <tr>
-                            <td>No. of Items:</td>
-                            <td>0</td>
-                            <td>Discount:</td>
-                            <td>₱0.00</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"></td>
-                            <td>Net of Sales:</td>
-                            <td>₱0.00</td>
-                        </tr>
-                    </table>
-                </div>
-                
-                <!-- Sales Table -->
-                <div class="card p-3 mt-3">
-                    <h5>List</h5>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Barcode</th>
-                                <th>Product Name</th>
-                                <th>Quantity</th>
-                                <th>SRP</th>
-                                <th>Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Sales Data Here -->
-                        </tbody>
-                    </table>
-                </div>
+            <script>
+					document.getElementById('quickSearchBtn').addEventListener('click', function () {
+					document.getElementById('fromDate').disabled = false;
+					document.getElementById('toDate').disabled = false;
 
-                <!-- Print Options -->
-                <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-info mx-1">BIR Sales</button>
-                    <button class="btn btn-success mx-1">Vatable</button>
-                    <button class="btn btn-warning mx-1">Non-Vat</button>
-                    <button class="btn btn-primary mx-1">Print</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-            </div>
+					document.getElementById('fieldDropdown').disabled = true;
+					document.getElementById('operatorDropdown').disabled = true;
+					document.getElementById('valueDropdown').disabled = true;
+					document.getElementById('andorDropdown').disabled = true;
 
-			<script>
+					document.getElementById('addButton').disabled = true;
+					document.getElementById('cancelButton').disabled = true;
+				});
+
+				document.getElementById('valueSearchBtn').addEventListener('click', function () {
+					document.getElementById('fieldDropdown').disabled = false;
+					document.getElementById('operatorDropdown').disabled = false;
+					document.getElementById('valueDropdown').disabled = false;
+					document.getElementById('andorDropdown').disabled = false;
+
+					document.getElementById('addButton').disabled = false;
+					document.getElementById('cancelButton').disabled = false;
+
+					document.getElementById('fromDate').disabled = true;
+					document.getElementById('toDate').disabled = true;
+				});
+
 				const currentUrl = window.location.pathname.split('/').pop();
 				document.querySelectorAll('.list-unstyled a').forEach(link => {
 					if (link.getAttribute('href') === currentUrl) {
@@ -283,7 +399,7 @@
 				});
 			</script>
 
-            	<style>
+				<style>
 					.navbar{
 					background-color: #1137a9;
 					color: #fff;
@@ -325,6 +441,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>

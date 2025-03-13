@@ -1,4 +1,6 @@
 <?php include_once 'header.php'; ?>
+<?php include_once 'modals.php'; ?>
+
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -170,73 +172,231 @@
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Inventory</h2>
-						</div>
-					</div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                <div class="container-fluid mt-3">
-        <div class="row">
-            <!-- Search Section -->
-            <div class="col-md-3">
-                <div class="card p-3">
-                    <h5>Search</h5>
-                    <form method="GET" action="inventory.php">
-                        <label>Type:</label>
-                        <select name="type" class="form-control mb-2">
-                            <option value="">Select Type</option>
-                            <option value="consignment">Include Consignment</option>
-                        </select>
-                        <label>Date:</label>
-                        <input type="date" name="from_date" class="form-control mb-2">
-                        <input type="date" name="to_date" class="form-control mb-3">
-                        <label>Value Search</label>
-                        <select name="field" class="form-control mb-2">
-                            <option value="barcode">Barcode</option>
-                            <option value="product_name">Product Name</option>
-                        </select>
-                        <input type="text" name="value" class="form-control mb-3" placeholder="Enter value">
-                        <button type="submit" class="btn btn-primary btn-block">Search</button>
-                    </form>
-                </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 style="margin: 0 20px; margin-top: 15px;">Inventory</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Left Side - Product Data Entry Form -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+									<form>
+										<button type="button" class="btn btn-info me-2" style="font-size: 13px;" id="quickSearchBtn">
+											<i class="fas fa-search"></i> Quick Search
+										</button>
+										<button type="button" class="btn btn-info me-2" style="font-size: 13px;" id="valueSearchBtn">
+											<i class="fas fa-search"></i> Value Search
+										</button>
+										<button type="button" class="btn btn-info" style="width: 105px; font-size: 13px;">
+											<i class="fas fa-search"></i> Search
+										</button>
+										
+										<div class="form-row mt-3">
+											<h5>Quick Search</h5>
+											<div class="form-group d-flex align-items-center mt-3">
+												<label for="typeDropdown" class="me-2">Type:</label>
+												<select class="form-select" id="typeDropdown" style="width: 320px;" disabled>
+													<option value="option1">Option 1</option>
+													<option value="option2">Option 2</option>
+												</select>
+											</div>
+											<div class="form-group d-flex align-items-center mt-3">
+												<label for="purposeDropdown" class="me-2">Purpose:</label>
+												<select class="form-select" id="purposeDropdown" style="width: 300px;" disabled>
+													<option value="option1">Option 1</option>
+													<option value="option2">Option 2</option>
+												</select>
+											</div>
+											<div class="form-check me-4 mt-3" style="margin-left: 10px;">
+												<input class="form-check-input" type="radio" name="recordSearch" id="receipt" value="receipt" disabled>
+												<label class="form-check-label" for="receipt">Include Consignment</label>
+											</div>
+										</div>
+										<hr>
+										<div class="form-row mt-3">
+											<h5>Date:</h5>
+											<div class="form-group col-md-12">
+												<label for="#">From</label>
+												<input type="date" class="form-control" id="fromDate" disabled>
+											</div>
+											<div class="form-group col-md-12 mt-3">
+												<label for="#">To:</label>
+												<input type="date" class="form-control" id="toDate" disabled>
+											</div>
+										</div>
+										<hr>
+										<div class="form-row mt-3">
+											<h5>Value Search</h5>
+											<div class="d-flex mt-3">
+												<div class="form-group col-md-7 me-4">
+													<label for="fieldDropdown">Field:</label>
+													<select class="form-select" id="fieldDropdown" disabled>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+												<div class="form-group col-md-4">
+													<label for="operatorDropdown">Operator:</label>
+													<select class="form-select" id="operatorDropdown" disabled>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+											</div>
+											<div class="d-flex mt-3">
+												<div class="form-group col-md-7 me-4">
+													<label for="valueDropdown">Value:</label>
+													<select class="form-select" id="valueDropdown" disabled>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+												<div class="form-group col-md-4">
+													<label for="andorDropdown">And/Or:</label>
+													<select class="form-select" id="andorDropdown" disabled>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+											</div>
+											<div class="d-flex mt-3">
+												<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+													<thead class="card-header bg-dark opacity-60 text-white">
+														<tr>
+															<th>
+																Current Filter
+																<button type="button" id="addButton" class="btn btn-success me-2" style="font-size: 10px; margin-left: 155px;" disabled>
+																	<i class="fas fa-plus"></i>
+																</button>
+																<button type="button" id="cancelButton" class="btn btn-danger me-2" style="font-size: 10px;" disabled>
+																	<i class="fas fa-times"></i>
+																</button>
+															</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															<td>Sample</td>
+														</tr>
+														<tr>
+															<td>Sample</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<p style="text-transform: none; font-size: 14px;" class="mt-4">
+											Double click on filter to edit search values. 
+											<a href="#" style="color: blue; text-decoration: underline; cursor: pointer;">Reset Filter</a>
+										</p>
+									</form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Side - Additional Table -->
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-body">
+									<div style="overflow-x: auto; white-space: nowrap;">
+										<h5>Inventory Summary</h5>
+										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+											<thead class="card-header bg-dark opacity-60 text-white">
+												<tr>
+													<th>Quantity</th>
+													<th>Cost Price</th>
+													<th>Selling Price</th>
+													<th>Total Cost Price</th>
+													<th>Total Selling Price</th>
+												</tr>
+											</thead>
+											<tbody>
+													<tr>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+													</tr>
+											</tbody>
+										</table>
+									</div>
+                                </div>
+                            </div>
+							<button type="button" class="btn btn-success" style="width: 100px; margin-left: 88%; font-size: 13px;">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+
+                            <div class="card">
+								<div class="card-body">
+									<div style="overflow-x: auto; white-space: nowrap;">
+										<h5>List</h5>
+										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+											<thead class="card-header bg-dark opacity-60 text-white">
+												<tr>
+													<th>Barcode</th>
+													<th>Product Name</th>
+													<th>Quantity</th>
+													<th>Cost Price</th>
+													<th>Selling Price</th>
+													<th>Total Cost Price</th>
+													<th>Total Selling Price</th>
+												</tr>
+											</thead>
+											<tbody>
+													<tr>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+													</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+                        </div>
+                    </div>
+                </div>    
             </div>
             
-            <!-- Inventory Table Section -->
-            <div class="col-md-9">
-                <div class="card p-3">
-                    <h5>List</h5>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Barcode</th>
-                                <th>Product Name</th>
-                                <th>Quantity</th>
-                                <th>Cost Price</th>
-                                <th>Selling Price</th>
-                                <th>Total Cost Price</th>
-                                <th>Total Selling Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Inventory Data Here -->
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Print Button -->
-                <div class="d-flex justify-content-end mt-3">
-                    <button class="btn btn-primary">Print</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-            </div>
+            <script>
+				document.getElementById('quickSearchBtn').addEventListener('click', function () {
+				document.getElementById('typeDropdown').disabled = false;
+				document.getElementById('purposeDropdown').disabled = false;
+				document.getElementById('receipt').disabled = false;
+				document.getElementById('fromDate').disabled = false;
+				document.getElementById('toDate').disabled = false;
 
-			<script>
+				document.getElementById('fieldDropdown').disabled = true;
+				document.getElementById('operatorDropdown').disabled = true;
+				document.getElementById('valueDropdown').disabled = true;
+				document.getElementById('andorDropdown').disabled = true;
+
+				document.getElementById('addButton').disabled = true;
+				document.getElementById('cancelButton').disabled = true;
+			});
+
+			document.getElementById('valueSearchBtn').addEventListener('click', function () {
+				document.getElementById('fieldDropdown').disabled = false;
+				document.getElementById('operatorDropdown').disabled = false;
+				document.getElementById('valueDropdown').disabled = false;
+				document.getElementById('andorDropdown').disabled = false;
+
+				document.getElementById('addButton').disabled = false;
+				document.getElementById('cancelButton').disabled = false;
+
+				document.getElementById('typeDropdown').disabled = true;
+				document.getElementById('purposeDropdown').disabled = true;
+				document.getElementById('receipt').disabled = true;
+				document.getElementById('fromDate').disabled = true;
+				document.getElementById('toDate').disabled = true;
+			});
 				const currentUrl = window.location.pathname.split('/').pop();
 				document.querySelectorAll('.list-unstyled a').forEach(link => {
 					if (link.getAttribute('href') === currentUrl) {
@@ -261,7 +421,7 @@
 				});
 			</script>
 
-            	<style>
+				<style>
 					.navbar{
 					background-color: #1137a9;
 					color: #fff;
@@ -303,6 +463,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>
