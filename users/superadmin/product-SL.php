@@ -305,8 +305,33 @@
 								</div>
 							</div>
 						</div>
-
 						<div class="col-md-7">
+						<h5><b>Summary</b></h5>
+						<div class="card">
+							<div class="card-body">
+								<h5>Product Summary</h5>
+								<div class="record-summary">
+									<table class="table table-sm">
+										<tbody>
+											<tr>
+												<td>Barcode</td>
+											</tr>
+											<tr>
+												<td>Product Name</td>
+											</tr>
+											<tr>
+												<td>Category</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<button type="button" class="btn btn-success" style="width: 100px; margin-left: 88%; font-size: 13px;">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+							
+						<div class="col-md-15">
 						<h5>Details</h5>
 							<div class="card">
 								<div class="card-body">
@@ -342,9 +367,6 @@
 							</div>
 						</div>
 					</div>
-							<button type="button" class="btn btn-success" style="width: 100px; margin-left: 88%; font-size: 13px;">
-                                <i class="fas fa-print"></i> Print
-                            </button>
 					<div class="col-md-12">
 						<div class="card">
 							
