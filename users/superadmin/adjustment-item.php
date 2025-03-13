@@ -192,7 +192,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic">
+                                        <thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
                                             <tr>
 												<th>#</th>
                                                 <th>Adj. Number</th>
@@ -211,13 +211,13 @@
                                                 </tr>
                                         </tbody>
                                     </table>
-									<button type="button" class="btn btn-primary" onclick="location.href='adjust-item.php';" data-bs-toggle="modal" data-bs-target="#" style="width: 80px; margin-right: 5px; font-size: 10px;">
+									<button type="button" class="btn btn-primary" onclick="location.href='adjust-item.php';" data-bs-toggle="modal" data-bs-target="#" style="width: auto; margin-right: 5px; font-size: 13px;">
                                         <i class="fas fa-plus"></i> New
                                     </button>
-                                    <button type="button" class="btn btn-success" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#editModalcost">
+                                    <button type="button" class="btn btn-success" style="width: auto; margin-right: 5px; font-size: 13px;" data-bs-toggle="modal" data-bs-target="#editModalcost">
 										<i class="fas fa-save"></i> Open
 									</button>
-                                    <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#deleteModalcost">
+                                    <button type="button" class="btn btn-danger" style="width: auto; margin-right: 5px; font-size: 13px;" data-bs-toggle="modal" data-bs-target="#deleteModalcost">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                 </div>

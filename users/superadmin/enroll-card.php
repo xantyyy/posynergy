@@ -258,7 +258,7 @@
 												<label for="#">Card Details:</label>
 												<input type="text" class="form-control" id="#" placeholder="Card #">
 											</div>
-											<button type="button" class="btn btn-primary mt-4" style="width: auto; margin-right: 5px; font-size: 12px;" onclick="window.location.href='product-entry.php';">
+											<button type="button" class="btn btn-primary mt-4" style="width: auto; margin-right: 5px; font-size: 12px;">
 												<i class="fas fa-plus"></i> New
 												</button>
 												<button type="button" class="btn btn-warning mt-4" style="width: auto; margin-right: 5px; font-size: 12px;">

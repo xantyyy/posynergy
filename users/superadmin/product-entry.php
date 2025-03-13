@@ -249,7 +249,7 @@
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                     <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead>
+                                        <thead class="card-header bg-dark opacity-60 text-white">
                                             <tr>
 												<th>#</th>
                                                 <th>Supplier Name</th>
@@ -285,7 +285,7 @@
 									</button>
 
 									<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-										<thead>
+										<thead class="card-header bg-dark opacity-60 text-white">
 											<tr>
 												<th>#</th>
 												<th>Price Type</th>

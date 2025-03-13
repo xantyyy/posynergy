@@ -262,7 +262,7 @@
                                         <input type="text" class="form-control" id="#">
                                     </div>
                                     <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic">
+                                        <thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
                                             <tr>
                                                 <th>Batch</th>
                                                 <th>Description</th>
@@ -312,7 +312,7 @@
                             <div class="card mt-5">
                                 <div class="card-body">
                                     <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic">
+                                        <thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
                                             <tr>
                                                 <th>Barcode</th>
                                                 <th>Description</th>

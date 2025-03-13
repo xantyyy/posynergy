@@ -247,7 +247,7 @@
 								<div class="card-body">
 									<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
 										<table class="table table-bordered" id="table-bold">
-											<thead class="fw-bold fs-6 fst-italic">
+											<thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
 												<tr>
 													<th>Date</th>
 													<th>Transaction No.</th>
@@ -308,7 +308,7 @@
 						switch (type) {
 							case "receipt":
 								tableContent = `
-									<thead>
+									<thead class="card-header bg-dark opacity-60 text-white">
 										<tr>
 											<th>Transaction</th>
 											<th>Barcode</th>
@@ -338,7 +338,7 @@
 
 							case "shiftReading":
 								tableContent = `
-									<thead>
+									<thead class="card-header bg-dark opacity-60 text-white">
 										<tr>
 											<th>POS Type</th>
 											<th>Transaction</th>
@@ -360,7 +360,7 @@
 
 							case "xReading":
 								tableContent = `
-									<thead>
+									<thead class="card-header bg-dark opacity-60 text-white">
 										<tr>
 											<th>Category</th>
 											<th>Category Sales Count</th>
@@ -378,7 +378,7 @@
 
 							case "zReading":
 								tableContent = `
-									<thead>
+									<thead class="card-header bg-dark opacity-60 text-white">
 										<tr>
 											<th>Category</th>
 											<th>Category Sales Count</th>

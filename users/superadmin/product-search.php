@@ -222,7 +222,7 @@
                                         <h5>Product List</h5>
                                         <form>
                                         <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                            <thead>
+                                            <thead class="card-header bg-dark opacity-60 text-white">
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Barcode</th>
@@ -253,7 +253,7 @@
                                         <h5>Details</h5>
                                         <h6>Category:</h6>
                                         <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                            <thead>
+                                            <thead class="card-header bg-dark opacity-60 text-white">
                                                 <tr>
                                                     <th>Default</th>
                                                     <th>Supplier Name</th>
@@ -275,7 +275,7 @@
                                     <div class="card-body">
                                         <h5>Selling Price</h5>
                                         <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                            <thead>
+                                            <thead class="card-header bg-dark opacity-60 text-white">
                                                 <tr>
                                                     <th>UOM</th>
                                                     <th>Price Type</th>

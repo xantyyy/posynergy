@@ -276,7 +276,7 @@
                                     <!-- Scrollable Table Wrapper -->
                                     <div style="overflow-x: auto; white-space: nowrap;">
                                         <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                            <thead class="fw-bold fs-6 fst-italic">
+                                            <thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Barcode</th>
@@ -328,7 +328,7 @@
                                 <div class="card-body">
                                     <h6>Product Discounts</h6>
                                     <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic">
+                                        <thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
                                             <tr>
 												<th>#</th>
                                                 <th>Description</th>
@@ -374,7 +374,7 @@
                                 <div class="card-body">
                                     <h6>Expiration Details</h6>
                                     <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic">
+                                        <thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
                                             <tr>
 												<th>#</th>
                                                 <th>Description</th>
