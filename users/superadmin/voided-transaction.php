@@ -170,54 +170,65 @@
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Voided Transactions</h2>
-						</div>
-					</div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                <div class="container mt-4">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                <h5>Voided Transactions</h5>
-            </div>
-            <div class="card-body">
-                <form class="form-inline mb-3">
-                    <label class="mr-2">Transaction Date:</label>
-                    <input type="date" class="form-control mr-2" id="fromDate">
-                    <label class="mr-2">to</label>
-                    <input type="date" class="form-control mr-2" id="toDate">
-                    <button type="button" class="btn btn-primary">Search</button>
-                </form>
-                
-                <table class="table table-bordered text-center">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Transaction Date</th>
-                            <th>Cashier</th>
-                            <th>Barcode</th>
-                            <th>Product Name</th>
-                            <th>SRP</th>
-                            <th>Discount</th>
-                            <th>Qty</th>
-                            <th>Total Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="8" class="text-center">No records found</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <button class="btn btn-secondary float-right">Print</button>
+    <div class="row">
+        <div class="col-md-12 text-center">
+        </div>
+    </div>
+    <div class="container mt-5">
+    <div class="card shadow-lg rounded">
+        <div class="card-header bg-primary text-white text-center py-3">
+            <h4>Voided Transactions</h4>
+        </div>
+        <div class="card-body">
+            <form class="d-flex justify-content-center align-items-center flex-wrap gap-3">
+                <div>
+                    <label for="fromDate" class="form-label fw-bold">From:</label>
+                    <input type="date" class="form-control" id="fromDate">
+                </div>
+                <div>
+                    <label for="toDate" class="form-label fw-bold">To:</label>
+                    <input type="date" class="form-control" id="toDate">
+                </div>
+                <button type="button" class="btn btn-primary px-4">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4 shadow-lg rounded">
+        <div class="card-header bg-secondary text-white text-left py-3">
+            <h5> List</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered text-center table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Transaction Date</th>
+                        <th>Cashier</th>
+                        <th>Barcode</th>
+                        <th>Product Name</th>
+                        <th>SRP</th>
+                        <th>Discount</th>
+                        <th>Qty</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="8" class="text-center text-muted fst-italic">No records found</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end mt-3">
+                <button class="btn btn-secondary px-4">
+                    <i class="fas fa-print"></i> Print
+                </button>
             </div>
         </div>
     </div>
 </div>
-            </div>
+
 
             <script>
 				const currentUrl = window.location.pathname.split('/').pop();

@@ -169,37 +169,31 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-						</div>
+				<div class="container d-flex flex-column align-items-center justify-content-center" style="height: 100vh; background-color: #f8f9fa;">
+					<div class="container text-center">
+						<h2 class="mb-4 text-primary">E-Journal</h2>
+					</div>
+
+					<!-- Date Range Selection -->
+					<div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%; border-radius: 10px;">
+						<form method="POST" action="e-journal.php">
+							<div class="form-group mb-3">
+								<label for="fromDate" class="form-label">From</label>
+								<input type="date" class="form-control" id="fromDate" name="fromDate" required>
+							</div>
+							<div class="form-group mb-3">
+								<label for="toDate" class="form-label">To</label>
+								<input type="date" class="form-control" id="toDate" name="toDate" required>
+							</div>
+							<div class="text-center">
+								<button type="submit" class="btn btn-primary btn-block mt-3">
+									<i class="material-icons"></i> Search
+								</button>
+							</div>
+
+						</form>
 					</div>
 				</div>
-                <!-- Table Here -->
-                <div class="container">
-                <div class="container mt-4">
-    <h2 class="mb-4">E-Journal</h2>
-    
-    <!-- Date Range Selection -->
-    <div class="card p-3 shadow-sm" style="max-width: 400px;">
-        <h5>Date</h5>
-        <form method="POST" action="e-journal.php">
-            <div class="form-group">
-                <label for="fromDate">From</label>
-                <input type="date" class="form-control" id="fromDate" name="fromDate" required>
-            </div>
-            <div class="form-group">
-                <label for="toDate">To</label>
-                <input type="date" class="form-control" id="toDate" name="toDate" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block mt-3">
-                <i class="material-icons">search</i> Search
-            </button>
-        </form>
-    </div>
-</div>
-            </div>
-
 			<script>
 				const currentUrl = window.location.pathname.split('/').pop();
 				document.querySelectorAll('.list-unstyled a').forEach(link => {
