@@ -176,58 +176,58 @@
 					</div>
 				</div>
                 <!-- Table Here -->
-                <div class="container">
+                <div class="d-flex justify-content-center align-items-center vh-100">
 					<div class="card p-4 col-md-6">
-						<h4>Discount Report</h4>
+						<h4 class="text-center"><b>Discount Report</b></h4>
 						<hr>
 						<form>
 							<div class="row mb-3">
 								<div class="col-md-6">
-									<label for="from-date" class="form-label">From:</label>
+									<label for="from-date" class="form-label"><b>From:</b></label>
 									<input type="date" id="from-date" class="form-control">
 								</div>
 								<div class="col-md-6">
-									<label for="to-date" class="form-label">To:</label>
+									<label for="to-date" class="form-label"><b>To:</b></label>
 									<input type="date" id="to-date" class="form-control">
 								</div>
 							</div>
-							
-							<h5>Discount Type</h5>
+
+							<h5 class="text-center"><b>Discount Type</b></h5>
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-check">
 										<input type="radio" name="discountType" id="senior" class="form-check-input">
-										<label for="senior" class="form-check-label">Senior Citizen</label>
+										<label for="senior" class="form-check-label"><b>Senior Citizen</b></label>
 									</div>
 									<div class="form-check mt-2">
 										<input type="radio" name="discountType" id="pwd" class="form-check-input">
-										<label for="pwd" class="form-check-label">PWD</label>
+										<label for="pwd" class="form-check-label"><b>PWD</b></label>
 									</div>
 									<div class="form-check mt-2">
 										<input type="radio" name="discountType" id="naac" class="form-check-input">
-										<label for="naac" class="form-check-label">NAAC</label>
+										<label for="naac" class="form-check-label"><b>NAAC</b></label>
 									</div>
 									<div class="form-check mt-2">
 										<input type="radio" name="discountType" id="medal" class="form-check-input">
-										<label for="medal" class="form-check-label">Medal of Valor</label>
+										<label for="medal" class="form-check-label"><b>Medal of Valor</b></label>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-check">
 										<input type="radio" name="discountType" id="discounted" class="form-check-input">
-										<label for="discounted" class="form-check-label">Discounted Products</label>
+										<label for="discounted" class="form-check-label"><b>Discounted Products</b></label>
 									</div>
 									<div class="form-check mt-2">
 										<input type="radio" name="discountType" id="regular" class="form-check-input">
-										<label for="regular" class="form-check-label">Regular Discount</label>
+										<label for="regular" class="form-check-label"><b>Regular Discount</b></label>
 									</div>
 									<div class="form-check mt-2">
 										<input type="radio" name="discountType" id="solo" class="form-check-input">
-										<label for="solo" class="form-check-label">Solo Parent</label>
+										<label for="solo" class="form-check-label"><b>Solo Parent</b></label>
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="mt-4 text-center">
 								<button type="submit" class="btn btn-primary">
 									<i class="material-icons">preview</i> Preview
@@ -236,32 +236,31 @@
 						</form>
 					</div>
 				</div>
-            </div>
 
-            <script>
-				const currentUrl = window.location.pathname.split('/').pop();
-				document.querySelectorAll('.list-unstyled a').forEach(link => {
-					if (link.getAttribute('href') === currentUrl) {
-						link.classList.add('active');
+				<script>
+					const currentUrl = window.location.pathname.split('/').pop();
+					document.querySelectorAll('.list-unstyled a').forEach(link => {
+						if (link.getAttribute('href') === currentUrl) {
+							link.classList.add('active');
 
-						if (link.closest('.dashboard')) {
-							link.closest('.dashboard').classList.add('active');
-						} else {
-							document.querySelector('.dashboard')?.classList.remove('active');
-						}
+							if (link.closest('.dashboard')) {
+								link.closest('.dashboard').classList.add('active');
+							} else {
+								document.querySelector('.dashboard')?.classList.remove('active');
+							}
 
-						const parentMenu = link.closest('.collapse');
-						if (parentMenu) {
-							parentMenu.classList.add('show');
+							const parentMenu = link.closest('.collapse');
+							if (parentMenu) {
+								parentMenu.classList.add('show');
 
-							const dropdownToggle = parentMenu.previousElementSibling;
-							if (dropdownToggle) {
-								dropdownToggle.setAttribute('aria-expanded', 'true');
+								const dropdownToggle = parentMenu.previousElementSibling;
+								if (dropdownToggle) {
+									dropdownToggle.setAttribute('aria-expanded', 'true');
+								}
 							}
 						}
-					}
-				});
-			</script>
+					});
+				</script>
 
             	<style>
 					.navbar{

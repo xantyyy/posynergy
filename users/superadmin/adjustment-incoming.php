@@ -169,72 +169,77 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-						</div>
-					</div>
-				</div>
-
-                <div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h2 style="margin: 20px 0;">Adjustment/Incoming Report</h2>
-							<div class="card p-3">
+				<div class="container mt-5">
+					<div class="row justify-content-center">
+						<div class="col-md-8">
+							<div class="form-section">
+								<h2>Adjustment/Incoming Report</h2>
 								<form>
-									<div class="form-group">
-										<label>Select</label>
+									<!-- Report Type -->
+									<div class="form-group mb-4">
+										<label for="reportType"><b>Select</b></label>
 										<div>
-											<input type="radio" name="reportType" value="adjustment"> Adjustment
-											<input type="radio" name="reportType" value="incoming" class="ml-3"> Incoming
+											<input type="radio" id="adjustment" name="reportType" value="adjustment">
+											<label for="adjustment">Adjustment</label>
+											<input type="radio" id="incoming" name="reportType" value="incoming" class="ms-3">
+											<label for="incoming">Incoming</label>
 										</div>
 									</div>
-									<div class="form-group">
-										<label>Supplier</label>
-										<select class="form-control">
-											<option>Select Supplier</option>
+
+									<!-- Supplier -->
+									<div class="form-group mb-4">
+										<label for="supplier"><b>Supplier</b></label>
+										<select id="supplier" class="form-control">
+											<option value=""><b>Select Supplier</b></option>
+											<option value="supplier1">Supplier 1</option>
+											<option value="supplier2">Supplier 2</option>
+											<option value="supplier3">Supplier 3</option>
 										</select>
 									</div>
-									<div class="form-group">
-										<label>Date Filter</label>
-										<div class="d-flex">
-											<input type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+
+									<!-- Date Filter -->
+									<div class="form-group mb-4">
+										<label for="dateFilter"><b>Date Filter</b></label>
+										<div class="d-flex align-items-center date-filter">
+											<input type="date" class="form-control" id="startDate" value="<?php echo date('Y-m-d'); ?>">
 											<span class="mx-2">to</span>
-											<input type="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+											<input type="date" class="form-control" id="endDate" value="<?php echo date('Y-m-d'); ?>">
 										</div>
 									</div>
-									<button type="submit" class="btn btn-primary">Print Summary</button>
+
+									<!-- Submit Button -->
+									<button type="button" class="btn btn-success" style="width: 100px; margin-left: 88%; font-size: 13px;">
+                                <i class="fas fa-print"></i> Print</button>
 								</form>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 
-            <script>
-				const currentUrl = window.location.pathname.split('/').pop();
-				document.querySelectorAll('.list-unstyled a').forEach(link => {
-					if (link.getAttribute('href') === currentUrl) {
-						link.classList.add('active');
+				<script>
+					const currentUrl = window.location.pathname.split('/').pop();
+					document.querySelectorAll('.list-unstyled a').forEach(link => {
+						if (link.getAttribute('href') === currentUrl) {
+							link.classList.add('active');
 
-						if (link.closest('.dashboard')) {
-							link.closest('.dashboard').classList.add('active');
-						} else {
-							document.querySelector('.dashboard')?.classList.remove('active');
-						}
+							if (link.closest('.dashboard')) {
+								link.closest('.dashboard').classList.add('active');
+							} else {
+								document.querySelector('.dashboard')?.classList.remove('active');
+							}
 
-						const parentMenu = link.closest('.collapse');
-						if (parentMenu) {
-							parentMenu.classList.add('show');
+							const parentMenu = link.closest('.collapse');
+							if (parentMenu) {
+								parentMenu.classList.add('show');
 
-							const dropdownToggle = parentMenu.previousElementSibling;
-							if (dropdownToggle) {
-								dropdownToggle.setAttribute('aria-expanded', 'true');
+								const dropdownToggle = parentMenu.previousElementSibling;
+								if (dropdownToggle) {
+									dropdownToggle.setAttribute('aria-expanded', 'true');
+								}
 							}
 						}
-					}
-				});
-			</script>
+					});
+				</script>
 
             	<style>
 					.navbar{
