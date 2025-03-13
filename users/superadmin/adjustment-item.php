@@ -228,77 +228,121 @@
             </div>
 			
 			<script>
-				const currentUrl = window.location.pathname.split('/').pop();
-				document.querySelectorAll('.list-unstyled a').forEach(link => {
-					if (link.getAttribute('href') === currentUrl) {
-						link.classList.add('active');
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentUrl = window.location.pathname.split('/').pop();
+        
+        document.querySelectorAll('.list-unstyled a').forEach(link => {
+            const linkHref = link.getAttribute('href');
+            const parentMenu = link.closest('.collapse');
+            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-						if (link.closest('.dashboard')) {
-							link.closest('.dashboard').classList.add('active');
-						} else {
-							document.querySelector('.dashboard')?.classList.remove('active');
-						}
+            // Mark the active link
+            if (linkHref === currentUrl) {
+                link.classList.add('active');
 
-						const parentMenu = link.closest('.collapse');
-						if (parentMenu) {
-							parentMenu.classList.add('show');
+                if (parentMenu) {
+                    const dropdownToggle = parentMenu.previousElementSibling;
+                    if (dropdownToggle) {
+                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                        dropdownToggle.setAttribute('aria-expanded', 'true');
+                    }
+                    parentMenu.classList.add('show');
+                }
+            }
 
-							const dropdownToggle = parentMenu.previousElementSibling;
-							if (dropdownToggle) {
-								dropdownToggle.setAttribute('aria-expanded', 'true');
-							}
-						}
-					}
-				});
-			</script>
+            // Apply hover effect for menu items
+            link.addEventListener('mouseenter', function () {
+                this.classList.add('hover-effect');
+            });
 
-				<style>
-					.navbar{
-					background-color: #1137a9;
-					color: #fff;
-					}
+            link.addEventListener('mouseleave', function () {
+                this.classList.remove('hover-effect');
+            });
+        });
 
-					.navbar-brand{
-						color: #fff;
-					}
-					.sidebar {
-						width: 250px;
-						background-color: #f8f9fa;
-						padding: 10px;
-						height: 100vh;
-						position: fixed;
-					}
+        // Ensure dropdown toggle remains highlighted if its submenu has an active item
+        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+            const parentMenu = dropdown.nextElementSibling;
+            if (parentMenu && parentMenu.querySelector('.active')) {
+                dropdown.classList.add('highlighted-dropdown');
+                dropdown.setAttribute('aria-expanded', 'true');
+            }
 
-					.nav-link {
-						color: #333;
-						font-size: 14px;
-					}
+            // Apply hover effect for dropdown menu
+            dropdown.addEventListener("mouseenter", function () {
+                this.classList.add('hovered-dropdown');
+            });
 
-					.nav-link:hover, .nav-link.active {
-						color: #007bff;
-						font-weight: bold;
-					}
+            dropdown.addEventListener("mouseleave", function () {
+                this.classList.remove('hovered-dropdown');
+            });
+        });
+    });
+</script>
 
-					.collapse.show {
-						background-color: #e9ecef;
-						padding: 5px 10px;
-						border-left: 4px solid #007bff;
-					}
+<style>
+    @keyframes aurora {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 
-					.list-unstyled a.active {
-						background-color: #f0f0f0;
-						color: #000;
-						font-weight: bold;
-					}
+    .navbar {
+        background: linear-gradient(270deg, #ff4b5c, #00509d, #adb5bd, #ff4b5c, #00509d, #adb5bd, #ff4b5c);
+        background-size: 400% 400%;
+        animation: aurora 10s ease infinite;
+        transition: all 0.8s ease-in-out;
+    }
 
-					.dropdown-toggle[aria-expanded="true"] {
-						background-color: #e0e0e0;
-						font-weight: bold;
-					}
+    .navbar-brand {
+        color: #fff;
+    }
 
-					#table-bold thead th {
-						font-weight: bold;
-						font-style: italic;
-					}
-				</style>
+    .nav-link, 
+    .dropdown-toggle, 
+    .list-unstyled a {
+        color: #333;
+        font-size: 16px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .nav-link, .nav-link:hover, 
+    .list-unstyled a:hover, .dropdown-toggle:hover,
+    .hovered-dropdown, .hover-effect {
+        background: linear-gradient(90deg, #adb5bd, #ff4b5c);
+        color: #ffffff !important;
+        transform: scale(1.05);
+    }
+
+    .nav-link.active, .list-unstyled a.active, .dropdown-toggle.active {
+        color: #ffffff !important;
+        font-weight: bold;
+        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+    }
+
+    .dropdown-toggle[aria-expanded="true"], 
+    .dropdown-toggle.highlighted-dropdown {
+        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+        color: #ffffff !important;
+        font-weight: bold;
+    }
+
+    .dropdown-toggle.highlighted-dropdown:hover {
+        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+    }
+
+    .sidebar {
+        width: 250px;
+        background: #ff4b5c !important;
+        overflow: visible !important;
+    }
+
+    .sidebar .collapse {
+        display: none;
+    }
+
+    .sidebar .collapse.show {
+        display: block !important;
+    }
+</style>
 <?php include_once 'footer.php'; ?>

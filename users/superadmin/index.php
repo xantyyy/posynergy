@@ -23,13 +23,13 @@
 				</div>
 				<ul class="list-unstyled components">
 					<li class="active">
-						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
+						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span><b>Dashboard</b></span></a>
 						
 					</li>
 						
 					<li class="dropdown">
 						<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">warehouse</i><span>Inventory</span></a>
+						<i class="material-icons">warehouse</i><span><b>Inventory</span></a>
 						<ul class="collapse list-unstyled menu" id="homeSubmenu1">
 							<li>
 								<a href="incoming.php">Incoming</a>
@@ -42,7 +42,7 @@
 
 					<li class="dropdown">
 						<a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">inventory</i><span>Product Profile</span></a>
+						<i class="material-icons">inventory</i><span><b>Product Profile</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu2">
 							<li>
 								<a href="product-entry.php">Product Entry</a>
@@ -55,7 +55,7 @@
 
 					<li class="dropdown">
 						<a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">payment</i><span>Other Transaction</span></a>
+						<i class="material-icons">payment</i><span><b>Other Transaction</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu3">
 							<li>
 								<a href="enroll-card.php">Enroll Card</a>
@@ -71,7 +71,7 @@
 
 					<li class="dropdown">
 						<a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">search</i><span>Search</span></a>
+						<i class="material-icons">search</i><span><b>Search</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu4">
 							<li>
 								<a href="inventory.php">Inventory</a>
@@ -108,7 +108,7 @@
 
 					<li class="dropdown">
 						<a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">settings</i><span>Configuration</span></a>
+						<i class="material-icons">settings</i><span><b>Configuration</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu5">
 						<li>
 								<a href="supplier.php">Supplier</a>
@@ -404,134 +404,163 @@
 				</div>
 
 				<script>
-					var filter = 'weekly';
+    var filter = 'weekly';
 
-					var salesChart = new Chart($('#sales-chart'), {
-						type: 'line',
-						data: {
-							labels: [],
-							datasets: [{
-								label: 'Total Sales',
-								data: [],
-								fill: false,
-								borderColor: 'rgb(75, 192, 192)',
-								pointBackgroundColor: 'rgb(75, 192, 192)',
-								pointRadius: 3,
-								pointHoverRadius: 7
-							}]
-						},
-						options: {
-							scales: {
-								yAxes: [{
-									ticks: {
-										beginAtZero: true
-									}
-								}]
-							}
-						}
-					});
+    var salesChart = new Chart($('#sales-chart'), {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Total Sales',
+                data: [],
+                fill: false,
+                borderColor: '#ff4b5c',
+                pointBackgroundColor: '#ff4b5c',
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 
-					$('#filter').on('change', function() {
-						filter = $(this).val();
-						updateChart();
-					});
+    function updateChart() {
+        $.ajax({
+            url: 'get-data.php',
+            type: 'POST',
+            data: { filter: filter },
+            dataType: 'json',
+            success: function (data) {
+                salesChart.data.labels = data.labels;
+                salesChart.data.datasets[0].data = data.data;
+                salesChart.update();
+            }
+        });
+    }
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        updateChart();
+        
+        document.querySelectorAll('.list-unstyled a').forEach(link => {
+            const linkHref = link.getAttribute('href');
+            const parentMenu = link.closest('.collapse');
+            const dropdownToggle = link.closest('.collapse') ? link.closest('.collapse').previousElementSibling : null;
 
-					function updateChart() {
-						$.ajax({
-							url: 'get-data.php',
-							type: 'POST',
-							data: {filter: filter},
-							dataType: 'json',
-							success: function(data) {
-								salesChart.data.labels = data.labels;
-								if (filter === 'monthly') {
-									salesChart.options.scales.xAxes = [{
-										type: 'category',
-										labels: data.labels
-									}];
-								} else {
-									salesChart.options.scales.xAxes = [{
-										type: 'time',
-										time: {
-											unit: 'day'
-										}
-									}];
-								}
-								salesChart.data.datasets[0].data = data.values;
-								salesChart.update();
-							}
-						});
-					}
+            if (window.location.pathname.split('/').pop() === link.getAttribute('href')) {
+                link.classList.add('active');
+                link.style.backgroundColor = '#00509d';
+                link.style.color = '#fff';
+                if (parentMenu) {
+                    parentMenu.classList.add('show');
+                    if (dropdownToggle) {
+                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                        dropdownToggle.setAttribute('aria-expanded', 'true');
+                    }
+                }
+            }
 
-					updateChart();
-					
-					const currentUrl = window.location.pathname.split('/').pop();
-					document.querySelectorAll('.list-unstyled a').forEach(link => {
-						if (link.getAttribute('href') === currentUrl) {
-							link.classList.add('active');
+            link.addEventListener('mouseenter', function () {
+                this.classList.add('hover-effect');
+            });
 
-							if (link.closest('.dashboard')) {
-								link.closest('.dashboard').classList.add('active');
-							} else {
-								document.querySelector('.dashboard')?.classList.remove('active');
-							}
+            link.addEventListener('mouseleave', function () {
+                if (!this.classList.contains('active')) {
+                    this.classList.remove('hover-effect');
+                }
+            });
+        });
+        
+        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+            const parentMenu = dropdown.nextElementSibling;
+            if (parentMenu && parentMenu.querySelector('.active')) {
+                dropdown.classList.add('highlighted-dropdown', 'active');
+                dropdown.setAttribute('aria-expanded', 'true');
+            }
+            
+            dropdown.addEventListener("mouseenter", function () {
+                this.classList.add("hover-effect");
+            });
 
-							const parentMenu = link.closest('.collapse');
-							if (parentMenu) {
-								parentMenu.classList.add('show');
+            dropdown.addEventListener("mouseleave", function () {
+                if (!this.classList.contains('active')) {
+                    this.classList.remove("hover-effect");
+                }
+            });
+        });
+    });
+</script>
 
-								const dropdownToggle = parentMenu.previousElementSibling;
-								if (dropdownToggle) {
-									dropdownToggle.setAttribute('aria-expanded', 'true');
-								}
-							}
-						}
-					});
-				</script>
+<style>
+    @keyframes aurora {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
 
-				<style>
-					.navbar{
-					background-color: #1137a9;
-					color: #fff;
-					}
+    .navbar {
+        background: linear-gradient(270deg, #ff4b5c, #00509d, #adb5bd, #ff4b5c, #00509d, #adb5bd, #ff4b5c);
+        background-size: 400% 400%;
+        animation: aurora 10s ease infinite;
+        transition: all 0.8s ease-in-out;
+    }
 
-					.navbar-brand{
-						color: #fff;
-					}
-					.sidebar {
-						width: 250px;
-						background-color: #f8f9fa;
-						padding: 10px;
-						height: 100vh;
-						position: fixed;
-					}
+    .navbar-brand {
+        color: #fff;
+    }
 
-					.nav-link {
-						color: #333;
-						font-size: 14px;
-					}
+    .nav-link, 
+    .dropdown-toggle, 
+    .list-unstyled a {
+        color: #333;
+        font-size: 16px;
+        transition: all 0.3s ease-in-out;
+    }
 
-					.nav-link:hover, .nav-link.active {
-						color: #007bff;
-						font-weight: bold;
-					}
+    .nav-link, .nav-link:hover, 
+    .list-unstyled a:hover, .dropdown-toggle:hover,
+    .hovered-dropdown, .hover-effect {
+        background: linear-gradient(90deg, #adb5bd, #ff4b5c);
+        color: #ffffff !important;
+        transform: scale(1.05);
+    }
 
-					.collapse.show {
-						background-color: #e9ecef;
-						padding: 5px 10px;
-						border-left: 4px solid #007bff;
-					}
+    .nav-link.active, .list-unstyled a.active, .dropdown-toggle.active {
+        color: #ffffff !important;
+        font-weight: bold;
+        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+    }
 
-					.list-unstyled a.active {
-						background-color: #f0f0f0;
-						color: #000;
-						font-weight: bold;
-					}
+    .dropdown-toggle[aria-expanded="true"], 
+    .dropdown-toggle.highlighted-dropdown {
+        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+        color: #ffffff !important;
+        font-weight: bold;
+    }
 
-					.dropdown-toggle[aria-expanded="true"] {
-						background-color: #e0e0e0;
-						font-weight: bold;
-					}
-				</style>
+    .dropdown-toggle.highlighted-dropdown:hover {
+        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+    }
+
+    .sidebar {
+        width: 250px;
+        background: #ff4b5c !important;
+        overflow: visible !important;
+    }
+
+    .sidebar .collapse {
+        display: none;
+    }
+
+    .sidebar .collapse.show {
+        display: block !important;
+    }
+</style>
+
+
 
 <?php include_once 'footer.php'; ?>
