@@ -5,7 +5,7 @@
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
 				<div class="sidebar-header">
-					<img src="../../assets/images/isynergies.png" class="img-fluid"/>
+					<img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
 					<?php 
 						
 						$admin = $_SESSION['superadmin_name'];
