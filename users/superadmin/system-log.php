@@ -177,58 +177,62 @@
 					</div>
 				</div>
                 <!-- Table Here -->
-                <div class="container">
                 <div class="container mt-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                    </div>
-                </div>
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-12">
+								</div>
+							</div>
 
-                <!-- Filter Section -->
-                <div class="row mb-3">
-                    <div class="col-md-3">
-                        <label for="logType">Logs</label>
-                        <select class="form-control" id="logType">
-                            <option value="">Select Type</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label>Date Filter:</label>
-                        <div class="input-group">
-                            <input type="date" class="form-control">
-                            <span class="input-group-text">To</span>
-                            <input type="date" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-md-2 align-self-end">
-                        <button class="btn btn-success">Search</button>
-                    </div>
-                </div>
-
-                <!-- Log Table -->
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Timestamp</th>
-                                <th>Remarks</th>
-                                <th>Control</th>
-                                <th>User</th>
-                                <th>Application</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Dynamic Logs Here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+							<!-- Filter Section -->
+							<div class="row mb-3">
+								<div class="col-md-3">
+									<label for="logType">Logs</label>
+									<select class="form-select" id="logType">
+										<option value="">Select Type</option>
+									</select>
+								</div>
+								<div class="col-md-3">
+									<label>Date Filter:</label>
+									<div class="input-group">
+										<input type="date" class="form-control">
+										<span class="input-group-text">-</span>
+										<input type="date" class="form-control">
+									</div>
+								</div>
+								<div class="col-md-3 align-self-end">
+									<button type="button" class="btn btn-primary" style="font-size: 13px; width: 100px;" id="#">
+										<i class="fas fa-search"></i> Search
+									</button>
+								</div>
+							</div>
+							<hr>
+							<div style="overflow-x: auto; white-space: nowrap;">
+								<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+									<thead class="card-header bg-dark opacity-60 text-white">
+										<tr>
+											<th>Timestamp</th>
+											<th>Remarks</th>
+											<th>Control</th>
+											<th>User</th>
+											<th>Application</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>Sample</td>
+											<td>Sample</td>
+											<td>Sample</td>
+											<td>Sample</td>
+											<td>Sample</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
             </div>
 
             <script>
@@ -256,7 +260,7 @@
 				});
 			</script>
 
-            	<style>
+				<style>
 					.navbar{
 					background-color: #1137a9;
 					color: #fff;
@@ -298,6 +302,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>

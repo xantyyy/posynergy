@@ -202,14 +202,6 @@
 													<option value="option2">Option 2</option>
 												</select>
 											</div>
-											<div class="form-group d-flex align-items-center mt-3">
-												<label for="purposeDropdown" class="me-2">Purpose:</label>
-												<select class="form-select" id="purposeDropdown" style="width: 300px;" disabled>
-													<option value="option1">Option 1</option>
-													<option value="option2">Option 2</option>
-												</select>
-											</div>
-											
 										</div>
 										<hr>
 										<div class="form-row mt-3">
@@ -230,15 +222,15 @@
 												<div class="form-group col-md-7 me-4">
 													<label for="fieldDropdown">Field:</label>
 													<select class="form-select" id="fieldDropdown" disabled>
-														<option value="option1"></option>
-														<option value="option2"></option>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
 													</select>
 												</div>
 												<div class="form-group col-md-4">
 													<label for="operatorDropdown">Operator:</label>
 													<select class="form-select" id="operatorDropdown" disabled>
-														<option value="option1"></option>
-														<option value="option2"></option>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
 													</select>
 												</div>
 											</div>
@@ -246,15 +238,15 @@
 												<div class="form-group col-md-7 me-4">
 													<label for="valueDropdown">Value:</label>
 													<select class="form-select" id="valueDropdown" disabled>
-														<option value="option1"></option>
-														<option value="option2"></option>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
 													</select>
 												</div>
 												<div class="form-group col-md-4">
 													<label for="andorDropdown">And/Or:</label>
 													<select class="form-select" id="andorDropdown" disabled>
-														<option value="option1"></option>
-														<option value="option2"></option>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
 													</select>
 												</div>
 											</div>
@@ -295,27 +287,29 @@
 
                         <!-- Right Side - Additional Table -->
                         <div class="col-md-8">
-						<div class="card">
-							<div class="card-body">
-								<h5>Record Summary</h5>
-								<div class="record-summary">
-									<table class="table table-sm">
-										<tbody>
-											<tr>
-												<td>Type</td>
-											</tr>
-											<tr>
-												<td>No. of Item</td>
-											</tr>
-											<tr>
-												<td>Total Amount</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-
+                            <div class="card">
+                                <div class="card-body">
+									<div style="overflow-x: auto; white-space: nowrap;">
+										<h5>Record Summary</h5>
+										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+											<thead class="card-header bg-dark opacity-60 text-white">
+												<tr>
+													<th>Type</th>
+													<th>No. of Item</th>
+													<th>Total Amount</th>
+												</tr>
+											</thead>
+											<tbody>
+													<tr>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+													</tr>
+											</tbody>
+										</table>
+									</div>
+                                </div>
+                            </div>
 							<button type="button" class="btn btn-success" style="width: 100px; margin-left: 88%; font-size: 13px;">
                                 <i class="fas fa-print"></i> Print
                             </button>
@@ -327,18 +321,16 @@
 										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
 											<thead class="card-header bg-dark opacity-60 text-white">
 												<tr>
+													<th>Reference</th>
 													<th>Barcode</th>
 													<th>Product Name</th>
+													<th>SRP</th>
 													<th>Quantity</th>
-													<th>Cost Price</th>
-													<th>Selling Price</th>
-													<th>Total Cost Price</th>
-													<th>Total Selling Price</th>
+													<th>Total</th>
 												</tr>
 											</thead>
 											<tbody>
 													<tr>
-														<td>Sample</td>
 														<td>Sample</td>
 														<td>Sample</td>
 														<td>Sample</td>
@@ -359,8 +351,6 @@
             <script>
 				document.getElementById('quickSearchBtn').addEventListener('click', function () {
 				document.getElementById('typeDropdown').disabled = false;
-				document.getElementById('purposeDropdown').disabled = false;
-				document.getElementById('receipt').disabled = false;
 				document.getElementById('fromDate').disabled = false;
 				document.getElementById('toDate').disabled = false;
 
@@ -383,8 +373,6 @@
 				document.getElementById('cancelButton').disabled = false;
 
 				document.getElementById('typeDropdown').disabled = true;
-				document.getElementById('purposeDropdown').disabled = true;
-				document.getElementById('receipt').disabled = true;
 				document.getElementById('fromDate').disabled = true;
 				document.getElementById('toDate').disabled = true;
 			});

@@ -169,54 +169,186 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-				<div class="container mt-5">
-					<div class="row justify-content-center">
-						<div class="col-md-8">
-							<div class="form-section">
-								<h2>Adjustment/Incoming Report</h2>
-								<form>
-									<!-- Report Type -->
-									<div class="form-group mb-4">
-										<label for="reportType"><b>Select</b></label>
-										<div>
-											<input type="radio" id="adjustment" name="reportType" value="adjustment">
-											<label for="adjustment">Adjustment</label>
-											<input type="radio" id="incoming" name="reportType" value="incoming" class="ms-3">
-											<label for="incoming">Incoming</label>
-										</div>
-									</div>
-
-									<!-- Supplier -->
-									<div class="form-group mb-4">
-										<label for="supplier"><b>Supplier</b></label>
-										<select id="supplier" class="form-control">
-											<option value=""><b>Select Supplier</b></option>
-											<option value="supplier1">Supplier 1</option>
-											<option value="supplier2">Supplier 2</option>
-											<option value="supplier3">Supplier 3</option>
-										</select>
-									</div>
-
-									<!-- Date Filter -->
-									<div class="form-group mb-4">
-										<label for="dateFilter"><b>Date Filter</b></label>
-										<div class="d-flex align-items-center date-filter">
-											<input type="date" class="form-control" id="startDate" value="<?php echo date('Y-m-d'); ?>">
-											<span class="mx-2">to</span>
-											<input type="date" class="form-control" id="endDate" value="<?php echo date('Y-m-d'); ?>">
-										</div>
-									</div>
-
-									<!-- Submit Button -->
-									<button type="button" class="btn btn-success" style="width: 100px; margin-left: 88%; font-size: 13px;">
-                                <i class="fas fa-print"></i> Print</button>
-								</form>
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<h2 style="margin: 0 20px; margin-top: 15px;">Adjustemnt / Incoming</h2>
 							</div>
 						</div>
-					</div>
+						<div class="row">
+							<!-- Left Side - Product Data Entry Form -->
+							<div class="col-md-4">
+								<div class="card h-100">
+									<div class="card-body">
+										<form>			
+											<div class="form-row mt-2">
+												<h5>Select</h5>
+												<div class="d-flex align-items-center">
+													<div class="form-check me-4 mt-3" style="margin-left: 50px;">
+														<input class="form-check-input" type="radio" name="recordSearch" id="adjustmentRadio" value="adjustment">
+														<label class="form-check-label" for="adjustmentRadio">Adjustment</label>
+													</div>
+													<div class="form-check me-4 mt-3" style="margin-left: 10px;">
+														<input class="form-check-input" type="radio" name="recordSearch" id="incomingRadio" value="incoming">
+														<label class="form-check-label" for="incomingRadio">Incoming</label>
+													</div>
+												</div>
+											</div>
+											<hr>
+											<div class="form-row mt-3">
+												<h5>Supplier:</h5>
+												<div class="form-group col-md-12 me-4">
+													<select class="form-select" id="fieldDropdown" disabled>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+											</div>
+											<hr>
+											<div class="form-row mt-3">
+												<h5>Date Filter:</h5>
+												<div class="form-group col-md-12 d-flex align-items-center">
+													<input type="checkbox" id="enableAsOf" class="me-2">
+													<label style="width: 70px;" for="enableAsOf" class="me-2">As of:</label>
+													<input type="date" class="form-control" id="asOfDate" disabled>
+												</div>
+												<div class="form-group col-md-12 mt-2 d-flex align-items-center">
+													<label for="toDate" class="me-2">To:</label>
+													<input type="date" class="form-control me-2" id="toDate" disabled>
+													<button type="button" class="btn btn-primary" style="font-size: 13px;" disabled id="quickSearchBtn">
+														<i class="fas fa-search"></i>
+													</button>
+												</div>
+											</div>
+											<button type="button" class="btn btn-success mt-2" style="font-size: 13px; margin-left: 65%;" disabled id="printSummaryBtn">
+												<i class="fas fa-print"></i> Print Summary
+											</button>
+										</form>
+									</div>
+								</div>
+							</div>
+
+							<!-- Right Side - Additional Table -->
+							<div class="col-md-8">
+								<div class="card h-100">
+									<div class="card-body">
+										<div id="tableContainer" style="overflow-x: auto; white-space: nowrap;">
+											<!-- Default "No Data Available" Content -->
+											<p class="text-center text-muted" id="noDataText">No Data Available</p>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-12">
+								<div class="card mt-4">
+									<div class="card-body">
+										<div style="overflow-x: auto; white-space: nowrap;">
+											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+												<thead class="card-header bg-dark opacity-60 text-white">
+													<tr>
+														<th>Barcode</th>
+														<th>Product Name</th>
+														<th>Qty</th>
+														<th>Unit</th>
+														<th>Cost</th>
+														<th>Discount</th>
+														<th>Total Cost</th>
+													</tr>
+												</thead>
+												<tbody>
+														<tr>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+														</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div> 
 				</div>
 
 				<script>
+					const adjustmentTable = `
+						<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+							<thead class="card-header bg-dark opacity-60 text-white">
+								<tr>
+									<th>Adj. Date</th>
+									<th>Adj. Date</th>
+									<th>Quantity</th>
+									<th>Net Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sample</td>
+									<td>Sample</td>
+									<td>Sample</td>
+									<td>Sample</td>
+								</tr>
+							</tbody>
+						</table>
+					`;
+
+					const incomingTable = `
+						<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+							<thead class="card-header bg-dark opacity-60 text-white">
+								<tr>
+									<th>Inventory Date</th>
+									<th>Inventory #</th>
+									<th>Net Amount</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sample</td>
+									<td>Sample</td>
+									<td>Sample</td>
+								</tr>
+							</tbody>
+						</table>
+					`;
+
+					const tableContainer = document.getElementById('tableContainer');
+					const noDataText = document.getElementById('noDataText');
+					const fieldDropdown = document.getElementById('fieldDropdown');
+
+					document.getElementById('adjustmentRadio').addEventListener('change', function () {
+						noDataText.style.display = 'none';
+						tableContainer.innerHTML = adjustmentTable;
+						fieldDropdown.disabled = false;
+					});
+
+					document.getElementById('incomingRadio').addEventListener('change', function () {
+						noDataText.style.display = 'none';
+						tableContainer.innerHTML = incomingTable;
+						fieldDropdown.disabled = false;
+					});
+
+					const enableAsOfCheckbox = document.getElementById('enableAsOf');
+					const asOfDate = document.getElementById('asOfDate');
+					const toDate = document.getElementById('toDate');
+					const quickSearchBtn = document.getElementById('quickSearchBtn');
+					const printSummaryBtn = document.getElementById('printSummaryBtn');
+
+					// Add an event listener to the checkbox
+					enableAsOfCheckbox.addEventListener('change', function () {
+						// Enable or disable elements based on checkbox state
+						const isChecked = this.checked;
+						asOfDate.disabled = !isChecked;
+						toDate.disabled = !isChecked;
+						quickSearchBtn.disabled = !isChecked;
+						printSummaryBtn.disabled = !isChecked;
+					});
+
 					const currentUrl = window.location.pathname.split('/').pop();
 					document.querySelectorAll('.list-unstyled a').forEach(link => {
 						if (link.getAttribute('href') === currentUrl) {
@@ -283,6 +415,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>

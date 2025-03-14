@@ -169,366 +169,182 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Product Subsidiary</h2>
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<h2 style="margin: 0 20px; margin-top: 15px;">Product Subsidiary</h2>
+							</div>
 						</div>
-					</div>
-					<div class="row">
-						<!-- Left Side - Fixed Form -->
-						<div class="col-md-5">
-							<div class="card">
-								<div class="card-body">
-									<h6>Filters</h6>
-									<h6>Date</h6>
-									<form>
-										<div class="d-flex align-items-center mb-3">
-											<div class="form-group me-2" style="flex: 1;">
-												<input type="date" class="form-control" id="startDate">
+						<div class="row">
+							<!-- Left Side - Product Data Entry Form -->
+							<div class="col-md-4">
+								<div class="card h-100">
+									<div class="card-body">
+										<form>
+											<div class="form-row">
+												<h5>Filters</h5>
+												<hr>
+												<h6>Date:</h6>
+												<div class="form-group col-md-12 d-flex align-items-center">
+													<label for="#" class="me-4">From:</label>
+													<input type="date" class="form-control" id="#">
+												</div>
+												<div class="form-group col-md-12 mt-2 d-flex align-items-center">
+													<label for="#" class="me-5">To:</label>
+													<input type="date" class="form-control" id="#">
+												</div>
 											</div>
-											<label class="me-2"> - </label>
-											<div class="form-group me-2" style="flex: 1;">
-												<input type="date" class="form-control" id="endDate">
+											<hr>
+											<div class="form-row mt-2">
+												<h5>Select</h5>
+												<div class="d-flex align-items-center">
+													<div class="form-check me-2 mt-2">
+														<input class="form-check-input" type="radio" name="#" id="#" value="#">
+														<label class="form-check-label" for="#">Supplier</label>
+													</div>
+													<div class="form-check me-2 mt-2" style="margin-left: 10px;">
+														<input class="form-check-input" type="radio" name="#" id="#" value="#">
+														<label class="form-check-label" for="#">Barcode</label>
+													</div>
+													<div class="form-check me-2 mt-2" style="margin-left: 10px;">
+														<input class="form-check-input" type="radio" name="#" id="#" value="#">
+														<label class="form-check-label" for="#">Product Name</label>
+													</div>
+												</div>
 											</div>
-										</div>
+											<hr>
+											<div class="form-row mt-3">
+												<div class="form-group col-md-12 me-4">
+													<select class="form-select" id="fieldDropdown">
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
 
-										<div class="form-check-group">
-											<div class="form-check">
-												<input class="form-check-input" type="radio" name="recordSearch" id="supplier" value="supplier">
-												<label class="form-check-label" for="supplier">Supplier</label>
-											</div>
-											<div class="form-check">
-												<input class="form-check-input" type="radio" name="recordSearch" id="barcode" value="barcode">
-												<label class="form-check-label" for="barcode">Barcode</label>
-											</div>
-											<div class="form-check">
-												<input class="form-check-input" type="radio" name="recordSearch" id="productName" value="productName">
-												<label class="form-check-label" for="productName">Product Name</label>
-											</div>
-										</div>
-										<div class="form-select-container">
-							
-												<select class="form-select" aria-label="Default select">
-													<option value="" selected hidden>-- Select an option --</option>
-												</select>
-											</div>
-											<script>
-												const select = document.querySelector('.form-select');
-												select.addEventListener('focus', function () {
-													select.innerHTML = '<option value="" selected hidden>-- Select an option --</option>';
-
-													const options = [
-														{ value: "1", text: "NE CROSSING" },
-														{ value: "2", text: "COCA COLA" },
-														{ value: "3", text: "FRIENSHIP SUPERMARKET" },
-														{ value: "4", text: "AVON" },
-														{ value: "5", text: "168 COMMERCIAL" },
-														{ value: "6", text: "UNILAB" },
-													];
-													options.forEach(option => {
-														const opt = document.createElement('option');
-														opt.value = option.value;
-														opt.textContent = option.text;
-														select.appendChild(opt);
-													});
-												});
-											</script>
-
-									</form>
-									<hr>
-									<div class="mt-">
-										<h5>Product List</h5>
-										<div class="table-responsive" style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
-											<table class="table table-bordered table-sm">
-												<thead>
+							<!-- Right Side - Additional Table -->
+							<div class="col-md-8">
+								<div class="card h-100">
+									<div class="card-body">
+										<div style="overflow-x: auto; white-space: nowrap;">
+											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+												<thead class="card-header bg-dark opacity-60 text-white">
 													<tr>
-														<th style="width: 30%;">Barcode</th>
-														<th style="width: 70%;">Description</th>
+														<th>Barcode</th>
+														<th>Product Name</th>
+														<th>Category</th>
 													</tr>
 												</thead>
 												<tbody>
-													<tr class="clickable-row" onclick="handleRowClick('8977845', '3J DRUM 1513 CLASS A 140L')">
-														<td>8977845...</td>
-														<td>3J DRUM 1513 CLASS A 140L</td>
+														<tr>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+														</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<!-- Left Side - Product Data Entry Form -->
+							<div class="col-md-4">
+								<div class="card mt-4">
+									<div class="card-body">
+										<h5>Product List:</h5>
+										<div style="overflow-x: auto; white-space: nowrap;">
+											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+												<thead class="card-header bg-dark opacity-60 text-white">
+													<tr>
+														<th>Barcode</th>
+														<th>Description</th>
 													</tr>
-													<tr class="clickable-row" onclick="handleRowClick('8658547', '54532354645')">
-														<td>8658547...</td>
-														<td>54532354645</td>
-													</tr>
-													<tr class="clickable-row" onclick="handleRowClick('244663', '555 BOTTLED SARDINES SPANISH')">
-														<td>244663...</td>
-														<td>555 BOTTLED SARDINES SPANISH</td>
-													</tr>
-													<tr class="clickable-row" onclick="handleRowClick('35546', '555 CARNE NORTE 150G')">
-														<td>35546...</td>
-														<td>555 CARNE NORTE 150G</td>
-													</tr>
-													<tr class="clickable-row" onclick="handleRowClick('685367', '555 FRIED SARDINES WITH TAU')">
-														<td>685367...</td>
-														<td>555 FRIED SARDINES WITH TAU...</td>
-													</tr>
-													<tr class="clickable-row" onclick="handleRowClick('674388', '555 SARDINES IN TOMATO SAU')">
-														<td>674388...</td>
-														<td>555 SARDINES IN TOMATO SAU...</td>
+												</thead>
+												<tbody>
+													<tr>
+														<td>Sample</td>
+														<td>Sample</td>
 													</tr>
 												</tbody>
 											</table>
 										</div>
 									</div>
-
-									<script>
-
-										function handleRowClick(barcode, description) {
-											alert(`Barcode: ${barcode}\nDescription: ${description}`);
-										}
-										document.querySelectorAll('.clickable-row').forEach(row => {
-											row.style.cursor = 'pointer';
-											row.addEventListener('mouseenter', () => {
-												row.style.backgroundColor = '#f5f5f5';
-											});
-											row.addEventListener('mouseleave', () => {
-												row.style.backgroundColor = '';
-											});
-										});
-									</script>
-									<div class="d-flex justify-content-center mt-3">
-									<button class="btn btn-primary me-2">
-										<i class="fas fa-search"></i> Search
-									</button>
-									<button class="btn btn-outline-danger">
-										<i class="fas fa-sync-alt"></i> Clear
-									</button>
-								</div>
-								<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
 								</div>
 							</div>
-						</div>
-						<div class="col-md-7">
-						<h5><b>Summary</b></h5>
-						<div class="card">
-							<div class="card-body">
-								<h5>Product Summary</h5>
-								<div class="record-summary">
-									<table class="table table-sm">
-										<tbody>
-											<tr>
-												<td>Barcode</td>
-											</tr>
-											<tr>
-												<td>Product Name</td>
-											</tr>
-											<tr>
-												<td>Category</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-						<button type="button" class="btn btn-success" style="width: 100px; margin-left: 88%; font-size: 13px;">
-                                <i class="fas fa-print"></i> Print
-                            </button>
-							
-						<div class="col-md-15">
-						<h5>Details</h5>
-							<div class="card">
-								<div class="card-body">
-									<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
-										<table class="table table-bordered" id="table-bold">
-											<thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
-												<tr>
-													<th>Date</th>
-													<th>Type</th>
-													<th>Purpose</th>
-													<th>Transaction No.</th>
-													<th>Rreference</th>
-													<th>IN</th>
-													<th>OUT</th>
-													<th>Balance</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>Sample</td>
-													<td>Sample</td>
-													<td>Sample</td>
-													<td>Sample</td>
-													<td>Sample</td>
-													<td>Sample</td>
-													<td>Sample</td>
-													<td>Sample</td>
-												</tr>
-											</tbody>
-										</table>
+
+							<!-- Right Side - Additional Table -->
+							<div class="col-md-8">
+								<div class="card mt-4">
+									<div class="card-body">
+										<h5>Details</h5>
+										<div style="overflow-x: auto; white-space: nowrap;">
+											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+												<thead class="card-header bg-dark opacity-60 text-white">
+													<tr>
+														<th>Date</th>
+														<th>Type</th>
+														<th>Purpose</th>
+														<th>Transaction No.</th>
+														<th>Reference</th>
+														<th>IN</th>
+														<th>OUT</th>
+														<th>Balance</th>
+													</tr>
+												</thead>
+												<tbody>
+														<tr>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+														</tr>
+												</tbody>
+											</table>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="col-md-12">
-						<div class="card">
-							
-						</div>
-					</div>
+					</div> 
 				</div>
 
-                <script>
-					const enableButton = document.getElementById("enableButton");
-					const elementsToEnable = [
-						document.getElementById("receipt"),
-						document.getElementById("shiftReading"),
-						document.getElementById("xReading"),
-						document.getElementById("zReading"),
-						document.getElementById("cashierName"),
-						document.getElementById("payType"),
-						document.getElementById("searchButton"),
-						document.getElementById("clearButton"),
-					];
+				<script>
+					const currentUrl = window.location.pathname.split('/').pop();
+					document.querySelectorAll('.list-unstyled a').forEach(link => {
+						if (link.getAttribute('href') === currentUrl) {
+							link.classList.add('active');
 
-					enableButton.addEventListener("click", () => {
-						elementsToEnable.forEach((element) => {
-							element.disabled = false;
-						});
-						enableButton.disabled = true;
-					});
-
-					function updateTable(type) {
-						const table = document.getElementById("dynamicTable");
-						let tableContent = "";
-
-						switch (type) {
-							case "receipt":
-								tableContent = `
-									<thead class="card-header bg-dark opacity-60 text-white">
-										<tr>
-											<th>Transaction</th>
-											<th>Barcode</th>
-											<th>Product Name</th>
-											<th>SRP</th>
-											<th>Qty</th>
-											<th>Cost</th>
-											<th>Discount</th>
-											<th>Total Cost</th>
-											<th>Amount</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>TXN001</td>
-											<td>1234567890</td>
-											<td>Product A</td>
-											<td>100.00</td>
-											<td>2</td>
-											<td>90.00</td>
-											<td>5.00</td>
-											<td>180.00</td>
-											<td>200.00</td>
-										</tr>
-									</tbody>`;
-								break;
-
-							case "shiftReading":
-								tableContent = `
-									<thead class="card-header bg-dark opacity-60 text-white">
-										<tr>
-											<th>POS Type</th>
-											<th>Transaction</th>
-											<th>POS Total Amount</th>
-											<th>Cashier Total Amount</th>
-											<th>Short/Over</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>POS1</td>
-											<td>TXN002</td>
-											<td>3000.00</td>
-											<td>2950.00</td>
-											<td>-50.00</td>
-										</tr>
-									</tbody>`;
-								break;
-
-							case "xReading":
-								tableContent = `
-									<thead class="card-header bg-dark opacity-60 text-white">
-										<tr>
-											<th>Category</th>
-											<th>Category Sales Count</th>
-											<th>Total Amount</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Category A</td>
-											<td>15</td>
-											<td>1500.00</td>
-										</tr>
-									</tbody>`;
-								break;
-
-							case "zReading":
-								tableContent = `
-									<thead class="card-header bg-dark opacity-60 text-white">
-										<tr>
-											<th>Category</th>
-											<th>Category Sales Count</th>
-											<th>Total Amount</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td>Category B</td>
-											<td>20</td>
-											<td>2000.00</td>
-										</tr>
-									</tbody>`;
-								break;
-
-							default:
-								tableContent = `<tbody><tr><td colspan="9" class="text-center">No data available</td></tr></tbody>`;
-								break;
-						}
-
-						table.innerHTML = tableContent;
-					}
-
-					document.querySelectorAll('input[name="recordSearch"]').forEach((radio) => {
-						radio.addEventListener("change", (event) => {
-							updateTable(event.target.value);
-						});
-					});
-
-					// Initial state: clear the table
-					updateTable("");
-
-					const currentUrl = window.location.pathname.split("/").pop();
-					document.querySelectorAll(".list-unstyled a").forEach((link) => {
-						if (link.getAttribute("href") === currentUrl) {
-							link.classList.add("active");
-
-							if (link.closest(".dashboard")) {
-								link.closest(".dashboard").classList.add("active");
+							if (link.closest('.dashboard')) {
+								link.closest('.dashboard').classList.add('active');
 							} else {
-								document.querySelector(".dashboard")?.classList.remove("active");
+								document.querySelector('.dashboard')?.classList.remove('active');
 							}
 
-							const parentMenu = link.closest(".collapse");
+							const parentMenu = link.closest('.collapse');
 							if (parentMenu) {
-								parentMenu.classList.add("show");
+								parentMenu.classList.add('show');
 
 								const dropdownToggle = parentMenu.previousElementSibling;
 								if (dropdownToggle) {
-									dropdownToggle.setAttribute("aria-expanded", "true");
+									dropdownToggle.setAttribute('aria-expanded', 'true');
 								}
 							}
 						}
 					});
-			</script>
+				</script>
 
-				<style>
+            	<style>
 					.navbar{
 					background-color: #1137a9;
 					color: #fff;
@@ -572,69 +388,9 @@
 						font-weight: bold;
 					}
 
-					#dynamicTable thead th {
-						font-style: italic;
-						font-weight: bold;
-					}
-
 					#table-bold thead th {
 						font-weight: bold;
 						font-style: italic;
-					}
-
-					.form-check-group {
-						display: flex;
-						justify-content: space-between;
-						max-width: 400px;
-						margin-bottom: 10px;
-					}
-
-					.form-check {
-						display: flex;
-						align-items: center;
-						gap: 5px;
-					}
-
-					.form-check-label {
-						font-size: 14px;
-						font-weight: bold;
-					}
-
-					.form-check-input {
-						width: 18px;
-						height: 18px;
-					}
-
-					.form-select-container {
-						width: 100%;
-						max-width: 400px;
-					}
-
-					.form-select {
-						width: 100%;
-						padding: 5px;
-						font-size: 14px;
-					}
-
-					.btn-primary {
-						background-color: #6CD2E8; /* Light blue */
-						border-color: #6CD2E8;
-						color: black;
-						border-radius: 8px;
-						padding: 10px 20px;
-					}
-					.btn-primary:hover {
-						background-color: #5ABBD5; /* Slightly darker on hover */
-					}
-					.btn-outline-danger {
-						border-color: #D9534F; /* Red outline */
-						color: #D9534F;
-						border-radius: 8px;
-						padding: 10px 20px;
-					}
-					.btn-outline-danger:hover {
-						background-color: #D9534F;
-						color: white;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>

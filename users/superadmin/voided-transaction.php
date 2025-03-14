@@ -1,4 +1,6 @@
 <?php include_once 'header.php'; ?>
+<?php include_once 'modals.php'; ?>
+
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -170,66 +172,84 @@
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 				<div class="container">
-    <div class="row">
-        <div class="col-md-12 text-center">
-        </div>
-    </div>
-    <div class="container mt-5">
-    <div class="card shadow-lg rounded">
-        <div class="card-header bg-primary text-white text-center py-3">
-            <h4>Voided Transactions</h4>
-        </div>
-        <div class="card-body">
-            <form class="d-flex justify-content-center align-items-center flex-wrap gap-3">
-                <div>
-                    <label for="fromDate" class="form-label fw-bold">From:</label>
-                    <input type="date" class="form-control" id="fromDate">
-                </div>
-                <div>
-                    <label for="toDate" class="form-label fw-bold">To:</label>
-                    <input type="date" class="form-control" id="toDate">
-                </div>
-                <button type="button" class="btn btn-primary px-4">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </form>
-        </div>
-    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2 style="margin: 0 20px; margin-top: 15px;">Voided Transaction</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Left Side - Product Data Entry Form -->
+                        <div class="col-md-5">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5>Transaction Date:</h5>
+                                    <form>
+										<div class="form-row">
+											<div class="form-group col-md-12 d-flex align-items-center">
+												<label for="#" class="me-4">From:</label>
+												<input type="date" class="form-control me-2" id="#">
+											</div>
+											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
+												<label for="#" class="me-5">To:</label>
+												<input type="date" class="form-control me-2" id="#">
+											</div>
+										</div>                                   
+                                    </form>
+									<button type="button" class="btn btn-primary mt-2" style="font-size: 13px; width: 100px; margin-bottom: -35px; margin-left: 77%;" id="#">
+										<i class="fas fa-search"></i> Search
+									</button>
+                                </div>
+                            </div>
+                        </div>
 
-    <div class="card mt-4 shadow-lg rounded">
-        <div class="card-header bg-secondary text-white text-left py-3">
-            <h5> List</h5>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered text-center table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Transaction Date</th>
-                        <th>Cashier</th>
-                        <th>Barcode</th>
-                        <th>Product Name</th>
-                        <th>SRP</th>
-                        <th>Discount</th>
-                        <th>Qty</th>
-                        <th>Total Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="8" class="text-center text-muted fst-italic">No records found</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-secondary px-4">
-                    <i class="fas fa-print"></i> Print
-                </button>
+						<div class="col-md-6" style="margin-left: 90%;">
+							<button type="button" class="btn btn-success" style="font-size: 13px; width: 100px;" id="#">
+								<i class="fas fa-print"></i> Print
+							</button>
+                        </div>
+
+                        <!-- Right Side - Additional Table -->
+                        <div class="col-md-12">
+                            <div class="card">
+								<div class="card-body">
+									<h5>List</h5>
+									<div style="overflow-x: auto; white-space: nowrap;">
+										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+											<thead class="card-header bg-dark opacity-60 text-white">
+												<tr>
+													<th>Transaction Date</th>
+													<th>Cashier</th>
+													<th>Barcode</th>
+													<th>Product Name</th>
+													<th>SRP</th>
+													<th>Discount</th>
+													<th>Qty</th>
+													<th>Total Amount</th>
+													<th>Reason</th>
+												</tr>
+											</thead>
+											<tbody>
+													<tr>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+													</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                  
             </div>
-        </div>
-    </div>
-</div>
-
-
+            
             <script>
 				const currentUrl = window.location.pathname.split('/').pop();
 				document.querySelectorAll('.list-unstyled a').forEach(link => {
@@ -255,7 +275,7 @@
 				});
 			</script>
 
-            	<style>
+				<style>
 					.navbar{
 					background-color: #1137a9;
 					color: #fff;
@@ -297,6 +317,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>
