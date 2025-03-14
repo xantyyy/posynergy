@@ -23,13 +23,13 @@
 				</div>
 				<ul class="list-unstyled components">
 					<li class="active">
-						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span><b>Dashboard</b></span></a>
+						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
 						
 					</li>
 						
 					<li class="dropdown">
 						<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">warehouse</i><span><b>Inventory</span></a>
+						<i class="material-icons">warehouse</i><span>Inventory</span></a>
 						<ul class="collapse list-unstyled menu" id="homeSubmenu1">
 							<li>
 								<a href="incoming.php">Incoming</a>
@@ -42,7 +42,7 @@
 
 					<li class="dropdown">
 						<a href="#pageSubmenu2" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">inventory</i><span><b>Product Profile</span></a>
+						<i class="material-icons">inventory</i><span>Product Profile</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu2">
 							<li>
 								<a href="product-entry.php">Product Entry</a>
@@ -55,7 +55,7 @@
 
 					<li class="dropdown">
 						<a href="#pageSubmenu3" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">payment</i><span><b>Other Transaction</span></a>
+						<i class="material-icons">payment</i><span>Other Transaction</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu3">
 							<li>
 								<a href="enroll-card.php">Enroll Card</a>
@@ -71,7 +71,7 @@
 
 					<li class="dropdown">
 						<a href="#pageSubmenu4" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">search</i><span><b>Search</span></a>
+						<i class="material-icons">search</i><span>Search</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu4">
 							<li>
 								<a href="inventory.php">Inventory</a>
@@ -108,7 +108,7 @@
 
 					<li class="dropdown">
 						<a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-						<i class="material-icons">settings</i><span><b>Configuration</span></a>
+						<i class="material-icons">settings</i><span>Configuration</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu5">
 						<li>
 								<a href="supplier.php">Supplier</a>
@@ -443,18 +443,18 @@
         });
     }
     
+
     document.addEventListener("DOMContentLoaded", function () {
-        updateChart();
+        const currentUrl = window.location.pathname.split('/').pop();
         
         document.querySelectorAll('.list-unstyled a').forEach(link => {
             const linkHref = link.getAttribute('href');
             const parentMenu = link.closest('.collapse');
-            const dropdownToggle = link.closest('.collapse') ? link.closest('.collapse').previousElementSibling : null;
+            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            if (window.location.pathname.split('/').pop() === link.getAttribute('href')) {
+            // Mark the active link
+            if (linkHref === currentUrl) {
                 link.classList.add('active');
-                link.style.backgroundColor = '#00509d';
-                link.style.color = '#fff';
                 if (parentMenu) {
                     parentMenu.classList.add('show');
                     if (dropdownToggle) {
@@ -464,14 +464,13 @@
                 }
             }
 
-            link.addEventListener('mouseenter', function () {
-                this.classList.add('hover-effect');
+            // Apply hover effect for menu items
+            link.addEventListener("mouseenter", function () {
+                this.classList.add("hover-effect");
             });
 
-            link.addEventListener('mouseleave', function () {
-                if (!this.classList.contains('active')) {
-                    this.classList.remove('hover-effect');
-                }
+            link.addEventListener("mouseleave", function () {
+                this.classList.remove("hover-effect");
             });
         });
         
@@ -483,36 +482,28 @@
             }
             
             dropdown.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
+                this.classList.add('hovered-dropdown');
             });
 
             dropdown.addEventListener("mouseleave", function () {
-                if (!this.classList.contains('active')) {
-                    this.classList.remove("hover-effect");
-                }
+                this.classList.remove("hovered-dropdown");
             });
         });
     });
 </script>
 
 <style>
-    @keyframes aurora {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-
+    /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
     .navbar {
-        background: linear-gradient(270deg, #ff4b5c, #00509d, #adb5bd, #ff4b5c, #00509d, #adb5bd, #ff4b5c);
-        background-size: 400% 400%;
-        animation: aurora 10s ease infinite;
-        transition: all 0.8s ease-in-out;
+        background: rgb(0, 0, 128) !important;
     }
 
+    /* 🔹 NAVBAR BRAND COLOR (White) */
     .navbar-brand {
-        color: #fff;
+        color: #ffffff !important;
     }
 
+    /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
     .nav-link, 
     .dropdown-toggle, 
     .list-unstyled a {
@@ -521,34 +512,56 @@
         transition: all 0.3s ease-in-out;
     }
 
-    .nav-link, .nav-link:hover, 
-    .list-unstyled a:hover, .dropdown-toggle:hover,
+    /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
+    .nav-link:hover, 
+    .list-unstyled a:hover, 
+    .dropdown-toggle:hover,
     .hovered-dropdown, .hover-effect {
-        background: linear-gradient(90deg, #adb5bd, #ff4b5c);
-        color: #ffffff !important;
+        background: rgb(0, 0, 128) !important; /* Navy Blue */
+        color: #ffffff !important; /* White Text */
         transform: scale(1.05);
     }
 
-    .nav-link.active, .list-unstyled a.active, .dropdown-toggle.active {
-        color: #ffffff !important;
-        font-weight: bold;
-        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+    /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
+    .nav-link.active, 
+    .list-unstyled a.active, 
+    .dropdown-toggle.active {
+        color: rgb(0, 0, 0) !important; /* Black */
+        font-weight: bold !important;
+        background: transparent !important;
     }
 
+    /* 🔹 WHEN DROPDOWN IS EXPANDED */
     .dropdown-toggle[aria-expanded="true"], 
     .dropdown-toggle.highlighted-dropdown {
-        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
-        color: #ffffff !important;
+        background: rgb(255, 255, 255) !important; /* White Background */
+        color: rgb(0, 0, 0) !important; /* Black Text */
         font-weight: bold;
     }
 
-    .dropdown-toggle.highlighted-dropdown:hover {
-        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+    /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
+    .collapse.show {
+        background-color: rgb(255, 255, 255);
+        border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
     }
 
+    /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+    .dropdown-toggle:hover, 
+    .dropdown-toggle.highlighted-dropdown:hover {
+        background: rgb(0, 0, 128) !important; /* Navy Blue */
+        color: white !important; /* White Text */
+    }
+
+    /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
+    .dropdown-toggle:hover *, 
+    .dropdown-toggle.highlighted-dropdown:hover * {
+        color: white !important;
+    }
+
+    /* 🔹 SIDEBAR STYLE */
     .sidebar {
         width: 250px;
-        background: #ff4b5c !important;
+        background: rgb(0, 0, 128) !important; /* Navy Blue */
         overflow: visible !important;
     }
 
@@ -559,7 +572,22 @@
     .sidebar .collapse.show {
         display: block !important;
     }
+
+    /* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
+    .dropdown-toggle {
+        border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+
+    /* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
+    .dropdown-toggle:hover, 
+    .dropdown-toggle.highlighted-dropdown {
+        border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
+    }
 </style>
+
+
 
 
 

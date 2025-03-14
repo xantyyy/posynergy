@@ -239,65 +239,55 @@
             // Mark the active link
             if (linkHref === currentUrl) {
                 link.classList.add('active');
-
                 if (parentMenu) {
-                    const dropdownToggle = parentMenu.previousElementSibling;
+                    parentMenu.classList.add('show');
                     if (dropdownToggle) {
                         dropdownToggle.classList.add('highlighted-dropdown', 'active');
                         dropdownToggle.setAttribute('aria-expanded', 'true');
                     }
-                    parentMenu.classList.add('show');
                 }
             }
 
             // Apply hover effect for menu items
-            link.addEventListener('mouseenter', function () {
-                this.classList.add('hover-effect');
+            link.addEventListener("mouseenter", function () {
+                this.classList.add("hover-effect");
             });
 
-            link.addEventListener('mouseleave', function () {
-                this.classList.remove('hover-effect');
+            link.addEventListener("mouseleave", function () {
+                this.classList.remove("hover-effect");
             });
         });
-
-        // Ensure dropdown toggle remains highlighted if its submenu has an active item
+        
         document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
             const parentMenu = dropdown.nextElementSibling;
             if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown');
+                dropdown.classList.add('highlighted-dropdown', 'active');
                 dropdown.setAttribute('aria-expanded', 'true');
             }
-
-            // Apply hover effect for dropdown menu
+            
             dropdown.addEventListener("mouseenter", function () {
                 this.classList.add('hovered-dropdown');
             });
 
             dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove('hovered-dropdown');
+                this.classList.remove("hovered-dropdown");
             });
         });
     });
 </script>
 
 <style>
-    @keyframes aurora {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-
+    /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
     .navbar {
-        background: linear-gradient(270deg, #ff4b5c, #00509d, #adb5bd, #ff4b5c, #00509d, #adb5bd, #ff4b5c);
-        background-size: 400% 400%;
-        animation: aurora 10s ease infinite;
-        transition: all 0.8s ease-in-out;
+        background: rgb(0, 0, 128) !important;
     }
 
+    /* 🔹 NAVBAR BRAND COLOR (White) */
     .navbar-brand {
-        color: #fff;
+        color: #ffffff !important;
     }
 
+    /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
     .nav-link, 
     .dropdown-toggle, 
     .list-unstyled a {
@@ -306,34 +296,56 @@
         transition: all 0.3s ease-in-out;
     }
 
-    .nav-link, .nav-link:hover, 
-    .list-unstyled a:hover, .dropdown-toggle:hover,
+    /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
+    .nav-link:hover, 
+    .list-unstyled a:hover, 
+    .dropdown-toggle:hover,
     .hovered-dropdown, .hover-effect {
-        background: linear-gradient(90deg, #adb5bd, #ff4b5c);
-        color: #ffffff !important;
+        background: rgb(0, 0, 128) !important; /* Navy Blue */
+        color: #ffffff !important; /* White Text */
         transform: scale(1.05);
     }
 
-    .nav-link.active, .list-unstyled a.active, .dropdown-toggle.active {
-        color: #ffffff !important;
-        font-weight: bold;
-        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+    /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
+    .nav-link.active, 
+    .list-unstyled a.active, 
+    .dropdown-toggle.active {
+        color: rgb(0, 0, 0) !important; /* Black */
+        font-weight: bold !important;
+        background: transparent !important;
     }
 
+    /* 🔹 WHEN DROPDOWN IS EXPANDED */
     .dropdown-toggle[aria-expanded="true"], 
     .dropdown-toggle.highlighted-dropdown {
-        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
-        color: #ffffff !important;
+        background: rgb(255, 255, 255) !important; /* White Background */
+        color: rgb(0, 0, 0) !important; /* Black Text */
         font-weight: bold;
     }
 
-    .dropdown-toggle.highlighted-dropdown:hover {
-        background: linear-gradient(90deg, #adb5bd, #ff4b5c) !important;
+    /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
+    .collapse.show {
+        background-color: rgb(255, 255, 255);
+        border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
     }
 
+    /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+    .dropdown-toggle:hover, 
+    .dropdown-toggle.highlighted-dropdown:hover {
+        background: rgb(0, 0, 128) !important; /* Navy Blue */
+        color: white !important; /* White Text */
+    }
+
+    /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
+    .dropdown-toggle:hover *, 
+    .dropdown-toggle.highlighted-dropdown:hover * {
+        color: white !important;
+    }
+
+    /* 🔹 SIDEBAR STYLE */
     .sidebar {
         width: 250px;
-        background: #ff4b5c !important;
+        background: rgb(0, 0, 128) !important; /* Navy Blue */
         overflow: visible !important;
     }
 
@@ -344,5 +356,19 @@
     .sidebar .collapse.show {
         display: block !important;
     }
+
+    /* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
+    .dropdown-toggle {
+        border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+
+    /* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
+    .dropdown-toggle:hover, 
+    .dropdown-toggle.highlighted-dropdown {
+        border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
+    }
 </style>
+
 <?php include_once 'footer.php'; ?>
