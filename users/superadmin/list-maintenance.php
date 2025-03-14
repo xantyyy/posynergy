@@ -169,17 +169,88 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">List Maintenance</h2>
+				<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; margin-top: -30px;">
+						<div class="container">
+							<div class="row justify-content-center">
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-body">
+											<div class="col-md-12">
+												<h2>List Maintenance</h2>
+											</div>
+											<form>
+												<div class="d-flex align-items-center mt-3">
+													<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-plus"></i> New List
+													</button>
+													<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-edit"></i> Edit List Name
+													</button>
+													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-trash"></i> Delete
+													</button>
+												</div>
+												<h6>Common Lists:</h6>
+												<div class="d-flex align-items-center mt-2">
+													<label for="#" class="me-2">Select:</label>
+													<select class="form-select" id="#">
+														<option value="#" selected hidden></option>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+											</form>
+											<hr>
+											<div class="row">
+												<div class="col-md-12">
+													<h6>Item Name</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 375px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<!--<tr>
+																			<th style="width: 30%;">Supplier:</th>
+																			<td id="supplierName">ABC Branch</td>
+																		</tr>
+																		<tr>
+																			<th>TIN:</th>
+																			<td id="supplierTIN">123</td>
+																		</tr>
+																		<tr>
+																			<th>Address:</th>
+																			<td id="supplierAddress">123 Street</td>
+																		</tr>
+																		<tr>
+																			<th>Name:</th>
+																			<td id="supplierContactPerson">Carl</td>
+																		</tr>
+																		<tr>
+																			<th>Contact No.:</th>
+																			<td id="supplierContactNo">09123456789</td>
+																		</tr>-->
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="d-flex align-items-center" style="margin-left: 86%;">
+												<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="#">
+													<i class="fas fa-times"></i>
+												</button>
+												<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" id="#">
+													<i class="fas fa-plus"></i>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-					</div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                    
-            </div>
+					</div>                   
+            	</div>
 
             <script>
 				const currentUrl = window.location.pathname.split('/').pop();

@@ -169,17 +169,175 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Branch Setup</h2>
+					<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+						<div class="container">
+							<div class="row justify-content-center">
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-body">
+											<div class="col-md-12">
+												<h2>Branch Setup</h2>
+											</div>
+											<form>
+												<div class="d-flex align-items-center mt-3">
+													<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-edit"></i> Edit
+													</button>
+													<button type="button" class="btn btn-warning mb-2 me-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-save"></i> Save
+													</button>
+													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-times"></i> Cancel
+													</button>
+												</div>
+											</form>
+											<hr>
+											<div class="row">
+												<div class="col-md-12">
+													<h6>Supplier Information</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 380px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<tr>
+																			<th style="width: 50%;">Company:</th>
+																			<td id="#">Sample</td>
+																		</tr>
+																		<tr>
+																			<th>Businness Line Trade:</th>
+																			<td id="#">Sample</td>
+																		</tr>
+																		<tr>
+																			<th>Branch:</th>
+																			<td id="#">Sample</td>
+																		</tr>
+																		<tr>
+																			<th>Address:</th>
+																			<td id="#">Sample</td>
+																		</tr>
+																		<tr>
+																			<th>Telephone No.:</th>
+																			<td id="#">Sample</td>
+																		</tr>
+																		<tr>
+																			<th>TIN No.:</th>
+																			<td id="#">Sample</td>
+																		</tr>
+																		<tr>
+																			<th>Permit No.:</th>
+																			<td id="#">Sample</td>
+																		</tr>
+																		<tr>
+																			<th>Serial No.:</th>
+																			<td id="#">Sample</td>
+																		</tr>
+																		<tr>
+																			<th>Min No.:</th>
+																			<td id="#">Sample</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Company Value</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 550px); overflow-y: auto;">
+																<table class="table">
+																<tbody>
+																		<tr>
+																			<th style="width: 50%;">Vatable:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Minimum Purchase to Earned Points</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 550px); overflow-y: auto;">
+																<table class="table">
+																<tbody>
+																		<tr>
+																			<th style="width: 50%;">ST Per Point:</th>
+																			<td id="#">400</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Senior Discount Setup</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 500px); overflow-y: auto;">
+																<table class="table">
+																<tbody>
+																		<tr>
+																			<th style="width: 50%;">Discount Max Amount:</th>
+																			<td id="#">2500</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">Discount Scope:</th>
+																			<td id="#">WEEK</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Discount Percentage</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 400px); overflow-y: auto;">
+																<table class="table">
+																<tbody>
+																		<tr>
+																			<th style="width: 50%;">Senior Discount:</th>
+																			<td id="#">0.05</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">PWD Discount:</th>
+																			<td id="#">0.05</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">Solo Parent Discount:</th>
+																			<td id="#">0.10</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">NAAC Discount:</th>
+																			<td id="#">0.20</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">Medal of Valor Discount:</th>
+																			<td id="#">0.05</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                    
-            </div>
+            	</div>
 
             <script>
 				const currentUrl = window.location.pathname.split('/').pop();
@@ -248,6 +406,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>

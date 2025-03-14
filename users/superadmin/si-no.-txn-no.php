@@ -169,17 +169,52 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Si No. and Transaction No. Setup</h2>
+					<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; margin-top: -30px;">
+						<div class="container">
+							<div class="row justify-content-center">
+								<div class="col-md-5">
+									<div class="card">
+										<div class="card-body">
+											<div class="col-md-12">
+												<h3>SI No. and Transaction No. Setup</h3>
+											</div>
+											<form>
+												<div class="d-flex align-items-center mt-3">
+													<h6>Sales Invoice:</h6>
+													<input type="text" class="form-control" style="width: 60%; margin-left: 10px;" id="#">
+													<button type="button" class="btn btn-success" style="font-size: 13px; margin-left: 10px;" id="#">
+														<i class="fas fa-edit"></i> Edit
+													</button>
+												</div>
+											</form>
+											<hr>
+											<div class="row">
+												<div class="col-md-12">
+													<h6>Transaction No.</h6>
+													<form>
+														<div class="d-flex align-items-center mt-3">
+															<label for="#">No. of Reset: </label>
+															<input type="text" class="form-control" style="width: 75%; margin-left: 10px;" id="#">
+														</div>
+														<div class="d-flex align-items-center mt-3">
+															<label for="#">Txn No: </label>
+															<input type="text" class="form-control" style="width: 75%; margin-left: 50px;" id="#">
+														</div>
+													</form>
+												</div>
+											</div>
+											<div class="d-flex align-items-center mt-2" style="margin-left: 82%;">
+												<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="#">
+													<i class="fas fa-refresh"></i> Reset
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                    
-            </div>
+            	</div>
 
             <script>
 				const currentUrl = window.location.pathname.split('/').pop();
@@ -248,6 +283,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>

@@ -169,17 +169,300 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">User Permissions</h2>
+					<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+						<div class="container">
+							<div class="row justify-content-center">
+								<div class="col-md-6">
+									<div class="card">
+										<div class="card-body">
+											<div class="col-md-12">
+												<h2>User Permissions</h2>
+											</div>
+											<form>
+												<div class="d-flex align-items-center mt-3">
+													<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-edit"></i> Edit Previleges
+													</button>
+													<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-trash"></i> Delete
+													</button>
+													<button type="button" class="btn btn-warning mb-2 me-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-save"></i> Save
+													</button>
+													<button type="button" class="btn btn-info mb-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-times"></i> Cancel
+													</button>
+												</div>
+											</form>
+											<hr>
+											<form>
+												<h6>Roles:</h6>
+												<div class="d-flex align-items-center mt-2">
+													<select class="form-select" id="#">
+														<option value="#" selected hidden></option>
+														<option value="option1">Option 1</option>
+														<option value="option2">Option 2</option>
+													</select>
+												</div>
+											</form>
+											<hr>
+											<div class="row">
+												<div class="col-md-12">
+													<h6>Inventory</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 500px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<tr>
+																			<th style="width: 50%;">Incoming Inventory:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Adjustment Inventory:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Inventory Purchases</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 500px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<tr>
+																			<th style="width: 50%;">Purchase Order:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Purchase Return:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Receiving:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Inventory Product Profile</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 500px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<tr>
+																			<th style="width: 50%;">PLU Entry:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>PLU Search:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Inventory Search</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 400px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<tr>
+																			<th style="width: 50%;">Search Inventory:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Search Sales:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Search Discounts:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Adjustment/Incoming:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Product SL:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Search Return:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>E-Journal:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Void Transactions:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Suki Points:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Logs:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Other Transaction</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 450px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<tr>
+																			<th style="width: 50%;">Enroll:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Document Reprinter:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Senior Discount:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>PWD Dicount:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Discount Setup:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Inventory Configuration</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 450px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<tr>
+																			<th style="width: 50%;">Supplier:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Inventory Maintenance:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Product Description:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Inventory Branch Setup:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>SI Setup:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Inventory User:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Permissions:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Inventory Utilities</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 500px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<tr>
+																			<th style="width: 50%;">Close Inventory:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Backup Data:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-12">
+													<h6>Point of Sales</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 470px); overflow-y: auto;">
+																<table class="table">
+																	<tbody>
+																		<tr>
+																			<th style="width: 50%;">Point of Sale:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Tender Declaration:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Shift Reading:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>X Reading:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																		<tr>
+																			<th>Z Reading:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                    
-            </div>
+            	</div>
 
             <script>
 				const currentUrl = window.location.pathname.split('/').pop();
@@ -248,6 +531,11 @@
 					.dropdown-toggle[aria-expanded="true"] {
 						background-color: #e0e0e0;
 						font-weight: bold;
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 				</style>
 <?php include_once 'footer.php'; ?>
