@@ -32,4 +32,4 @@ if (!empty($barcode)) {
 }
 
 $conn->close();
-?>
+?> test
