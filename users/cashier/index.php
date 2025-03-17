@@ -1,4 +1,7 @@
 <?php include_once 'header.php'; ?>
+<?php include 'sidebar-modals.php'; ?>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 <!--MENU SIDEBAR CONTENT-->
 <nav id="sidebar">
@@ -17,13 +20,19 @@
             <a href="#" class="dashboard"><i class="material-icons">add</i><span>Add To Pending</span></a>
         </li>
         <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">pending</i><span>Pending Transaction</span></a>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#pendingTransactionModal">
+                <i class="material-icons">pending</i><span>Pending Transaction</span>
+            </a>
         </li>
         <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">search</i><span>Search Product</span></a>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#searchProductModal">
+                <i class="material-icons">search</i><span>Search Product</span>
+            </a>
         </li>
         <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">keyboard_return</i><span>Return</span></a>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#returnModal">
+                <i class="material-icons">keyboard_return</i><span>Return</span>
+            </a>
         </li>
         <li class="">
         <a href="#" class="dashboard"><i class="material-icons">delete</i><span>Void Item</span></a>
@@ -35,7 +44,9 @@
             <a href="#" class="dashboard"><i class="material-icons">delete_forever</i><span>Void All</span></a>
         </li>
         <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">loyalty</i><span>Customer Points</span></a>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#customerPointsModal">
+                <i class="material-icons">loyalty</i><span>Customer Points</span>
+            </a>
         </li>
         <li class="">
             <a href="#" class="dashboard"><i class="material-icons">credit_card</i><span>Other Payment Type</span></a>
@@ -44,7 +55,9 @@
             <a href="#" class="dashboard"><i class="material-icons">discount</i><span>Apply Discount</span></a>
         </li>
         <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">price_check</i><span>Price Check</span></a>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#priceCheckModal">
+                <i class="material-icons">price_check</i><span>Price Check</span>
+            </a>
         </li>
         <li class="logout" style="margin-top: 30px;">
             <a href="?logout='1'"><i class="material-icons">logout</i><span>Logout</span></a>
@@ -62,8 +75,7 @@
             <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
             data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
                 <span class="material-icons">menu</span>
-            </button>
-            
+            </button>        
         </nav>
     </div>	  
 
@@ -97,7 +109,7 @@
 
                                 <!-- Right Section: Value -->
                                 <div class="col-md-8 text-right d-flex justify-content-end" style="font-size: 48px; font-weight: bold; color: white;">
-                                    0.00
+                                    ₱0.00
                                 </div>
                             </div>
                         </div>
