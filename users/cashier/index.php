@@ -19,7 +19,7 @@
         </div>
     </div>
     <ul class="list-unstyled components">
-        <li class="active">
+        <li class="">
             <a href="#" class="dashboard"><i class="material-icons">edit</i><span>Edit Item</span></a>
         </li>
         <li class="">
@@ -136,69 +136,6 @@
                                         <td>Sample</td>
                                         <td>Sample</td>
                                     </tr>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
                                 </tbody>
 						    </table>
 					    </div>
@@ -209,6 +146,7 @@
             <!-- Right Side - Additional Table -->
             <div class="col-md-4" style="margin-top: -15px;">
                 <div class="card" style="height: calc(87.8vh);">
+                <div class="card-header bg-success text-white text-center"></div>
                     <div class="card-body">
                         <h5>Transaction Details</h5>
                         <hr>
@@ -227,7 +165,7 @@
 													<td id="#"> </td>
 												</tr>
                                                 <tr>
-													<th style="width: 50%;"># of Item(s):</th>
+													<th style="width: 50%;"># of Item:</th>
 													<td id="#"> </td>
 												</tr>
                                                 <tr>
