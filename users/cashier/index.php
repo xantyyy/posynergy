@@ -55,7 +55,7 @@
         <li class="">
             <a href="#" class="dashboard"><i class="material-icons">price_check</i><span>Price Check</span></a>
         </li>
-        <li class="logout">
+        <li class="logout" style="margin-top: 30px;">
             <a href="?logout='1'"><i class="material-icons">logout</i><span>Logout</span></a>
         </li>
     </ul>
