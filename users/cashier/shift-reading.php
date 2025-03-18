@@ -13,9 +13,6 @@
         </div>
     </div>
     <ul class="list-unstyled components">
-        <li class="">
-            <a href="point-of-sale.php" class="dashboard"><i class="material-icons">point_of_sale</i><span>Point of Sale</span></a>
-        </li>
         <li class="dropdown">
 			<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 			<i class="material-icons">report</i><span>POS Reports</span></a>
@@ -37,8 +34,8 @@
 				</li>
 			</ul>
 		</li>
-        <li class="logout">
-            <a href="?logout='1'"><i class="material-icons">logout</i><span>Logout</span></a>
+        <li class="#">
+            <a href="index.php"><i class="material-icons">arrow_back</i><span>Back to Main</span></a>
         </li>
     </ul>
 </nav>
@@ -49,7 +46,7 @@
         <nav class="navbar  navbar-expand-lg">
             </button>
             
-            <a class="navbar-brand" href="#">POSynergy</a>
+            <a class="navbar-brand" href="#">POS Reports</a>
             <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
             data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
                 <span class="material-icons">menu</span>
@@ -59,14 +56,121 @@
 
     <!--DASHBOARD CONTENT-->
     <div class="main-content">
-        <div class="row">
-            <!-- Left Side - Product Data Entry Form -->
-            
+        <div class="card">
+            <div class="card-body">
+                <form>
+                    <div class="row g-4">
+                        <!-- Left Side -->
+                        <div class="col-md-5 ms-md-5" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+                            <div class="mb-3 row">
+                                <label for="date" class="col-sm-4 col-form-label">Date:</label>
+                                <div class="col-sm-8">
+                                    <input type="date" class="form-control" id="date">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="transactionNo" class="col-sm-4 col-form-label">Transaction No.:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="transactionNo">
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="cashierName" class="form-label">Cashier Name:</label>
+                                <div class="col-sm-12 d-flex">
+                                    <select class="form-select me-2" id="cashierName">
+                                        <option>Select Cashier</option>
+                                        <!-- Add options here -->
+                                    </select>
+                                    <button type="button" class="btn btn-secondary">
+                                        <i class="fa fa-gear"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-3 row">
+                                <label for="openingFund" class="col-sm-4 col-form-label">Opening Fund:</label>
+                                <div class="col-sm-8">
+                                    <input type="number" class="form-control" id="openingFund">
+                                </div>
+                            </div>
+                        </div>
 
-            <!-- Right Side - Additional Table -->
-            <!--<div class="col-md-4" style="margin-top: -15px;">
-                
-            </div>-->
+                        <!-- Right Side -->
+                        <div class="col-md-5 offset-md-1" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+                            <div class="mb-2 row">
+                                <label for="gross" class="col-sm-4 col-form-label">Gross:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="gross">
+                                </div>
+                            </div>
+                            <div class="mb-2 row">
+                                <label for="pointsAvailed" class="col-sm-4 col-form-label">Points Availed:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="pointsAvailed">
+                                </div>
+                            </div>
+                            <div class="mb-2 row">
+                                <label for="totalDiscount" class="col-sm-4 col-form-label">Total Discount:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="totalDiscount">
+                                </div>
+                            </div>
+                            <div class="mb-2 row">
+                                <label for="totalSales" class="col-sm-4 col-form-label">Total Sales:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="totalSales">
+                                </div>
+                            </div>
+                            <div class="mb-2 row">
+                                <label for="lessSalesReturn" class="col-sm-4 col-form-label">Less Sales Return:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="lessSalesReturn">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="net" class="col-sm-4 col-form-label">NET:</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="net">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: -10px;">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
+                            <table class="table table-bordered" id="table-bold">
+                                <thead>
+                                    <tr>
+                                        <th>POS Type</th>
+                                        <th>Transaction</th>
+                                        <th>POS Amount</th>
+                                        <th>Cashier Amount</th>
+                                        <th>Short/Over</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Add rows dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary me-2">
+                    <i class="fa fa-print"></i> Print
+                </button>
+                <button type="button" class="btn btn-danger">
+                    <i class="fa fa-arrow-left"></i> Exit
+                </button>
+            </div>
         </div>
     </div>
 </div>

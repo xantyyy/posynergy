@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <!-- Modal Header -->
-            <div class="modal-header card-header bg-success text-white text-center">
+            <div class="modal-header" style="background: rgb(65, 165, 232); color: #fff;">
                 <h5 class="modal-title" id="pendingTransactionModalLabel">Pending Transaction Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -49,7 +49,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <!-- Modal Header -->
-            <div class="modal-header card-header bg-success text-white text-center">
+            <div class="modal-header" style="background: rgb(65, 165, 232); color: #fff;">
                 <h5 class="modal-title" id="searchProductModalLabel">Search Product</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -135,7 +135,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <!-- Modal Header -->
-            <div class="modal-header card-header bg-success text-white text-center">
+            <div class="modal-header" style="background: rgb(65, 165, 232); color: #fff;">
                 <h5 class="modal-title" id="returnModalLabel">Return Item</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="margin-left: 10px;"></button>
             </div>
@@ -241,7 +241,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <!-- Modal Header -->
-            <div class="modal-header bg-success text-white">
+            <div class="modal-header" style="background: rgb(65, 165, 232); color: #fff;">
                 <h5 class="modal-title" id="customerPointsModalLabel">Customer Points</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -321,7 +321,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <!-- Modal Header -->
-            <div class="modal-header bg-success text-white">
+            <div class="modal-header" style="background: rgb(65, 165, 232); color: #fff;">
                 <h5 class="modal-title" id="enrollCustomerModalLabel">Enroll Customer</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -433,7 +433,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <!-- Modal Header -->
-            <div class="modal-header bg-success text-white">
+            <div class="modal-header" style="background: rgb(65, 165, 232); color: #fff;">
                 <h5 class="modal-title" id="priceCheckModalLabel">Price Check</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>

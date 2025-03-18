@@ -37,7 +37,7 @@
 				</li>
 			</ul>
 		</li>
-        <li class="logout">
+        <li class="logout" style="margin-top: 30px;">
             <a href="?logout='1'"><i class="material-icons">logout</i><span>Logout</span></a>
         </li>
     </ul>
