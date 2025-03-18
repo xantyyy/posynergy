@@ -174,7 +174,7 @@
 					<div class="card p-4 shadow-lg text-center" style="max-width: 400px; width: 100%; border-radius: 10px;">
 						
 						<!-- E-Journal Title -->
-						<h2 class="text-primary border-bottom pb-2"><b>E-Journal</b></h2>
+						<h2 class="text	 border-bottom pb-2"><b>E-Journal</b></h2>
 
 						<!-- Date Range Selection Form -->
 						<form method="POST" action="e-journal.php">
@@ -245,7 +245,7 @@
 </script>
 
 			<style>
-				/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
+					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
 					.navbar {
 						background: rgb(65, 165, 232) !important;
 					}
@@ -269,7 +269,7 @@
 					.list-unstyled a:hover, 
 					.dropdown-toggle:hover,
 					.hovered-dropdown, .hover-effect {
-						background: rgb(0, 0, 128) !important; /* Navy Blue */
+						background: rgb(65, 165, 232) !important; /* Navy Blue */
 						color: #ffffff !important; /* White Text */
 						transform: scale(1.05);
 					}
@@ -294,15 +294,9 @@
 					/* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
 					.collapse.show {
 						background-color: rgb(255, 255, 255);
-						border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
+						border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
 					}
 
-					/* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
-					.dropdown-toggle:hover, 
-					.dropdown-toggle.highlighted-dropdown:hover {
-						background: rgb(0, 0, 128) !important; /* Navy Blue */
-						color: white !important; /* White Text */
-					}
 
 					/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
 					.dropdown-toggle:hover *, 
@@ -313,7 +307,7 @@
 					/* 🔹 SIDEBAR STYLE */
 					.sidebar {
 						width: 250px;
-						background: rgb(0, 0, 128) !important; /* Navy Blue */
+						background: rgb(65, 165, 232) !important; /* Navy Blue */
 						overflow: visible !important;
 					}
 
@@ -325,17 +319,9 @@
 						display: block !important;
 					}
 
-					/* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
-					.dropdown-toggle {
-						border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
-						border-radius: 5px;
-						padding: 5px 10px;
-					}
-
 					/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
 					.dropdown-toggle:hover, 
 					.dropdown-toggle.highlighted-dropdown {
-						border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
-   					 }
+					}
 			</style>
 <?php include_once 'footer.php'; ?>
