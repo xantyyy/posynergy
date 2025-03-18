@@ -184,15 +184,16 @@
                                 <div class="card-body">
 									<form>
 										<h5>Search</h5>
-										<button type="button" class="btn btn-info me-2" style="font-size: 13px;" id="quickSearchBtn">
+										<button type="button" class="btn btn-outline-secondary me-2" style="font-size: 13px;" id="quickSearchBtn">
 											<i class="fas fa-search"></i> Quick Search
 										</button>
-										<button type="button" class="btn btn-info me-2" style="font-size: 13px;" id="valueSearchBtn">
+										<button type="button" class="btn btn-outline-secondary me-2" style="font-size: 13px;" id="valueSearchBtn">
 											<i class="fas fa-search"></i> Value Search
 										</button>
-										<button type="button" class="btn btn-info" style="width: 105px; font-size: 13px;" id="searchBtn" disabled>
+										<button type="button" class="btn btn-outline-secondary" style="width: 105px; font-size: 13px;">
 											<i class="fas fa-search"></i> Search
 										</button>
+
 										<hr>
 										<div class="form-row mt-3">
 											<h5>Value Search</h5>
@@ -230,7 +231,7 @@
 											</div>
 											<div class="d-flex mt-3">
 												<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-													<thead class="card-header bg-dark opacity-60 text-white">
+												<thead class="fw-bolder fs-5 fst-italic card-header" style="background-color: #cbd1d3; color: black; font-weight: bold;">
 														<tr>
 															<th>
 																Current Filter
@@ -269,7 +270,7 @@
                                 <div class="card-body">
 									<div style="overflow-x: auto; white-space: nowrap;">
 										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-											<thead class="card-header bg-dark opacity-60 text-white">
+										<thead class="fw-bolder fs-5 fst-italic card-header" style="background-color: #cbd1d3; color: black; font-weight: bold;">
 												<tr>
 													<th>Total Client</th>
 													<th>Total Points Earned</th>
@@ -298,7 +299,7 @@
 									<div style="overflow-x: auto; white-space: nowrap;">
 										<h5>List</h5>
 										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-											<thead class="card-header bg-dark opacity-60 text-white">
+										<thead class="fw-bolder fs-5 fst-italic card-header" style="background-color: #cbd1d3; color: black; font-weight: bold;">
 												<tr>
 													<th>Card No.</th>
 													<th>Full Name</th>
@@ -331,173 +332,173 @@
                 </div>    
             </div>
             
-            <script>
-				document.getElementById('quickSearchBtn').addEventListener('click', function () {
-				document.getElementById('searchBtn').disabled = false;
+           		 <script>
+							document.getElementById('quickSearchBtn').addEventListener('click', function () {
+							document.getElementById('searchBtn').disabled = false;
 
-				document.getElementById('fieldDropdown').disabled = true;
-				document.getElementById('operatorDropdown').disabled = true;
-				document.getElementById('valueDropdown').disabled = true;
-				document.getElementById('andorDropdown').disabled = true;
+							document.getElementById('fieldDropdown').disabled = true;
+							document.getElementById('operatorDropdown').disabled = true;
+							document.getElementById('valueDropdown').disabled = true;
+							document.getElementById('andorDropdown').disabled = true;
 
-				document.getElementById('addButton').disabled = true;
-				document.getElementById('cancelButton').disabled = true;
-			});
+							document.getElementById('addButton').disabled = true;
+							document.getElementById('cancelButton').disabled = true;
+						});
 
-			document.getElementById('valueSearchBtn').addEventListener('click', function () {
-				document.getElementById('fieldDropdown').disabled = false;
-				document.getElementById('operatorDropdown').disabled = false;
-				document.getElementById('valueDropdown').disabled = false;
-				document.getElementById('andorDropdown').disabled = false;
+						document.getElementById('valueSearchBtn').addEventListener('click', function () {
+							document.getElementById('fieldDropdown').disabled = false;
+							document.getElementById('operatorDropdown').disabled = false;
+							document.getElementById('valueDropdown').disabled = false;
+							document.getElementById('andorDropdown').disabled = false;
 
-				document.getElementById('addButton').disabled = false;
-				document.getElementById('cancelButton').disabled = false;
+							document.getElementById('addButton').disabled = false;
+							document.getElementById('cancelButton').disabled = false;
 
-				document.getElementById('searchBtn').disabled = true;
-			});
-			document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
-        
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+							document.getElementById('searchBtn').disabled = true;
+						});
+						document.addEventListener("DOMContentLoaded", function () {
+					const currentUrl = window.location.pathname.split('/').pop();
+					
+					document.querySelectorAll('.list-unstyled a').forEach(link => {
+						const linkHref = link.getAttribute('href');
+						const parentMenu = link.closest('.collapse');
+						const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            // Mark the active link
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
-                }
-            }
+						// Mark the active link
+						if (linkHref === currentUrl) {
+							link.classList.add('active');
+							if (parentMenu) {
+								parentMenu.classList.add('show');
+								if (dropdownToggle) {
+									dropdownToggle.classList.add('highlighted-dropdown', 'active');
+									dropdownToggle.setAttribute('aria-expanded', 'true');
+								}
+							}
+						}
 
-            // Apply hover effect for menu items
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
-            });
+						// Apply hover effect for menu items
+						link.addEventListener("mouseenter", function () {
+							this.classList.add("hover-effect");
+						});
 
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
-        });
-        
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-            
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
+						link.addEventListener("mouseleave", function () {
+							this.classList.remove("hover-effect");
+						});
+					});
+					
+					document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+						const parentMenu = dropdown.nextElementSibling;
+						if (parentMenu && parentMenu.querySelector('.active')) {
+							dropdown.classList.add('highlighted-dropdown', 'active');
+							dropdown.setAttribute('aria-expanded', 'true');
+						}
+						
+						dropdown.addEventListener("mouseenter", function () {
+							this.classList.add('hovered-dropdown');
+						});
 
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
-        });
-    });
-</script>
-<style>
-/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
-    .navbar {
-        background: rgb(0, 0, 128) !important;
-    }
+						dropdown.addEventListener("mouseleave", function () {
+							this.classList.remove("hovered-dropdown");
+						});
+						});
+					});
+				</script>
+				<style>
+					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
+						.navbar {
+							background: rgb(65, 165, 232) !important;
+						}
 
-    /* 🔹 NAVBAR BRAND COLOR (White) */
-    .navbar-brand {
-        color: #ffffff !important;
-    }
+						/* 🔹 NAVBAR BRAND COLOR (White) */
+						.navbar-brand {
+							color: #ffffff !important;
+						}
 
-    /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
-    .nav-link, 
-    .dropdown-toggle, 
-    .list-unstyled a {
-        color: #333;
-        font-size: 16px;
-        transition: all 0.3s ease-in-out;
-    }
+						/* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
+						.nav-link, 
+						.dropdown-toggle, 
+						.list-unstyled a {
+							color: #333;
+							font-size: 16px;
+							transition: all 0.3s ease-in-out;
+						}
 
-    /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
-    .nav-link:hover, 
-    .list-unstyled a:hover, 
-    .dropdown-toggle:hover,
-    .hovered-dropdown, .hover-effect {
-        background: rgb(0, 0, 128) !important; /* Navy Blue */
-        color: #ffffff !important; /* White Text */
-        transform: scale(1.05);
-    }
+						/* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
+						.nav-link:hover, 
+						.list-unstyled a:hover, 
+						.dropdown-toggle:hover,
+						.hovered-dropdown, .hover-effect {
+							background: rgb(0, 0, 128) !important; /* Navy Blue */
+							color: #ffffff !important; /* White Text */
+							transform: scale(1.05);
+						}
 
-    /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
-    .nav-link.active, 
-    .list-unstyled a.active, 
-    .dropdown-toggle.active {
-        color: rgb(0, 0, 0) !important; /* Black */
-        font-weight: bold !important;
-        background: transparent !important;
-    }
+						/* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
+						.nav-link.active, 
+						.list-unstyled a.active, 
+						.dropdown-toggle.active {
+							color: rgb(0, 0, 0) !important; /* Black */
+							font-weight: bold !important;
+							background: transparent !important;
+						}
 
-    /* 🔹 WHEN DROPDOWN IS EXPANDED */
-    .dropdown-toggle[aria-expanded="true"], 
-    .dropdown-toggle.highlighted-dropdown {
-        background: rgb(255, 255, 255) !important; /* White Background */
-        color: rgb(0, 0, 0) !important; /* Black Text */
-        font-weight: bold;
-    }
+						/* 🔹 WHEN DROPDOWN IS EXPANDED */
+						.dropdown-toggle[aria-expanded="true"], 
+						.dropdown-toggle.highlighted-dropdown {
+							background: rgb(255, 255, 255) !important; /* White Background */
+							color: rgb(0, 0, 0) !important; /* Black Text */
+							font-weight: bold;
+						}
 
-    /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
-    .collapse.show {
-        background-color: rgb(255, 255, 255);
-        border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
-    }
+						/* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
+						.collapse.show {
+							background-color: rgb(255, 255, 255);
+							border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
+						}
 
-    /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
-    .dropdown-toggle:hover, 
-    .dropdown-toggle.highlighted-dropdown:hover {
-        background: rgb(0, 0, 128) !important; /* Navy Blue */
-        color: white !important; /* White Text */
-    }
+						/* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+						.dropdown-toggle:hover, 
+						.dropdown-toggle.highlighted-dropdown:hover {
+							background: rgb(0, 0, 128) !important; /* Navy Blue */
+							color: white !important; /* White Text */
+						}
 
-    /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
-    .dropdown-toggle:hover *, 
-    .dropdown-toggle.highlighted-dropdown:hover * {
-        color: white !important;
-    }
+						/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
+						.dropdown-toggle:hover *, 
+						.dropdown-toggle.highlighted-dropdown:hover * {
+							color: white !important;
+						}
 
-    /* 🔹 SIDEBAR STYLE */
-    .sidebar {
-        width: 250px;
-        background: rgb(0, 0, 128) !important; /* Navy Blue */
-        overflow: visible !important;
-    }
+						/* 🔹 SIDEBAR STYLE */
+						.sidebar {
+							width: 250px;
+							background: rgb(0, 0, 128) !important; /* Navy Blue */
+							overflow: visible !important;
+						}
 
-    .sidebar .collapse {
-        display: none;
-    }
+						.sidebar .collapse {
+							display: none;
+						}
 
-    .sidebar .collapse.show {
-        display: block !important;
-    }
+						.sidebar .collapse.show {
+							display: block !important;
+						}
 
-    /* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
-    .dropdown-toggle {
-        border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
-        border-radius: 5px;
-        padding: 5px 10px;
-    }
+						/* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
+						.dropdown-toggle {
+							border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
+							border-radius: 5px;
+							padding: 5px 10px;
+						}
 
-    /* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
-    .dropdown-toggle:hover, 
-    .dropdown-toggle.highlighted-dropdown {
-        border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
-    }
-					#table-bold thead th {
-						font-weight: bold;
-						font-style: italic;
-					}
-				</style>
+						/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
+						.dropdown-toggle:hover, 
+						.dropdown-toggle.highlighted-dropdown {
+							border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
+						}
+						#table-bold thead th {
+							font-weight: bold;
+							font-style: italic;
+						}
+			</style>
 <?php include_once 'footer.php'; ?>

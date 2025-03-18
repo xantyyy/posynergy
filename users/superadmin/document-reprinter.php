@@ -247,7 +247,7 @@
 								<div class="card-body">
 									<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
 										<table class="table table-bordered" id="table-bold">
-											<thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
+										<thead class="fw-bolder fs-5 fst-italic card-header" style="background-color: #cbd1d3; color: black; font-weight: bold;">
 												<tr>
 													<th>Date</th>
 													<th>Transaction No.</th>
@@ -462,7 +462,7 @@
 <style>
     /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
     .navbar {
-        background: rgb(0, 0, 128) !important;
+        background: rgb(65, 165, 232) !important;
     }
 
     /* 🔹 NAVBAR BRAND COLOR (White) */

@@ -184,15 +184,15 @@
                                 <div class="card-body">
                                     <h5>Details</h5>
                                     <form>
-                                        <button type="button" class="btn btn-primary" style="width: 80px; font-size: 10px;">
-                                            <i class="fas fa-plus"></i> New
-                                        </button>
-                                        <button type="button" class="btn btn-success" style="width: 80px; font-size: 10px;">
-                                            <i class="fas fa-save"></i> Save
-                                        </button>
-                                        <button type="button" class="btn btn-danger" style="width: 80px; font-size: 10px;">
-                                            <i class="fas fa-times"></i> Cancel
-                                        </button>
+                                    <button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
+                                        <i class="fas fa-plus"></i> New
+                                    </button>
+                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <i class="fas fa-save"></i> Edit
+                                    </button>
+                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
                                         <div class="form-row">
                                             <div class="form-group col-md-12">
                                                 <label for="barCode">Bar Code</label>
@@ -239,17 +239,17 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Costing Details</h5>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" style="width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-plus"></i> Add
+                                    <button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
+                                        <i class="fas fa-plus"></i> New
                                     </button>
-                                    <button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#editModalcost">
-										<i class="fas fa-save"></i> Edit
-									</button>
-                                    <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#deleteModalcost">
+                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <i class="fas fa-save"></i> Edit
+                                    </button>
+                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                     <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="card-header bg-dark opacity-60 text-white">
+                                    <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
                                             <tr>
 												<th>#</th>
                                                 <th>Supplier Name</th>
@@ -274,18 +274,17 @@
                             <div class="card">
 								<div class="card-body">
 									<h5>Retail Details</h5>
-									<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productModal" style="width: 80px; margin-right: 5px; font-size: 10px;">
-										<i class="fas fa-plus"></i> Add
-									</button>
-									<button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#editModalprice">
-										<i class="fas fa-save"></i> Edit
-									</button>
-									<button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;" data-bs-toggle="modal" data-bs-target="#deleteModalsrp">
-										<i class="fas fa-trash"></i> Delete
-									</button>
-
+									<button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
+                                        <i class="fas fa-plus"></i> New
+                                    </button>
+                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <i class="fas fa-save"></i> Edit
+                                    </button>
+                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
 									<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-										<thead class="card-header bg-dark opacity-60 text-white">
+                                    <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
 											<tr>
 												<th>#</th>
 												<th>Price Type</th>
@@ -319,147 +318,152 @@
             
 
 			<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
-        
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+                document.addEventListener("DOMContentLoaded", function () {
+                    const currentUrl = window.location.pathname.split('/').pop();
+                    
+                    document.querySelectorAll('.list-unstyled a').forEach(link => {
+                        const linkHref = link.getAttribute('href');
+                        const parentMenu = link.closest('.collapse');
+                        const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            // Mark the active link
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
+                        // Mark the active link
+                        if (linkHref === currentUrl) {
+                            link.classList.add('active');
+                            if (parentMenu) {
+                                parentMenu.classList.add('show');
+                                if (dropdownToggle) {
+                                    dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                                    dropdownToggle.setAttribute('aria-expanded', 'true');
+                                }
+                            }
+                        }
+
+                        // Apply hover effect for menu items
+                        link.addEventListener("mouseenter", function () {
+                            this.classList.add("hover-effect");
+                        });
+
+                        link.addEventListener("mouseleave", function () {
+                            this.classList.remove("hover-effect");
+                        });
+                    });
+                    
+                    document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+                        const parentMenu = dropdown.nextElementSibling;
+                        if (parentMenu && parentMenu.querySelector('.active')) {
+                            dropdown.classList.add('highlighted-dropdown', 'active');
+                            dropdown.setAttribute('aria-expanded', 'true');
+                        }
+                        
+                        dropdown.addEventListener("mouseenter", function () {
+                            this.classList.add('hovered-dropdown');
+                        });
+
+                        dropdown.addEventListener("mouseleave", function () {
+                            this.classList.remove("hovered-dropdown");
+                        });
+                    });
+                });
+            </script>
+
+                <style>
+                    /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
+                    .navbar {
+                        background: rgb(65, 165, 232) !important;
                     }
-                }
-            }
 
-            // Apply hover effect for menu items
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
-            });
+                    /* 🔹 NAVBAR BRAND COLOR (White) */
+                    .navbar-brand {
+                        color: #ffffff !important;
+                    }
 
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
-        });
-        
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-            
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
+                    /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
+                    .nav-link, 
+                    .dropdown-toggle, 
+                    .list-unstyled a {
+                        color: #333;
+                        font-size: 16px;
+                        transition: all 0.3s ease-in-out;
+                    }
 
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
-        });
-    });
-</script>
+                    /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
+                    .nav-link:hover, 
+                    .list-unstyled a:hover, 
+                    .dropdown-toggle:hover,
+                    .hovered-dropdown, .hover-effect {
+                        background: rgb(0, 0, 128) !important; /* Navy Blue */
+                        color: #ffffff !important; /* White Text */
+                        transform: scale(1.05);
+                    }
 
-<style>
-    /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
-    .navbar {
-        background: rgb(0, 0, 128) !important;
-    }
+                    /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
+                    .nav-link.active, 
+                    .list-unstyled a.active, 
+                    .dropdown-toggle.active {
+                        color: rgb(0, 0, 0) !important; /* Black */
+                        font-weight: bold !important;
+                        background: transparent !important;
+                    }
 
-    /* 🔹 NAVBAR BRAND COLOR (White) */
-    .navbar-brand {
-        color: #ffffff !important;
-    }
+                    /* 🔹 WHEN DROPDOWN IS EXPANDED */
+                    .dropdown-toggle[aria-expanded="true"], 
+                    .dropdown-toggle.highlighted-dropdown {
+                        background: rgb(255, 255, 255) !important; /* White Background */
+                        color: rgb(0, 0, 0) !important; /* Black Text */
+                        font-weight: bold;
+                    }
 
-    /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
-    .nav-link, 
-    .dropdown-toggle, 
-    .list-unstyled a {
-        color: #333;
-        font-size: 16px;
-        transition: all 0.3s ease-in-out;
-    }
+                    /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
+                    .collapse.show {
+                        background-color: rgb(255, 255, 255);
+                        border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
+                    }
 
-    /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
-    .nav-link:hover, 
-    .list-unstyled a:hover, 
-    .dropdown-toggle:hover,
-    .hovered-dropdown, .hover-effect {
-        background: rgb(0, 0, 128) !important; /* Navy Blue */
-        color: #ffffff !important; /* White Text */
-        transform: scale(1.05);
-    }
+                    /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+                    .dropdown-toggle:hover, 
+                    .dropdown-toggle.highlighted-dropdown:hover {
+                        background: rgb(0, 0, 128) !important; /* Navy Blue */
+                        color: white !important; /* White Text */
+                    }
 
-    /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
-    .nav-link.active, 
-    .list-unstyled a.active, 
-    .dropdown-toggle.active {
-        color: rgb(0, 0, 0) !important; /* Black */
-        font-weight: bold !important;
-        background: transparent !important;
-    }
+                    /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
+                    .dropdown-toggle:hover *, 
+                    .dropdown-toggle.highlighted-dropdown:hover * {
+                        color: white !important;
+                    }
 
-    /* 🔹 WHEN DROPDOWN IS EXPANDED */
-    .dropdown-toggle[aria-expanded="true"], 
-    .dropdown-toggle.highlighted-dropdown {
-        background: rgb(255, 255, 255) !important; /* White Background */
-        color: rgb(0, 0, 0) !important; /* Black Text */
-        font-weight: bold;
-    }
+                    /* 🔹 SIDEBAR STYLE */
+                    .sidebar {
+                        width: 250px;
+                        background: rgb(0, 0, 128) !important; /* Navy Blue */
+                        overflow: visible !important;
+                    }
 
-    /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
-    .collapse.show {
-        background-color: rgb(255, 255, 255);
-        border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
-    }
+                    .sidebar .collapse {
+                        display: none;
+                    }
 
-    /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
-    .dropdown-toggle:hover, 
-    .dropdown-toggle.highlighted-dropdown:hover {
-        background: rgb(0, 0, 128) !important; /* Navy Blue */
-        color: white !important; /* White Text */
-    }
+                    .sidebar .collapse.show {
+                        display: block !important;
+                    }
 
-    /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
-    .dropdown-toggle:hover *, 
-    .dropdown-toggle.highlighted-dropdown:hover * {
-        color: white !important;
-    }
+                    /* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
+                    .dropdown-toggle {
+                        border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
+                        border-radius: 5px;
+                        padding: 5px 10px;
+                    }
 
-    /* 🔹 SIDEBAR STYLE */
-    .sidebar {
-        width: 250px;
-        background: rgb(0, 0, 128) !important; /* Navy Blue */
-        overflow: visible !important;
-    }
+                    /* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
+                    .dropdown-toggle:hover, 
+                    .dropdown-toggle.highlighted-dropdown {
+                        border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
+                    }
 
-    .sidebar .collapse {
-        display: none;
-    }
-
-    .sidebar .collapse.show {
-        display: block !important;
-    }
-
-    /* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
-    .dropdown-toggle {
-        border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
-        border-radius: 5px;
-        padding: 5px 10px;
-    }
-
-    /* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
-    .dropdown-toggle:hover, 
-    .dropdown-toggle.highlighted-dropdown {
-        border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
-    }
-</style>
+                    #table-bold thead th {
+                                        font-weight: bold;
+                                        font-style: italic;
+                                    }
+                </style>
 
 <?php include_once 'footer.php'; ?>

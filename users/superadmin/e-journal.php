@@ -170,18 +170,19 @@
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 				<div class="container d-flex flex-column align-items-center justify-content-center" style="height: 100vh; background-color: #f8f9fa;">
-					<div class="container text-center">
-						<h2 class="mb-4 text-primary">E-Journal</h2>
-					</div>
+					<!-- Card Container -->
+					<div class="card p-4 shadow-lg text-center" style="max-width: 400px; width: 100%; border-radius: 10px;">
+						
+						<!-- E-Journal Title -->
+						<h2 class="text-primary border-bottom pb-2"><b>E-Journal</b></h2>
 
-					<!-- Date Range Selection -->
-					<div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%; border-radius: 10px;">
+						<!-- Date Range Selection Form -->
 						<form method="POST" action="e-journal.php">
-							<div class="form-group mb-3">
+							<div class="form-group mb-3 text-start">
 								<label for="fromDate" class="form-label">From</label>
 								<input type="date" class="form-control" id="fromDate" name="fromDate" required>
 							</div>
-							<div class="form-group mb-3">
+							<div class="form-group mb-3 text-start">
 								<label for="toDate" class="form-label">To</label>
 								<input type="date" class="form-control" id="toDate" name="toDate" required>
 							</div>
@@ -243,98 +244,98 @@
     });
 </script>
 
-<style>
-/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
-    .navbar {
-        background: rgb(0, 0, 128) !important;
-    }
+			<style>
+				/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
+					.navbar {
+						background: rgb(65, 165, 232) !important;
+					}
 
-    /* 🔹 NAVBAR BRAND COLOR (White) */
-    .navbar-brand {
-        color: #ffffff !important;
-    }
+					/* 🔹 NAVBAR BRAND COLOR (White) */
+					.navbar-brand {
+						color: #ffffff !important;
+					}
 
-    /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
-    .nav-link, 
-    .dropdown-toggle, 
-    .list-unstyled a {
-        color: #333;
-        font-size: 16px;
-        transition: all 0.3s ease-in-out;
-    }
+					/* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
+					.nav-link, 
+					.dropdown-toggle, 
+					.list-unstyled a {
+						color: #333;
+						font-size: 16px;
+						transition: all 0.3s ease-in-out;
+					}
 
-    /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
-    .nav-link:hover, 
-    .list-unstyled a:hover, 
-    .dropdown-toggle:hover,
-    .hovered-dropdown, .hover-effect {
-        background: rgb(0, 0, 128) !important; /* Navy Blue */
-        color: #ffffff !important; /* White Text */
-        transform: scale(1.05);
-    }
+					/* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
+					.nav-link:hover, 
+					.list-unstyled a:hover, 
+					.dropdown-toggle:hover,
+					.hovered-dropdown, .hover-effect {
+						background: rgb(0, 0, 128) !important; /* Navy Blue */
+						color: #ffffff !important; /* White Text */
+						transform: scale(1.05);
+					}
 
-    /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
-    .nav-link.active, 
-    .list-unstyled a.active, 
-    .dropdown-toggle.active {
-        color: rgb(0, 0, 0) !important; /* Black */
-        font-weight: bold !important;
-        background: transparent !important;
-    }
+					/* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
+					.nav-link.active, 
+					.list-unstyled a.active, 
+					.dropdown-toggle.active {
+						color: rgb(0, 0, 0) !important; /* Black */
+						font-weight: bold !important;
+						background: transparent !important;
+					}
 
-    /* 🔹 WHEN DROPDOWN IS EXPANDED */
-    .dropdown-toggle[aria-expanded="true"], 
-    .dropdown-toggle.highlighted-dropdown {
-        background: rgb(255, 255, 255) !important; /* White Background */
-        color: rgb(0, 0, 0) !important; /* Black Text */
-        font-weight: bold;
-    }
+					/* 🔹 WHEN DROPDOWN IS EXPANDED */
+					.dropdown-toggle[aria-expanded="true"], 
+					.dropdown-toggle.highlighted-dropdown {
+						background: rgb(255, 255, 255) !important; /* White Background */
+						color: rgb(0, 0, 0) !important; /* Black Text */
+						font-weight: bold;
+					}
 
-    /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
-    .collapse.show {
-        background-color: rgb(255, 255, 255);
-        border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
-    }
+					/* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
+					.collapse.show {
+						background-color: rgb(255, 255, 255);
+						border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
+					}
 
-    /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
-    .dropdown-toggle:hover, 
-    .dropdown-toggle.highlighted-dropdown:hover {
-        background: rgb(0, 0, 128) !important; /* Navy Blue */
-        color: white !important; /* White Text */
-    }
+					/* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+					.dropdown-toggle:hover, 
+					.dropdown-toggle.highlighted-dropdown:hover {
+						background: rgb(0, 0, 128) !important; /* Navy Blue */
+						color: white !important; /* White Text */
+					}
 
-    /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
-    .dropdown-toggle:hover *, 
-    .dropdown-toggle.highlighted-dropdown:hover * {
-        color: white !important;
-    }
+					/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
+					.dropdown-toggle:hover *, 
+					.dropdown-toggle.highlighted-dropdown:hover * {
+						color: white !important;
+					}
 
-    /* 🔹 SIDEBAR STYLE */
-    .sidebar {
-        width: 250px;
-        background: rgb(0, 0, 128) !important; /* Navy Blue */
-        overflow: visible !important;
-    }
+					/* 🔹 SIDEBAR STYLE */
+					.sidebar {
+						width: 250px;
+						background: rgb(0, 0, 128) !important; /* Navy Blue */
+						overflow: visible !important;
+					}
 
-    .sidebar .collapse {
-        display: none;
-    }
+					.sidebar .collapse {
+						display: none;
+					}
 
-    .sidebar .collapse.show {
-        display: block !important;
-    }
+					.sidebar .collapse.show {
+						display: block !important;
+					}
 
-    /* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
-    .dropdown-toggle {
-        border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
-        border-radius: 5px;
-        padding: 5px 10px;
-    }
+					/* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
+					.dropdown-toggle {
+						border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
+						border-radius: 5px;
+						padding: 5px 10px;
+					}
 
-    /* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
-    .dropdown-toggle:hover, 
-    .dropdown-toggle.highlighted-dropdown {
-        border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
-    }
-				</style>
+					/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
+					.dropdown-toggle:hover, 
+					.dropdown-toggle.highlighted-dropdown {
+						border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
+   					 }
+			</style>
 <?php include_once 'footer.php'; ?>

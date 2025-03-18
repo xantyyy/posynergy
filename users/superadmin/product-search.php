@@ -222,7 +222,7 @@
                                         <h5>Product List</h5>
                                         <form>
                                         <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                            <thead class="card-header bg-dark opacity-60 text-white">
+                                        <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
                                                 <tr>
                                                     <th>ID</th>
                                                     <th>Barcode</th>
@@ -253,7 +253,7 @@
                                         <h5>Details</h5>
                                         <h6>Category:</h6>
                                         <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                            <thead class="card-header bg-dark opacity-60 text-white">
+                                        <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
                                                 <tr>
                                                     <th>Default</th>
                                                     <th>Supplier Name</th>
@@ -275,7 +275,7 @@
                                     <div class="card-body">
                                         <h5>Selling Price</h5>
                                         <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                            <thead class="card-header bg-dark opacity-60 text-white">
+                                        <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
                                                 <tr>
                                                     <th>UOM</th>
                                                     <th>Price Type</th>
@@ -292,15 +292,16 @@
                                                 </tr>
                                             </tbody>                                            
                                         </table>
-                                        <button type="button" class="btn btn-primary" style="width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
+                                        <button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
                                             <i class="fas fa-plus"></i> New
                                         </button>
-                                        <button type="button" class="btn btn-warning" style="width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
                                             <i class="fas fa-save"></i> Edit
                                         </button>
-                                        <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
+
                                     </div>
                                 </div>
                             </div>
@@ -359,7 +360,7 @@
 <style>
     /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
     .navbar {
-        background: rgb(0, 0, 128) !important;
+        background: rgb(65, 165, 232) !important;
     }
 
     /* 🔹 NAVBAR BRAND COLOR (White) */
@@ -449,6 +450,11 @@
     .dropdown-toggle.highlighted-dropdown {
         border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
     }
+
+    #table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
+					}
 </style>
 
 

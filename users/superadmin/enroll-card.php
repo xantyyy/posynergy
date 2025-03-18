@@ -258,15 +258,16 @@
 												<label for="#">Card Details:</label>
 												<input type="text" class="form-control" id="#" placeholder="Card #">
 											</div>
-											<button type="button" class="btn btn-primary mt-4" style="width: auto; margin-right: 5px; font-size: 12px;">
+											<button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 9px;" onclick="window.location.href='product-entry.php';">
 												<i class="fas fa-plus"></i> New
-												</button>
-												<button type="button" class="btn btn-warning mt-4" style="width: auto; margin-right: 5px; font-size: 12px;">
-													<i class="fas fa-save"></i> Save
-												</button>
-												<button type="button" class="btn btn-danger mt-4" style="width: auto; margin-right: 5px; font-size: 12px;">
-													<i class="fas fa-trash"></i> Cancel
-												</button>
+											</button>
+											<button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+												<i class="fas fa-save"></i> Edit
+											</button>
+											<button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 7.7px;">
+												<i class="fas fa-trash"></i> Delete
+											</button>
+
 										</div>
                                     </form>
                                 </div>
@@ -326,7 +327,7 @@
 <style>
     /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
     .navbar {
-        background: rgb(0, 0, 128) !important;
+        background: rgb(65, 165, 232) !important;
     }
 
     /* 🔹 NAVBAR BRAND COLOR (White) */

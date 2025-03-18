@@ -268,7 +268,7 @@
 <style>
 /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
     .navbar {
-        background: rgb(0, 0, 128) !important;
+        background: rgb(65, 165, 232) !important;
     }
 
     /* 🔹 NAVBAR BRAND COLOR (White) */
