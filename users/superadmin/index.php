@@ -166,31 +166,6 @@
 									</div>
 								</div>
 
-								<?php 
-									include '../../includes/config.php';
-
-									$sql = "SELECT COUNT(name) AS total_products FROM products";
-									$result = $conn->query($sql);
-									
-									if ($result->num_rows > 0) {
-										// output data of each row
-										while($row = $result->fetch_assoc()) {
-
-								?>
-
-								<div class="card-content">
-									<p class="category"><strong>No. of Products</strong></p>
-									<h4 class="card-title"><?php echo $row['total_products']; ?></h4>
-								</div>
-
-								<?php 
-										}
-									}
-
-									$conn->close();
-
-								?>
-
 								<div class="card-footer">
 									<div class="stats">
 										<i class="material-icons text-info">info</i>
@@ -208,28 +183,10 @@
 									</div>
 								</div>
 
-								<?php 
-									include '../../includes/config.php';
-
-									$sql = "SELECT SUM(subtotal_amount) AS total_amount FROM sales";
-									$result = $conn->query($sql);
-									
-									if ($result->num_rows > 0) {
-										// output data of each row
-										while($row = $result->fetch_assoc()) {
-
-								?>
-
 								<div class="card-content">
 									<p class="category"><strong>Total Sales</strong></p>
-									<h4 class="card-title">₱<?php echo number_format($row['total_amount']); ?></h4>
-								<?php 
-										}
-									}
+									<h4 class="card-title"></h4>
 
-									$conn->close();
-
-								?>
 								</div>
 								<div class="card-footer">
 									<div class="stats">
@@ -248,30 +205,10 @@
 									</div>
 								</div>
 
-								<?php 
-									include '../../includes/config.php';
-
-									$sql = "SELECT SUM(amount) AS total_amount FROM expenses";
-									$result = $conn->query($sql);
-									
-									if ($result->num_rows > 0) {
-										// output data of each row
-										while($row = $result->fetch_assoc()) {
-
-								?>
-
 								<div class="card-content">
 									<p class="category"><strong>Expenses</strong></p>
-									<h4 class="card-title">₱<?php echo number_format($row['total_amount']); ?></h4>
+									<h4 class="card-title"></h4>
 								</div>
-
-								<?php 
-										}
-									}
-
-									$conn->close();
-
-								?>
 
 								<div class="card-footer">
 									<div class="stats">
@@ -289,29 +226,10 @@
 									</div>
 								</div>
 
-								<?php 
-									include '../../includes/config.php';
-
-									$sql = "SELECT COUNT(user_id) AS total_users FROM users";
-									$result = $conn->query($sql);
-									
-									if ($result->num_rows > 0) {
-										// output data of each row
-										while($row = $result->fetch_assoc()) {
-
-								?>
 								<div class="card-content">
 									<p class="category"><strong>No. of Users</strong></p>
-									<h3 class="card-title">+<?php echo $row['total_users']; ?></h3>
+									<h3 class="card-title"></h3>
 								</div>
-
-								<?php 
-										}
-									}
-
-									$conn->close();
-
-								?>
 
 								<div class="card-footer">
 									<div class="stats">
@@ -354,23 +272,6 @@
 									<h4 class="card-title">Trending Products</h4>
 								</div>
 
-								<div class="filter pull-right" style="margin: 20px;">
-									<select id="branch_filter" class="form-select" hidden>
-										<option selected value="all">All branches</option>
-										<?php 
-											include '../../includes/config.php';
-
-											$sql = "SELECT * FROM branches";
-											$result = $conn->query($sql);
-											
-											while($row = $result->fetch_assoc()) {
-												echo "<option value='" . $row['branch_id'] . "'>" . $row['branch_description']  . "</option>";
-											}
-
-											$conn->close();
-										?>
-									</select>
-								</div>
 								<br/><br/>
 
 								<div class="table-responsive">
@@ -392,47 +293,7 @@
 					</div>
 				</div>
 
-				<script>
-					var filter = 'weekly';
-
-					var salesChart = new Chart($('#sales-chart'), {
-						type: 'line',
-						data: {
-							labels: [],
-							datasets: [{
-								label: 'Total Sales',
-								data: [],
-								fill: false,
-								borderColor: '#ff4b5c',
-								pointBackgroundColor: '#ff4b5c',
-								pointRadius: 5,
-								pointHoverRadius: 7
-							}]
-						},
-						options: {
-							scales: {
-								y: {
-									beginAtZero: true
-								}
-							}
-						}
-					});
-
-					function updateChart() {
-						$.ajax({
-							url: 'get-data.php',
-							type: 'POST',
-							data: { filter: filter },
-							dataType: 'json',
-							success: function (data) {
-								salesChart.data.labels = data.labels;
-								salesChart.data.datasets[0].data = data.data;
-								salesChart.update();
-							}
-						});
-					}
-					
-
+				<script>					
 					document.addEventListener("DOMContentLoaded", function () {
 						const currentUrl = window.location.pathname.split('/').pop();
 						
