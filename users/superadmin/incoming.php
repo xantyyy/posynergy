@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				<ul class="list-unstyled components">
-					<li class="active">
+					<li class="#">
 						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</b></span></a>
 						
 					</li>
@@ -280,7 +280,7 @@
 				});
 			</script>
 
-		<style>
+			<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
 					.navbar {
 						background: rgb(65, 165, 232) !important;
@@ -332,7 +332,13 @@
 						background-color: rgb(255, 255, 255);
 						border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
 					}
-
+					
+					/* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+					.list-unstyled a:hover, 
+					.list-unstyled a.highlighted-dropdown:hover {
+						background: rgb(65, 165, 232) !important; /* Navy Blue */
+						color: white !important; /* White Text */
+					}
 
 					/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
 					.dropdown-toggle:hover *, 
@@ -358,6 +364,9 @@
 					/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
 					.dropdown-toggle:hover, 
 					.dropdown-toggle.highlighted-dropdown {
+						background: rgb(65, 165, 232) !important; /* Navy Blue Background */
+    					color: #ffffff !important; /* White Text */
+    					transform: scale(1.05);
 					}
 
 					#table-bold thead th {
@@ -366,7 +375,4 @@
 					}
 			</style>
 
-
-
-	
 <?php include_once 'footer.php'; ?>

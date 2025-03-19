@@ -3,7 +3,7 @@
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
 				<div class="sidebar-header">
-					<img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
+					<img src="../../assets/images/isynergies.png" class="img-fluid"/>
 					<?php 
 						
 						$admin = $_SESSION['superadmin_name'];
@@ -157,7 +157,7 @@
 						<span class="material-icons"></span>
 						</button>
 						
-						<a class="navbar-brand" href="#">Other Transaction</a>
+						<a class="navbar-brand" href="#">Configuration</a>
 						<button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
 						data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
 							<span class="material-icons">menu</span>
@@ -171,65 +171,70 @@
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 					<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
 						<div class="container">
-							<div class="row">
-								<div class="col-md-12">
-									<h2 style="margin: 0 20px; margin-top: 15px;">Discount Setup</h2>
-								</div>
-							</div>
 							<div class="row justify-content-center">
 								<div class="col-md-6">
 									<div class="card">
 										<div class="card-body">
-											<h5>Setup</h5>
+											<div class="col-md-12">
+												<h2>Branch Setup</h2>
+											</div>
 											<form>
-												<div class="d-flex align-items-center mt-2">
-													<label for="categoryDropdown" class="me-2">Category:</label>
-													<select class="form-control" id="categoryDropdown">
-														<option value="option1">Option 1</option>
-														<option value="option2">Option 2</option>
-													</select>
+												<div class="d-flex align-items-center mt-3">
+													<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-edit"></i> Edit
+													</button>
+													<button type="button" class="btn btn-warning mb-2 me-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-save"></i> Save
+													</button>
+													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="#">
+														<i class="fas fa-times"></i> Cancel
+													</button>
 												</div>
 											</form>
 											<hr>
 											<div class="row">
-												<div class="col-md-6">
-													<h5>Discount Category</h5>
+												<div class="col-md-12">
+													<h6>Supplier Information</h6>
 													<div class="card">
 														<div class="card-body">
-															<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
-																<table class="table table-bordered" id="table-bold">
-																	<thead class="fw-bold fs-6 fst-italic">
-																		<tr>
-																			<th>Category</th>
-																		</tr>
-																	</thead>
+															<div class="table-responsive" style="height: calc(80vh - 380px); overflow-y: auto;">
+																<table class="table">
 																	<tbody>
 																		<tr>
-																			<td>BABY CARE</td>
+																			<th style="width: 50%;">Company:</th>
+																			<td id="#">Sample</td>
 																		</tr>
 																		<tr>
-																			<td>BEVERAGES</td>
+																			<th>Businness Line Trade:</th>
+																			<td id="#">Sample</td>
 																		</tr>
 																		<tr>
-																			<td>CANNED GOODS</td>
+																			<th>Branch:</th>
+																			<td id="#">Sample</td>
 																		</tr>
 																		<tr>
-																			<td>CANNED GOODS (LOCAL)</td>
+																			<th>Address:</th>
+																			<td id="#">Sample</td>
 																		</tr>
 																		<tr>
-																			<td>CIGARS</td>
+																			<th>Telephone No.:</th>
+																			<td id="#">Sample</td>
 																		</tr>
 																		<tr>
-																			<td>FORMULA MILK & BABY FOODS</td>
+																			<th>TIN No.:</th>
+																			<td id="#">Sample</td>
 																		</tr>
 																		<tr>
-																			<td>INFANTS</td>
+																			<th>Permit No.:</th>
+																			<td id="#">Sample</td>
 																		</tr>
 																		<tr>
-																			<td>POULTRY</td>
+																			<th>Serial No.:</th>
+																			<td id="#">Sample</td>
 																		</tr>
 																		<tr>
-																			<td>RICE & SUGAR (LOCAL)</td>
+																			<th>Min No.:</th>
+																			<td id="#">Sample</td>
 																		</tr>
 																	</tbody>
 																</table>
@@ -237,47 +242,92 @@
 														</div>
 													</div>
 												</div>
-												<div class="col-md-4" style="font-size: 16px;">
-													<h5>Discount Type</h5>
-													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="overallDiscount" value="overall">
-														<label class="form-check-label" for="overallDiscount">Overall</label>
+												<div class="col-md-12">
+													<h6>Company Value</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 550px); overflow-y: auto;">
+																<table class="table">
+																<tbody>
+																		<tr>
+																			<th style="width: 50%;">Vatable:</th>
+																			<td id="#">YES</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
 													</div>
-													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="seniorDiscount" value="senior">
-														<label class="form-check-label" for="seniorDiscount">Senior</label>
+												</div>
+												<div class="col-md-12">
+													<h6>Minimum Purchase to Earned Points</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 550px); overflow-y: auto;">
+																<table class="table">
+																<tbody>
+																		<tr>
+																			<th style="width: 50%;">ST Per Point:</th>
+																			<td id="#">400</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
 													</div>
-													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="pwdDiscount" value="pwd">
-														<label class="form-check-label" for="pwdDiscount">PWD</label>
+												</div>
+												<div class="col-md-12">
+													<h6>Senior Discount Setup</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 500px); overflow-y: auto;">
+																<table class="table">
+																<tbody>
+																		<tr>
+																			<th style="width: 50%;">Discount Max Amount:</th>
+																			<td id="#">2500</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">Discount Scope:</th>
+																			<td id="#">WEEK</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
 													</div>
-													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="naacDiscount" value="naac">
-														<label class="form-check-label" for="naacDiscount">NAAC</label>
-													</div>
-													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="soloDiscount" value="solo">
-														<label class="form-check-label" for="soloDiscount">Solo Parent</label>
-													</div>
-													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="valorDiscount" value="valor">
-														<label class="form-check-label" for="valorDiscount">Medal of Valor</label>
-													</div>
-													
-													<div class="d-flex flex-column mt-3">
-													<button type="button" class="btn" style="background-color:rgb(57, 133, 219); color: white; font-size: 15px; margin-bottom: 5px;" id="addButton">
-														<i class="fas fa-plus"></i> Add
-													</button>
-													<button type="button" class="btn" style="background-color:rgb(239, 164, 60); color: white; font-size: 15px; margin-bottom: 5px;" id="editButton">
-														<i class="fas fa-save"></i> Edit
-													</button>
-													<button type="button" class="btn" style="background-color:rgb(236, 94, 94); color: white; font-size: 15px; margin-bottom: 5px;" id="deleteButton">
-														<i class="fas fa-trash"></i> Delete
-													</button>
-													<button type="button" class="btn" style="background-color:rgb(95, 212, 95); color: white; font-size: 15px; margin-bottom: 5px;" id="cancelButton">
-														<i class="fas fa-times"></i> Cancel
-													</button>
-
+												</div>
+												<div class="col-md-12">
+													<h6>Discount Percentage</h6>
+													<div class="card">
+														<div class="card-body">
+															<div class="table-responsive" style="height: calc(80vh - 400px); overflow-y: auto;">
+																<table class="table">
+																<tbody>
+																		<tr>
+																			<th style="width: 50%;">Senior Discount:</th>
+																			<td id="#">0.05</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">PWD Discount:</th>
+																			<td id="#">0.05</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">Solo Parent Discount:</th>
+																			<td id="#">0.10</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">NAAC Discount:</th>
+																			<td id="#">0.20</td>
+																		</tr>
+																		<tr>
+																			<th style="width: 50%;">Medal of Valor Discount:</th>
+																			<td id="#">0.05</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -287,59 +337,58 @@
 							</div>
 						</div>
 					</div>
-
-            </div>
+            	</div>
 
             <script>
 				document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
-        
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+					const currentUrl = window.location.pathname.split('/').pop();
+					
+					document.querySelectorAll('.list-unstyled a').forEach(link => {
+						const linkHref = link.getAttribute('href');
+						const parentMenu = link.closest('.collapse');
+						const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            // Mark the active link
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
-                }
-            }
+						// Mark the active link
+						if (linkHref === currentUrl) {
+							link.classList.add('active');
+							if (parentMenu) {
+								parentMenu.classList.add('show');
+								if (dropdownToggle) {
+									dropdownToggle.classList.add('highlighted-dropdown', 'active');
+									dropdownToggle.setAttribute('aria-expanded', 'true');
+								}
+							}
+						}
 
-            // Apply hover effect for menu items
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
-            });
+						// Apply hover effect for menu items
+						link.addEventListener("mouseenter", function () {
+							this.classList.add("hover-effect");
+						});
 
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
-        });
-        
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-            
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
+						link.addEventListener("mouseleave", function () {
+							this.classList.remove("hover-effect");
+						});
+					});
+					
+					document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+						const parentMenu = dropdown.nextElementSibling;
+						if (parentMenu && parentMenu.querySelector('.active')) {
+							dropdown.classList.add('highlighted-dropdown', 'active');
+							dropdown.setAttribute('aria-expanded', 'true');
+						}
+						
+						dropdown.addEventListener("mouseenter", function () {
+							this.classList.add('hovered-dropdown');
+						});
 
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
-        });
-    });
-</script>
+						dropdown.addEventListener("mouseleave", function () {
+							this.classList.remove("hovered-dropdown");
+						});
+					});
+				});
+			</script>
 
-				<style>
+		<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
 					.navbar {
 						background: rgb(65, 165, 232) !important;
@@ -391,8 +440,9 @@
 						background-color: rgb(255, 255, 255);
 						border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
 					}
+					
 					/* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
-                    .list-unstyled a:hover, 
+					.list-unstyled a:hover, 
 					.list-unstyled a.highlighted-dropdown:hover {
 						background: rgb(65, 165, 232) !important; /* Navy Blue */
 						color: white !important; /* White Text */
@@ -419,6 +469,13 @@
 						display: block !important;
 					}
 
+					/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
+					.dropdown-toggle:hover, 
+					.dropdown-toggle.highlighted-dropdown {
+						background: rgb(65, 165, 232) !important; /* Navy Blue Background */
+    					color: #ffffff !important; /* White Text */
+    					transform: scale(1.05);
+					}
 					#table-bold thead th {
 						font-weight: bold;
 						font-style: italic;

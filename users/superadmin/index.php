@@ -404,93 +404,93 @@
 				</div>
 
 				<script>
-    var filter = 'weekly';
+					var filter = 'weekly';
 
-    var salesChart = new Chart($('#sales-chart'), {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'Total Sales',
-                data: [],
-                fill: false,
-                borderColor: '#ff4b5c',
-                pointBackgroundColor: '#ff4b5c',
-                pointRadius: 5,
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+					var salesChart = new Chart($('#sales-chart'), {
+						type: 'line',
+						data: {
+							labels: [],
+							datasets: [{
+								label: 'Total Sales',
+								data: [],
+								fill: false,
+								borderColor: '#ff4b5c',
+								pointBackgroundColor: '#ff4b5c',
+								pointRadius: 5,
+								pointHoverRadius: 7
+							}]
+						},
+						options: {
+							scales: {
+								y: {
+									beginAtZero: true
+								}
+							}
+						}
+					});
 
-    function updateChart() {
-        $.ajax({
-            url: 'get-data.php',
-            type: 'POST',
-            data: { filter: filter },
-            dataType: 'json',
-            success: function (data) {
-                salesChart.data.labels = data.labels;
-                salesChart.data.datasets[0].data = data.data;
-                salesChart.update();
-            }
-        });
-    }
-    
+					function updateChart() {
+						$.ajax({
+							url: 'get-data.php',
+							type: 'POST',
+							data: { filter: filter },
+							dataType: 'json',
+							success: function (data) {
+								salesChart.data.labels = data.labels;
+								salesChart.data.datasets[0].data = data.data;
+								salesChart.update();
+							}
+						});
+					}
+					
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
-        
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+					document.addEventListener("DOMContentLoaded", function () {
+						const currentUrl = window.location.pathname.split('/').pop();
+						
+						document.querySelectorAll('.list-unstyled a').forEach(link => {
+							const linkHref = link.getAttribute('href');
+							const parentMenu = link.closest('.collapse');
+							const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            // Mark the active link
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
-                }
-            }
+							// Mark the active link
+							if (linkHref === currentUrl) {
+								link.classList.add('active');
+								if (parentMenu) {
+									parentMenu.classList.add('show');
+									if (dropdownToggle) {
+										dropdownToggle.classList.add('highlighted-dropdown', 'active');
+										dropdownToggle.setAttribute('aria-expanded', 'true');
+									}
+								}
+							}
 
-            // Apply hover effect for menu items
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
-            });
+							// Apply hover effect for menu items
+							link.addEventListener("mouseenter", function () {
+								this.classList.add("hover-effect");
+							});
 
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
-        });
-        
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-            
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
+							link.addEventListener("mouseleave", function () {
+								this.classList.remove("hover-effect");
+							});
+						});
+						
+						document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+							const parentMenu = dropdown.nextElementSibling;
+							if (parentMenu && parentMenu.querySelector('.active')) {
+								dropdown.classList.add('highlighted-dropdown', 'active');
+								dropdown.setAttribute('aria-expanded', 'true');
+							}
+							
+							dropdown.addEventListener("mouseenter", function () {
+								this.classList.add('hovered-dropdown');
+							});
 
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
-        });
-    });
-</script>
+							dropdown.addEventListener("mouseleave", function () {
+								this.classList.remove("hovered-dropdown");
+							});
+						});
+					});
+				</script>
 
 			<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
@@ -544,7 +544,13 @@
 						background-color: rgb(255, 255, 255);
 						border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
 					}
-
+					
+					/* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+					.list-unstyled a:hover, 
+					.list-unstyled a.highlighted-dropdown:hover {
+						background: rgb(65, 165, 232) !important; /* Navy Blue */
+						color: white !important; /* White Text */
+					}
 
 					/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
 					.dropdown-toggle:hover *, 
@@ -570,11 +576,15 @@
 					/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
 					.dropdown-toggle:hover, 
 					.dropdown-toggle.highlighted-dropdown {
+						background: rgb(65, 165, 232) !important; /* Navy Blue Background */
+    					color: #ffffff !important; /* White Text */
+    					transform: scale(1.05);
+					}
+
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
 					}
 			</style>
-
-
-
-
 
 <?php include_once 'footer.php'; ?>

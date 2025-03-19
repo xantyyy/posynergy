@@ -566,6 +566,12 @@
 						border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
 					}
 
+					/* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+                    .list-unstyled a:hover, 
+					.list-unstyled a.highlighted-dropdown:hover {
+						background: rgb(65, 165, 232) !important; /* Navy Blue */
+						color: white !important; /* White Text */
+					}
 
 					/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
 					.dropdown-toggle:hover *, 
@@ -586,11 +592,6 @@
 
 					.sidebar .collapse.show {
 						display: block !important;
-					}
-
-					/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
-					.dropdown-toggle:hover, 
-					.dropdown-toggle.highlighted-dropdown {
 					}
 
 					#table-bold thead th {

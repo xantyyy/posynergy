@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				<ul class="list-unstyled components">
-					<li class="active">
+					<li class="#">
 						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
 						
 					</li>
@@ -278,90 +278,109 @@
 						});
 				</script>
 
-				<style>
-					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
-					.navbar {
-						background: rgb(65, 165, 232) !important;
-					}
+	<style>
+        /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
+        .navbar {
+            background: rgb(65, 165, 232) !important;
+        }
 
-					/* 🔹 NAVBAR BRAND COLOR (White) */
-					.navbar-brand {
-						color: #ffffff !important;
-					}
+        /* 🔹 NAVBAR BRAND COLOR (White) */
+        .navbar-brand {
+            color: #ffffff !important;
+        }
 
-					/* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
-					.nav-link, 
-					.dropdown-toggle, 
-					.list-unstyled a {
-						color: #333;
-						font-size: 16px;
-						transition: all 0.3s ease-in-out;
-					}
+        /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
+        .nav-link,  
+        .list-unstyled a {
+            color: #333;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
 
-					/* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
-					.nav-link:hover, 
-					.list-unstyled a:hover, 
-					.dropdown-toggle:hover,
-					.hovered-dropdown, .hover-effect {
-						background: rgb(65, 165, 232) !important; /* Navy Blue */
-						color: #ffffff !important; /* White Text */
-						transform: scale(1.05);
-					}
+        /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
+        .nav-link:hover,
+        .list-unstyled a:hover,
+        .hovered-dropdown, .hover-effect {
+            background: rgb(65, 165, 232) !important; /* Navy Blue */
+            color: #ffffff !important; /* White Text */
+            transform: scale(1.05);
+        }
 
-					/* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
-					.nav-link.active, 
-					.list-unstyled a.active, 
-					.dropdown-toggle.active {
-						color: rgb(0, 0, 0) !important; /* Black */
-						font-weight: bold !important;
-						background: transparent !important;
-					}
+        /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
+        .nav-link.active,
+        .list-unstyled a.active {
+            color: rgb(0, 0, 0) !important; /* Black */
+            font-weight: bold !important;
+            background: transparent !important;
+        }
 
-					/* 🔹 WHEN DROPDOWN IS EXPANDED */
-					.dropdown-toggle[aria-expanded="true"], 
-					.dropdown-toggle.highlighted-dropdown {
-						background: rgb(255, 255, 255) !important; /* White Background */
-						color: rgb(0, 0, 0) !important; /* Black Text */
-						font-weight: bold;
-					}
+        /* 🔹 WHEN DROPDOWN IS EXPANDED */
+        .list-unstyled a[aria-expanded="true"], 
+        .list-unstyled a.highlighted-dropdown {
+            background: rgb(255, 255, 255) !important; /* White Background */
+            color: rgb(0, 0, 0) !important; /* Black Text */
+            font-weight: bold;
+        }
 
-					/* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
-					.collapse.show {
-						background-color: rgb(255, 255, 255);
-						border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
-					}
+        /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
+        .collapse.show {
+            background-color: rgb(255, 255, 255);
+            border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
+        }
 
+        /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+        .list-unstyled a:hover, 
+        .list-unstyled a.highlighted-dropdown:hover {
+            background: rgb(65, 165, 232) !important; /* Navy Blue */
+            color: white !important; /* White Text */
+        }
 
-					/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
-					.dropdown-toggle:hover *, 
-					.dropdown-toggle.highlighted-dropdown:hover * {
-						color: white !important;
-					}
+        /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
+        .list-unstyled a:hover *, 
+        .list-unstyled a.highlighted-dropdown:hover * {
+            color: white !important;
+        }
 
-					/* 🔹 SIDEBAR STYLE */
-					.sidebar {
-						width: 250px;
-						background: rgb(65, 165, 232) !important; /* Navy Blue */
-						overflow: visible !important;
-					}
+        /* 🔹 SIDEBAR STYLE */
+        .sidebar {
+            width: 250px;
+            background: rgb(65, 165, 232) !important;
+            overflow: visible !important;
+        }
 
-					.sidebar .collapse {
-						display: none;
-					}
+        .sidebar .collapse {
+            display: none;
+        }
 
-					.sidebar .collapse.show {
-						display: block !important;
-					}
+        .sidebar .collapse.show {
+            display: block !important;
+        }
 
-					/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
-					.dropdown-toggle:hover, 
-					.dropdown-toggle.highlighted-dropdown {
-					}
+        /* 🔹 MAKE Edit Item and Void Item links unclickable */
+        .list-unstyled a.disabled-link {
+            pointer-events: none; /* Disable click events */
+            color: #b0b0b0; /* Gray out the text */
+            cursor: not-allowed; /* Show the not-allowed cursor */
+        }
 
-					#table-bold thead th {
-						font-weight: bold;
-						font-style: italic;
-					}
-				</style>
+        /* Optionally, make the background color appear disabled as well */
+        .list-unstyled a.disabled-link:hover {
+            background-color: transparent;
+        }
+
+        /* 🔹 STYLE FOR NAVBAR */
+        .navbar {
+            background: linear-gradient(to right, rgb(235, 110, 110), rgb(142, 188, 225), rgb(128, 135, 141));
+            background-size: 1550px 870px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* STYLE FOR TABLE HEADER */
+        #table-bold thead th {
+            font-weight: bold;
+            font-style: italic;
+        }
+    </style>
 
 <?php include_once 'footer.php'; ?>
