@@ -178,7 +178,7 @@
 						<div class="row">
 							<!-- Left Side - Product Data Entry Form -->
 							<div class="col-md-4">
-								<div class="card h-100">
+								<div class="card">
 									<div class="card-body">
 										<form>
 											<div class="form-row">
@@ -198,7 +198,7 @@
 											<div class="form-row mt-2">
 												<h5>Select</h5>
 												<div class="d-flex align-items-center">
-													<div class="form-check me-2 mt-2">
+													<div class="form-check me-2 mt-2 ms-md-3">
 														<input class="form-check-input" type="radio" name="#" id="#" value="#">
 														<label class="form-check-label" for="#">Supplier</label>
 													</div>
@@ -228,11 +228,11 @@
 
 							<!-- Right Side - Additional Table -->
 							<div class="col-md-8">
-								<div class="card h-100">
+								<div class="card">
 									<div class="card-body">
-										<div style="overflow-x: auto; white-space: nowrap;">
+										<div class="table-responsive" style="height: calc(87vh - 300px); overflow-y: auto;">
 											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
+												<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 													<tr>
 														<th>Barcode</th>
 														<th>Product Name</th>
@@ -259,9 +259,9 @@
 								<div class="card mt-4">
 									<div class="card-body">
 										<h5>Product List:</h5>
-										<div style="overflow-x: auto; white-space: nowrap;">
+										<div class="table-responsive mt-2" style="height: calc(80vh - 300px); overflow-y: auto;">
 											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
+											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 													<tr>
 														<th>Barcode</th>
 														<th>Description</th>
@@ -284,9 +284,9 @@
 								<div class="card mt-4">
 									<div class="card-body">
 										<h5>Details</h5>
-										<div style="overflow-x: auto; white-space: nowrap;">
+										<div class="table-responsive mt-2" style="height: calc(80vh - 300px); overflow-y: auto;">
 											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
+												<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 													<tr>
 														<th>Date</th>
 														<th>Type</th>

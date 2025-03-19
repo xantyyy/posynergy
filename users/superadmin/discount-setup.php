@@ -198,7 +198,7 @@
 														<div class="card-body">
 															<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
 																<table class="table table-bordered" id="table-bold">
-																	<thead class="fw-bold fs-6 fst-italic">
+																	<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 																		<tr>
 																			<th>Category</th>
 																		</tr>

@@ -180,7 +180,7 @@
                     <div class="row">
                         <!-- Left Side - Product Data Entry Form -->
                         <div class="col-md-5">
-                            <div class="card h-100">
+                            <div class="card">
                                 <div class="card-body">
                                     <h5>Transaction Date:</h5>
                                     <form>
@@ -195,17 +195,13 @@
 											</div>
 										</div>                                   
                                     </form>
-									<button type="button" class="btn btn-primary mt-2" style="font-size: 13px; width: 100px; margin-bottom: -35px; margin-left: 77%;" id="#">
-										<i class="fas fa-search"></i> Search
-									</button>
+									<div class="d-flex justify-content-end mt-3 me-2">
+										<button type="button" class="btn btn-outline-secondary" style="font-size: 13px;">
+											<i class="fas fa-search"></i> Search
+										</button>
+									</div>
                                 </div>
                             </div>
-                        </div>
-
-						<div class="col-md-6" style="margin-left: 90%;">
-							<button type="button" class="btn btn-success" style="font-size: 13px; width: 100px;" id="#">
-								<i class="fas fa-print"></i> Print
-							</button>
                         </div>
 
                         <!-- Right Side - Additional Table -->
@@ -213,9 +209,9 @@
                             <div class="card">
 								<div class="card-body">
 									<h5>List</h5>
-									<div style="overflow-x: auto; white-space: nowrap;">
+									<div class="table-responsive mt-2" style="height: calc(80vh - 300px); overflow-y: auto;">
 										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-										<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
+										<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 												<tr>
 													<th>Transaction Date</th>
 													<th>Cashier</th>
@@ -245,6 +241,11 @@
 									</div>
 								</div>
                             </div>
+							<div class="d-flex justify-content-end">
+								<button type="button" class="btn btn-light">
+									<i class="fas fa-print"></i> Print
+								</button>
+							</div>
                         </div>
                     </div>
                 </div>                  

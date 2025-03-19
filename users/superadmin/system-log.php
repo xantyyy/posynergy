@@ -202,15 +202,15 @@
 									</div>
 								</div>
 								<div class="col-md-3 align-self-end">
-									<button type="button" class="btn btn-primary" style="font-size: 13px; width: 100px;" id="#">
+									<button type="button" class="btn btn-outline-secondary">
 										<i class="fas fa-search"></i> Search
 									</button>
 								</div>
 							</div>
 							<hr>
-							<div style="overflow-x: auto; white-space: nowrap;">
+							<div class="table-responsive mt-2" style="height: calc(100vh - 300px); overflow-y: auto;">
 								<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-								<thead class="fw-bolder fs-5 fst-italic card-header" style="background-color: #cbd1d3; color: black; font-weight: bold;">
+									<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 										<tr>
 											<th>Timestamp</th>
 											<th>Remarks</th>

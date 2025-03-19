@@ -178,7 +178,7 @@
 						<div class="row">
 							<!-- Left Side - Product Data Entry Form -->
 							<div class="col-md-4">
-								<div class="card h-100">
+								<div class="card">
 									<div class="card-body">
 										<form>			
 											<div class="form-row mt-2">
@@ -215,12 +215,12 @@
 												<div class="form-group col-md-12 mt-2 d-flex align-items-center">
 													<label for="toDate" class="me-2">To:</label>
 													<input type="date" class="form-control me-2" id="toDate" disabled>
-													<button type="button" class="btn btn-primary" style="font-size: 13px;" disabled id="quickSearchBtn">
+													<button type="button" class="btn btn-outline-secondary me-2" style="font-size: 13px;" disabled id="quickSearchBtn">
 														<i class="fas fa-search"></i>
 													</button>
 												</div>
 											</div>
-											<button type="button" class="btn btn-success mt-2" style="font-size: 13px; margin-left: 65%;" disabled id="printSummaryBtn">
+											<button type="button" class="btn btn-outline-secondary mt-2" style="font-size: 13px; margin-left: 64%;" disabled id="printSummaryBtn">
 												<i class="fas fa-print"></i> Print Summary
 											</button>
 										</form>
@@ -230,22 +230,24 @@
 
 							<!-- Right Side - Additional Table -->
 							<div class="col-md-8">
-								<div class="card h-100">
+								<div class="card">
 									<div class="card-body">
-										<div id="tableContainer" style="overflow-x: auto; white-space: nowrap;">
-											<!-- Default "No Data Available" Content -->
-											<p class="text-center text-muted" id="noDataText">No Data Available</p>
+										<div class="table-responsive" style="height: calc(92vh - 300px); overflow-y: auto;">
+											<div id="tableContainer" style="overflow-x: auto; white-space: nowrap;">
+												<!-- Default "No Data Available" Content -->
+												<p class="text-center text-muted" id="noDataText">No Data Available</p>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 
 							<div class="col-md-12">
-								<div class="card mt-4">
+								<div class="card">
 									<div class="card-body">
-										<div style="overflow-x: auto; white-space: nowrap;">
+										<div class="table-responsive mt-2" style="height: calc(90vh - 300px); overflow-y: auto;">
 											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
+												<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 													<tr>
 														<th>Barcode</th>
 														<th>Product Name</th>
@@ -279,7 +281,7 @@
 				<script>
 					const adjustmentTable = `
 						<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-							<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
+							<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 								<tr>
 									<th>Adj. Date</th>
 									<th>Adj. Date</th>
@@ -300,7 +302,7 @@
 
 					const incomingTable = `
 						<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-							<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
+							<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 								<tr>
 									<th>Inventory Date</th>
 									<th>Inventory #</th>

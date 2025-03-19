@@ -172,7 +172,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Incoming Inventory</h2>
+							<h2 style="margin: 0 20px; margin-top: 15px;">Adjustemnt Item</h2>
 						</div>
 					</div>
 					<div class="row">
@@ -191,37 +191,35 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-									<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
-
-                                            <tr>
-												<th>#</th>
-                                                <th>Adj. Number</th>
-                                                <th>Adj. Date</th>
-                                                <th>Supplier</th>
-                                                <th>Net Amount</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                <tr>
-													<td><input type="radio" name="selectItem" value="1"></td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                </tr>
-                                        </tbody>
-                                    </table>
-									<button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
+									<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
+										<table class="table table-bordered table-hover" id="table-bold">
+											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+												<tr>
+													<th>Adj. Number</th>
+													<th>Adj. Date</th>
+													<th>Supplier</th>
+													<th>Net Amount</th>
+												</tr>
+											</thead>
+											<tbody>
+													<tr>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+														<td>Sample</td>
+													</tr>
+											</tbody>
+										</table>
+									</div>
+									<button type="button" class="btn" style="background-color: #0056b3; color: white; width: auto; font-size: 13px;" onclick="window.location.href='product-entry.php';">
 										<i class="fas fa-plus"></i> New
 									</button>
-									<button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+									<button type="button" class="btn" style="background-color: #d48f00; color: white; width: auto; font-size: 13px;">
 										<i class="fas fa-save"></i> Edit
 									</button>
-									<button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+									<button type="button" class="btn" style="background-color: #b30000; color: white; width: auto; font-size: 13px;">
 										<i class="fas fa-trash"></i> Delete
 									</button>
-
                                 </div>
                             </div>
                         </div>

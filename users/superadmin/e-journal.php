@@ -187,11 +187,10 @@
 								<input type="date" class="form-control" id="toDate" name="toDate" required>
 							</div>
 							<div class="text-center">
-								<button type="submit" class="btn btn-primary btn-block mt-3">
-									<i class="material-icons"></i> Search
+								<button type="submit" class="btn btn-outline-secondary">
+									<i class="fa fa-search"></i> Search
 								</button>
 							</div>
-
 						</form>
 					</div>
 				</div>

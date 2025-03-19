@@ -169,7 +169,7 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-					<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; margin-top: -30px;">
+					<div class="d-flex justify-content-center align-items-center">
 						<div class="container">
 							<div class="row justify-content-center">
 								<div class="col-md-6">
@@ -203,7 +203,7 @@
 													<h6>Supplier Information</h6>
 													<div class="card">
 														<div class="card-body">
-															<div class="table-responsive" style="height: calc(80vh - 375px); overflow-y: auto;">
+															<div class="table-responsive" style="height: calc(90vh - 375px); overflow-y: auto;">
 																<table class="table">
 																	<tbody>
 																		<tr>
@@ -233,7 +233,7 @@
 													</div>
 												</div>
 											</div>
-											<div class="d-flex align-items-center" style="margin-left: 60%;">
+											<div class="d-flex justify-content-end">
 												<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="#">
 													<i class="fas fa-times"></i> Cancel
 												</button>

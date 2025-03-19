@@ -221,26 +221,28 @@
                                     <div class="card-body">
                                         <h5>Product List</h5>
                                         <form>
-                                        <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>Barcode</th>
-                                                    <th>Product</th>
-                                                    <th>Shelf</th>
-                                                    <th>Quantity</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                    <tr onclick="selectRow(this)" style="cursor: pointer;">
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                    </tr>
-                                            </tbody>
-                                        </table>
+                                            <div class="table-responsive" style="height: calc(123vh - 300px); overflow-y: auto;">
+                                                <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+                                                    <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+                                                        <tr>
+                                                            <th>ID</th>
+                                                            <th>Barcode</th>
+                                                            <th>Product</th>
+                                                            <th>Shelf</th>
+                                                            <th>Quantity</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                            <tr onclick="selectRow(this)" style="cursor: pointer;">
+                                                                <td>Sample</td>
+                                                                <td>Sample</td>
+                                                                <td>Sample</td>
+                                                                <td>Sample</td>
+                                                                <td>Sample</td>
+                                                            </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
@@ -252,56 +254,59 @@
                                     <div class="card-body">
                                         <h5>Details</h5>
                                         <h6>Category:</h6>
-                                        <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
-                                                <tr>
-                                                    <th>Default</th>
-                                                    <th>Supplier Name</th>
-                                                    <th>Cost</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
+                                        <div class="table-responsive" style="height: calc(80vh - 300px); overflow-y: auto;">
+                                            <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+                                                <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                     <tr>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
+                                                        <th>Default</th>
+                                                        <th>Supplier Name</th>
+                                                        <th>Cost</th>
                                                     </tr>
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                            <td>Sample</td>
+                                                            <td>Sample</td>
+                                                            <td>Sample</td>
+                                                        </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class="card">
                                     <div class="card-body">
                                         <h5>Selling Price</h5>
-                                        <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
-                                                <tr>
-                                                    <th>UOM</th>
-                                                    <th>Price Type</th>
-                                                    <th>VAT-able</th>
-                                                    <th>SRP</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                </tr>
-                                            </tbody>                                            
-                                        </table>
-                                        <button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
+                                        <div class="table-responsive" style="height: calc(80vh - 300px); overflow-y: auto;">
+                                            <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+                                                <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+                                                    <tr>
+                                                        <th>UOM</th>
+                                                        <th>Price Type</th>
+                                                        <th>VAT-able</th>
+                                                        <th>SRP</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Sample</td>
+                                                        <td>Sample</td>
+                                                        <td>Sample</td>
+                                                        <td>Sample</td>
+                                                    </tr>
+                                                </tbody>                                            
+                                            </table>
+                                        </div>
+                                        <button type="button" class="btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;" onclick="window.location.href='product-entry.php';">
                                             <i class="fas fa-plus"></i> New
                                         </button>
-                                        <button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <button type="button" class="btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;">
                                             <i class="fas fa-save"></i> Edit
                                         </button>
-                                        <button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                        <button type="button" class="btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
-
                                     </div>
                                 </div>
                             </div>

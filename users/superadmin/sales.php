@@ -183,18 +183,18 @@
                             <div class="card">
                                 <div class="card-body">
 									<form>
-									<button type="button" class="btn btn-outline-secondary me-2" style="font-size: 13px;" id="quickSearchBtn">
-										<i class="fas fa-search"></i> Quick Search
-									</button>
-									<button type="button" class="btn btn-outline-secondary me-2" style="font-size: 13px;" id="valueSearchBtn">
-										<i class="fas fa-search"></i> Value Search
-									</button>
-									<button type="button" class="btn btn-outline-secondary" style="width: 105px; font-size: 13px;">
-										<i class="fas fa-search"></i> Search
-									</button>
-
-										
-										<div class="form-row mt-3">
+										<div class="d-flex flex-wrap align-items-center">
+											<button type="button" class="btn btn-outline-secondary me-2 mb-2 ms-md-3" style="width: auto; font-size: 13px;" id="quickSearchBtn">
+												<i class="fas fa-search"></i> Quick Search
+											</button>
+											<button type="button" class="btn btn-outline-secondary me-2 mb-2" style="width: auto; font-size: 13px;" id="valueSearchBtn">
+												<i class="fas fa-search"></i> Value Search
+											</button>
+											<button type="button" class="btn btn-outline-secondary mb-2" style="width: auto; font-size: 13px;">
+												<i class="fas fa-search"></i> Search
+											</button>
+										</div>
+										<div class="form-row mt-2">
 											<h5>Transaction Date:</h5>
 											<div class="form-group col-md-12">
 												<label for="#">From</label>
@@ -240,37 +240,38 @@
 													</select>
 												</div>
 											</div>
-											<div class="d-flex mt-3">
-												<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-												<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
-														<tr>
-															<th>
-																Current Filter
-																<button type="button" id="addButton" class="btn btn-success me-2" style="font-size: 10px; margin-left: 155px;" disabled>
+										</div>
+									</form>
+									<div class="table-responsive mt-4" style="height: calc(80vh - 300px); overflow-y: auto;">
+										<table class="table table-bordered table-hover" id="table-bold">
+											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+												<tr>
+													<th>
+														<div class="d-flex justify-content-between align-items-center">
+															<span>Current Filter</span>
+															<div>
+																<button type="button" id="addButton" class="btn btn-success me-2" style="font-size: 10px;" disabled>
 																	<i class="fas fa-plus"></i>
 																</button>
-																<button type="button" id="cancelButton" class="btn btn-danger me-2" style="font-size: 10px;" disabled>
-																	<i class="fas fa-times"></i>
+																<button type="button" id="cancelButton" class="btn btn-danger" style="font-size: 10px;" disabled>
+																		<i class="fas fa-times"></i>
 																</button>
-															</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td>Sample</td>
-														</tr>
-														<tr>
-															<td>Sample</td>
-														</tr>
-													</tbody>
-												</table>
-											</div>
-										</div>
-										<p style="text-transform: none; font-size: 14px;" class="mt-4">
-											Double click on filter to edit search values. 
-											<a href="#" style="color: blue; text-decoration: underline; cursor: pointer;">Reset Filter</a>
-										</p>
-									</form>
+															</div>
+														</div>
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+													<tr>
+														<td>Sample</td>
+													</tr>
+											</tbody>
+										</table>
+									</div>
+									<p style="text-transform: none; font-size: 14px; " class="mt-4 text-center">
+										Double click on filter to edit search values. 
+										<a href="#" style="color: blue; text-decoration: underline; cursor: pointer;">Reset Filter</a>
+									</p>
                                 </div>
                             </div>
                         </div>
@@ -281,66 +282,73 @@
                                 <div class="card-body">
 									<div style="overflow-x: auto; white-space: nowrap;">
 										<h5>Sales Summary</h5>
-										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-										<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
-												<tr>
-													<th>No. of Transac.</th>
-													<th>No. of Items</th>
-													<th>Gross of Sales</th>
-													<th>Discount</th>
-													<th>Net of Sales</th>
-												</tr>
-											</thead>
-											<tbody>
+										<div class="table-responsive mt-2" style="height: calc(85vh - 300px); overflow-y: auto;">
+											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+												<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 													<tr>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
+														<th>No. of Transac.</th>
+														<th>No. of Items</th>
+														<th>Gross of Sales</th>
+														<th>Discount</th>
+														<th>Net of Sales</th>
 													</tr>
-											</tbody>
-										</table>
+												</thead>
+												<tbody>
+														<tr>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+														</tr>
+												</tbody>
+											</table>
+										</div>
 									</div>
                                 </div>
                             </div>
-								<button type="button" class="btn btn-light me-2" style="font-size: 13px; margin-left: 51%;">
+
+							<div class="d-flex justify-content-end">
+								<button type="button" class="btn btn-light me-2" style="font-size: 13px;">
 									<i class="fas fa-print"></i> BIR Sales
 								</button>
 								<button type="button" class="btn btn-light me-2" style="font-size: 13px;">
 									<i class="fas fa-print"></i> Vatable
 								</button>
-								<button type="button" class="btn btn-light me-2" style="width: 105px; font-size: 13px;">
-									<i class="fas fa-print"></i> Non-Vat
-								</button>
 								<button type="button" class="btn btn-light me-2" style="font-size: 13px;">
+									<i class="fas fa-print"></i> Non-VAT
+								</button>
+								<button type="button" class="btn btn-light" style="font-size: 13px;">
 									<i class="fas fa-print"></i> Print
 								</button>
+							</div>
 
                             <div class="card">
 								<div class="card-body">
 									<div style="overflow-x: auto; white-space: nowrap;">
 										<h5>List</h5>
-										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-										<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
-												<tr>
-													<th>Barcode</th>
-													<th>Product Name</th>
-													<th>Quantity</th>
-													<th>SRP</th>
-													<th>Total</th>
-												</tr>
-											</thead>
-											<tbody>
+										<div class="table-responsive mt-2" style="height: calc(85vh - 300px); overflow-y: auto;">
+											<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+												<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 													<tr>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
+														<th>Barcode</th>
+														<th>Product Name</th>
+														<th>Quantity</th>
+														<th>SRP</th>
+														<th>Total</th>
 													</tr>
-											</tbody>
-										</table>
+												</thead>
+												<tbody>
+														<tr>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+															<td>Sample</td>
+														</tr>
+												</tbody>
+											</table>
+										</div>
 									</div>
 								</div>
 							</div>

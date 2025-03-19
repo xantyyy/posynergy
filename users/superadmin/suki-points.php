@@ -183,17 +183,17 @@
                             <div class="card">
                                 <div class="card-body">
 									<form>
-										<h5>Search</h5>
-										<button type="button" class="btn btn-outline-secondary me-2" style="font-size: 13px;" id="quickSearchBtn">
-											<i class="fas fa-search"></i> Quick Search
-										</button>
-										<button type="button" class="btn btn-outline-secondary me-2" style="font-size: 13px;" id="valueSearchBtn">
-											<i class="fas fa-search"></i> Value Search
-										</button>
-										<button type="button" class="btn btn-outline-secondary" style="width: 105px; font-size: 13px;">
-											<i class="fas fa-search"></i> Search
-										</button>
-
+										<div class="d-flex flex-wrap align-items-center">
+											<button type="button" class="btn btn-outline-secondary me-2 mb-2 ms-md-3" style="width: auto; font-size: 13px;" id="quickSearchBtn">
+												<i class="fas fa-search"></i> Quick Search
+											</button>
+											<button type="button" class="btn btn-outline-secondary me-2 mb-2" style="width: auto; font-size: 13px;" id="valueSearchBtn">
+												<i class="fas fa-search"></i> Value Search
+											</button>
+											<button type="button" class="btn btn-outline-secondary mb-2" disabled style="width: auto; font-size: 13px;" id="searchBtn">
+												<i class="fas fa-search"></i> Search
+											</button>
+										</div>
 										<hr>
 										<div class="form-row mt-3">
 											<h5>Value Search</h5>
@@ -229,36 +229,37 @@
 													</select>
 												</div>
 											</div>
-											<div class="d-flex mt-3">
-												<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-												<thead class="fw-bolder fs-5 fst-italic card-header" style="background-color: #cbd1d3; color: black; font-weight: bold;">
+											<div class="table-responsive mt-4" style="height: calc(87vh - 300px); overflow-y: auto;">
+												<table class="table table-bordered table-hover" id="table-bold">
+													<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 														<tr>
 															<th>
-																Current Filter
-																<button type="button" id="addButton" class="btn btn-success me-2" style="font-size: 10px; margin-left: 155px;" disabled>
-																	<i class="fas fa-plus"></i>
-																</button>
-																<button type="button" id="cancelButton" class="btn btn-danger me-2" style="font-size: 10px;" disabled>
-																	<i class="fas fa-times"></i>
-																</button>
+																<div class="d-flex justify-content-between align-items-center">
+																	<span>Current Filter</span>
+																	<div>
+																		<button type="button" id="addButton" class="btn btn-success me-2" style="font-size: 10px;" disabled>
+																			<i class="fas fa-plus"></i>
+																		</button>
+																		<button type="button" id="cancelButton" class="btn btn-danger" style="font-size: 10px;" disabled>
+																				<i class="fas fa-times"></i>
+																		</button>
+																	</div>
+																</div>
 															</th>
 														</tr>
 													</thead>
 													<tbody>
-														<tr>
-															<td>Sample</td>
-														</tr>
-														<tr>
-															<td>Sample</td>
-														</tr>
+															<tr>
+																<td>Sample</td>
+															</tr>
 													</tbody>
 												</table>
 											</div>
+											<p style="text-transform: none; font-size: 14px; " class="mt-4 text-center">
+												Double click on filter to edit search values. 
+												<a href="#" style="color: blue; text-decoration: underline; cursor: pointer;">Reset Filter</a>
+											</p>
 										</div>
-										<p style="text-transform: none; font-size: 14px;" class="mt-4">
-											Double click on filter to edit search values. 
-											<a href="#" style="color: blue; text-decoration: underline; cursor: pointer;">Reset Filter</a>
-										</p>
 									</form>
                                 </div>
                             </div>
@@ -268,9 +269,9 @@
                         <div class="col-md-8">
                             <div class="card">
                                 <div class="card-body">
-									<div style="overflow-x: auto; white-space: nowrap;">
+									<div class="table-responsive" style="height: calc(80vh - 300px); overflow-y: auto;">
 										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-										<thead class="fw-bolder fs-5 fst-italic card-header" style="background-color: #cbd1d3; color: black; font-weight: bold;">
+											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 												<tr>
 													<th>Total Client</th>
 													<th>Total Points Earned</th>
@@ -290,16 +291,17 @@
 									</div>
                                 </div>
                             </div>
-							<button type="button" class="btn btn-success" style="width: 100px; margin-left: 88%; font-size: 13px;">
-                                <i class="fas fa-print"></i> Print
-                            </button>
-
+							<div class="d-flex justify-content-end">
+								<button type="button" class="btn btn-light">
+									<i class="fas fa-print"></i> Print
+								</button>
+							</div>
                             <div class="card">
 								<div class="card-body">
-									<div style="overflow-x: auto; white-space: nowrap;">
+									<div class="table-responsive mt-2" style="height: calc(80vh - 300px); overflow-y: auto;">
 										<h5>List</h5>
 										<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-										<thead class="fw-bolder fs-5 fst-italic card-header" style="background-color: #cbd1d3; color: black; font-weight: bold;">
+											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 												<tr>
 													<th>Card No.</th>
 													<th>Full Name</th>

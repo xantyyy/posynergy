@@ -247,7 +247,7 @@
 								<div class="card-body">
 									<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
 										<table class="table table-bordered" id="table-bold">
-										<thead class="fw-bolder fs-5 fst-italic card-header" style="background-color: #cbd1d3; color: black; font-weight: bold;">
+											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 												<tr>
 													<th>Date</th>
 													<th>Transaction No.</th>
@@ -273,9 +273,11 @@
 						<div class="card">
 							<div class="card-body">
 								<h5>List</h5>
-								<table class="table table-bordered" style="margin-top: 10px;" id="dynamicTable">
-									<!-- Table headers and rows will be updated dynamically -->
-								</table>
+								<div class="table-responsive" style="height: calc(80vh - 300px); overflow-y: auto;">
+									<table class="table table-bordered" style="margin-top: 10px;" id="dynamicTable">
+										<!-- Table headers and rows will be updated dynamically -->
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -308,7 +310,7 @@
 						switch (type) {
 							case "receipt":
 								tableContent = `
-									<thead class="card-header bg-dark opacity-60 text-white">
+									<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 										<tr>
 											<th>Transaction</th>
 											<th>Barcode</th>
@@ -338,7 +340,7 @@
 
 							case "shiftReading":
 								tableContent = `
-									<thead class="card-header bg-dark opacity-60 text-white">
+									<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 										<tr>
 											<th>POS Type</th>
 											<th>Transaction</th>
@@ -360,7 +362,7 @@
 
 							case "xReading":
 								tableContent = `
-									<thead class="card-header bg-dark opacity-60 text-white">
+									<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 										<tr>
 											<th>Category</th>
 											<th>Category Sales Count</th>
@@ -378,7 +380,7 @@
 
 							case "zReading":
 								tableContent = `
-									<thead class="card-header bg-dark opacity-60 text-white">
+									<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
 										<tr>
 											<th>Category</th>
 											<th>Category Sales Count</th>

@@ -184,45 +184,45 @@
                                 <div class="card-body">
                                     <h5>Details</h5>
                                     <form>
-                                    <button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
-                                        <i class="fas fa-plus"></i> New
-                                    </button>
-                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-save"></i> Edit
-                                    </button>
-                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
+                                        <button type="button" class="btn ms-md-3" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;" onclick="window.location.href='product-entry.php';">
+                                            <i class="fas fa-plus"></i> New
+                                        </button>
+                                        <button type="button" class="btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                            <i class="fas fa-save"></i> Edit
+                                        </button>
+                                        <button type="button" class="btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
                                         <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="barCode">Bar Code</label>
+                                            <div class="form-group col-md-12 mt-2">
+                                                <label for="barCode">Bar Code:</label>
                                                 <input type="text" class="form-control" id="barCode">
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="pujCode">PLU Code</label>
+                                            <div class="form-group col-md-12 mt-2">
+                                                <label for="pujCode">PLU Code:</label>
                                                 <input type="text" class="form-control" id="pujCode">
                                             </div>
                                         </div>
                                         <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="date">Date</label>
+                                            <div class="form-group col-md-12 mt-2">
+                                                <label for="date">Date:</label>
                                                 <input type="date" class="form-control" id="date">
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="category">Category</label>
+                                            <div class="form-group col-md-12 mt-2">
+                                                <label for="category">Category:</label>
                                                 <input type="text" class="form-control" id="category">
                                             </div>
                                         </div>
-                                        <div class="form-group col-md-12">
-                                            <label for="productDetails">Product Details</label>
+                                        <div class="form-group col-md-12 mt-2">
+                                            <label for="productDetails">Product Details:</label>
                                             <textarea class="form-control" id="productDetails" rows="3"></textarea>
                                         </div>
-                                        <div class="form-group col-md-12">
-                                            <label for="productCode">Product Code</label>
+                                        <div class="form-group col-md-12 mt-2">
+                                            <label for="productCode">Product Code:</label>
                                             <input type="text" class="form-control" id="productCode">
                                         </div>
-                                        <div class="form-group col-md-12">
-                                            <label for="shellOptions">Shelf</label>
+                                        <div class="form-group col-md-12 mt-2">
+                                            <label for="shellOptions">Shelf:</label>
                                             <select class="form-control" id="shellOptions">
                                                 <option value="option1">Option 1</option>
                                                 <option value="option2">Option 2</option>
@@ -239,74 +239,74 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Costing Details</h5>
-                                    <button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
+                                    <button type="button" class="btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;" onclick="window.location.href='product-entry.php';">
                                         <i class="fas fa-plus"></i> New
                                     </button>
-                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;">
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
-                                    <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                    <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
-                                            <tr>
-												<th>#</th>
-                                                <th>Supplier Name</th>
-                                                <th>Cost</th>
-                                                <th>UOM</th>
-                                                <th>Barcode</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+                                    <div class="table-responsive" style="height: calc(70vh - 250px); overflow-y: auto;">
+                                        <table class="table table-bordered table-hover mt-2" id="table-bold">
+                                            <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
-													<td><input type="radio" name="selectItem" value="1"></td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
+                                                    <th>Supplier Name</th>
+                                                    <th>Cost</th>
+                                                    <th>UOM</th>
+                                                    <th>Barcode</th>
                                                 </tr>
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody>
+                                                    <tr>
+                                                        <td>Sample</td>
+                                                        <td>Sample</td>
+                                                        <td>Sample</td>
+                                                        <td>Sample</td>
+                                                    </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="card">
 								<div class="card-body">
 									<h5>Retail Details</h5>
-									<button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 10px;" onclick="window.location.href='product-entry.php';">
+									<button type="button" class="btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;" onclick="window.location.href='product-entry.php';">
                                         <i class="fas fa-plus"></i> New
                                     </button>
-                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;">
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
-									<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                    <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black;">
-											<tr>
-												<th>#</th>
-												<th>Price Type</th>
-												<th>Barcode</th>
-												<th>Product Name</th>
-												<th>UOM</th>
-												<th>Quantity</th>
-												<th>Selling Price</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td><input type="radio" name="selectItem" value="1"></td>
-												<td>Sample</td>
-												<td>Sample</td>
-												<td>Sample</td>
-												<td>Sample</td>
-												<td>Sample</td>
-												<td>Sample</td>
-											</tr>
-										</tbody>
-									</table>
+                                    <div class="table-responsive" style="height: calc(70vh - 250px); overflow-y: auto;">
+                                        <table class="table table-bordered table-hover mt-2" id="table-bold">
+                                            <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+                                                <tr>
+                                                    <th>Price Type</th>
+                                                    <th>Barcode</th>
+                                                    <th>Product Name</th>
+                                                    <th>UOM</th>
+                                                    <th>Quantity</th>
+                                                    <th>Selling Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
 								</div>
 							</div>
                         </div>

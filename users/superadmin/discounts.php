@@ -228,9 +228,9 @@
 								</div>
 							</div>
 
-							<div class="mt-4 text-center">
+							<div class="mt-3 text-center">
 							<button type="submit" class="btn btn-outline-secondary">
-								<i class="material-icons">preview</i> Preview
+								<i class="fa fa-eye"></i> Preview
 							</button>
 
 							</div>
