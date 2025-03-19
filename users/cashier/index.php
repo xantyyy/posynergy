@@ -42,176 +42,188 @@
         </li>
     </ul>
 </nav>
-<div id="content">
+                <!--TOP NAVBAR CONTENT-->
+                <div class="top-navbar">
+                    <nav class="navbar  navbar-expand-lg">
+                        </button>
 
-    <!--TOP NAVBAR CONTENT-->
-    <div class="top-navbar">
-        <nav class="navbar  navbar-expand-lg">
-            </button>
-            
-            <a class="navbar-brand" href="#">POSynergy</a>
-            <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
-            data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
-                <span class="material-icons">menu</span>
-            </button>        
-        </nav>
-    </div>	  
+                        <a class="navbar-brand" href="#">POSynergy</a>
+                        <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
+                        data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
+                            <span class="material-icons">menu</span>
+                        </button>        
+                    </nav>
+                </div>	  
+                <div>
+                <img src="../../assets/images/cashierbg.jpg" class="img-fluid" style="border-left: 200px solid black; margin-top: -20px;"/>
 
-    <!--DASHBOARD CONTENT-->
-    <div class="main-content">
-        <div class="row">
-            <!-- Left Side - Product Data Entry Form -->
-            
+                        
+                    </div>
+                 </div>
 
-            <!-- Right Side - Additional Table -->
-            <!--<div class="col-md-4" style="margin-top: -15px;">
-                
-            </div>-->
-        </div>
-    </div>
-</div>
+                    <!--DASHBOARD CONTENT-->
+                    <div class="main-content">
+                        <div class="row">
+                            <!-- Left Side - Product Data Entry Form -->
+                            
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const currentUrl = window.location.pathname.split('/').pop();
-            
-            document.querySelectorAll('.list-unstyled a').forEach(link => {
-                const linkHref = link.getAttribute('href');
-                const parentMenu = link.closest('.collapse');
-                const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+                            <!-- Right Side - Additional Table -->
+                            <!--<div class="col-md-4" style="margin-top: -15px;">
+                                
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
 
-                // Mark the active link
-                if (linkHref === currentUrl) {
-                    link.classList.add('active');
-                    if (parentMenu) {
-                        parentMenu.classList.add('show');
-                        if (dropdownToggle) {
-                            dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                            dropdownToggle.setAttribute('aria-expanded', 'true');
-                        }
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const currentUrl = window.location.pathname.split('/').pop();
+                            
+                            document.querySelectorAll('.list-unstyled a').forEach(link => {
+                                const linkHref = link.getAttribute('href');
+                                const parentMenu = link.closest('.collapse');
+                                const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+
+                                // Mark the active link
+                                if (linkHref === currentUrl) {
+                                    link.classList.add('active');
+                                    if (parentMenu) {
+                                        parentMenu.classList.add('show');
+                                        if (dropdownToggle) {
+                                            dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                                            dropdownToggle.setAttribute('aria-expanded', 'true');
+                                        }
+                                    }
+                                }
+
+                                /* Add 'disabled-link' class to Edit Item and Void Item
+                                if (link.querySelector('span') && link.querySelector('span').textContent.includes('Edit Item') || 
+                                    link.querySelector('span') && link.querySelector('span').textContent.includes('Void Item')) {
+                                        link.classList.add('disabled-link');
+                                }*/
+                            });
+                        });
+                    </script>
+
+                <style>
+                    /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
+                    .navbar {
+                        background: rgb(65, 165, 232) !important;
                     }
-                }
 
-                /* Add 'disabled-link' class to Edit Item and Void Item
-                if (link.querySelector('span') && link.querySelector('span').textContent.includes('Edit Item') || 
-                    link.querySelector('span') && link.querySelector('span').textContent.includes('Void Item')) {
-                        link.classList.add('disabled-link');
-                }*/
-            });
-        });
-    </script>
+                    /* 🔹 NAVBAR BRAND COLOR (White) */
+                    .navbar-brand {
+                        color: #ffffff !important;
+                    }
 
-    <style>
-        /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
-        .navbar {
-            background: rgb(65, 165, 232) !important;
-        }
+                    /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
+                    .nav-link,  
+                    .list-unstyled a {
+                        color: #333;
+                        font-size: 16px;
+                        transition: all 0.3s ease-in-out;
+                    }
 
-        /* 🔹 NAVBAR BRAND COLOR (White) */
-        .navbar-brand {
-            color: #ffffff !important;
-        }
+                    /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
+                    .nav-link:hover,
+                    .list-unstyled a:hover,
+                    .hovered-dropdown, .hover-effect {
+                        background: rgb(65, 165, 232) !important; /* Navy Blue */
+                        color: #ffffff !important; /* White Text */
+                        transform: scale(1.05);
+                    }
 
-        /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
-        .nav-link,  
-        .list-unstyled a {
-            color: #333;
-            font-size: 16px;
-            transition: all 0.3s ease-in-out;
-        }
+                    /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
+                    .nav-link.active,
+                    .list-unstyled a.active {
+                        color: rgb(0, 0, 0) !important; /* Black */
+                        font-weight: bold !important;
+                        background: transparent !important;
+                    }
 
-        /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
-        .nav-link:hover,
-        .list-unstyled a:hover,
-        .hovered-dropdown, .hover-effect {
-            background: rgb(65, 165, 232) !important; /* Navy Blue */
-            color: #ffffff !important; /* White Text */
-            transform: scale(1.05);
-        }
+                    /* 🔹 WHEN DROPDOWN IS EXPANDED */
+                    .list-unstyled a[aria-expanded="true"], 
+                    .list-unstyled a.highlighted-dropdown {
+                        background: rgb(255, 255, 255) !important; /* White Background */
+                        color: rgb(0, 0, 0) !important; /* Black Text */
+                        font-weight: bold;
+                    }
 
-        /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
-        .nav-link.active,
-        .list-unstyled a.active {
-            color: rgb(0, 0, 0) !important; /* Black */
-            font-weight: bold !important;
-            background: transparent !important;
-        }
+                    /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
+                    .collapse.show {
+                        background-color: rgb(255, 255, 255);
+                        border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
+                    }
 
-        /* 🔹 WHEN DROPDOWN IS EXPANDED */
-        .list-unstyled a[aria-expanded="true"], 
-        .list-unstyled a.highlighted-dropdown {
-            background: rgb(255, 255, 255) !important; /* White Background */
-            color: rgb(0, 0, 0) !important; /* Black Text */
-            font-weight: bold;
-        }
+                    /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+                    .list-unstyled a:hover, 
+                    .list-unstyled a.highlighted-dropdown:hover {
+                        background: rgb(65, 165, 232) !important; /* Navy Blue */
+                        color: white !important; /* White Text */
+                    }
 
-        /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
-        .collapse.show {
-            background-color: rgb(255, 255, 255);
-            border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
-        }
+                    /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
+                    .list-unstyled a:hover *, 
+                    .list-unstyled a.highlighted-dropdown:hover * {
+                        color: white !important;
+                    }
 
-        /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
-        .list-unstyled a:hover, 
-        .list-unstyled a.highlighted-dropdown:hover {
-            background: rgb(65, 165, 232) !important; /* Navy Blue */
-            color: white !important; /* White Text */
-        }
+                    /* 🔹 SIDEBAR STYLE */
+                    .sidebar {
+                        width: 250px;
+                        background: rgb(65, 165, 232) !important;
+                        overflow: visible !important;
+                    }
 
-        /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
-        .list-unstyled a:hover *, 
-        .list-unstyled a.highlighted-dropdown:hover * {
-            color: white !important;
-        }
+                    .sidebar .collapse {
+                        display: none;
+                    }
 
-        /* 🔹 SIDEBAR STYLE */
-        .sidebar {
-            width: 250px;
-            background: rgb(65, 165, 232) !important;
-            overflow: visible !important;
-        }
+                    .sidebar .collapse.show {
+                        display: block !important;
+                    }
 
-        .sidebar .collapse {
-            display: none;
-        }
+                    /* 🔹 MAKE Edit Item and Void Item links unclickable */
+                    .list-unstyled a.disabled-link {
+                        pointer-events: none; /* Disable click events */
+                        color: #b0b0b0; /* Gray out the text */
+                        cursor: not-allowed; /* Show the not-allowed cursor */
+                    }
 
-        .sidebar .collapse.show {
-            display: block !important;
-        }
+                    /* Optionally, make the background color appear disabled as well */
+                    .list-unstyled a.disabled-link:hover {
+                        background-color: transparent;
+                    }
 
-        /* 🔹 MAKE Edit Item and Void Item links unclickable */
-        .list-unstyled a.disabled-link {
-            pointer-events: none; /* Disable click events */
-            color: #b0b0b0; /* Gray out the text */
-            cursor: not-allowed; /* Show the not-allowed cursor */
-        }
+                    /* 🔹 STYLE FOR NAVBAR */
+                    .navbar {
+                        background: linear-gradient(to right, rgb(235, 110, 110), rgb(142, 188, 225), rgb(128, 135, 141));
+                        background-size: 1550px 870px;
+                        background-position: center;
+                        background-repeat: no-repeat;
+                    }
 
-        /* Optionally, make the background color appear disabled as well */
-        .list-unstyled a.disabled-link:hover {
-            background-color: transparent;
-        }
-
-        /* 🔹 STYLE FOR NAVBAR */
-        .navbar {
-            background: linear-gradient(to right, rgb(235, 110, 110), rgb(142, 188, 225), rgb(128, 135, 141));
-            background-size: 1550px 870px;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-
-        /* STYLE FOR TABLE HEADER */
-        #table-bold thead th {
-            font-weight: bold;
-            font-style: italic;
-        }
-        .disabled-link {
-            pointer-events: none; /* Disable click interactions */
-            opacity: 0.7; /* Make the text appear faded */
-            filter: blur(0.8px); /* Optionally add blur effect */
-            cursor: not-allowed; /* Change cursor to indicate it's disabled */
-        }
-    </style>
-
-
+                    /* STYLE FOR TABLE HEADER */
+                    #table-bold thead th {
+                        font-weight: bold;
+                        font-style: italic;
+                    }
+                    .disabled-link {
+                        pointer-events: none; /* Disable click interactions */
+                        opacity: 0.7; /* Make the text appear faded */
+                        filter: blur(0.8px); /* Optionally add blur effect */
+                        cursor: not-allowed; /* Change cursor to indicate it's disabled */
+                    }
+                    body {
+                        background-image: url('../../assets/images/cashierbg.jpg');
+                        background-size: cover;
+                        background-position: center;
+                        background-attachment: fixed; /* Para hindi mag-scroll */
+                        background-repeat: no-repeat;
+                        margin: 0;
+                        height: 100vh; /* Full height ng screen */
+                        overflow: hidden; /* Tatanggalin ang scrollbar */
+                    }
+                </style>
 
 <?php include_once 'footer.php'; ?>
