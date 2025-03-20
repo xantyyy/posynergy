@@ -303,3 +303,84 @@
         </div>
     </div>
 </div>
+
+<!-- ADD NEW SUPPLIER MODAL -->
+<div class="modal fade" id="newSupplierModal" tabindex="-1" aria-labelledby="newSupplierModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newSupplierModalLabel">Add New Supplier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="newSupplierForm" method="POST" action="supplier.php">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="supplier" class="form-label">Supplier Name</label>
+                        <input type="text" class="form-control" id="supplier" name="supplier" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tin" class="form-label">TIN</label>
+                        <input type="text" class="form-control" id="tin" name="tin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" name="address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Contact Person</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactNumber" class="form-label">Contact Number</label>
+                        <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="add_supplier">Save Supplier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT SUPPLIER MODAL -->
+<div class="modal fade" id="editSupplierModal" tabindex="-1" aria-labelledby="editSupplierModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editSupplierModalLabel">Edit Supplier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editSupplierForm" method="POST" action="supplier.php">
+                <div class="modal-body">
+                    <input type="hidden" id="editSupplierId" name="id">
+                    <div class="mb-3">
+                        <label for="editSupplier" class="form-label">Supplier Name</label>
+                        <input type="text" class="form-control" id="editSupplier" name="supplier">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTin" class="form-label">TIN</label>
+                        <input type="text" class="form-control" id="editTin" name="tin" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAddress" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="editAddress" name="address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editName" class="form-label">Contact Person</label>
+                        <input type="text" class="form-control" id="editName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editContactNumber" class="form-label">Contact Number</label>
+                        <input type="text" class="form-control" id="editContactNumber" name="contactNumber" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" name="update_supplier">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

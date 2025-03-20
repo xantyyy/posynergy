@@ -1,4 +1,5 @@
 <?php include_once 'header.php'; ?>
+<?php include_once 'modals.php'; ?>
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -156,140 +157,318 @@
 					</nav>
 				</div>	  
 
-				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
+				<?php
+					require_once '../../includes/config.php';
+
+					// Handle form submission for adding new supplier
+					if (isset($_POST['add_supplier'])) {
+						$supplier = $_POST['supplier'];
+						$tin = $_POST['tin'];
+						$address = $_POST['address'];
+						$name = $_POST['name'];
+						$contactNumber = $_POST['contactNumber'];
+
+						$sql = "INSERT INTO tbl_suppliers (Supplier, TIN, Address, Name, ContactNumber) 
+								VALUES (?, ?, ?, ?, ?)";
+
+						$stmt = $conn->prepare($sql);
+						$stmt->bind_param("sssss", $supplier, $tin, $address, $name, $contactNumber);
+
+						if ($stmt->execute()) {
+							echo "<script>alert('New supplier added successfully!'); window.location.href='supplier.php';</script>";
+						} else {
+							echo "<script>alert('Error adding supplier: " . $conn->error . "');</script>";
+						}
+
+						$stmt->close();
+					}
+
+					// Handle form submission for updating supplier
+					if (isset($_POST['update_supplier'])) {
+						$id = $_POST['id'];
+						$supplier = isset($_POST['supplier']) ? trim($_POST['supplier']) : null;
+						$tin = $_POST['tin'];
+						$address = $_POST['address'];
+						$name = $_POST['name'];
+						$contactNumber = $_POST['contactNumber'];
+
+						// Start building the SQL query dynamically
+						$sql = "UPDATE tbl_suppliers SET ";
+						$fields = [];
+						$params = [];
+						$types = '';
+
+						// Add fields to update only if they are provided
+						if (!empty($supplier)) {
+							$fields[] = "Supplier = ?";
+							$params[] = $supplier;
+							$types .= 's';
+						}
+						$fields[] = "TIN = ?";
+						$params[] = $tin;
+						$types .= 's';
+
+						$fields[] = "Address = ?";
+						$params[] = $address;
+						$types .= 's';
+
+						$fields[] = "Name = ?";
+						$params[] = $name;
+						$types .= 's';
+
+						$fields[] = "ContactNumber = ?";
+						$params[] = $contactNumber;
+						$types .= 's';
+
+						$params[] = $id; // Add ID for WHERE clause
+						$types .= 'i';
+
+						// Combine fields into the query
+						$sql .= implode(", ", $fields) . " WHERE ID = ?";
+
+						$stmt = $conn->prepare($sql);
+						$stmt->bind_param($types, ...$params);
+
+						if ($stmt->execute()) {
+							echo "<script>alert('Supplier updated successfully!'); window.location.href='supplier.php';</script>";
+						} else {
+							echo "<script>alert('Error updating supplier: " . $conn->error . "');</script>";
+						}
+
+						$stmt->close();
+					}
+
+					// Query to get all suppliers
+					$sql = "SELECT ID, Supplier FROM tbl_suppliers ORDER BY Supplier ASC";
+					$result = $conn->query($sql);
+
+					$conn->close();
+				?>
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-					<div class="d-flex justify-content-center align-items-center">
-						<div class="container">
-							<div class="row justify-content-center">
-								<div class="col-md-6">
-									<div class="card">
-										<div class="card-body">
-											<div class="col-md-12">
-												<h2>Supplier Maintenance</h2>
+				<div class="d-flex justify-content-center align-items-center">
+					<div class="container">
+						<div class="row justify-content-center">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-body">
+										<div class="col-md-12">
+											<h2>Supplier Maintenance</h2>
+										</div>
+										<form>
+											<div class="d-flex align-items-center mt-3">
+												<!-- Updated New Supplier button to trigger modal -->
+												<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" 
+													data-bs-toggle="modal" data-bs-target="#newSupplierModal">
+													<i class="fas fa-plus"></i> New Supplier
+												</button>
+												<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="deleteBtn" disabled>
+													<i class="fas fa-trash"></i> Delete
+												</button>
 											</div>
-											<form>
-												<div class="d-flex align-items-center mt-3">
-													<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" id="#">
-														<i class="fas fa-plus"></i> New Supplier
-													</button>
-													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="#">
-														<i class="fas fa-trash"></i> Delete
-													</button>
-												</div>
-												<h6>Supplier Info:</h6>
-												<div class="d-flex align-items-center mt-2">
-													<label for="#" class="me-2">Select:</label>
-													<select class="form-select" id="#">
-														<option value="#" selected hidden></option>
-														<option value="option1">Option 1</option>
-														<option value="option2">Option 2</option>
-													</select>
-												</div>
-											</form>
-											<hr>
-											<div class="row">
-												<div class="col-md-12">
-													<h6>Supplier Information</h6>
-													<div class="card">
-														<div class="card-body">
-															<div class="table-responsive" style="height: calc(90vh - 375px); overflow-y: auto;">
-																<table class="table">
-																	<tbody>
-																		<tr>
-																			<th style="width: 30%;">Supplier:</th>
-																			<td id="supplierName">ABC Branch</td>
-																		</tr>
-																		<tr>
-																			<th>TIN:</th>
-																			<td id="supplierTIN">123</td>
-																		</tr>
-																		<tr>
-																			<th>Address:</th>
-																			<td id="supplierAddress">123 Street</td>
-																		</tr>
-																		<tr>
-																			<th>Name:</th>
-																			<td id="supplierContactPerson">Carl</td>
-																		</tr>
-																		<tr>
-																			<th>Contact No.:</th>
-																			<td id="supplierContactNo">09123456789</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
+											<h6>Supplier Info:</h6>
+											<div class="d-flex align-items-center mt-2">
+												<label for="supplierSelect" class="me-2">Select:</label>
+												<select class="form-select" id="supplierSelect" name="supplier_id">
+													<option value="" selected hidden>Select Supplier</option>
+													<?php
+													if ($result->num_rows > 0) {
+														while ($row = $result->fetch_assoc()) {
+															echo "<option value='" . $row['ID'] . "'>" . htmlspecialchars($row['Supplier']) . "</option>";
+														}
+													} else {
+														echo "<option value=''>No suppliers found</option>";
+													}
+													?>
+												</select>
+											</div>
+										</form>
+										<!-- Rest of your existing code remains the same -->
+										<hr>
+										<div class="row">
+											<div class="col-md-12">
+												<h6>Supplier Information</h6>
+												<div class="card">
+													<div class="card-body">
+														<div class="table-responsive" style="height: calc(90vh - 375px); overflow-y: auto;">
+															<table class="table">
+																<tbody>
+																	<tr>
+																		<th style="width: 30%;">Supplier:</th>
+																		<td id="supplierName"></td>
+																	</tr>
+																	<tr>
+																		<th>TIN:</th>
+																		<td id="supplierTIN"></td>
+																	</tr>
+																	<tr>
+																		<th>Address:</th>
+																		<td id="supplierAddress"></td>
+																	</tr>
+																	<tr>
+																		<th>Name:</th>
+																		<td id="supplierContactPerson"></td>
+																	</tr>
+																	<tr>
+																		<th>Contact No.:</th>
+																		<td id="supplierContactNo"></td>
+																	</tr>
+																</tbody>
+															</table>
 														</div>
 													</div>
 												</div>
 											</div>
-											<div class="d-flex justify-content-end">
-												<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="#">
-													<i class="fas fa-times"></i> Cancel
-												</button>
-												<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="#">
-													<i class="fas fa-edit"></i> Edit
-												</button>
-												<button type="button" class="btn btn-warning mb-2" style="font-size: 13px;" id="#">
-													<i class="fas fa-save"></i> Save
-												</button>
-											</div>
+										</div>
+										<div class="d-flex justify-content-end">
+										<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="editBtn" disabled 
+											data-bs-toggle="modal" data-bs-target="#editSupplierModal">
+											<i class="fas fa-edit"></i> Edit
+										</button>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-            	</div>
+				</div>
+            </div>
 
             <script>
+				$(document).ready(function() {
+					// Initially disable buttons
+					toggleButtons(false);
+
+					$('#supplierSelect').on('change', function() {
+						var supplierId = $(this).val();
+						console.log('Selected supplier ID:', supplierId);
+						
+						if (supplierId) {
+							console.log('Enabling buttons');
+							toggleButtons(true);
+							
+							$.ajax({
+								url: 'get_supplier.php',
+								type: 'POST',
+								data: {id: supplierId},
+								dataType: 'json',
+								success: function(response) {
+									console.log('AJAX response:', response);
+									if (response.success) {
+										$('#supplierName').text(response.supplier);
+										$('#supplierTIN').text(response.tin);
+										$('#supplierAddress').text(response.address);
+										$('#supplierContactPerson').text(response.name);
+										$('#supplierContactNo').text(response.contactNumber);
+									} else {
+										alert('Supplier not found');
+										clearTable();
+									}
+								},
+								error: function(xhr, status, error) {
+									console.log('AJAX error:', status, error);
+									alert('Error fetching supplier data');
+									clearTable();
+								}
+							});
+						} else {
+							console.log('Disabling buttons');
+							clearTable();
+							toggleButtons(false);
+						}
+					});
+
+					// Populate modal when Edit button is clicked
+					$('#editBtn').on('click', function() {
+						var supplierId = $('#supplierSelect').val();
+						var supplierName = $('#supplierSelect option:selected').text();
+						if (supplierId) {
+							$.ajax({
+								url: 'get_supplier.php',
+								type: 'POST',
+								data: { id: supplierId },
+								dataType: 'json',
+								success: function(response) {
+									if (response.success) {
+										$('#editSupplierModalLabel').text('Supplier: ' + supplierName);
+										$('#editSupplierId').val(supplierId);
+										$('#editSupplier').val(response.supplier);
+										$('#editTin').val(response.tin);
+										$('#editAddress').val(response.address);
+										$('#editName').val(response.name);
+										$('#editContactNumber').val(response.contactNumber);
+									} else {
+										alert('Supplier data not found');
+									}
+								},
+								error: function() {
+									alert('Error fetching supplier data for edit');
+								}
+							});
+						}
+					});
+
+					function clearTable() {
+						$('#supplierName').text('');
+						$('#supplierTIN').text('');
+						$('#supplierAddress').text('');
+						$('#supplierContactPerson').text('');
+						$('#supplierContactNo').text('');
+					}
+
+					function toggleButtons(enable) {
+						$('#editBtn').prop('disabled', !enable);
+						console.log('Toggle buttons - Enable:', enable);
+					}
+				});
+								
 				document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
-        
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+					const currentUrl = window.location.pathname.split('/').pop();
+					
+					document.querySelectorAll('.list-unstyled a').forEach(link => {
+						const linkHref = link.getAttribute('href');
+						const parentMenu = link.closest('.collapse');
+						const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            // Mark the active link
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
-                }
-            }
+						// Mark the active link
+						if (linkHref === currentUrl) {
+							link.classList.add('active');
+							if (parentMenu) {
+								parentMenu.classList.add('show');
+								if (dropdownToggle) {
+									dropdownToggle.classList.add('highlighted-dropdown', 'active');
+									dropdownToggle.setAttribute('aria-expanded', 'true');
+								}
+							}
+						}
 
-            // Apply hover effect for menu items
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
-            });
+						// Apply hover effect for menu items
+						link.addEventListener("mouseenter", function () {
+							this.classList.add("hover-effect");
+						});
 
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
-        });
-        
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-            
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
+						link.addEventListener("mouseleave", function () {
+							this.classList.remove("hover-effect");
+						});
+					});
+					
+					document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+						const parentMenu = dropdown.nextElementSibling;
+						if (parentMenu && parentMenu.querySelector('.active')) {
+							dropdown.classList.add('highlighted-dropdown', 'active');
+							dropdown.setAttribute('aria-expanded', 'true');
+						}
+						
+						dropdown.addEventListener("mouseenter", function () {
+							this.classList.add('hovered-dropdown');
+						});
 
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
-        });
-    });
-</script>
+						dropdown.addEventListener("mouseleave", function () {
+							this.classList.remove("hovered-dropdown");
+						});
+					});
+				});
+			</script>
 
 			<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
