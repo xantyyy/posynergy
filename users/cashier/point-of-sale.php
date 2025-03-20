@@ -3,81 +3,90 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-<!--MENU SIDEBAR CONTENT-->
-<nav id="sidebar">
-    <div class="sidebar-header">
-        <img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
+            <!--MENU SIDEBAR CONTENT-->
+            <nav id="sidebar">
+                <div class="sidebar-header">
+                    <img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
 
-        <div class="ml-auto" id="userInfo">
-            <p class="text-right">Cashier Staff</p>
-        </div>
-    </div>
-    <ul class="list-unstyled components">
-        <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">edit</i><span>Edit Item</span></a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">add</i><span>Add To Pending</span></a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#pendingTransactionModal">
-                <i class="material-icons">pending</i><span>Pending Transaction</span>
-            </a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#searchProductModal">
-                <i class="material-icons">search</i><span>Search Product</span>
-            </a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#returnModal">
-                <i class="material-icons">keyboard_return</i><span>Return</span>
-            </a>
-        </li>
-        <li class="">
-        <a href="#" class="dashboard"><i class="material-icons">delete</i><span>Void Item</span></a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">attach_money</i><span>Cash Tender</span></a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">delete_forever</i><span>Void All</span></a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#customerPointsModal">
-                <i class="material-icons">loyalty</i><span>Customer Points</span>
-            </a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">credit_card</i><span>Other Payment Type</span></a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard"><i class="material-icons">discount</i><span>Apply Discount</span></a>
-        </li>
-        <li class="">
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#priceCheckModal">
-                <i class="material-icons">price_check</i><span>Price Check</span>
-            </a>
-        </li>
-        <li class="#" style="margin-top: 30px;">
-            <a href="index.php"><i class="material-icons">arrow_back</i><span>Back to Main</span></a>
-        </li>
-    </ul>
-</nav>
-<div id="content">
-
-    <!--TOP NAVBAR CONTENT-->
-    <div class="top-navbar">
-        <nav class="navbar  navbar-expand-lg">
-            </button>
-            
-            <a class="navbar-brand" href="#">Point of Sale</a>
-            <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
-            data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
-                <span class="material-icons">menu</span>
-            </button>        
+                    <div class="ml-auto" id="userInfo">
+                        <p class="text-right">Cashier Staff</p>
+                    </div>
+                </div>
+                <ul class="list-unstyled components">
+                <li>
+                    <a href="#" class="dashboard" accesskey="F1"><i class="material-icons">edit</i><span>Edit Item (F1)</span></a>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" accesskey="F2"><i class="material-icons">add</i><span>Add To Pending (F2)</span></a>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#pendingTransactionModal" accesskey="F3">
+                        <i class="material-icons">pending</i><span>Pending Transaction (F3)</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#searchProductModal" accesskey="F4">
+                        <i class="material-icons">search</i><span>Search Product (F4)</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#returnModal" accesskey="F5">
+                        <i class="material-icons">keyboard_return</i><span>Return (F5)</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" accesskey="F6"><i class="material-icons">delete</i><span>Void Item (F6)</span></a>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" accesskey="F7"><i class="material-icons">attach_money</i><span>Cash Tender (F7)</span></a>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" accesskey="F8"><i class="material-icons">delete_forever</i><span>Void All (F8)</span></a>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#customerPointsModal" accesskey="F9">
+                        <i class="material-icons">loyalty</i><span>Customer Points (F9)</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" accesskey="F10"><i class="material-icons">credit_card</i><span>Other Payment Type (F10)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a href="#" class="dashboard dropdown-toggle" id="discountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="material-icons">discount</i><span>Apply Discount</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="discountDropdown">
+                        <li><a class="dropdown-item" href="#">SOLO PARENT</a></li>
+                        <li><a class="dropdown-item" href="#">PWD</a></li>
+                        <li><a class="dropdown-item" href="#">SENIOR CITIZEN</a></li>
+                        <li><a class="dropdown-item" href="#">NAAC</a></li>
+                        <li><a class="dropdown-item" href="#">MEDAL OF VALOR</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#priceCheckModal" accesskey="F12">
+                        <i class="material-icons">price_check</i><span>Price Check (F12)</span>
+                    </a>
+                </li>
+                <li class="#" style="margin-top: 30px;">
+                    <a href="index.php"><i class="material-icons">arrow_back</i><span>Back to Main</span></a>
+                </li>
+            </ul>
         </nav>
-    </div>	  
+                <div id="content">
+
+                    <!--TOP NAVBAR CONTENT-->
+                    <div class="top-navbar">
+                        <nav class="navbar  navbar-expand-lg">
+                            </button>
+                            
+                            <a class="navbar-brand" href="#">Point of Sale</a>
+                            <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
+                            data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
+                                <span class="material-icons">menu</span>
+                            </button>        
+                        </nav>
+                    </div>	  
 
     <!--DASHBOARD CONTENT-->
     <div class="main-content">
@@ -213,35 +222,73 @@
     </div>
 </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const currentUrl = window.location.pathname.split('/').pop();
-            
-            document.querySelectorAll('.list-unstyled a').forEach(link => {
-                const linkHref = link.getAttribute('href');
-                const parentMenu = link.closest('.collapse');
-                const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+<script>
+     document.addEventListener("keydown", function(event) {
+        switch (event.key) {
+            case "F1":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F1"]').click();
+                break;
+            case "F2":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F2"]').click();
+                break;
+            case "F3":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F3"]').click();
+                break;
+            case "F4":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F4"]').click();
+                break;
+            case "F5":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F5"]').click();
+                break;
+            case "F6":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F6"]').click();
+                break;
+            case "F7":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F7"]').click();
+                break;
+            case "F8":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F8"]').click();
+                break;
+            case "F9":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F9"]').click();
+                break;
+            case "F10":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F10"]').click();
+                break;
+            case "F11":
+                event.preventDefault();
 
-                // Mark the active link
-                if (linkHref === currentUrl) {
-                    link.classList.add('active');
-                    if (parentMenu) {
-                        parentMenu.classList.add('show');
-                        if (dropdownToggle) {
-                            dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                            dropdownToggle.setAttribute('aria-expanded', 'true');
-                        }
-                    }
+                // Kunin ang Apply Discount button
+                let discountBtn = document.getElementById("discountDropdown");
+
+                // I-toggle ang dropdown gamit ang Bootstrap API
+                let discountMenu = new bootstrap.Dropdown(discountBtn);
+
+                if (discountBtn.getAttribute("aria-expanded") === "true") {
+                    discountMenu.hide();
+                } else {
+                    discountMenu.show();
                 }
-
-                /* Add 'disabled-link' class to Edit Item and Void Item
-                if (link.querySelector('span') && link.querySelector('span').textContent.includes('Edit Item') || 
-                    link.querySelector('span') && link.querySelector('span').textContent.includes('Void Item')) {
-                        link.classList.add('disabled-link');
-                }*/
-            });
-        });
-    </script>
+                break;
+            case "F12":
+                event.preventDefault();
+                document.querySelector('a[accesskey="F12"]').click();
+                break;
+            default:
+                break;
+        }
+    });
+</script>
 
     <style>
         /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
