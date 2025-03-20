@@ -3,11 +3,7 @@
 
     include_once 'includes/config.php';
 
-    // Prevent caching
-    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-    header("Pragma: no-cache");
-    header("Expires: 0");
-
+    // initializing variables
     $errors = array();
 
     // LOGIN USER
@@ -18,39 +14,36 @@
         if (empty($username) || empty($password)) {
             array_push($errors, "Username and password are required!");
         } else {
-            $sql = "SELECT * FROM tbl_users WHERE Username = '$username'";
+            // Query user information based on the username
+            $sql = "SELECT * FROM users WHERE username = '$username'";
             $result = mysqli_query($conn, $sql);
 
             if (mysqli_num_rows($result) > 0) {
                 $row = mysqli_fetch_array($result);
 
-                if ($row['Status'] !== 'ENABLED') {
-                    array_push($errors, "Account is disabled!");
-                } else {
-                    if (password_verify($password, $row['Password'])) {
-                        // Regenerate session ID after successful login
-                        session_regenerate_id(true);
-
-                        if ($row['Role'] == 'ADMIN/IT') {
-                            $_SESSION['superadmin_name'] = $row['Username'];
-                            header('location: users/superadmin/index.php');
-                            exit();
-                        } elseif ($row['Role'] == 'MANAGER') {
-                            $_SESSION['admin_name'] = $row['Username'];
-                            header('location: users/admin/index.php');
-                            exit();
-                        } elseif ($row['Role'] == 'CASHIER') {
-                            $_SESSION['cashier_name'] = $row['Username'];
-                            header('location: users/cashier/index.php');
-                            exit();
-                        } else {
-                            array_push($errors, "Role not recognized!");
-                        }
-                    } else {
-                        array_push($errors, "Wrong username/password!");
+                // Verify the hashed password
+                if (password_verify($password, $row['password'])) {
+                    // Set session variables based on user role
+                    if ($row['role'] == 'superadmin') {
+                        $_SESSION['superadmin_name'] = $row['username'];
+                        header('location: users/superadmin/index.php');
+                    } elseif ($row['role'] == 'admin') {
+                        $_SESSION['admin_name'] = $row['username'];
+                        $_SESSION['branch'] = $row['branch_id'];
+                        header('location: users/admin/index.php');
+                    } elseif ($row['role'] == 'accountant') {
+                        $_SESSION['accountant_name'] = $row['username'];
+                        header('location: users/accountant/index.php');
+                    } elseif ($row['role'] == 'cashier') {
+                        $_SESSION['cashier_name'] = $row['username'];
+                        header('location: users/cashier/index.php');
                     }
+                } else {
+                    // Password does not match
+                    array_push($errors, "Wrong username/password!");
                 }
             } else {
+                // Username does not exist
                 array_push($errors, "Wrong username/password!");
             }
         }

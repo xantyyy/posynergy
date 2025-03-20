@@ -51,16 +51,25 @@
                 <li>
                     <a href="#" class="dashboard" accesskey="F10"><i class="material-icons">credit_card</i><span>Other Payment Type (F10)</span></a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a href="#" class="dashboard dropdown-toggle" id="discountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="material-icons">discount</i><span>Apply Discount</span>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="discountDropdown">
-                        <li><a class="dropdown-item" href="#">SOLO PARENT</a></li>
-                        <li><a class="dropdown-item" href="#">PWD</a></li>
-                        <li><a class="dropdown-item" href="#">SENIOR CITIZEN</a></li>
-                        <li><a class="dropdown-item" href="#">NAAC</a></li>
-                        <li><a class="dropdown-item" href="#">MEDAL OF VALOR</a></li>
+                <li class="dropdown">
+                    <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <i class="material-icons">discount</i><span>Apply Discount</span></a>
+                    <ul class="collapse list-unstyled menu" id="homeSubmenu1">
+                        <li>
+                            <a href="#">Solo Parent</a>
+                        </li>
+                        <li>
+                            <a href="#">PWD</a>
+                        </li>
+                        <li>
+                            <a href="#">Senior Citizen</a>
+                        </li>
+                        <li>
+                            <a href="#">NAAC</a>
+                        </li>
+                        <li>
+                            <a href="#">Medal of Valor</a>
+                        </li>
                     </ul>
                 </li>
                 <li>

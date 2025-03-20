@@ -3,7 +3,7 @@
 $host = "localhost";
 $dbUsername = "root";
 $dbPassword = "";
-$dbName = "ampcdb";
+$dbName = "isyn_pos";
 
 //Create connection
 $conn = new mysqli($host, $dbUsername, $dbPassword, $dbName);
