@@ -1,5 +1,4 @@
 <?php include_once 'header.php'; ?>
-<?php include_once 'modals.php'; ?>
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -171,8 +170,7 @@
 											</div>
 											<form>
 												<div class="d-flex align-items-center mt-3">
-													<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" 
-														id="addSupplierBtn" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
+													<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" id="#">
 														<i class="fas fa-plus"></i> New Supplier
 													</button>
 													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="#">
@@ -245,77 +243,53 @@
             	</div>
 
             <script>
-				document.getElementById('saveSupplierBtn').addEventListener('click', function() {
-    let form = document.getElementById('addSupplierForm');
-    let formData = new FormData(form);
-
-    fetch('backend/add-supplier.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Supplier added successfully!');
-            $('#addSupplierModal').modal('hide');
-            form.reset();
-        } else {
-            alert('Error: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while adding the supplier.');
-    });
-});
-
 				document.addEventListener("DOMContentLoaded", function () {
-					const currentUrl = window.location.pathname.split('/').pop();
-					
-					document.querySelectorAll('.list-unstyled a').forEach(link => {
-						const linkHref = link.getAttribute('href');
-						const parentMenu = link.closest('.collapse');
-						const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+        const currentUrl = window.location.pathname.split('/').pop();
+        
+        document.querySelectorAll('.list-unstyled a').forEach(link => {
+            const linkHref = link.getAttribute('href');
+            const parentMenu = link.closest('.collapse');
+            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-						// Mark the active link
-						if (linkHref === currentUrl) {
-							link.classList.add('active');
-							if (parentMenu) {
-								parentMenu.classList.add('show');
-								if (dropdownToggle) {
-									dropdownToggle.classList.add('highlighted-dropdown', 'active');
-									dropdownToggle.setAttribute('aria-expanded', 'true');
-								}
-							}
-						}
+            // Mark the active link
+            if (linkHref === currentUrl) {
+                link.classList.add('active');
+                if (parentMenu) {
+                    parentMenu.classList.add('show');
+                    if (dropdownToggle) {
+                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                        dropdownToggle.setAttribute('aria-expanded', 'true');
+                    }
+                }
+            }
 
-						// Apply hover effect for menu items
-						link.addEventListener("mouseenter", function () {
-							this.classList.add("hover-effect");
-						});
+            // Apply hover effect for menu items
+            link.addEventListener("mouseenter", function () {
+                this.classList.add("hover-effect");
+            });
 
-						link.addEventListener("mouseleave", function () {
-							this.classList.remove("hover-effect");
-						});
-					});
-					
-					document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-						const parentMenu = dropdown.nextElementSibling;
-						if (parentMenu && parentMenu.querySelector('.active')) {
-							dropdown.classList.add('highlighted-dropdown', 'active');
-							dropdown.setAttribute('aria-expanded', 'true');
-						}
-						
-						dropdown.addEventListener("mouseenter", function () {
-							this.classList.add('hovered-dropdown');
-						});
+            link.addEventListener("mouseleave", function () {
+                this.classList.remove("hover-effect");
+            });
+        });
+        
+        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+            const parentMenu = dropdown.nextElementSibling;
+            if (parentMenu && parentMenu.querySelector('.active')) {
+                dropdown.classList.add('highlighted-dropdown', 'active');
+                dropdown.setAttribute('aria-expanded', 'true');
+            }
+            
+            dropdown.addEventListener("mouseenter", function () {
+                this.classList.add('hovered-dropdown');
+            });
 
-						dropdown.addEventListener("mouseleave", function () {
-							this.classList.remove("hovered-dropdown");
-						});
-					});
-				});
-			</script>
+            dropdown.addEventListener("mouseleave", function () {
+                this.classList.remove("hovered-dropdown");
+            });
+        });
+    });
+</script>
 
 			<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
