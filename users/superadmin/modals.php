@@ -303,3 +303,43 @@
         </div>
     </div>
 </div>
+
+<!-- Add New Supplier -->
+<div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSupplierModalLabel">Add New Supplier</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addSupplierForm">
+                    <div class="mb-3">
+                        <label for="supplier" class="form-label">Supplier Name</label>
+                        <input type="text" class="form-control" id="supplier" name="Supplier" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="tin" class="form-label">TIN</label>
+                        <input type="text" class="form-control" id="tin" name="TIN">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" name="Address">
+                    </div>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Contact Name</label>
+                        <input type="text" class="form-control" id="name" name="Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="contactNumber" class="form-label">Contact Number</label>
+                        <input type="tel" class="form-control" id="contactNumber" name="ContactNumber">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveSupplierBtn">Save Supplier</button>
+            </div>
+        </div>
+    </div>
+</div>
