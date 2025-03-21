@@ -384,3 +384,70 @@
         </div>
     </div>
 </div>
+
+<!-- ADD LIST MODAL -->
+<div class="modal fade" id="newListModal" tabindex="-1" aria-labelledby="newListModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newListModalLabel">Add New List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addListForm">
+                    <div class="mb-3">
+                        <label for="listName" class="form-label">Enter New List Name</label>
+                        <input type="text" class="form-control" id="listName" name="listName" placeholder="New list name" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add List</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editListModal" tabindex="-1" aria-labelledby="editListModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editListModalLabel">Edit List Name</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editListForm">
+                    <input type="hidden" id="oldItemType" name="oldItemType"> <!-- Hidden field for the current ItemType -->
+                    <div class="mb-3">
+                        <label for="newItemType" class="form-label">New List Name</label>
+                        <input type="text" class="form-control" id="newItemType" name="newItemType" placeholder="Enter new list name" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update List Name</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DELETE LIST MODAL -->
+<div class="modal fade" id="deleteListModal" tabindex="-1" aria-labelledby="deleteListModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteListModalLabel" style="text-transform: none;">Are you sure you want to delete this List Type?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="deleteListForm">
+                    <div class="mb-3">
+                        <label for="deleteItemType" class="form-label">List Type</label>
+                        <input type="text" class="form-control" id="deleteItemType" name="deleteItemType" readonly>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,4 +1,5 @@
 <?php include_once 'header.php'; ?>
+<?php include_once 'modals.php'; ?>
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -170,23 +171,21 @@
 											</div>
 											<form>
 												<div class="d-flex align-items-center mt-3">
-													<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-primary mb-2 me-2" id="newListButton" style="font-size: 13px;">
 														<i class="fas fa-plus"></i> New List
 													</button>
-													<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-success mb-2 me-2" id="editListButton" style="font-size: 13px;" disabled data-bs-toggle="modal" data-bs-target="#editListModal">
 														<i class="fas fa-edit"></i> Edit List Name
 													</button>
-													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="deleteListButton" disabled>
 														<i class="fas fa-trash"></i> Delete
 													</button>
 												</div>
 												<h6>Common Lists:</h6>
 												<div class="d-flex align-items-center mt-2">
-													<label for="#" class="me-2">Select:</label>
-													<select class="form-select" id="#">
-														<option value="#" selected hidden></option>
-														<option value="option1">Option 1</option>
-														<option value="option2">Option 2</option>
+													<label for="itemTypeDropdown" class="me-2">Select:</label>
+													<select class="form-select" id="itemTypeDropdown">
+														<!-- Options will be dynamically added here -->
 													</select>
 												</div>
 											</form>
@@ -199,26 +198,7 @@
 															<div class="table-responsive" style="height: calc(90vh - 375px); overflow-y: auto;">
 																<table class="table">
 																	<tbody>
-																		<!--<tr>
-																			<th style="width: 30%;">Supplier:</th>
-																			<td id="supplierName">ABC Branch</td>
-																		</tr>
-																		<tr>
-																			<th>TIN:</th>
-																			<td id="supplierTIN">123</td>
-																		</tr>
-																		<tr>
-																			<th>Address:</th>
-																			<td id="supplierAddress">123 Street</td>
-																		</tr>
-																		<tr>
-																			<th>Name:</th>
-																			<td id="supplierContactPerson">Carl</td>
-																		</tr>
-																		<tr>
-																			<th>Contact No.:</th>
-																			<td id="supplierContactNo">09123456789</td>
-																		</tr>-->
+																		
 																	</tbody>
 																</table>
 															</div>
@@ -227,10 +207,10 @@
 												</div>
 											</div>
 											<div class="d-flex justify-content-end">
-												<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" id="#">
+												<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" id="addItemButton" disabled>
 													<i class="fas fa-plus"></i>
 												</button>
-												<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="#">
+												<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="removeItemButton" disabled>
 													<i class="fas fa-times"></i>
 												</button>
 											</div>
@@ -243,53 +223,243 @@
             	</div>
 
             <script>
+				$(document).ready(function () {
+					/* Load ItemType Dropdown */
+					function loadItemTypeDropdown() {
+						$.ajax({
+							url: 'manage-listMaintenance.php',
+							type: 'GET',
+							dataType: 'json',
+							success: function (response) {
+								if (response.success) {
+									let options = '<option value="" selected hidden>Select a List</option>';
+									response.data.forEach(function (itemType) {
+										options += `<option value="${itemType}">${itemType}</option>`;
+									});
+									$('#itemTypeDropdown').html(options);
+								} else {
+									alert(response.message);
+								}
+							},
+							error: function () {
+								alert('An error occurred while loading the dropdown data.');
+							}
+						});
+					}
+
+					/* Load dropdown on page load */
+					loadItemTypeDropdown();
+
+					/* Handle Delete Modal */
+					$('#deleteListButton').click(function () {
+						const selectedType = $('#itemTypeDropdown').val();
+
+						if (selectedType) {
+							$('#deleteItemType').val(selectedType);
+							$('#deleteListModal').modal('show');
+						} else {
+							alert('Please select a list to delete.');
+						}
+					});
+
+					/* Handle Delete Submission */
+					$('#deleteListForm').submit(function (e) {
+						e.preventDefault();
+
+						const formData = {
+							deleteItemType: $('#deleteItemType').val()
+						};
+
+						$.ajax({
+							url: 'manage-listMaintenance.php',
+							type: 'POST',
+							data: formData,
+							dataType: 'json',
+							success: function (response) {
+								if (response.success) {
+									alert(response.message);
+									$('#deleteListModal').modal('hide');
+									$('#deleteListForm')[0].reset();
+									loadItemTypeDropdown();
+									$('table tbody').html('');
+								} else {
+									alert(response.message);
+								}
+							},
+							error: function () {
+								alert('Error deleting the list.');
+							}
+						});
+					});
+
+					/* Handle "New List" Modal and Add List */
+					$('#newListButton').click(function () {
+						$('#newListModal').modal('show');
+					});
+
+					$('#addListForm').submit(function (e) {
+						e.preventDefault();
+
+						$.ajax({
+							url: 'manage-listMaintenance.php',
+							type: 'POST',
+							data: $(this).serialize(),
+							dataType: 'json',
+							success: function (response) {
+								if (response.success) {
+									alert(response.message);
+									$('#newListModal').modal('hide');
+									$('#addListForm')[0].reset();
+									loadItemTypeDropdown();
+								} else {
+									alert(response.message);
+								}
+							},
+							error: function () {
+								alert('An error occurred while adding the list.');
+							}
+						});
+					});
+
+					/* Handle ItemType Selection */
+					$('#itemTypeDropdown').on('change', function () {
+						const selectedType = $(this).val();
+
+						if (selectedType) {
+							// Fetch ItemName values
+							$.ajax({
+								url: 'manage-listMaintenance.php',
+								type: 'POST',
+								data: { itemType: selectedType },
+								dataType: 'json',
+								success: function (response) {
+									if (response.success) {
+										let tableRows = '';
+										response.data.forEach(function (itemName) {
+											tableRows += `<tr><td>${itemName}</td></tr>`;
+										});
+										$('table tbody').html(tableRows);
+									} else {
+										$('table tbody').html(`<tr><td>${response.message}</td></tr>`);
+									}
+								},
+								error: function () {
+									alert('An error occurred while fetching item names.');
+								}
+							});
+
+							// Enable action buttons
+							toggleButtons(true);
+						} else {
+							$('table tbody').html('');
+							toggleButtons(false);
+						}
+					});
+
+					/* Handle "Edit List Name" Modal */
+					$('#editListButton').click(function () {
+						const selectedType = $('#itemTypeDropdown').val();
+
+						if (selectedType) {
+							$('#oldItemType').val(selectedType);
+							$('#newItemType').val(selectedType);
+							$('#editListModal').modal('show');
+						} else {
+							alert('Please select a list to edit.');
+						}
+					});
+
+					/* Handle form submission for editing the list name */
+					$('#editListForm').submit(function (e) {
+						e.preventDefault();
+
+						const formData = {
+							oldItemType: $('#oldItemType').val(),
+							newItemType: $('#newItemType').val()
+						};
+
+						$.ajax({
+							url: 'manage-listMaintenance.php',
+							type: 'POST',
+							data: formData,
+							dataType: 'json',
+							success: function (response) {
+								if (response.success) {
+									alert(response.message);
+									$('#editListModal').modal('hide');
+									$('#editListForm')[0].reset();
+									loadItemTypeDropdown();
+								} else {
+									alert(response.message);
+								}
+							},
+							error: function () {
+								alert('Error updating the list name.');
+							}
+						});
+					});
+
+					/* Toggle Buttons Based on Selection */
+					function toggleButtons(enable) {
+						const buttons = [
+							'#editListButton',
+							'#deleteListButton'
+						];
+						buttons.forEach(function (button) {
+							$(button).prop('disabled', !enable);
+						});
+					}
+
+					toggleButtons(false);
+				});
+
 				document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
-        
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+					const currentUrl = window.location.pathname.split('/').pop();
+					
+					document.querySelectorAll('.list-unstyled a').forEach(link => {
+						const linkHref = link.getAttribute('href');
+						const parentMenu = link.closest('.collapse');
+						const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            // Mark the active link
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
-                }
-            }
+						// Mark the active link
+						if (linkHref === currentUrl) {
+							link.classList.add('active');
+							if (parentMenu) {
+								parentMenu.classList.add('show');
+								if (dropdownToggle) {
+									dropdownToggle.classList.add('highlighted-dropdown', 'active');
+									dropdownToggle.setAttribute('aria-expanded', 'true');
+								}
+							}
+						}
 
-            // Apply hover effect for menu items
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
-            });
+						// Apply hover effect for menu items
+						link.addEventListener("mouseenter", function () {
+							this.classList.add("hover-effect");
+						});
 
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
-        });
-        
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-            
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
+						link.addEventListener("mouseleave", function () {
+							this.classList.remove("hover-effect");
+						});
+					});
+					
+					document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+						const parentMenu = dropdown.nextElementSibling;
+						if (parentMenu && parentMenu.querySelector('.active')) {
+							dropdown.classList.add('highlighted-dropdown', 'active');
+							dropdown.setAttribute('aria-expanded', 'true');
+						}
+						
+						dropdown.addEventListener("mouseenter", function () {
+							this.classList.add('hovered-dropdown');
+						});
 
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
-        });
-    });
-</script>
+						dropdown.addEventListener("mouseleave", function () {
+							this.classList.remove("hovered-dropdown");
+						});
+					});
+				});
+			</script>
 
 			<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
