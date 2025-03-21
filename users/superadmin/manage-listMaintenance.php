@@ -92,20 +92,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['itemType'])) {
 }
 
 // Handle Delete Request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteItemType'])) {
-    $deleteItemType = trim($_POST['deleteItemType']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteListType'])) {
+    // Sanitize and validate input
+    $deleteListType = trim($_POST['deleteListType']);
 
-    if (!empty($deleteItemType)) {
-        $sql = "DELETE FROM tbl_invmaintenance WHERE ItemType = ?";
+    if (!empty($deleteListType)) {
+        try {
+            // Prepare SQL query to delete the item type
+            $sql = "DELETE FROM tbl_invmaintenance WHERE ItemType = ?";
+            $stmt = $conn->prepare($sql);
+
+            if ($stmt) {
+                // Bind the parameter and execute the statement
+                $stmt->bind_param("s", $deleteListType);
+
+                if ($stmt->execute()) {
+                    // Check if any rows were affected
+                    if ($stmt->affected_rows > 0) {
+                        echo json_encode(['success' => true, 'message' => 'List type deleted successfully!']);
+                    } else {
+                        echo json_encode(['success' => false, 'message' => 'No matching list type found to delete.']);
+                    }
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Error executing query: ' . $stmt->error]);
+                }
+
+                $stmt->close(); // Close the prepared statement
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to prepare SQL statement.']);
+            }
+        } catch (Exception $e) {
+            // Handle any unexpected exceptions
+            echo json_encode(['success' => false, 'message' => 'An unexpected error occurred: ' . $e->getMessage()]);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'List type cannot be empty.']);
+    }
+
+    // Close the database connection
+    $conn->close();
+    exit;
+}
+
+// Add a new item to the ItemName column
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedItemType']) && isset($_POST['newItemName'])) {
+    $selectedItemType = trim($_POST['selectedItemType']);
+    $newItemName = trim($_POST['newItemName']);
+
+    if (!empty($selectedItemType) && !empty($newItemName)) {
+        $sql = "INSERT INTO tbl_invmaintenance (ItemType, ItemName) VALUES (?, ?)";
         $stmt = $conn->prepare($sql);
 
         if ($stmt) {
-            $stmt->bind_param("s", $deleteItemType);
+            $stmt->bind_param("ss", $selectedItemType, $newItemName);
 
             if ($stmt->execute()) {
-                echo json_encode(['success' => true, 'message' => 'List type deleted successfully!']);
+                echo json_encode(['success' => true, 'message' => 'Item added successfully!']);
             } else {
-                echo json_encode(['success' => false, 'message' => 'Error deleting list type: ' . $conn->error]);
+                echo json_encode(['success' => false, 'message' => 'Error adding item: ' . $conn->error]);
             }
 
             $stmt->close();
@@ -113,7 +157,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteItemType'])) {
             echo json_encode(['success' => false, 'message' => 'Failed to prepare statement.']);
         }
     } else {
-        echo json_encode(['success' => false, 'message' => 'List type cannot be empty.']);
+        echo json_encode(['success' => false, 'message' => 'Item name and type cannot be empty.']);
+    }
+
+    $conn->close();
+    exit;
+}
+
+// Handle Bulk Deletion of Items
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['itemsToDelete'])) {
+    $itemsToDelete = $_POST['itemsToDelete']; // Array of items to delete
+
+    if (!empty($itemsToDelete)) {
+        // Prepare placeholders for SQL IN clause
+        $placeholders = implode(',', array_fill(0, count($itemsToDelete), '?'));
+        $sql = "DELETE FROM tbl_invmaintenance WHERE ItemName IN ($placeholders)";
+        $stmt = $conn->prepare($sql);
+
+        if ($stmt) {
+            // Dynamically bind parameters
+            $types = str_repeat('s', count($itemsToDelete)); // 's' for string
+            $stmt->bind_param($types, ...$itemsToDelete);
+
+            if ($stmt->execute()) {
+                echo json_encode(['success' => true, 'message' => 'Selected items were successfully removed.']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Error deleting items: ' . $conn->error]);
+            }
+
+            $stmt->close();
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to prepare statement.']);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'No items to delete.']);
     }
 
     $conn->close();

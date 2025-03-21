@@ -157,10 +157,10 @@
 					</nav>
 				</div>	  
 
-				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
+					<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
-				<!--MAIN CONTENT HERE!!!!!!!!-->
-				<div class="d-flex justify-content-center align-items-center">
+					<!--MAIN CONTENT HERE!!!!!!!!-->
+					<div class="d-flex justify-content-center align-items-center">
 						<div class="container">
 							<div class="row justify-content-center">
 								<div class="col-md-6">
@@ -198,7 +198,7 @@
 															<div class="table-responsive" style="height: calc(90vh - 375px); overflow-y: auto;">
 																<table class="table">
 																	<tbody>
-																		
+																		<!-- Dynamic rows will be inserted here -->
 																	</tbody>
 																</table>
 															</div>
@@ -250,51 +250,168 @@
 					/* Load dropdown on page load */
 					loadItemTypeDropdown();
 
-					/* Handle Delete Modal */
-					$('#deleteListButton').click(function () {
-						const selectedType = $('#itemTypeDropdown').val();
+					/* Handle Add Item Modal */
+					$('#addItemButton').click(function () {
+						const selectedType = $('#itemTypeDropdown').val(); // Get the selected ItemType from dropdown
 
 						if (selectedType) {
-							$('#deleteItemType').val(selectedType);
-							$('#deleteListModal').modal('show');
+							$('#selectedItemType').val(selectedType); // Set the selected ItemType in the hidden field
+							$('#addItemModal').modal('show'); // Show the modal
 						} else {
-							alert('Please select a list to delete.');
+							alert('Please select a list to add an item.');
 						}
 					});
 
-					/* Handle Delete Submission */
-					$('#deleteListForm').submit(function (e) {
-						e.preventDefault();
+					/* Handle Add Item Form Submission */
+					$('#addItemForm').submit(function (e) {
+						e.preventDefault(); // Prevent default form submission
 
 						const formData = {
-							deleteItemType: $('#deleteItemType').val()
+							selectedItemType: $('#selectedItemType').val(), // Selected ItemType
+							newItemName: $('#newItemName').val() // New item name
 						};
 
 						$.ajax({
-							url: 'manage-listMaintenance.php',
+							url: 'manage-listMaintenance.php', // Backend script
 							type: 'POST',
 							data: formData,
 							dataType: 'json',
 							success: function (response) {
 								if (response.success) {
 									alert(response.message);
-									$('#deleteListModal').modal('hide');
-									$('#deleteListForm')[0].reset();
-									loadItemTypeDropdown();
-									$('table tbody').html('');
+									$('#addItemModal').modal('hide'); // Close the modal
+									$('#addItemForm')[0].reset(); // Reset the form
+
+									// Refresh the table to include the newly added item
+									const selectedType = $('#itemTypeDropdown').val();
+									if (selectedType) {
+										fetchItemNames(selectedType);
+									}
 								} else {
 									alert(response.message);
 								}
 							},
 							error: function () {
-								alert('Error deleting the list.');
+								alert('An error occurred while adding the item.');
 							}
 						});
 					});
 
+					/* Handle Delete List Button Click */
+					$('#deleteListButton').click(function () {
+						const selectedType = $('#itemTypeDropdown').val(); // Get the selected list type
+
+						if (selectedType) {
+							// Populate the modal with the selected list type
+							$('#deleteListName').text(selectedType); // Update modal content dynamically
+							$('#deleteListModal').modal('show'); // Show the confirmation modal
+						} else {
+							alert('Please select a list to delete.');
+						}
+					});
+
+					/* Handle Delete List Confirmation */
+					$('#confirmDeleteListButton').click(function () {
+						const selectedType = $('#itemTypeDropdown').val(); // Get the selected list type
+
+						if (selectedType) {
+							$.ajax({
+								url: 'manage-listMaintenance.php', // Backend script to handle deletion
+								type: 'POST',
+								data: { deleteListType: selectedType },
+								dataType: 'json',
+								success: function (response) {
+									if (response.success) {
+										alert(response.message);
+
+										// Refresh the dropdown and table after deletion
+										loadItemTypeDropdown();
+										$('table tbody').html(''); // Clear the table
+										toggleButtons(false); // Disable all buttons
+
+										$('#deleteListModal').modal('hide'); // Close the modal
+									} else {
+										alert(response.message);
+									}
+								},
+								error: function () {
+									alert('An error occurred while deleting the list.');
+								}
+							});
+						} else {
+							alert('No list selected for deletion.');
+						}
+					});
+
+					/* Handle Remove Selected Button Click */
+					$('#removeItemButton').click(function () {
+						const selectedItems = [];
+						$('.item-checkbox:checked').each(function () {
+							selectedItems.push($(this).val()); // Collect all checked item names
+						});
+
+						if (selectedItems.length > 0) {
+							// Populate the confirmation modal with the selected items
+							let itemsList = '';
+							selectedItems.forEach(function (item) {
+								itemsList += `<li>${item}</li>`;
+							});
+							$('#selectedItemsList').html(itemsList);
+
+							// Show the confirmation modal
+							$('#confirmDeleteModal').modal('show');
+
+							// Attach selected items to the confirm button
+							$('#confirmDeleteButton').data('itemsToDelete', selectedItems);
+						} else {
+							alert('Please select at least one item to remove.');
+						}
+					});
+
+					/* Handle Confirmation of Deletion */
+					$('#confirmDeleteButton').click(function () {
+						const itemsToDelete = $(this).data('itemsToDelete'); // Get the selected items to delete
+
+						if (itemsToDelete && itemsToDelete.length > 0) {
+							$.ajax({
+								url: 'manage-listMaintenance.php',
+								type: 'POST',
+								data: { itemsToDelete: itemsToDelete },
+								dataType: 'json',
+								success: function (response) {
+									if (response.success) {
+										alert(response.message);
+
+										// Refresh the table to exclude removed items
+										const selectedType = $('#itemTypeDropdown').val();
+										if (selectedType) {
+											fetchItemNames(selectedType);
+										}
+
+										// Hide the modal
+										$('#confirmDeleteModal').modal('hide');
+									} else {
+										alert(response.message);
+									}
+								},
+								error: function () {
+									alert('An error occurred while removing items.');
+								}
+							});
+						} else {
+							alert('No items to delete.');
+						}
+					});
+
+					/* Handle "Select All" Checkbox */
+					$('#selectAllCheckbox').click(function () {
+						const isChecked = $(this).prop('checked');
+						$('.item-checkbox').prop('checked', isChecked); // Check/uncheck all checkboxes
+					});
+
 					/* Handle "New List" Modal and Add List */
 					$('#newListButton').click(function () {
-						$('#newListModal').modal('show');
+						$('#newListModal').modal('show'); // Show the modal
 					});
 
 					$('#addListForm').submit(function (e) {
@@ -308,9 +425,9 @@
 							success: function (response) {
 								if (response.success) {
 									alert(response.message);
-									$('#newListModal').modal('hide');
-									$('#addListForm')[0].reset();
-									loadItemTypeDropdown();
+									$('#newListModal').modal('hide'); // Close the modal
+									$('#addListForm')[0].reset(); // Reset the form
+									loadItemTypeDropdown(); // Reload the dropdown
 								} else {
 									alert(response.message);
 								}
@@ -323,53 +440,72 @@
 
 					/* Handle ItemType Selection */
 					$('#itemTypeDropdown').on('change', function () {
-						const selectedType = $(this).val();
+						const selectedType = $(this).val(); // Get the selected dropdown value
 
 						if (selectedType) {
-							// Fetch ItemName values
-							$.ajax({
-								url: 'manage-listMaintenance.php',
-								type: 'POST',
-								data: { itemType: selectedType },
-								dataType: 'json',
-								success: function (response) {
-									if (response.success) {
-										let tableRows = '';
-										response.data.forEach(function (itemName) {
-											tableRows += `<tr><td>${itemName}</td></tr>`;
-										});
-										$('table tbody').html(tableRows);
-									} else {
-										$('table tbody').html(`<tr><td>${response.message}</td></tr>`);
-									}
-								},
-								error: function () {
-									alert('An error occurred while fetching item names.');
-								}
-							});
-
-							// Enable action buttons
-							toggleButtons(true);
+							fetchItemNames(selectedType); // Fetch associated items
+							toggleButtons(true); // Enable buttons
 						} else {
-							$('table tbody').html('');
-							toggleButtons(false);
+							$('table tbody').html(''); // Clear the table
+							toggleButtons(false); // Disable buttons
 						}
 					});
+
+					/* Fetch ItemNames Based on Selected ItemType */
+					function fetchItemNames(itemType) {
+						$.ajax({
+							url: 'manage-listMaintenance.php',
+							type: 'POST',
+							data: { itemType: itemType },
+							dataType: 'json',
+							success: function (response) {
+								if (response.success) {
+									// Build the table rows dynamically for tbody
+									let tableRows = '';
+									response.data.forEach(function (itemName) {
+										tableRows += `
+											<tr>
+												<td>
+													<input type="checkbox" class="item-checkbox" value="${itemName}" />
+												</td>
+												<td>${itemName}</td>
+											</tr>
+										`;
+									});
+
+									// Populate tbody
+									$('table tbody').html(tableRows);
+								} else {
+									// If no data found, clear the table and show a "No data" message
+									const noDataMessage = `
+										<tr>
+											<td colspan="2">No items found for the selected type.</td>
+										</tr>
+									`;
+
+									$('table tbody').html(noDataMessage);
+								}
+							},
+							error: function () {
+								alert('An error occurred while fetching item names.');
+							}
+						});
+					}
 
 					/* Handle "Edit List Name" Modal */
 					$('#editListButton').click(function () {
 						const selectedType = $('#itemTypeDropdown').val();
 
 						if (selectedType) {
-							$('#oldItemType').val(selectedType);
-							$('#newItemType').val(selectedType);
-							$('#editListModal').modal('show');
+							$('#oldItemType').val(selectedType); // Set the old ItemType in the hidden field
+							$('#newItemType').val(selectedType); // Pre-fill the new ItemType input
+							$('#editListModal').modal('show'); // Show the modal
 						} else {
 							alert('Please select a list to edit.');
 						}
 					});
 
-					/* Handle form submission for editing the list name */
+					/* Handle Edit List Name Submission */
 					$('#editListForm').submit(function (e) {
 						e.preventDefault();
 
@@ -386,9 +522,9 @@
 							success: function (response) {
 								if (response.success) {
 									alert(response.message);
-									$('#editListModal').modal('hide');
-									$('#editListForm')[0].reset();
-									loadItemTypeDropdown();
+									$('#editListModal').modal('hide'); // Close the modal
+									$('#editListForm')[0].reset(); // Reset the form
+									loadItemTypeDropdown(); // Reload the dropdown
 								} else {
 									alert(response.message);
 								}
@@ -402,14 +538,17 @@
 					/* Toggle Buttons Based on Selection */
 					function toggleButtons(enable) {
 						const buttons = [
-							'#editListButton',
-							'#deleteListButton'
+							'#addItemButton',    // Add Item button
+							'#removeItemButton', // Remove Item button
+							'#editListButton',   // Edit List Name button
+							'#deleteListButton'  // Delete button
 						];
 						buttons.forEach(function (button) {
-							$(button).prop('disabled', !enable);
+							$(button).prop('disabled', !enable); // Enable or disable buttons
 						});
 					}
 
+					// Initially disable the buttons
 					toggleButtons(false);
 				});
 

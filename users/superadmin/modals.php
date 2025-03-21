@@ -406,6 +406,7 @@
     </div>
 </div>
 
+<!-- EDIT LIST MODAL -->
 <div class="modal fade" id="editListModal" tabindex="-1" aria-labelledby="editListModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -427,27 +428,65 @@
     </div>
 </div>
 
-<!-- DELETE LIST MODAL -->
+<!-- Delete List Confirmation Modal -->
 <div class="modal fade" id="deleteListModal" tabindex="-1" aria-labelledby="deleteListModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteListModalLabel" style="text-transform: none;">Are you sure you want to delete this List Type?</h5>
+                <h5 class="modal-title" id="deleteListModalLabel">Delete List</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="text-transform: none;">
+                Are you sure you want to delete the list: <strong id="deleteListName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteListButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD ITEM MODAL -->
+<div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addItemModalLabel" style="text-transform: none;">Enter New Item</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="deleteListForm">
+                <form id="addItemForm">
+                    <input type="hidden" id="selectedItemType" name="selectedItemType"> <!-- Hidden field for selected ItemType -->
                     <div class="mb-3">
-                        <label for="deleteItemType" class="form-label">List Type</label>
-                        <input type="text" class="form-control" id="deleteItemType" name="deleteItemType" readonly>
+                        <label for="newItemName" class="form-label">New Item</label>
+                        <input type="text" class="form-control" id="newItemName" name="newItemName" placeholder="Enter new item" required>
                     </div>
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Item</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-
-
+<!-- DELETE ITEMNAME LIST -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel" style="text-transform: none;">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="text-transform: none;">
+                <p>Are you sure you want to delete the following items?</p>
+                <ul id="selectedItemsList">
+                    <!-- Dynamically populated list of selected items -->
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
