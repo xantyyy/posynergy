@@ -11,7 +11,7 @@
 					</div>
 				</div>
 				<ul class="list-unstyled components">
-					<li class="active">
+					<li class="">
 						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
 						
 					</li>

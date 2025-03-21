@@ -1,11 +1,5 @@
 <?php include_once 'header.php'; ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<style>
-	.navbar{
-	background-color:#1137a9;
-	color:#fff;
-}
-</style>
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -19,7 +13,7 @@
 					
 				</div>
 				<ul class="list-unstyled components">
-					<li class="active">
+					<li class="">
 						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
 						
 					</li>
