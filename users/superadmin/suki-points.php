@@ -1,7 +1,6 @@
 <?php include_once 'header.php'; ?>
 <?php include_once 'modals.php'; ?>
 
-
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
 				<div class="sidebar-header">
@@ -14,7 +13,7 @@
 					
 				</div>
 				<ul class="list-unstyled components">
-					<li class="active">
+					<li class="">
 						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
 						
 					</li>
