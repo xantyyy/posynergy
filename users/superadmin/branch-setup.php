@@ -159,177 +159,257 @@
 				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
-					<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-						<div class="container">
-							<div class="row justify-content-center">
-								<div class="col-md-6">
-									<div class="card">
-										<div class="card-body">
-											<div class="col-md-12">
-												<h2>Branch Setup</h2>
-											</div>
-											<form>
-												<div class="d-flex align-items-center mt-3">
-													<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="#">
-														<i class="fas fa-edit"></i> Edit
-													</button>
-													<button type="button" class="btn btn-warning mb-2 me-2" style="font-size: 13px;" id="#">
-														<i class="fas fa-save"></i> Save
-													</button>
-													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="#">
-														<i class="fas fa-times"></i> Cancel
-													</button>
-												</div>
-											</form>
-											<hr>
-											<div class="row">
-												<div class="col-md-12">
-													<h6>Supplier Information</h6>
-													<div class="card">
-														<div class="card-body">
-															<div class="table-responsive" style="height: calc(80vh - 380px); overflow-y: auto;">
-																<table class="table">
-																	<tbody>
-																		<tr>
-																			<th style="width: 50%;">Company:</th>
-																			<td id="#">Sample</td>
-																		</tr>
-																		<tr>
-																			<th>Businness Line Trade:</th>
-																			<td id="#">Sample</td>
-																		</tr>
-																		<tr>
-																			<th>Branch:</th>
-																			<td id="#">Sample</td>
-																		</tr>
-																		<tr>
-																			<th>Address:</th>
-																			<td id="#">Sample</td>
-																		</tr>
-																		<tr>
-																			<th>Telephone No.:</th>
-																			<td id="#">Sample</td>
-																		</tr>
-																		<tr>
-																			<th>TIN No.:</th>
-																			<td id="#">Sample</td>
-																		</tr>
-																		<tr>
-																			<th>Permit No.:</th>
-																			<td id="#">Sample</td>
-																		</tr>
-																		<tr>
-																			<th>Serial No.:</th>
-																			<td id="#">Sample</td>
-																		</tr>
-																		<tr>
-																			<th>Min No.:</th>
-																			<td id="#">Sample</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-12">
-													<h6>Company Value</h6>
-													<div class="card">
-														<div class="card-body">
-															<div class="table-responsive" style="height: calc(80vh - 550px); overflow-y: auto;">
-																<table class="table">
-																<tbody>
-																		<tr>
-																			<th style="width: 50%;">Vatable:</th>
-																			<td id="#">YES</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-12">
-													<h6>Minimum Purchase to Earned Points</h6>
-													<div class="card">
-														<div class="card-body">
-															<div class="table-responsive" style="height: calc(80vh - 550px); overflow-y: auto;">
-																<table class="table">
-																<tbody>
-																		<tr>
-																			<th style="width: 50%;">ST Per Point:</th>
-																			<td id="#">400</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-12">
-													<h6>Senior Discount Setup</h6>
-													<div class="card">
-														<div class="card-body">
-															<div class="table-responsive" style="height: calc(80vh - 500px); overflow-y: auto;">
-																<table class="table">
-																<tbody>
-																		<tr>
-																			<th style="width: 50%;">Discount Max Amount:</th>
-																			<td id="#">2500</td>
-																		</tr>
-																		<tr>
-																			<th style="width: 50%;">Discount Scope:</th>
-																			<td id="#">WEEK</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="col-md-12">
-													<h6>Discount Percentage</h6>
-													<div class="card">
-														<div class="card-body">
-															<div class="table-responsive" style="height: calc(80vh - 400px); overflow-y: auto;">
-																<table class="table">
-																<tbody>
-																		<tr>
-																			<th style="width: 50%;">Senior Discount:</th>
-																			<td id="#">0.05</td>
-																		</tr>
-																		<tr>
-																			<th style="width: 50%;">PWD Discount:</th>
-																			<td id="#">0.05</td>
-																		</tr>
-																		<tr>
-																			<th style="width: 50%;">Solo Parent Discount:</th>
-																			<td id="#">0.10</td>
-																		</tr>
-																		<tr>
-																			<th style="width: 50%;">NAAC Discount:</th>
-																			<td id="#">0.20</td>
-																		</tr>
-																		<tr>
-																			<th style="width: 50%;">Medal of Valor Discount:</th>
-																			<td id="#">0.05</td>
-																		</tr>
-																	</tbody>
-																</table>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
+				<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+					<div class="container">
+						<div class="row justify-content-center">
+							<div class="col-md-6">
+								<!-- Card for Branch Setup -->
+								<div class="card">
+									<div class="card-body">
+										<!-- Title Section -->
+										<div class="text-center mb-4">
+											<h2>Branch Setup</h2>
 										</div>
+
+										<!-- Action Buttons -->
+										<div class="d-flex align-items-center mb-3">
+											<button type="button" class="btn btn-success me-2" style="font-size: 13px;" id="editButton">
+												<i class="fas fa-edit"></i> Edit
+											</button>
+											<button type="button" class="btn btn-warning me-2" style="font-size: 13px;" id="saveButton">
+												<i class="fas fa-save"></i> Save
+											</button>
+											<button type="button" class="btn btn-danger" style="font-size: 13px;" id="cancelButton">
+												<i class="fas fa-times"></i> Cancel
+											</button>
+										</div>
+
+										<hr>
+
+										<!-- Information Sections -->
+										<div class="row">
+											<!-- Supplier Information Section -->
+											<div class="col-md-12 mb-4">
+												<h6>Supplier Information</h6>
+												<div class="card">
+													<div class="card-body">
+														<div class="table-responsive" style="max-height: 200px; overflow-y: auto;">
+															<table class="table table-striped">
+																<tbody>
+																	<tr>
+																		<th style="width: 50%;">Company:</th>
+																		<td id="company"></td>
+																	</tr>
+																	<tr>
+																		<th>Business Line Trade:</th>
+																		<td id="businessLineTrade"></td>
+																	</tr>
+																	<tr>
+																		<th>Branch:</th>
+																		<td id="branch"></td>
+																	</tr>
+																	<tr>
+																		<th>Address:</th>
+																		<td id="address"></td>
+																	</tr>
+																	<tr>
+																		<th>Telephone No.:</th>
+																		<td id="telephone"></td>
+																	</tr>
+																	<tr>
+																		<th>TIN No.:</th>
+																		<td id="tin"></td>
+																	</tr>
+																	<tr>
+																		<th>Permit No.:</th>
+																		<td id="permit"></td>
+																	</tr>
+																	<tr>
+																		<th>Serial No.:</th>
+																		<td id="serial"></td>
+																	</tr>
+																	<tr>
+																		<th>Min No.:</th>
+																		<td id="min"></td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<!-- Company Value Section -->
+											<div class="col-md-12 mb-4">
+												<h6>Company Value</h6>
+												<div class="card">
+													<div class="card-body">
+														<div class="table-responsive">
+															<table class="table table-striped">
+																<tbody>
+																	<tr>
+																		<th style="width: 50%;">Vatable:</th>
+																		<td id="vatable"></td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<!-- Minimum Purchase Section -->
+											<div class="col-md-12 mb-4">
+												<h6>Minimum Purchase to Earn Points</h6>
+												<div class="card">
+													<div class="card-body">
+														<div class="table-responsive">
+															<table class="table table-striped">
+																<tbody>
+																	<tr>
+																		<th style="width: 50%;">ST Per Point:</th>
+																		<td id="stPerPoint"></td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<!-- Senior Discount Setup Section -->
+											<div class="col-md-12 mb-4">
+												<h6>Senior Discount Setup</h6>
+												<div class="card">
+													<div class="card-body">
+														<div class="table-responsive">
+															<table class="table table-striped">
+																<tbody>
+																	<tr>
+																		<th style="width: 50%;">Discount Max Amount:</th>
+																		<td id="discountMaxAmount"></td>
+																	</tr>
+																	<tr>
+																		<th>Discount Scope:</th>
+																		<td id="discountScope"></td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<!-- Discount Percentage Section -->
+											<div class="col-md-12">
+												<h6>Discount Percentage</h6>
+												<div class="card">
+													<div class="card-body">
+														<div class="table-responsive">
+															<table class="table table-striped">
+																<tbody>
+																	<tr>
+																		<th style="width: 50%;">Senior Discount:</th>
+																		<td id="seniorDiscount"></td>
+																	</tr>
+																	<tr>
+																		<th>PWD Discount:</th>
+																		<td id="pwdDiscount"></td>
+																	</tr>
+																	<tr>
+																		<th>Solo Parent Discount:</th>
+																		<td id="soloParentDiscount"></td>
+																	</tr>
+																	<tr>
+																		<th>NAAC Discount:</th>
+																		<td id="naacDiscount"></td>
+																	</tr>
+																	<tr>
+																		<th>Medal of Valor Discount:</th>
+																		<td id="medalOfValorDiscount"></td>
+																	</tr>
+																</tbody>
+															</table>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div> <!-- End of Row -->
 									</div>
-								</div>
+								</div> <!-- End of Card -->
 							</div>
 						</div>
 					</div>
-            	</div>
+				</div>
+            </div>
 
             <script>
+				$(document).ready(function () {
+					// Fetch Branch Setup Data via AJAX
+					$.ajax({
+						url: 'manage-branchSetup.php', // Adjust the path if needed
+						method: 'GET',
+						dataType: 'json',
+						success: function (response) {
+							// Log the full response for debugging
+							console.log("Raw Response:", response);
+
+							// Check for errors in the response
+							if (response.error) {
+								console.error("Error from server:", response.error);
+								alert("An error occurred: " + response.error);
+								return;
+							}
+
+							// Check for warnings (e.g., no data found)
+							if (response.warning) {
+								console.warn("Warning from server:", response.warning);
+								alert("No data found: " + response.warning);
+							}
+
+							// Log specific sections for debugging
+							console.log("Supplier Data:", response.supplier);
+							console.log("Vatable:", response.vatable);
+							console.log("Discounts:", response.discounts);
+							console.log("Dropdown Values:", response.dropdown_values); // Added for debugging
+
+							// Populate Supplier Information
+							$('#company').text(response.supplier?.Company ?? 'N/A');
+							$('#businessLineTrade').text(response.supplier?.['Business Line Trade'] ?? 'N/A');
+							$('#branch').text(response.supplier?.Branch ?? 'N/A');
+							$('#address').text(response.supplier?.Address ?? 'N/A');
+							$('#telephone').text(response.supplier?.['Telephone No.'] ?? 'N/A');
+							$('#tin').text(response.supplier?.['TIN No.'] ?? 'N/A');
+							$('#permit').text(response.supplier?.['Permit No.'] ?? 'N/A');
+							$('#serial').text(response.supplier?.['Serial No.'] ?? 'N/A');
+							$('#min').text(response.supplier?.['Min No.'] ?? 'N/A');
+
+							// Populate Company Value (Vatable)
+							$('#vatable').text(response.vatable ?? 'N/A');
+
+							// Populate Minimum Purchase to Earn Points
+							$('#stPerPoint').text(response.st_per_point ?? 'N/A');
+
+							// Populate Senior Discount Setup
+							$('#discountMaxAmount').text(response.discount_setup?.max_amount ?? 'N/A');
+							$('#discountScope').text(response.discount_setup?.scope ?? 'N/A');
+
+							// Populate Discount Percentages
+							$('#seniorDiscount').text(response.discounts?.['Senior Discount'] ?? 'N/A');
+							$('#pwdDiscount').text(response.discounts?.['PWD Discount'] ?? 'N/A');
+							$('#soloParentDiscount').text(response.discounts?.['Solo Parent Discount'] ?? 'N/A');
+							$('#naacDiscount').text(response.discounts?.['NAAC Discount'] ?? 'N/A');
+							$('#medalOfValorDiscount').text(response.discounts?.['Medal of Valor Discount'] ?? 'N/A');
+						},
+						error: function (xhr, status, error) {
+							// Log detailed error information
+							console.error("AJAX Error:", status, error);
+							console.error("Response Text:", xhr.responseText);
+							alert("Failed to fetch data. Please check the server or network connection.");
+						}
+					});
+				});
+
 				document.addEventListener("DOMContentLoaded", function () {
 					const currentUrl = window.location.pathname.split('/').pop();
 					
