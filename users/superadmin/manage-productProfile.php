@@ -27,6 +27,16 @@ if ($type === 'CATEGORY') {
             );
         }
     }
+} elseif ($type === 'PRODUCTNAME') {
+    // Fetch ProductName from tbl_invprodlist
+    $sql = "SELECT ProductName FROM tbl_invprodlist";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row['ProductName']; // Add ProductName to the data array
+        }
+    }
 } elseif (isset($_GET['selectedCategory'])) {
     // Fetch DiscountType for the selected Category
     $selectedCategory = $_GET['selectedCategory'];

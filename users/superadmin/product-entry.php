@@ -212,6 +212,13 @@
                                             <label for="productCode">Product Code:</label>
                                             <input type="text" class="form-control input-field" id="productCode" disabled>
                                         </div>
+                                        <div class="form-group col-md-12 mt-2">
+                                            <label for="productName">Product Name:</label>
+                                            <input type="text" class="form-control input-field" id="productName" list="productNameList" disabled>
+                                            <datalist id="productNameList">
+                                                <!-- Options will be populated dynamically -->
+                                            </datalist>
+                                        </div>
                                         <div class="form-group col-md-12 mt-3">
                                             <div class="d-flex align-items-center">
                                                 <label for="shellOptions" class="me-2" style="white-space: nowrap;">Shelf:</label>
@@ -229,9 +236,8 @@
 
                             <div class="card">
                                 <div class="card-body">
-                                    <p style="text-transform: none; font-style: italic; color: blue;">Selected Category discountable for the following discount type in the list.</p>
                                     <div class="table-responsive table-container" style="height: calc(50vh - 250px); overflow-y: auto; margin-top: -15px;">
-                                        <table class="table-borderless table-data" id="discountTable">
+                                        <table class="table-borderless table-data mt-2" id="discountTable">
                                             <thead>
                                                 <tr>
                                                     <th>Discount Type</th>
@@ -244,6 +250,9 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    <p style="text-transform: none; font-style: italic; color: blue;">
+                                        Selected Category discountable for the following discount type in the list.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -253,17 +262,17 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Costing Details</h5>
-                                    <button type="button" class="btn addCosting-btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                    <button type="button" class="btn addCosting-btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn edit-btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
+                                    <button type="button" class="btn edit-btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" disabled>
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn delete-btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
+                                    <button type="button" class="btn delete-btn btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                     <div class="table-responsive table-container" style="height: calc(76.5vh - 250px); overflow-y: auto;">
-                                        <table class="table table-bordered table-hover mt-2 table-data" id="table-bold">
+                                        <table class="table table-bordered mt-2 table-data" id="table-bold">
                                             <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
                                                     <th>Supplier Name</th>
@@ -288,17 +297,17 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Retail Details</h5>
-                                    <button type="button" class="btn addRetail-btn2" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                    <button type="button" class="btn addRetail-btn2 btn-outline-primary opacity-50 me-2" style="font-size: 13px;">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn edit-btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
+                                    <button type="button" class="btn edit-btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" disabled>
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn delete-btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
+                                    <button type="button" class="btn delete-btn btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                     <div class="table-responsive table-container" style="height: calc(76.5vh - 250px); overflow-y: auto;">
-                                        <table class="table table-bordered table-hover mt-2 table-data" id="table-bold">
+                                        <table class="table table-bordered mt-2 table-data" id="table-bold">
                                             <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
                                                     <th>Price Type</th>
@@ -355,7 +364,9 @@
                         $('#category').prop('disabled', true);
                         $('#shellOptions').prop('disabled', true);
 
-                        // Removed the table disabling logic
+                        // Disable the Costing and Retail tables (but not the discountTable)
+                        $('.costing-table tbody tr, .retail-table tbody tr').addClass('disabled-row');
+                        $('.costing-table, .retail-table').css('pointer-events', 'none'); // Prevent interaction with these tables
                     }
 
                     // Function to enable all elements except the date field when "New" button is clicked
@@ -376,7 +387,9 @@
                         // Ensure the date field remains disabled
                         $('.date-field').prop('disabled', true);
 
-                        // Removed the table enabling logic
+                        // Enable the Costing and Retail tables (but not the discountTable, which is always enabled)
+                        $('.costing-table tbody tr, .retail-table tbody tr').removeClass('disabled-row');
+                        $('.costing-table, .retail-table').css('pointer-events', 'auto'); // Allow interaction with these tables
                     }
 
                     // Mapping for DiscountType to display names
@@ -409,6 +422,19 @@
                                 });
                             })
                             .catch(error => console.error('Error fetching CATEGORY data:', error));
+
+                        // Load ProductName for datalist
+                        fetch('manage-productProfile.php?type=PRODUCTNAME')
+                            .then(response => response.json())
+                            .then(data => {
+                                const productNameList = $('#productNameList');
+                                productNameList.empty(); // Clear any existing options
+
+                                data.forEach(product => {
+                                    productNameList.append(`<option value="${product}">`);
+                                });
+                            })
+                            .catch(error => console.error('Error fetching PRODUCTNAME data:', error));
 
                         // Load Shelf dropdown data
                         fetch('manage-productProfile.php?type=SHELF')
@@ -600,20 +626,20 @@
                         font-weight: bold;
                         font-style: italic;
                     }
-
-                    .disabled-table {
-                        pointer-events: none;
-                        opacity: 0.5;
+                    .btn:disabled {
+                        border-color:rgb(6, 0, 0); /* Gray border for disabled buttons */
+                        color:rgb(6, 1, 1); /* Light gray text for disabled buttons */
+                        background-color:rgb(241, 201, 201); /* Light gray background for better visibility */
+                        cursor: not-allowed; /* Show "not-allowed" cursor */
+                        opacity: 1; /* Keep solid visibility */
                     }
 
-                    .table-disabled {
-                        background-color: #f0f0f0;
+                    /* Additional hover styles for enabled buttons */
+                    .btn:not(:disabled):hover {
+                        background-color: #007bff; /* Blue background */
+                        color: #ffffff; /* White text */
+                        border-color: #0056b3; /* Darker blue border */
                     }
-                    .disabled-row {
-                        background-color: #f0f0f0;
-                        color: #a0a0a0;
-                        cursor: not-allowed;
-                    }
-            </style>
+                </style>
 
 <?php include_once 'footer.php'; ?>
