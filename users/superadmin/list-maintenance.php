@@ -171,13 +171,13 @@
 											</div>
 											<form>
 												<div class="d-flex align-items-center mt-3">
-													<button type="button" class="btn btn-primary mb-2 me-2" id="newListButton" style="font-size: 13px;">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" id="newListButton" style="font-size: 13px;">
 														<i class="fas fa-plus"></i> New List
 													</button>
-													<button type="button" class="btn btn-success mb-2 me-2" id="editListButton" style="font-size: 13px;" disabled data-bs-toggle="modal" data-bs-target="#editListModal">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" id="editListButton" style="font-size: 13px;" disabled data-bs-toggle="modal" data-bs-target="#editListModal">
 														<i class="fas fa-edit"></i> Edit List Name
 													</button>
-													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="deleteListButton" disabled>
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="deleteListButton" disabled>
 														<i class="fas fa-trash"></i> Delete
 													</button>
 												</div>
@@ -207,10 +207,10 @@
 												</div>
 											</div>
 											<div class="d-flex justify-content-end">
-												<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" id="addItemButton" disabled>
+												<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="addItemButton" disabled>
 													<i class="fas fa-plus"></i>
 												</button>
-												<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="removeItemButton" disabled>
+												<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="removeItemButton" disabled>
 													<i class="fas fa-times"></i>
 												</button>
 											</div>

@@ -255,16 +255,16 @@
 													</div>
 													
 													<div class="d-flex flex-column mt-3">
-													<button type="button" class="btn" style="background-color:rgb(57, 133, 219); color: white; font-size: 15px; margin-bottom: 5px;" id="addButton">
+													<button type="button" class="btn mt-2 btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="addButton">
 														<i class="fas fa-plus"></i> Add
 													</button>
-													<button type="button" class="btn" style="background-color:rgb(239, 164, 60); color: white; font-size: 15px; margin-bottom: 5px;" id="editButton">
+													<button type="button" class="btn mt-2 btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="editButton">
 														<i class="fas fa-save"></i> Edit
 													</button>
-													<button type="button" class="btn" style="background-color:rgb(236, 94, 94); color: white; font-size: 15px; margin-bottom: 5px;" id="deleteButton">
+													<button type="button" class="btn mt-2 btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="deleteButton">
 														<i class="fas fa-trash"></i> Delete
 													</button>
-													<button type="button" class="btn" style="background-color:rgb(95, 212, 95); color: white; font-size: 15px; margin-bottom: 5px;" id="cancelButton">
+													<button type="button" class="btn mt-2 btn-outline-primary opacity-50 me-2" style="font-size: 13px;">
 														<i class="fas fa-times"></i> Cancel
 													</button>
 

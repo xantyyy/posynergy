@@ -172,7 +172,7 @@
 												<div class="d-flex align-items-center mt-3">
 													<h6>Sales Invoice:</h6>
 													<input type="text" class="form-control" style="width: 60%; margin-left: 10px;" id="#">
-													<button type="button" class="btn btn-success" style="font-size: 13px; margin-left: 10px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px; margin-left: 10px;" id="#">
 														<i class="fas fa-edit"></i> Edit
 													</button>
 												</div>
@@ -194,7 +194,7 @@
 												</div>
 											</div>
 											<div class="d-flex align-items-center mt-2" style="margin-left: 82%;">
-												<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="#">
+												<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
 													<i class="fas fa-refresh"></i> Reset
 												</button>
 											</div>

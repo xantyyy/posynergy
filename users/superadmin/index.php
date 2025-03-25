@@ -1,5 +1,5 @@
 <?php include_once 'header.php'; ?>
-
+<?php include_once 'modals.php'; ?>
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
 				<div class="sidebar-header">
@@ -124,8 +124,8 @@
 						<a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 						<i class="material-icons">build</i><span>Utilities</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu7">
-							<li>
-								<a href="#">Close Today's Transaction</a>
+						<li>
+								<a href="#" data-bs-toggle="modal" data-bs-target="#closeInventoryModal"> Close Today's Transaction</a>
 							</li>
 							<li>
 								<a href="#">Data Back-up</a>

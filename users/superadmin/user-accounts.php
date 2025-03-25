@@ -170,16 +170,16 @@
 											</div>
 											<form>
 												<div class="d-flex align-items-center mt-3">
-													<button type="button" class="btn btn-primary mb-2 me-2" style="font-size: 13px;" id="newBtn">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="newBtn">
 														<i class="fas fa-plus"></i> New
-													</button>
-													<button type="button" class="btn btn-warning mb-2 me-2" style="font-size: 13px;" id="#">
+													</button>	
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
 														<i class="fas fa-save"></i> Save
 													</button>
-													<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
 														<i class="fas fa-edit"></i> Edit
 													</button>
-													<button type="button" class="btn btn-danger mb-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
 														<i class="fas fa-ban"></i> Disable
 													</button>
 												</div>
@@ -242,10 +242,16 @@
 												<div class="col-md-12">
 													<h6>Account Details</h6>
 													<form>
-														<div class="d-flex align-items-center mt-3">
-															<label for="roleInput" class="me-2">Role:</label>
-															<input type="text" class="form-control" style="width: 97%; margin-left: 50px;" id="roleInput" disabled>
-														</div>
+													<div class="d-flex align-items-center mt-3">
+														<label for="roleInput" class="me-2">Role:</label>
+														<select class="form-select" style="width: 97%; margin-left: 50px;" id="roleInput" disabled>
+															<option value=""></option>
+															<option value="ADMIN/IT">ADMIN/IT</option>
+															<option value="CASHIER">CASHIER</option>
+															<option value="MANAGER">MANAGER</option>
+														</select>
+													</div>
+
 														<div class="d-flex align-items-center mt-3">
 															<label for="usernameInput" class="me-2">Username:</label>
 															<input type="text" class="form-control" style="width: 97%; margin-left: 10px;" id="usernameInput" disabled>
@@ -273,6 +279,32 @@
             	</div>
 
             <script>
+				
+				document.addEventListener("DOMContentLoaded", function () {
+				let newBtn = document.getElementById("newBtn");
+				let inputs = document.querySelectorAll(".form-control");
+
+				// Function to toggle fields
+				function toggleFields(enable) {
+					inputs.forEach(input => {
+						input.disabled = !enable; // Enable if true, disable if false
+						if (!enable) input.value = ""; // Clear fields when disabled
+					});
+				}
+
+				// Set default state (Disabled lahat)
+				toggleFields(false);
+
+				newBtn.addEventListener("click", function () {
+					if (newBtn.innerHTML.includes("New")) {
+						newBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
+						toggleFields(true); // Enable inputs
+					} else {
+						newBtn.innerHTML = '<i class="fas fa-plus"></i> New';
+						toggleFields(false); // Disable inputs
+					}
+				});
+			});
 				document.getElementById('newBtn').addEventListener('click', function () {
 				// Enable the input fields
 				document.getElementById('fullName').disabled = false;

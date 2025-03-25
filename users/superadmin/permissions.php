@@ -170,16 +170,16 @@
 											</div>
 											<form>
 												<div class="d-flex align-items-center mt-3">
-													<button type="button" class="btn btn-success mb-2 me-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
 														<i class="fas fa-edit"></i> Edit Previleges
 													</button>
-													<button type="button" class="btn btn-danger mb-2 me-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
 														<i class="fas fa-trash"></i> Delete
 													</button>
-													<button type="button" class="btn btn-warning mb-2 me-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
 														<i class="fas fa-save"></i> Save
 													</button>
-													<button type="button" class="btn btn-info mb-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2"" style="font-size: 13px;" id="#">
 														<i class="fas fa-times"></i> Cancel
 													</button>
 												</div>

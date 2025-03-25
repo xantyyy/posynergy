@@ -248,13 +248,13 @@
 												<label for="#">Card Details:</label>
 												<input type="text" class="form-control" id="#" placeholder="Card #">
 											</div>
-											<button type="button" class="btn" style="background-color: #0056b3; color: white; width: 80px; margin-right: 5px; font-size: 9px;" onclick="window.location.href='product-entry.php';">
+											<button type="button" class="btn btn-outline-primary opacity-50 me-2" onclick="window.location.href='product-entry.php';">
 												<i class="fas fa-plus"></i> New
 											</button>
-											<button type="button" class="btn" style="background-color: #d48f00; color: white; width: 80px; margin-right: 5px; font-size: 10px;">
+											<button type="button" class="btn btn-outline-primary opacity-50 me-2"
 												<i class="fas fa-save"></i> Edit
 											</button>
-											<button type="button" class="btn" style="background-color: #b30000; color: white; width: 80px; margin-right: 5px; font-size: 7.7px;">
+											<button type="button" class="btn btn-outline-primary opacity-50 me-2"
 												<i class="fas fa-trash"></i> Delete
 											</button>
 
