@@ -173,13 +173,13 @@
 
 										<!-- Action Buttons -->
 										<div class="d-flex align-items-center mb-3">
-											<button type="button" class="btn btn-success me-2" style="font-size: 13px;" id="editButton">
+											<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="editButton">
 												<i class="fas fa-edit"></i> Edit
 											</button>
-											<button type="button" class="btn btn-warning me-2" style="font-size: 13px;" id="saveButton">
+											<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="saveButton">
 												<i class="fas fa-save"></i> Save
 											</button>
-											<button type="button" class="btn btn-danger" style="font-size: 13px;" id="cancelButton">
+											<button type="button" class="btn btn-outline-primary opacity-50" style="font-size: 13px;" id="cancelButton">
 												<i class="fas fa-times"></i> Cancel
 											</button>
 										</div>

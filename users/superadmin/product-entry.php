@@ -173,51 +173,53 @@
                                 <div class="card-body">
                                     <h5>Details</h5>
                                     <form>
-                                        <button type="button" class="btn ms-md-3" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;" onclick="window.location.href='product-entry.php';">
+                                        <button type="button" class="btn ms-md-3 new-btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;">
                                             <i class="fas fa-plus"></i> New
                                         </button>
-                                        <button type="button" class="btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                        <button type="button" class="btn edit-btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
                                             <i class="fas fa-save"></i> Edit
                                         </button>
-                                        <button type="button" class="btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                        <button type="button" class="btn delete-btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                         <div class="form-row">
                                             <div class="form-group col-md-12 mt-2">
                                                 <label for="barCode">Bar Code:</label>
-                                                <input type="text" class="form-control" id="barCode">
+                                                <input type="text" class="form-control input-field" id="barCode" disabled>
                                             </div>
                                             <div class="form-group col-md-12 mt-2">
                                                 <label for="pujCode">PLU Code:</label>
-                                                <input type="text" class="form-control" id="pujCode">
+                                                <input type="text" class="form-control input-field" id="pujCode" disabled>
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-12 mt-2">
                                                 <label for="date">Date:</label>
-                                                <input type="date" class="form-control" id="date">
+                                                <input type="date" class="form-control input-field date-field" id="date" disabled>
                                             </div>
                                             <div class="form-group col-md-12 mt-2">
                                                 <label for="category">Category:</label>
-                                                <input type="text" class="form-control" id="category">
+                                                <select class="form-select input-field" id="category" disabled>
+                                                    <option value="option1">Option 1</option>
+                                                    <option value="option2">Option 2</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-group col-md-12 mt-2">
                                             <label for="productDetails">Product Details:</label>
-                                            <textarea class="form-control" id="productDetails" rows="3"></textarea>
+                                            <textarea class="form-control input-field" id="productDetails" rows="3" disabled></textarea>
                                         </div>
                                         <div class="form-group col-md-12 mt-2">
                                             <label for="productCode">Product Code:</label>
-                                            <input type="text" class="form-control" id="productCode">
+                                            <input type="text" class="form-control input-field" id="productCode" disabled>
                                         </div>
                                         <div class="form-group col-md-12 mt-2">
                                             <label for="shellOptions">Shelf:</label>
-                                            <select class="form-control" id="shellOptions">
+                                            <select class="form-select input-field" id="shellOptions" disabled>
                                                 <option value="option1">Option 1</option>
                                                 <option value="option2">Option 2</option>
                                             </select>
                                         </div>
-                                        
                                     </form>
                                 </div>
                             </div>
@@ -228,17 +230,17 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Costing Details</h5>
-                                    <button type="button" class="btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;" onclick="window.location.href='product-entry.php';">
-                                        <i class="fas fa-plus"></i> New
+                                    <button type="button" class="btn addCosting-btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                        <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                    <button type="button" class="btn edit-btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                    <button type="button" class="btn delete-btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
-                                    <div class="table-responsive" style="height: calc(70vh - 250px); overflow-y: auto;">
-                                        <table class="table table-bordered table-hover mt-2" id="table-bold">
+                                    <div class="table-responsive table-container" style="height: calc(70vh - 250px); overflow-y: auto;">
+                                        <table class="table table-bordered table-hover mt-2 table-data" id="table-bold">
                                             <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
                                                     <th>Supplier Name</th>
@@ -248,12 +250,12 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                    <tr>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                    <td>Sample</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -261,19 +263,19 @@
                             </div>
 
                             <div class="card">
-								<div class="card-body">
-									<h5>Retail Details</h5>
-									<button type="button" class="btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;" onclick="window.location.href='product-entry.php';">
-                                        <i class="fas fa-plus"></i> New
+                                <div class="card-body">
+                                    <h5>Retail Details</h5>
+                                    <button type="button" class="btn addRetail-btn2" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                        <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                    <button type="button" class="btn edit-btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                    <button type="button" class="btn delete-btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
-                                    <div class="table-responsive" style="height: calc(70vh - 250px); overflow-y: auto;">
-                                        <table class="table table-bordered table-hover mt-2" id="table-bold">
+                                    <div class="table-responsive table-container" style="height: calc(70vh - 250px); overflow-y: auto;">
+                                        <table class="table table-bordered table-hover mt-2 table-data" id="table-bold">
                                             <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
                                                     <th>Price Type</th>
@@ -296,17 +298,72 @@
                                             </tbody>
                                         </table>
                                     </div>
-								</div>
-							</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </div>            
                 </div>
-                    
-            </div>
-            
-            
+            </div>      
 
 			<script>
+                $(document).ready(function() {
+                    // Function to set the current date in the date input field
+                    function setCurrentDate() {
+                        const today = new Date();
+                        const year = today.getFullYear();
+                        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+                        const day = String(today.getDate()).padStart(2, '0');
+                        const formattedDate = `${year}-${month}-${day}`; // Format: YYYY-MM-DD
+                        $('#date').val(formattedDate);
+                    }
+
+                    // Function to initialize the form state (disable all except "New" button)
+                    function initializeFormState() {
+                        // Disable all buttons except the "New" button
+                        $('.edit-btn').prop('disabled', true);
+                        $('.delete-btn').prop('disabled', true);
+                        $('.addCosting-btn').prop('disabled', true);
+                        $('.addRetail-btn2').prop('disabled', true);
+
+                        // Disable all input fields and textareas
+                        $('.input-field').prop('disabled', true);
+
+                        // Disable the tables (make them non-interactive)
+                        $('.table-data tbody tr').addClass('disabled-row');
+                        $('.table-data').css('pointer-events', 'none'); // Prevent interaction with the table
+                    }
+
+                    // Function to enable all elements except the date field when "New" button is clicked
+                    function enableFormElements() {
+                        // Enable all buttons
+                        $('.edit-btn').prop('disabled', false);
+                        $('.delete-btn').prop('disabled', false);
+                        $('.addCosting-btn').prop('disabled', false);
+                        $('.addRetail-btn2').prop('disabled', false);
+
+                        // Enable all input fields and textareas except the date field
+                        $('.input-field').not('.date-field').prop('disabled', false);
+
+                        // Ensure the date field remains disabled
+                        $('.date-field').prop('disabled', true);
+
+                        // Enable the tables (make them interactive)
+                        $('.table-data tbody tr').removeClass('disabled-row');
+                        $('.table-data').css('pointer-events', 'auto'); // Allow interaction with the table
+                    }
+
+                    // Initialize the form state on page load
+                    initializeFormState();
+
+                    // Set the current date on page load
+                    setCurrentDate();
+
+                    // Event handler for the "New" button
+                    $('.new-btn').on('click', function() {
+                        enableFormElements();
+                    });
+                });
+
                 document.addEventListener("DOMContentLoaded", function () {
                     const currentUrl = window.location.pathname.split('/').pop();
                     
@@ -436,9 +493,23 @@
                     }
                     
                     #table-bold thead th {
-                                        font-weight: bold;
-                                        font-style: italic;
-                                    }
+                        font-weight: bold;
+                        font-style: italic;
+                    }
+
+                    .disabled-table {
+                        pointer-events: none;
+                        opacity: 0.5;
+                    }
+
+                    .table-disabled {
+                        background-color: #f0f0f0;
+                    }
+                    .disabled-row {
+                        background-color: #f0f0f0;
+                        color: #a0a0a0;
+                        cursor: not-allowed;
+                    }
             </style>
 
 <?php include_once 'footer.php'; ?>

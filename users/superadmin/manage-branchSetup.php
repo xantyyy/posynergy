@@ -6,17 +6,17 @@ function fetchBranchSetupData($conn) {
     $data = [];
 
     try {
-        // Query updated to match the actual ConfigName values in the database
+        // Query to fetch data from tbl_invconfig
         $query = "
             SELECT ConfigName, Value 
-            FROM tbl_configuration 
+            FROM tbl_invconfig 
             WHERE ConfigOwner = 'BRANCH SETUP' 
             AND ConfigName IN (
-                'ORGNAME', 'BRANCHNAME', 'BRANCHADDRESS', 'BRANCHTELNO', 
-                'TINNO', 'PERMITNO', 'CURRENTNO', 'CLIENTNOMAX', 
-                'PRIV_BANKO', 'ST_PER_POINT', 'DISCOUNT_MAX_AMOUNT', 'DISCOUNT_SCOPE', 
-                'SENIOR_DISCOUNT', 'PWD_DISCOUNT', 'SOLO_PARENT_DISCOUNT', 
-                'NAAC_DISCOUNT', 'MEDAL_OF_VALOR_DISCOUNT'
+                'COMPANY', 'BUSINESSLINE', 'BRANCH', 'ADDRESS', 
+                'TELNO', 'TINNO', 'PERMITNO', 'SERIALNO', 
+                'MINNO', 'IFVATABLE', 'POINTS', 'SENIORDISCOUNTMAXIMUMAMOUNT', 
+                'DISCOUNTSCOPE', 'SENIORDISCOUNT', 'PWDDISCOUNT', 'SOLOPARENTDISCOUNT', 
+                'NAACDISCOUNT', 'MEDALOFVALOR'
             )";
         
         $result = $conn->query($query);
@@ -36,21 +36,24 @@ function fetchBranchSetupData($conn) {
                 $configName = $row['ConfigName'];
                 $value = $row['Value'];
 
-                // Debug: Log each row
+                // Debug: Log each row (optional, for debugging only)
                 error_log("ConfigName: $configName, Value: $value");
 
                 switch ($configName) {
                     // Supplier Information
-                    case 'ORGNAME':
+                    case 'COMPANY':
                         $supplierData['Company'] = $value;
                         break;
-                    case 'BRANCHNAME':
+                    case 'BUSINESSLINE':
+                        $supplierData['Business Line Trade'] = $value;
+                        break;
+                    case 'BRANCH':
                         $supplierData['Branch'] = $value;
                         break;
-                    case 'BRANCHADDRESS':
+                    case 'ADDRESS':
                         $supplierData['Address'] = $value;
                         break;
-                    case 'BRANCHTELNO':
+                    case 'TELNO':
                         $supplierData['Telephone No.'] = $value;
                         break;
                     case 'TINNO':
@@ -59,45 +62,45 @@ function fetchBranchSetupData($conn) {
                     case 'PERMITNO':
                         $supplierData['Permit No.'] = $value;
                         break;
-                    case 'CURRENTNO':
+                    case 'SERIALNO':
                         $supplierData['Serial No.'] = $value;
                         break;
-                    case 'CLIENTNOMAX':
+                    case 'MINNO':
                         $supplierData['Min No.'] = $value;
                         break;
 
-                    // Company Value
-                    case 'PRIV_BANKO':
+                    // Company Value (VAT Status)
+                    case 'IFVATABLE':
                         $data['vatable'] = $value;
                         break;
 
-                    // Minimum Purchase
-                    case 'ST_PER_POINT':
+                    // Minimum Purchase Points
+                    case 'POINTS':
                         $data['st_per_point'] = $value;
                         break;
 
                     // Senior Discount Setup
-                    case 'DISCOUNT_MAX_AMOUNT':
+                    case 'SENIORDISCOUNTMAXIMUMAMOUNT':
                         $discountSetup['max_amount'] = $value;
                         break;
-                    case 'DISCOUNT_SCOPE':
+                    case 'DISCOUNTSCOPE':
                         $discountSetup['scope'] = $value;
                         break;
 
                     // Discount Percentages
-                    case 'SENIOR_DISCOUNT':
+                    case 'SENIORDISCOUNT':
                         $discountData['Senior Discount'] = $value;
                         break;
-                    case 'PWD_DISCOUNT':
+                    case 'PWDDISCOUNT':
                         $discountData['PWD Discount'] = $value;
                         break;
-                    case 'SOLO_PARENT_DISCOUNT':
+                    case 'SOLOPARENTDISCOUNT':
                         $discountData['Solo Parent Discount'] = $value;
                         break;
-                    case 'NAAC_DISCOUNT':
+                    case 'NAACDISCOUNT':
                         $discountData['NAAC Discount'] = $value;
                         break;
-                    case 'MEDAL_OF_VALOR_DISCOUNT':
+                    case 'MEDALOFVALOR':
                         $discountData['Medal of Valor Discount'] = $value;
                         break;
                 }
@@ -129,7 +132,7 @@ function fetchBranchSetupData($conn) {
 // Fetch data and encode as JSON for frontend
 $data = fetchBranchSetupData($conn);
 
-// Debug: Log the final response
+// Debug: Log the final response (optional)
 error_log("Final Response: " . json_encode($data));
 
 // Set appropriate header for JSON output
