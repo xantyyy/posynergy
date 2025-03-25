@@ -33,8 +33,8 @@
 					<a href="z-reading.php">Z Reading</a>
 				</li>
                 <li>
-					<a href="opening-fund.php">Opening Fund</a>
-				</li>
+                    <a href="#" id="openFundBtn">Opening Fund</a>
+                </li>
 			</ul>
 		</li>
         <li class="logout" style="margin-top: 30px;">
@@ -42,6 +42,62 @@
         </li>
     </ul>
 </nav>
+
+           <!-- First Modal: Password Input -->
+            <div id="passwordModal" class="modal">
+                <div class="modal-content">
+                    <h2>Enter Password</h2>
+                    <input type="password" id="passwordInput" placeholder="Enter password">
+                    <div class="modal-actions">
+                        <button id="submitPassword">Submit</button>
+                        <button id="closePasswordModal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Modal: Declare Opening Fund -->
+            <div id="fundModal" class="modal">
+                <div class="modal-content">
+                    <h2>Declare Opening Fund</h2>
+                    <input type="number" id="fundAmount" placeholder="Enter amount">
+                    <div class="modal-actions">
+                        <button id="nextToConfirm">Submit</button>
+                        <button id="closeFundModal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Declare Opening Fund Modal -->
+            <div id="openingFundModal" class="modal">
+                <div class="modal-content">
+                    <h2>Declare Opening Fund</h2>
+                    <label for="fundAmount">Enter Amount:</label>
+                    <input type="number" id="fundAmount" required>
+                    <button id="submitFund">Submit</button>
+                </div>
+            </div>
+
+            <!-- Third Modal: Confirmation -->
+            <div id="confirmModal" class="modal">
+                <div class="modal-content">
+                    <h2>Are you sure you want to submit the opening fund?</h2>
+                    <div class="modal-actions">
+                        <button id="confirmSubmit">Yes</button>
+                        <button id="closeConfirmModal">No</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Confirmation Modal -->
+            <div id="confirmModal" class="modal">
+                <div class="modal-content">
+                    <h2>Are you sure you want to submit the opening fund?</h2>
+                    <div class="modal-actions">
+                        <button id="confirmSubmit">Yes</button>
+                        <button id="closeConfirmModal">No</button>
+                    </div>
+                </div>
+            </div>
+
+            
 <div id="content">
 
     <!--TOP NAVBAR CONTENT-->
@@ -72,6 +128,123 @@
 </div>
 
     <script>
+        
+        document.getElementById("submitFund").addEventListener("click", function () {
+        let amount = document.getElementById("fundAmount").value;
+
+        if (amount.trim() === "" || amount <= 0) {
+            alert("Please enter a valid amount.");
+            return;
+        }
+
+        // Send to PHP via AJAX
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "save_opening_fund.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert(xhr.responseText); // Show response message
+                closeModal("openingFundModal");
+            }
+        };
+        xhr.send("amount=" + amount);
+    })
+        document.getElementById("confirmSubmit").addEventListener("click", function () {
+        let amount = document.getElementById("fundAmount").value;
+        closeModal("confirmModal"); // Close confirmation modal
+
+        // Generate receipt
+        let receiptWindow = window.open("", "_blank");
+        receiptWindow.document.write(`
+            <html>
+            <head>
+                <title>Receipt</title>
+                <style>
+                    body { font-family: Arial, sans-serif; text-align: center; }
+                    .receipt { border: 1px solid #000; padding: 20px; width: 300px; margin: auto; }
+                </style>
+            </head>
+            <body onload="window.print(); window.onafterprint = window.close;">
+                <div class="receipt">
+                    <h2>AM COMPANY</h2>
+                    <p>Owned & Operated By: AM Company Inc.</p>
+                    <p>#101 SAN PASCUAL, TALAVERA, N.E.</p>
+                    <p>VAT REG: TIN 000-000-000-000</p>
+                    <p>MIN: 12345678910111213</p>
+                    <p>SN: 1234BCD</p>
+                    <hr>
+                    <h3>OPENING FUND</h3>
+                    <p><b>DATE-TIME:</b> ${new Date().toLocaleString()}</p>
+                    <p><b>CASHIER NAME:</b> CASHIER</p>
+                    <p><b>AMOUNT:</b> ₱${parseFloat(amount).toLocaleString()}</p>
+                    <hr>
+                    <p>==============================</p>
+                </div>
+            </body>
+            </html>
+        `);
+    });
+            function showModal(modalId) {
+        console.log("Showing modal:", modalId);
+        document.getElementById(modalId).style.display = "flex";
+    }
+
+    function closeModal(modalId) {
+        console.log("Closing modal:", modalId);
+        document.getElementById(modalId).style.display = "none";
+    }
+
+    // Show Password Modal
+    document.getElementById("openFundBtn").addEventListener("click", function (event) {
+        event.preventDefault();
+        showModal("passwordModal");
+    });
+
+    // Close Password Modal
+    document.getElementById("closePasswordModal").addEventListener("click", function () {
+        closeModal("passwordModal");
+    });
+
+    // Check Password
+    document.getElementById("submitPassword").addEventListener("click", function () {
+        let password = document.getElementById("passwordInput").value;
+        if (password === "123") { // Password mo na "123"
+            closeModal("passwordModal"); // Close first modal
+            showModal("fundModal"); // Show second modal
+        } else {
+            alert("Incorrect password!");
+        }
+    });
+
+    // Close Fund Modal
+    document.getElementById("closeFundModal").addEventListener("click", function () {
+        closeModal("fundModal");
+    });
+
+    // Show Confirmation Modal
+    document.getElementById("nextToConfirm").addEventListener("click", function () {
+        let amount = document.getElementById("fundAmount").value;
+        if (amount.trim() === "" || isNaN(amount) || amount <= 0) {
+            alert("Please enter a valid amount!");
+        } else {
+            closeModal("fundModal"); // Close second modal
+            showModal("confirmModal"); // Show confirmation modal
+        }
+    });
+
+    // Close Confirmation Modal
+    document.getElementById("closeConfirmModal").addEventListener("click", function () {
+        closeModal("confirmModal");
+    });
+
+    // Final Submit
+    document.getElementById("confirmSubmit").addEventListener("click", function () {
+        let amount = document.getElementById("fundAmount").value;
+        alert("Opening Fund Successfully Declared: " + amount);
+        closeModal("confirmModal"); // Close confirmation modal
+        window.location.href = "opening-fund.php"; // Redirect (optional)
+    })
+
         document.addEventListener("DOMContentLoaded", function () {
             const currentUrl = window.location.pathname.split('/').pop();
             
@@ -101,7 +274,55 @@
         });
     </script>
 
-    <style>
+        <style>
+            .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        width: 300px;
+    }
+    .modal-actions {
+        margin-top: 15px;
+    }
+    .modal-actions button {
+        margin: 5px;
+    }
+            .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+        }
+        .modal-actions {
+            margin-top: 15px;
+        }
+        .modal-actions button {
+            margin: 5px;
+        }
         /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
         .navbar {
             background: rgb(65, 165, 232) !important;
