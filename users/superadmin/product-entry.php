@@ -168,18 +168,18 @@
                     </div>
                     <div class="row">
                         <!-- Left Side - Product Data Entry Form -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Details</h5>
                                     <form>
-                                        <button type="button" class="btn ms-md-3 new-btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                        <button type="button" class="btn me-2 new-btn btn-outline-primary opacity-50" style="font-size: 13px;">
                                             <i class="fas fa-plus"></i> New
                                         </button>
-                                        <button type="button" class="btn edit-btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
+                                        <button type="button" class="btn edit-btn me-2 btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
                                             <i class="fas fa-save"></i> Edit
                                         </button>
-                                        <button type="button" class="btn delete-btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
+                                        <button type="button" class="btn delete-btn btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                         <div class="form-row">
@@ -200,8 +200,7 @@
                                             <div class="form-group col-md-12 mt-2">
                                                 <label for="category">Category:</label>
                                                 <select class="form-select input-field" id="category" disabled>
-                                                    <option value="option1">Option 1</option>
-                                                    <option value="option2">Option 2</option>
+                                                    <option>Select Category</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -213,20 +212,44 @@
                                             <label for="productCode">Product Code:</label>
                                             <input type="text" class="form-control input-field" id="productCode" disabled>
                                         </div>
-                                        <div class="form-group col-md-12 mt-2">
-                                            <label for="shellOptions">Shelf:</label>
-                                            <select class="form-select input-field" id="shellOptions" disabled>
-                                                <option value="option1">Option 1</option>
-                                                <option value="option2">Option 2</option>
-                                            </select>
+                                        <div class="form-group col-md-12 mt-3">
+                                            <div class="d-flex align-items-center">
+                                                <label for="shellOptions" class="me-2" style="white-space: nowrap;">Shelf:</label>
+                                                <div class="d-flex flex-grow-1">
+                                                    <select class="form-select input-field me-2" id="shellOptions" disabled style="max-width: 30%;">
+                                                        <option></option>
+                                                    </select>
+                                                    <input type="text" class="form-control" id="shelfTextbox" disabled style="max-width: 70%;">
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-body">
+                                    <p style="text-transform: none; font-style: italic; color: blue;">Selected Category discountable for the following discount type in the list.</p>
+                                    <div class="table-responsive table-container" style="height: calc(50vh - 250px); overflow-y: auto; margin-top: -15px;">
+                                        <table class="table-borderless table-data" id="discountTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Discount Type</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="discountTableBody">
+                                                <tr>
+                                                    <td>No discounts available</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Right Side - Additional Table -->
-                        <div class="col-md-9">
+                        <div class="col-md-8">
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Costing Details</h5>
@@ -239,7 +262,7 @@
                                     <button type="button" class="btn delete-btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
-                                    <div class="table-responsive table-container" style="height: calc(70vh - 250px); overflow-y: auto;">
+                                    <div class="table-responsive table-container" style="height: calc(76.5vh - 250px); overflow-y: auto;">
                                         <table class="table table-bordered table-hover mt-2 table-data" id="table-bold">
                                             <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
@@ -274,7 +297,7 @@
                                     <button type="button" class="btn delete-btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
-                                    <div class="table-responsive table-container" style="height: calc(70vh - 250px); overflow-y: auto;">
+                                    <div class="table-responsive table-container" style="height: calc(76.5vh - 250px); overflow-y: auto;">
                                         <table class="table table-bordered table-hover mt-2 table-data" id="table-bold">
                                             <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
@@ -301,19 +324,19 @@
                                 </div>
                             </div>
                         </div>
-                    </div>            
+                    </div>
                 </div>
             </div>      
 
 			<script>
-                $(document).ready(function() {
+                $(document).ready(function () {
                     // Function to set the current date in the date input field
                     function setCurrentDate() {
                         const today = new Date();
                         const year = today.getFullYear();
-                        const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+                        const month = String(today.getMonth() + 1).padStart(2, '0');
                         const day = String(today.getDate()).padStart(2, '0');
-                        const formattedDate = `${year}-${month}-${day}`; // Format: YYYY-MM-DD
+                        const formattedDate = `${year}-${month}-${day}`;
                         $('#date').val(formattedDate);
                     }
 
@@ -328,9 +351,11 @@
                         // Disable all input fields and textareas
                         $('.input-field').prop('disabled', true);
 
-                        // Disable the tables (make them non-interactive)
-                        $('.table-data tbody tr').addClass('disabled-row');
-                        $('.table-data').css('pointer-events', 'none'); // Prevent interaction with the table
+                        // Disable the dropdowns
+                        $('#category').prop('disabled', true);
+                        $('#shellOptions').prop('disabled', true);
+
+                        // Removed the table disabling logic
                     }
 
                     // Function to enable all elements except the date field when "New" button is clicked
@@ -344,13 +369,22 @@
                         // Enable all input fields and textareas except the date field
                         $('.input-field').not('.date-field').prop('disabled', false);
 
+                        // Enable the dropdowns
+                        $('#category').prop('disabled', false);
+                        $('#shellOptions').prop('disabled', false);
+
                         // Ensure the date field remains disabled
                         $('.date-field').prop('disabled', true);
 
-                        // Enable the tables (make them interactive)
-                        $('.table-data tbody tr').removeClass('disabled-row');
-                        $('.table-data').css('pointer-events', 'auto'); // Allow interaction with the table
+                        // Removed the table enabling logic
                     }
+
+                    // Mapping for DiscountType to display names
+                    const discountTypeMapping = {
+                        'SD': 'Senior Citizen',
+                        'SP': 'Solo Parent',
+                        'PWD': 'PWD'
+                    };
 
                     // Initialize the form state on page load
                     initializeFormState();
@@ -359,8 +393,78 @@
                     setCurrentDate();
 
                     // Event handler for the "New" button
-                    $('.new-btn').on('click', function() {
+                    $('.new-btn').on('click', function () {
                         enableFormElements();
+
+                        // Load Category dropdown data
+                        fetch('manage-productProfile.php?type=CATEGORY')
+                            .then(response => response.json())
+                            .then(data => {
+                                const categoryDropdown = $('#category');
+                                categoryDropdown.empty(); // Clear any existing options
+                                categoryDropdown.append('<option disabled selected>Select Category</option>');
+
+                                data.forEach(category => {
+                                    categoryDropdown.append(`<option value="${category}">${category}</option>`);
+                                });
+                            })
+                            .catch(error => console.error('Error fetching CATEGORY data:', error));
+
+                        // Load Shelf dropdown data
+                        fetch('manage-productProfile.php?type=SHELF')
+                            .then(response => response.json())
+                            .then(data => {
+                                const shelfDropdown = $('#shellOptions');
+                                shelfDropdown.empty(); // Clear any existing options
+                                shelfDropdown.append('<option disabled selected>Select Shelf</option>');
+
+                                data.forEach(shelf => {
+                                    shelfDropdown.append(
+                                        `<option value="${shelf.ItemName}" data-subname="${shelf.ItemSubName}">${shelf.ItemName}</option>`
+                                    );
+                                });
+
+                                // Handle Shelf dropdown change to update the textbox
+                                shelfDropdown.on('change', function () {
+                                    const selectedOption = $(this).find(':selected');
+                                    const subName = selectedOption.data('subname') || '';
+                                    $('#shelfTextbox').val(subName);
+                                });
+                            })
+                            .catch(error => console.error('Error fetching SHELF data:', error));
+                    });
+
+                    // Event handler for category dropdown change to fetch and display DiscountType
+                    $('#category').on('change', function () {
+                        const selectedCategory = $(this).val();
+                        const tableBody = $('#discountTableBody');
+
+                        // Clear the table
+                        tableBody.empty();
+
+                        if (selectedCategory === 'Select Category') {
+                            tableBody.append('<tr><td>No discounts available</td></tr>');
+                            return;
+                        }
+
+                        // Fetch DiscountType for the selected category
+                        fetch(`manage-productProfile.php?selectedCategory=${encodeURIComponent(selectedCategory)}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.length > 0) {
+                                    data.forEach(discount => {
+                                        // Map the raw DiscountType to the display name
+                                        const displayName = discountTypeMapping[discount] || discount;
+                                        tableBody.append(`<tr><td>${displayName}</td></tr>`);
+                                    });
+                                } else {
+                                    tableBody.append('<tr><td>No discounts available</td></tr>');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching DiscountType data:', error);
+                                tableBody.append('<tr><td>Error fetching discounts</td></tr>');
+                            });
                     });
                 });
 
