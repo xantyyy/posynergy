@@ -4,7 +4,72 @@ require_once '../../includes/config.php'; // Database connection
 $type = isset($_GET['type']) ? $_GET['type'] : '';
 $data = array();
 
-if ($type === 'CATEGORY') {
+if ($type === 'UPDATE_CODES') {
+    // Get the JSON data from the request body
+    $json = file_get_contents('php://input');
+    $postData = json_decode($json, true);
+
+    // Validate required fields
+    if (empty($postData['productCodeNo']) || empty($postData['pluCodeNo'])) {
+        $data = array('success' => false, 'message' => 'Code numbers are required');
+    } else {
+        try {
+            // Always insert a new record
+            $insertStmt = $conn->prepare("INSERT INTO tbl_idno (ProductCodeNo, PLUCodeNo) VALUES (?, ?)");
+            $insertStmt->bind_param("ii", $postData['productCodeNo'], $postData['pluCodeNo']);
+            
+            if ($insertStmt->execute()) {
+                $data = array(
+                    'success' => true, 
+                    'message' => 'New codes record created successfully',
+                    'insert_id' => $conn->insert_id,
+                    'action' => 'insert'
+                );
+            } else {
+                throw new Exception('Failed to create new record: ' . $insertStmt->error);
+            }
+            $insertStmt->close();
+        } catch (Exception $e) {
+            $data = array(
+                'success' => false, 
+                'message' => 'Database error: ' . $e->getMessage(),
+                'error_code' => $e->getCode()
+            );
+        }
+    }
+} elseif ($type === 'GENERATE_CODES') {
+    try {
+        // Get the last used codes
+        $result = $conn->query("SELECT ProductCodeNo, PLUCodeNo FROM tbl_idno ORDER BY ID DESC LIMIT 1");
+        
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $productCodeNo = $row['ProductCodeNo'] + 1;
+            $pluCodeNo = $row['PLUCodeNo'] + 1;
+        } else {
+            // Initialize with default values if table is empty
+            $productCodeNo = 6285; // Starting product code
+            $pluCodeNo = 6253;    // Starting PLU code
+        }
+
+        // Return the new codes (don't insert yet - will be inserted when saved)
+        $data = array(
+            'success' => true,
+            'productCode' => 'PROD' . str_pad($productCodeNo, 6, '0', STR_PAD_LEFT),
+            'pluCode' => 'PLU' . str_pad($pluCodeNo, 4, '0', STR_PAD_LEFT),
+            'productCodeNo' => $productCodeNo,
+            'pluCodeNo' => $pluCodeNo,
+            'action' => ($result->num_rows == 0) ? 'initialize' : 'increment'
+        );
+        
+    } catch (Exception $e) {
+        $data = array(
+            'success' => false,
+            'message' => $e->getMessage(),
+            'error_code' => $e->getCode()
+        );
+    }
+} elseif ($type === 'CATEGORY') {
     // Fetch ItemName for CATEGORY
     $sql = "SELECT ItemName FROM tbl_invmaintenance WHERE ItemType = 'CATEGORY'";
     $result = $conn->query($sql);
