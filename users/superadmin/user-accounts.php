@@ -173,15 +173,16 @@
 													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="newBtn">
 														<i class="fas fa-plus"></i> New
 													</button>	
-													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="saveBtn" disabled>
 														<i class="fas fa-save"></i> Save
 													</button>
-													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="editBtn" disabled>
 														<i class="fas fa-edit"></i> Edit
 													</button>
-													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="#">
+													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="disableBtn" disabled>
 														<i class="fas fa-ban"></i> Disable
 													</button>
+
 												</div>
 												<div class="d-flex align-items-center mt-2">
 													<h6>Supplier Info:</h6>
@@ -278,89 +279,161 @@
 					</div>
             	</div>
 
-            <script>
-				
-				document.addEventListener("DOMContentLoaded", function () {
-				let newBtn = document.getElementById("newBtn");
-				let inputs = document.querySelectorAll(".form-control");
 
-				// Function to toggle fields
-				function toggleFields(enable) {
-					inputs.forEach(input => {
-						input.disabled = !enable; // Enable if true, disable if false
-						if (!enable) input.value = ""; // Clear fields when disabled
-					});
-				}
 
-				// Set default state (Disabled lahat)
-				toggleFields(false);
+			<!--JAVASCRIPT FOR USER ACCOUNTS-->
+			<script>
+	document.addEventListener("DOMContentLoaded", function () {
+    let newBtn = document.getElementById("newBtn");
+    let saveBtn = document.getElementById("saveBtn");
+    let editBtn = document.getElementById("editBtn");
+    let disableBtn = document.getElementById("disableBtn");
 
-				newBtn.addEventListener("click", function () {
-					if (newBtn.innerHTML.includes("New")) {
-						newBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
-						toggleFields(true); // Enable inputs
-					} else {
-						newBtn.innerHTML = '<i class="fas fa-plus"></i> New';
-						toggleFields(false); // Disable inputs
-					}
-				});
-			});
-				document.getElementById('newBtn').addEventListener('click', function () {
-				// Enable the input fields
-				document.getElementById('fullName').disabled = false;
-				document.getElementById('roleInput').disabled = false;
-				document.getElementById('usernameInput').disabled = false;
-				document.getElementById('passwordInput').disabled = false;
-				document.getElementById('confirmInput').disabled = false;
-			});
+    let inputs = document.querySelectorAll(".form-control");
+    let userFullName = document.getElementById("fullName");
+    let passwordInput = document.getElementById("passwordInput");
+    let confirmInput = document.getElementById("confirmInput");
+    let accountDetails = [
+        document.getElementById("roleInput"),
+        document.getElementById("usernameInput"),
+        passwordInput,
+        confirmInput
+    ];
 
-			document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
-        
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+    let userTableBody = document.querySelector("#table-bold tbody");
+    let form = document.getElementById("userForm");
+    let isAddingNewUser = false; // ✅ State para hindi clickable ang list kapag "New" ang naka-click
 
-            // Mark the active link
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
+    passwordInput.type = "password";
+    confirmInput.type = "password";
+
+    function loadUsers() {
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        userTableBody.innerHTML = ""; // Clear table before adding rows
+
+        users.forEach((user, index) => {
+            let newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td>${user.username}</td>
+                <td>${user.role}</td>
+                <td>Enabled</td>
+                <td>No</td>
+            `;
+            newRow.setAttribute("data-index", index); // Store index for reference
+            newRow.addEventListener("click", function () {
+                if (!isAddingNewUser) { // ✅ HINDI clickable kapag naka "New"
+                    highlightRow(newRow);
+                    loadUserData(index);
                 }
-            }
-
-            // Apply hover effect for menu items
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
             });
 
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
+            userTableBody.appendChild(newRow);
         });
-        
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-            
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
 
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
+        // ✅ Scrollable user list (max 5 users)
+        let tableContainer = document.querySelector("#table-container");
+        tableContainer.style.maxHeight = "200px"; // Approx height for 5 rows
+        tableContainer.style.overflowY = users.length > 5 ? "auto" : "hidden";
+    }
+
+    function highlightRow(selectedRow) {
+        document.querySelectorAll("#table-bold tbody tr").forEach(row => {
+            row.classList.remove("highlighted-row"); // Remove highlight from all rows
         });
+
+        selectedRow.classList.add("highlighted-row"); // Highlight clicked row
+    }
+
+    function addUser(fullName, username, role) {
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        users.push({ fullName, username, role });
+
+        localStorage.setItem("users", JSON.stringify(users));
+        alert("User successfully added!");
+
+        // ✅ Auto-refresh page after save
+        location.reload();
+    }
+
+    saveBtn.addEventListener("click", function () {
+        let fullName = userFullName.value.trim();
+        let username = document.getElementById("usernameInput").value.trim();
+        let role = document.getElementById("roleInput").value;
+        let password = passwordInput.value;
+        let confirmPassword = confirmInput.value;
+
+        if (!fullName || !username || !role || !password || !confirmPassword) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
+
+        addUser(fullName, username, role);
     });
+
+    function loadUserData(index) {
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+        let selectedUser = users[index];
+
+        if (selectedUser) {
+            document.getElementById("fullName").value = selectedUser.fullName; // ✅ Load Full Name Correctly
+            document.getElementById("usernameInput").value = selectedUser.username;
+            document.getElementById("roleInput").value = selectedUser.role;
+
+            // ✅ Disable fields but keep values
+            document.getElementById("fullName").disabled = true;
+            document.getElementById("usernameInput").disabled = true;
+            document.getElementById("roleInput").disabled = true;
+            document.getElementById("passwordInput").disabled = true;
+            document.getElementById("confirmInput").disabled = true;
+        }
+    }
+
+    function toggleFields(enable) {
+        inputs.forEach(input => {
+            input.disabled = !enable;
+            if (!enable) input.value = "";
+        });
+
+        userFullName.disabled = !enable;
+        accountDetails.forEach(input => input.disabled = !enable);
+
+        saveBtn.disabled = !enable;
+        editBtn.disabled = true;
+        disableBtn.disabled = true;
+    }
+
+    toggleFields(false);
+
+    newBtn.addEventListener("click", function () {
+        if (newBtn.innerHTML.includes("New")) {
+            newBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
+            toggleFields(true);
+            isAddingNewUser = true; // ✅ Set to true para hindi clickable ang user list
+        } else {
+            newBtn.innerHTML = '<i class="fas fa-plus"></i> New';
+            toggleFields(false);
+            form.reset();
+            isAddingNewUser = false; // ✅ Reset para clickable ulit ang user list
+        }
+    });
+
+    // ✅ Load users when page loads
+    loadUsers();
+});
+
+
+
 </script>
+
+
+
+
+
 
 			<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
@@ -444,9 +517,61 @@
 						display: block !important;
 					}
 
-					#table-bold thead th {
-						font-weight: bold;
-						font-style: italic;
-					}
+					#table-container {
+    width: 100%;
+    max-height: 250px; /* Fixed height */
+    overflow-y: hidden; /* Hidden by default */
+    display: block;
+    border: 1px solid #ddd;
+}
+
+/* ✅ Make the header fixed */
+#table-bold thead {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 10;
+}
+
+/* ✅ Ensure table rows don't affect layout */
+#table-bold tbody {
+    display: block;
+    max-height: 200px; /* Set height for scroll */
+    overflow-y: auto;
+}
+
+/* ✅ Ensure columns stay aligned */
+#table-bold tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#table-bold th, #table-bold td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#table-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+#table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px;
+}
+
+#table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.highlighted-row {
+    background-color: #f0f0f0 !important; /* Light gray background */
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+}
+
+
 			</style>
 <?php include_once 'footer.php'; ?>
