@@ -179,11 +179,8 @@
                                         <button type="button" class="btn edit-btn me-2 btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
                                             <i class="fas fa-save"></i> Edit
                                         </button>
-                                        <button type="button" class="btn delete-btn me-2 btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
+                                        <button type="button" class="btn delete-btn btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
                                             <i class="fas fa-trash"></i> Delete
-                                        </button>
-                                        <button type="button" class="btn save-btn btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
-                                            <i class="fas fa-save"></i> Save
                                         </button>
                                         <div class="form-row">
                                             <div class="form-group col-md-12 mt-2">
@@ -191,9 +188,8 @@
                                                 <input type="text" class="form-control input-field" id="barCode" disabled>
                                             </div>
                                             <div class="form-group col-md-12 mt-2">
-                                                <label for="pluCode">PLU Code:</label>
-                                                <input type="text" class="form-control input-field" id="pluCode" readonly>
-                                                <input type="hidden" id="pluCodeNo"> <!-- For raw number -->
+                                                <label for="pujCode">PLU Code:</label>
+                                                <input type="text" class="form-control input-field" id="pujCode" disabled>
                                             </div>
                                         </div>
                                         <div class="form-row">
@@ -212,17 +208,30 @@
                                             <label for="productDetails">Product Details:</label>
                                             <textarea class="form-control input-field" id="productDetails" rows="3" disabled></textarea>
                                         </div>
+                                        <div class="form-group">
+                                            <label for="productName">Product Name:</label>
+                                            <select class="form-select input-field" id="productName" disabled>
+                                                <option value="" disabled selected>Select Product</option>
+                                                <?php
+                                                require_once '../../includes/config.php';
+                                                $sql = "SELECT DISTINCT ProductName FROM tbl_productprofile 
+                                                        WHERE ProductName IS NOT NULL AND ProductName != '' 
+                                                        ORDER BY ProductName ASC";
+                                                $result = $conn->query($sql);
+                                                
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                        echo '<option value="'.htmlspecialchars($row['ProductName'], ENT_QUOTES).'">'
+                                                            .htmlspecialchars($row['ProductName']).'</option>';
+                                                    }
+                                                }
+                                                $conn->close();
+                                                ?>
+                                            </select>
+                                        </div>
                                         <div class="form-group col-md-12 mt-2">
                                             <label for="productCode">Product Code:</label>
                                             <input type="text" class="form-control input-field" id="productCode" readonly>
-                                            <input type="hidden" id="productCodeNo"> <!-- For raw number -->
-                                        </div>
-                                        <div class="form-group col-md-12 mt-2">
-                                            <label for="productName">Product Name:</label>
-                                            <input type="text" class="form-control input-field" id="productName" list="productNameList" disabled>
-                                            <datalist id="productNameList">
-                                                <!-- Options will be populated dynamically -->
-                                            </datalist>
                                         </div>
                                         <div class="form-group col-md-12 mt-3">
                                             <div class="d-flex align-items-center">
@@ -344,11 +353,6 @@
 
 			<script>
                 $(document).ready(function () {
-                    // Track the last used codes
-                    let lastProductCode = null;
-                    let lastPLUCode = null;
-                    let codesGenerated = false;
-
                     // Function to set the current date in the date input field
                     function setCurrentDate() {
                         const today = new Date();
@@ -374,9 +378,9 @@
                         $('#category').prop('disabled', true);
                         $('#shellOptions').prop('disabled', true);
 
-                        // Disable the Costing and Retail tables
+                        // Disable the Costing and Retail tables (but not the discountTable)
                         $('.costing-table tbody tr, .retail-table tbody tr').addClass('disabled-row');
-                        $('.costing-table, .retail-table').css('pointer-events', 'none');
+                        $('.costing-table, .retail-table').css('pointer-events', 'none'); // Prevent interaction with these tables
                     }
 
                     // Function to enable all elements except the date field when "New" button is clicked
@@ -397,92 +401,9 @@
                         // Ensure the date field remains disabled
                         $('.date-field').prop('disabled', true);
 
-                        // Enable the Costing and Retail tables
+                        // Enable the Costing and Retail tables (but not the discountTable, which is always enabled)
                         $('.costing-table tbody tr, .retail-table tbody tr').removeClass('disabled-row');
-                        $('.costing-table, .retail-table').css('pointer-events', 'auto');
-                    }
-
-                    // Event handler for Save button
-                    $('.save-btn').on('click', function() {
-                        // Get the raw code numbers from hidden fields
-                        const codeData = {
-                            productCodeNo: $('#productCodeNo').val(),
-                            pluCodeNo: $('#pluCodeNo').val()
-                        };
-
-                        // Show loading state
-                        const saveBtn = $(this);
-                        saveBtn.prop('disabled', true);
-                        saveBtn.html('<i class="fas fa-spinner fa-spin"></i> Saving...');
-
-                        // Send to server
-                        fetch('manage-productProfile.php?type=UPDATE_CODES', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(codeData)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Codes updated successfully in tbl_idno!');
-                                // Keep the Save button disabled until new codes are generated
-                                saveBtn.html('<i class="fas fa-save"></i> Save');
-                                
-                                // Auto-reload after 1 second (1000 milliseconds)
-                                setTimeout(function() {
-                                    location.reload();
-                                }, 500);
-                            } else {
-                                alert('Error: ' + data.message);
-                                saveBtn.prop('disabled', false);
-                                saveBtn.html('<i class="fas fa-save"></i> Save');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Error saving codes');
-                            saveBtn.prop('disabled', false);
-                            saveBtn.html('<i class="fas fa-save"></i> Save');
-                        });
-                    });
-
-                    // Function to generate the next product and PLU codes
-                    function generateNextCodes() {
-                        return fetch('manage-productProfile.php?type=GENERATE_CODES')
-                            .then(response => {
-                                if (!response.ok) throw new Error('Network response was not ok');
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data && data.productCode && data.pluCode) {
-                                    // Store both formatted codes and raw numbers
-                                    lastProductCode = data.productCode;
-                                    lastPLUCode = data.pluCode;
-                                    
-                                    // Set the values in the form
-                                    $('#productCode').val(data.productCode);
-                                    $('#pluCode').val(data.pluCode);
-                                    $('#productCodeNo').val(data.productCodeNo);
-                                    $('#pluCodeNo').val(data.pluCodeNo);
-                                    
-                                    // Enable Save button
-                                    $('.save-btn').prop('disabled', false);
-                                    
-                                    return data;
-                                }
-                                throw new Error('Invalid code format from server');
-                            })
-                            .catch(error => {
-                                console.error('Error generating codes:', error);
-                                // Fallback code generation...
-                                // Make sure to also set the hidden fields and enable Save button
-                                $('#productCodeNo').val(fallbackProductNum);
-                                $('#pluCodeNo').val(fallbackPLUNum);
-                                $('.save-btn').prop('disabled', false);
-                                // ... rest of fallback code
-                            });
+                        $('.costing-table, .retail-table').css('pointer-events', 'auto'); // Allow interaction with these tables
                     }
 
                     // Mapping for DiscountType to display names
@@ -502,19 +423,14 @@
                     $('.new-btn').on('click', function () {
                         enableFormElements();
 
-                        // Generate and set both codes
-                        generateNextCodes().then(codes => {
-                            $('#productCode').val(codes.productCode);
-                            $('#pluCode').val(codes.pluCode);
-                        });
-
                         // Load Category dropdown data
                         fetch('manage-productProfile.php?type=CATEGORY')
                             .then(response => response.json())
                             .then(data => {
                                 const categoryDropdown = $('#category');
-                                categoryDropdown.empty();
+                                categoryDropdown.empty(); // Clear any existing options
                                 categoryDropdown.append('<option disabled selected>Select Category</option>');
+
                                 data.forEach(category => {
                                     categoryDropdown.append(`<option value="${category}">${category}</option>`);
                                 });
@@ -526,7 +442,8 @@
                             .then(response => response.json())
                             .then(data => {
                                 const productNameList = $('#productNameList');
-                                productNameList.empty();
+                                productNameList.empty(); // Clear any existing options
+
                                 data.forEach(product => {
                                     productNameList.append(`<option value="${product}">`);
                                 });
@@ -538,8 +455,9 @@
                             .then(response => response.json())
                             .then(data => {
                                 const shelfDropdown = $('#shellOptions');
-                                shelfDropdown.empty();
+                                shelfDropdown.empty(); // Clear any existing options
                                 shelfDropdown.append('<option disabled selected>Select Shelf</option>');
+
                                 data.forEach(shelf => {
                                     shelfDropdown.append(
                                         `<option value="${shelf.ItemName}" data-subname="${shelf.ItemSubName}">${shelf.ItemName}</option>`
@@ -561,6 +479,7 @@
                         const selectedCategory = $(this).val();
                         const tableBody = $('#discountTableBody');
 
+                        // Clear the table
                         tableBody.empty();
 
                         if (selectedCategory === 'Select Category') {
@@ -568,11 +487,13 @@
                             return;
                         }
 
+                        // Fetch DiscountType for the selected category
                         fetch(`manage-productProfile.php?selectedCategory=${encodeURIComponent(selectedCategory)}`)
                             .then(response => response.json())
                             .then(data => {
                                 if (data.length > 0) {
                                     data.forEach(discount => {
+                                        // Map the raw DiscountType to the display name
                                         const displayName = discountTypeMapping[discount] || discount;
                                         tableBody.append(`<tr><td>${displayName}</td></tr>`);
                                     });
