@@ -429,6 +429,11 @@
                                 alert('Codes updated successfully in tbl_idno!');
                                 // Keep the Save button disabled until new codes are generated
                                 saveBtn.html('<i class="fas fa-save"></i> Save');
+                                
+                                // Auto-reload after 1 second (1000 milliseconds)
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 500);
                             } else {
                                 alert('Error: ' + data.message);
                                 saveBtn.prop('disabled', false);
@@ -443,8 +448,8 @@
                         });
                     });
 
-                                        // Function to generate the next product and PLU codes
-                                        function generateNextCodes() {
+                    // Function to generate the next product and PLU codes
+                    function generateNextCodes() {
                         return fetch('manage-productProfile.php?type=GENERATE_CODES')
                             .then(response => {
                                 if (!response.ok) throw new Error('Network response was not ok');

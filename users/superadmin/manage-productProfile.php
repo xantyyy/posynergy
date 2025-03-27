@@ -14,21 +14,44 @@ if ($type === 'UPDATE_CODES') {
         $data = array('success' => false, 'message' => 'Code numbers are required');
     } else {
         try {
-            // Always insert a new record
-            $insertStmt = $conn->prepare("INSERT INTO tbl_idno (ProductCodeNo, PLUCodeNo) VALUES (?, ?)");
-            $insertStmt->bind_param("ii", $postData['productCodeNo'], $postData['pluCodeNo']);
-            
-            if ($insertStmt->execute()) {
-                $data = array(
-                    'success' => true, 
-                    'message' => 'New codes record created successfully',
-                    'insert_id' => $conn->insert_id,
-                    'action' => 'insert'
-                );
+            // First check if record exists
+            $checkStmt = $conn->prepare("SELECT COUNT(*) FROM tbl_idno");
+            $checkStmt->execute();
+            $count = $checkStmt->get_result()->fetch_row()[0];
+            $checkStmt->close();
+
+            if ($count == 0) {
+                // Insert new record if table is empty
+                $insertStmt = $conn->prepare("INSERT INTO tbl_idno (ProductCodeNo, PLUCodeNo) VALUES (?, ?)");
+                $insertStmt->bind_param("ii", $postData['productCodeNo'], $postData['pluCodeNo']);
+                
+                if ($insertStmt->execute()) {
+                    $data = array(
+                        'success' => true, 
+                        'message' => 'Initial codes created successfully',
+                        'action' => 'insert'
+                    );
+                } else {
+                    throw new Exception('Failed to create initial record: ' . $insertStmt->error);
+                }
+                $insertStmt->close();
             } else {
-                throw new Exception('Failed to create new record: ' . $insertStmt->error);
+                // Update existing record
+                $stmt = $conn->prepare("UPDATE tbl_idno SET ProductCodeNo = ?, PLUCodeNo = ?");
+                $stmt->bind_param("ii", $postData['productCodeNo'], $postData['pluCodeNo']);
+                
+                if ($stmt->execute()) {
+                    $data = array(
+                        'success' => true, 
+                        'message' => 'Codes updated successfully',
+                        'affected_rows' => $stmt->affected_rows,
+                        'action' => 'update'
+                    );
+                } else {
+                    throw new Exception('Execute failed: ' . $stmt->error);
+                }
+                $stmt->close();
             }
-            $insertStmt->close();
         } catch (Exception $e) {
             $data = array(
                 'success' => false, 
@@ -39,29 +62,37 @@ if ($type === 'UPDATE_CODES') {
     }
 } elseif ($type === 'GENERATE_CODES') {
     try {
-        // Get the last used codes
+        // Get current codes
         $result = $conn->query("SELECT ProductCodeNo, PLUCodeNo FROM tbl_idno ORDER BY ID DESC LIMIT 1");
         
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            $productCodeNo = $row['ProductCodeNo'] + 1;
-            $pluCodeNo = $row['PLUCodeNo'] + 1;
+            $newProductCodeNo = $row['ProductCodeNo'] + 1;
+            $newPLUCodeNo = $row['PLUCodeNo'] + 1;
+            
+            // Update the codes table
+            $stmt = $conn->prepare("UPDATE tbl_idno SET ProductCodeNo = ?, PLUCodeNo = ?");
+            $stmt->bind_param("ii", $newProductCodeNo, $newPLUCodeNo);
+            $stmt->execute();
+            $stmt->close();
         } else {
-            // Initialize with default values if table is empty
-            $productCodeNo = 6285; // Starting product code
-            $pluCodeNo = 6253;    // Starting PLU code
+            // Initialize if table is empty
+            $newProductCodeNo = 6285;
+            $newPLUCodeNo = 6253;
+            
+            $stmt = $conn->prepare("INSERT INTO tbl_idno (ProductCodeNo, PLUCodeNo) VALUES (?, ?)");
+            $stmt->bind_param("ii", $newProductCodeNo, $newPLUCodeNo);
+            $stmt->execute();
+            $stmt->close();
         }
 
-        // Return the new codes (don't insert yet - will be inserted when saved)
-        $data = array(
+        $data = [
             'success' => true,
-            'productCode' => 'PROD' . str_pad($productCodeNo, 6, '0', STR_PAD_LEFT),
-            'pluCode' => 'PLU' . str_pad($pluCodeNo, 4, '0', STR_PAD_LEFT),
-            'productCodeNo' => $productCodeNo,
-            'pluCodeNo' => $pluCodeNo,
-            'action' => ($result->num_rows == 0) ? 'initialize' : 'increment'
-        );
-        
+            'productCode' => 'PROD' . str_pad($newProductCodeNo, 6, '0', STR_PAD_LEFT),
+            'pluCode' => 'PLU' . str_pad($newPLUCodeNo, 4, '0', STR_PAD_LEFT),
+            'productCodeNo' => $newProductCodeNo,
+            'pluCodeNo' => $newPLUCodeNo
+        ];
     } catch (Exception $e) {
         $data = array(
             'success' => false,
