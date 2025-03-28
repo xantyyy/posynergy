@@ -176,12 +176,6 @@
                                         <button type="button" class="btn me-2 new-btn btn-outline-primary opacity-50" style="font-size: 13px;">
                                             <i class="fas fa-plus"></i> New
                                         </button>
-                                        <button type="button" class="btn edit-btn me-2 btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
-                                            <i class="fas fa-save"></i> Edit
-                                        </button>
-                                        <button type="button" class="btn delete-btn me-2 btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
                                         <button type="button" class="btn save-btn btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
                                             <i class="fas fa-save"></i> Save
                                         </button>
@@ -212,41 +206,17 @@
                                             <label for="productDetails">Product Details:</label>
                                             <textarea class="form-control input-field" id="productDetails" rows="3" disabled></textarea>
                                         </div>
-                                        
-                                        <div class="form-group">
-    <label for="productName">Product Name:</label>
-    <select class="form-select" id="productName" onchange="console.log('Selected Value:', this.value); console.log('Selected Text:', this.options[this.selectedIndex].text)">
-        <option value="" disabled selected>Select Product</option>
-        <?php
-        require_once '../../includes/config.php';
-
-        try {
-            $sql = "SELECT ProductName FROM tbl_invprodlist ORDER BY ProductName";
-            $result = $conn->query($sql);
-
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $productName = trim($row['ProductName']);
-                    echo '<option value="' . htmlspecialchars($productName) . '">' . htmlspecialchars($productName) . '</option>';
-                }
-            } else {
-                error_log("No products found in database");
-                echo '<option value="">No products available</option>';
-            }
-        } catch (Exception $e) {
-            error_log("Database Error (Dropdown): " . $e->getMessage());
-            echo '<option value="">Error loading products</option>';
-        }
-
-        $conn->close();
-        ?>
-    </select>
-</div>
-
                                         <div class="form-group col-md-12 mt-2">
                                             <label for="productCode">Product Code:</label>
                                             <input type="text" class="form-control input-field" id="productCode" readonly>
                                             <input type="hidden" id="productCodeNo"> <!-- For raw number -->
+                                        </div>
+                                        <div class="form-group col-md-12 mt-2">
+                                            <label for="productName">Product Name:</label>
+                                            <input type="text" class="form-control input-field" id="productName" list="productNameList" disabled>
+                                            <datalist id="productNameList">
+                                                <!-- Options will be populated dynamically -->
+                                            </datalist>
                                         </div>
                                         <div class="form-group col-md-12 mt-3">
                                             <div class="d-flex align-items-center">
@@ -365,7 +335,6 @@
                     </div>
                 </div>
             </div>      
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 			<script>
                 $(document).ready(function () {
@@ -427,40 +396,49 @@
                         $('.costing-table, .retail-table').css('pointer-events', 'auto');
                     }
 
-                    $(document).ready(function () {
-                        $('.save-btn').on('click', function () {
-                            const productNameInput = $('#productName'); // Ito ay input field, hindi select
-                            console.log("Input Element:", productNameInput);
-                            console.log("Input Value:", productNameInput.val());
+                    // Event handler for Save button
+                    $('.save-btn').on('click', function() {
+                        // Get the raw code numbers from hidden fields
+                        const codeData = {
+                            productCodeNo: $('#productCodeNo').val(),
+                            pluCodeNo: $('#pluCodeNo').val()
+                        };
 
-                            let productName = productNameInput.val().trim(); // Direktang kunin ang value
+                        // Show loading state
+                        const saveBtn = $(this);
+                        saveBtn.prop('disabled', true);
+                        saveBtn.html('<i class="fas fa-spinner fa-spin"></i> Saving...');
 
-                            if (!productName) {
-                                alert("Please enter a valid Product Name!");
-                                return;
+                        // Send to server
+                        fetch('manage-productProfile.php?type=UPDATE_CODES', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(codeData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Codes updated successfully in tbl_idno!');
+                                // Reload the page after a successful update
+                                location.reload();
+                            } else {
+                                alert('Error: ' + data.message);
+                                saveBtn.prop('disabled', false);
+                                saveBtn.html('<i class="fas fa-save"></i> Save');
                             }
-
-                            const formData = new FormData();
-                            formData.append('productCodeNo', $('#productCodeNo').val());
-                            formData.append('pluCodeNo', $('#pluCodeNo').val());
-                            formData.append('productName', productName);
-                            formData.append('price', 0);
-
-                            fetch('manage-productProfile.php?type=UPDATE_AND_ADD', {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log("Parsed Response:", data);
-                                alert(data.success ? "Product saved successfully!" : "Error: " + data.message);
-                            })
-                            .catch(error => console.error("Fetch Error:", error));
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error saving codes');
+                            saveBtn.prop('disabled', false);
+                            saveBtn.html('<i class="fas fa-save"></i> Save');
                         });
                     });
 
-                                        // Function to generate the next product and PLU codes
-                                        function generateNextCodes() {
+                    // Function to generate the next product and PLU codes
+                    function generateNextCodes() {
                         return fetch('manage-productProfile.php?type=GENERATE_CODES')
                             .then(response => {
                                 if (!response.ok) throw new Error('Network response was not ok');
@@ -492,7 +470,6 @@
                                 $('#productCodeNo').val(fallbackProductNum);
                                 $('#pluCodeNo').val(fallbackPLUNum);
                                 $('.save-btn').prop('disabled', false);
-                                // ... rest of fallback code
                             });
                     }
 
@@ -511,60 +488,81 @@
 
                     // Event handler for the "New" button
                     $('.new-btn').on('click', function () {
-                        enableFormElements();
+                        const newBtn = $(this);
+                        const isCancel = newBtn.data('isCancel') || false;
 
-                        // Generate and set both codes
-                        generateNextCodes().then(codes => {
-                            $('#productCode').val(codes.productCode);
-                            $('#pluCode').val(codes.pluCode);
-                        });
+                        if (!isCancel) {
+                            // Change button text to "Cancel" and enable form elements
+                            newBtn.html('<i class="fas fa-times"></i> Cancel');
+                            newBtn.data('isCancel', true);
+                            enableFormElements();
 
-                        // Load Category dropdown data
-                        fetch('manage-productProfile.php?type=CATEGORY')
-                            .then(response => response.json())
-                            .then(data => {
-                                const categoryDropdown = $('#category');
-                                categoryDropdown.empty();
-                                categoryDropdown.append('<option disabled selected>Select Category</option>');
-                                data.forEach(category => {
-                                    categoryDropdown.append(`<option value="${category}">${category}</option>`);
-                                });
-                            })
-                            .catch(error => console.error('Error fetching CATEGORY data:', error));
+                            // Generate and set both codes
+                            generateNextCodes().then(codes => {
+                                $('#productCode').val(codes.productCode);
+                                $('#pluCode').val(codes.pluCode);
+                            });
 
-                        // Load ProductName for datalist
-                        fetch('manage-productProfile.php?type=PRODUCTNAME')
-                            .then(response => response.json())
-                            .then(data => {
-                                const productNameList = $('#productNameList');
-                                productNameList.empty();
-                                data.forEach(product => {
-                                    productNameList.append(`<option value="${product}">`);
-                                });
-                            })
-                            .catch(error => console.error('Error fetching PRODUCTNAME data:', error));
+                            // Load Category dropdown data
+                            fetch('manage-productProfile.php?type=CATEGORY')
+                                .then(response => response.json())
+                                .then(data => {
+                                    const categoryDropdown = $('#category');
+                                    categoryDropdown.empty();
+                                    categoryDropdown.append('<option disabled selected>Select Category</option>');
+                                    data.forEach(category => {
+                                        categoryDropdown.append(`<option value="${category}">${category}</option>`);
+                                    });
+                                })
+                                .catch(error => console.error('Error fetching CATEGORY data:', error));
 
-                        // Load Shelf dropdown data
-                        fetch('manage-productProfile.php?type=SHELF')
-                            .then(response => response.json())
-                            .then(data => {
-                                const shelfDropdown = $('#shellOptions');
-                                shelfDropdown.empty();
-                                shelfDropdown.append('<option disabled selected>Select Shelf</option>');
-                                data.forEach(shelf => {
-                                    shelfDropdown.append(
-                                        `<option value="${shelf.ItemName}" data-subname="${shelf.ItemSubName}">${shelf.ItemName}</option>`
-                                    );
-                                });
+                            // Load ProductName for datalist
+                            fetch('manage-productProfile.php?type=PRODUCTNAME')
+                                .then(response => response.json())
+                                .then(data => {
+                                    const productNameList = $('#productNameList');
+                                    productNameList.empty();
+                                    data.forEach(product => {
+                                        productNameList.append(`<option value="${product}">`);
+                                    });
+                                })
+                                .catch(error => console.error('Error fetching PRODUCTNAME data:', error));
 
-                                // Handle Shelf dropdown change to update the textbox
-                                shelfDropdown.on('change', function () {
-                                    const selectedOption = $(this).find(':selected');
-                                    const subName = selectedOption.data('subname') || '';
-                                    $('#shelfTextbox').val(subName);
-                                });
-                            })
-                            .catch(error => console.error('Error fetching SHELF data:', error));
+                            // Load Shelf dropdown data
+                            fetch('manage-productProfile.php?type=SHELF')
+                                .then(response => response.json())
+                                .then(data => {
+                                    const shelfDropdown = $('#shellOptions');
+                                    shelfDropdown.empty();
+                                    shelfDropdown.append('<option disabled selected>Select Shelf</option>');
+                                    data.forEach(shelf => {
+                                        shelfDropdown.append(
+                                            `<option value="${shelf.ItemName}" data-subname="${shelf.ItemSubName}">${shelf.ItemName}</option>`
+                                        );
+                                    });
+
+                                    // Handle Shelf dropdown change to update the textbox
+                                    shelfDropdown.on('change', function () {
+                                        const selectedOption = $(this).find(':selected');
+                                        const subName = selectedOption.data('subname') || '';
+                                        $('#shelfTextbox').val(subName);
+                                    });
+                                })
+                                .catch(error => console.error('Error fetching SHELF data:', error));
+                        } else {
+                            // Reset form state and change button back to "New"
+                            newBtn.html('<i class="fas fa-plus"></i> New');
+                            newBtn.data('isCancel', false);
+                            initializeFormState();
+
+                            // Clear form inputs
+                            $('#productCode, #pluCode, #productCodeNo, #pluCodeNo').val('');
+                            $('#category').empty().append('<option disabled selected>Select Category</option>');
+                            $('#productNameList').empty();
+                            $('#shellOptions').empty().append('<option disabled selected>Select Shelf</option>');
+                            $('#shelfTextbox').val('');
+                            $('.save-btn').prop('disabled', true).html('<i class="fas fa-save"></i> Save');
+                        }
                     });
 
                     // Event handler for category dropdown change to fetch and display DiscountType

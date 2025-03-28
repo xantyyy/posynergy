@@ -3,111 +3,64 @@ require_once '../../includes/config.php'; // Database connection
 
 $type = isset($_GET['type']) ? $_GET['type'] : '';
 $data = array();
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_GET['type'] === 'UPDATE_AND_ADD') {
-    $response = ['success' => false, 'message' => ''];
 
-    // Log ang natanggap na POST data para sa debugging
-    error_log("Received POST Data: " . print_r($_POST, true));
+if ($type === 'UPDATE_CODES') {
+    // Get the JSON data from the request body
+    $json = file_get_contents('php://input');
+    $postData = json_decode($json, true);
 
-    $productCodeNo = $_POST['productCodeNo'] ?? '';
-    $pluCodeNo = $_POST['pluCodeNo'] ?? '';
-    $productName = trim($_POST['productName'] ?? ''); // Trim para sa seguridad
-    $price = $_POST['price'] ?? 0;
-
-    $data = [
-        'productCodeNo' => $productCodeNo,
-        'pluCodeNo' => $pluCodeNo,
-        'productName' => $productName,
-        'price' => $price
-    ];
-
-    // Backend Validation (Idagdag ang iyong mga patakaran sa validation dito)
-    if (empty($data['productName'])) {
-        $response['message'] = "Error: Product Name cannot be empty.";
-        echo json_encode($response);
-        exit();
-    }
-
-    try {
-        $conn->begin_transaction(); // Start transaction
-
-        $idToUpdate = $_POST['id_to_update'] ?? null; // Palitan ito ng iyong aktwal na logic
-        if ($idToUpdate !== null) {
-            $updateIdno = $conn->prepare("
-                UPDATE tbl_idno
-                SET productCodeNo = ?, pluCodeNo = ?
-                WHERE id = ?");
-            $updateIdno->bind_param("ssi", $data['productCodeNo'], $data['pluCodeNo'], $idToUpdate);
-            if (!$updateIdno->execute()) {
-                throw new Exception("Error updating tbl_idno: " . $updateIdno->error);
+    // Validate required fields
+    if (empty($postData['productCodeNo']) || empty($postData['pluCodeNo'])) {
+        $data = array('success' => false, 'message' => 'Code numbers are required');
+    } else {
+        try {
+            // Update the existing record (assuming you're updating the last record)
+            $updateStmt = $conn->prepare("UPDATE tbl_idno SET ProductCodeNo = ?, PLUCodeNo = ? ORDER BY ID DESC LIMIT 1");
+            $updateStmt->bind_param("ii", $postData['productCodeNo'], $postData['pluCodeNo']);
+            
+            if ($updateStmt->execute()) {
+                $data = array(
+                    'success' => true, 
+                    'message' => 'Codes updated successfully',
+                    'action' => 'update'
+                );
+            } else {
+                throw new Exception('Failed to update record: ' . $updateStmt->error);
             }
-            $updateIdno->close();
-        } else {
-            error_log("Warning: 'id_to_update' not provided. Skipping tbl_idno update.");
+            $updateStmt->close();
+        } catch (Exception $e) {
+            $data = array(
+                'success' => false, 
+                'message' => 'Database error: ' . $e->getMessage(),
+                'error_code' => $e->getCode()
+            );
         }
-
-
-        // 2. INSERT INTO tbl_productprofile (include all required fields)
-        $insertProduct = $conn->prepare("
-            INSERT INTO tbl_productprofile
-            (productCode, pluCode, productName, price)
-            VALUES (?, ?, ?, ?)");
-        $insertProduct->bind_param(
-            "sssd",
-            $data['productCodeNo'],
-            $data['pluCodeNo'],
-            $data['productName'],
-            $data['price']
-        );
-        if (!$insertProduct->execute()) {
-            throw new Exception("Error inserting into tbl_productprofile: " . $insertProduct->error);
-        }
-        $insertProduct->close();
-
-        $conn->commit(); // Commit if both queries succeed
-        $response['success'] = true;
-    } catch (Exception $e) {
-        $conn->rollback(); // Rollback on error
-        $response['message'] = "Database error: " . $e->getMessage();
-        error_log("Database Error Details: " . $e->getMessage());
     }
-
-    echo json_encode($response);
-    $conn->close(); // Siguraduhing isara ang koneksyon dito kung hindi na kailangan sa ibang bahagi ng script
-    exit();
 } elseif ($type === 'GENERATE_CODES') {
     try {
-        // Get current codes
+        // Get the last used codes
         $result = $conn->query("SELECT ProductCodeNo, PLUCodeNo FROM tbl_idno ORDER BY ID DESC LIMIT 1");
         
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
-            $newProductCodeNo = $row['ProductCodeNo'] + 1;
-            $newPLUCodeNo = $row['PLUCodeNo'] + 1;
-            
-            // Update the codes table
-            $stmt = $conn->prepare("UPDATE tbl_idno SET ProductCodeNo = ?, PLUCodeNo = ?");
-            $stmt->bind_param("ii", $newProductCodeNo, $newPLUCodeNo);
-            $stmt->execute();
-            $stmt->close();
+            $productCodeNo = $row['ProductCodeNo'] + 1;
+            $pluCodeNo = $row['PLUCodeNo'] + 1;
         } else {
-            // Initialize if table is empty
-            $newProductCodeNo = 6285;
-            $newPLUCodeNo = 6253;
-            
-            $stmt = $conn->prepare("INSERT INTO tbl_idno (ProductCodeNo, PLUCodeNo) VALUES (?, ?)");
-            $stmt->bind_param("ii", $newProductCodeNo, $newPLUCodeNo);
-            $stmt->execute();
-            $stmt->close();
+            // Initialize with default values if table is empty
+            $productCodeNo = 6435; // Starting product code
+            $pluCodeNo = 6435;    // Starting PLU code
         }
 
-        $data = [
+        // Return the new codes (don't insert yet - will be inserted when saved)
+        $data = array(
             'success' => true,
-            'productCode' => 'PROD' . str_pad($newProductCodeNo, 6, '0', STR_PAD_LEFT),
-            'pluCode' => 'PLU' . str_pad($newPLUCodeNo, 4, '0', STR_PAD_LEFT),
-            'productCodeNo' => $newProductCodeNo,
-            'pluCodeNo' => $newPLUCodeNo
-        ];
+            'productCode' => 'PROD' . str_pad($productCodeNo, 6, '0', STR_PAD_LEFT),
+            'pluCode' => 'PLU' . str_pad($pluCodeNo, 4, '0', STR_PAD_LEFT),
+            'productCodeNo' => $productCodeNo,
+            'pluCodeNo' => $pluCodeNo,
+            'action' => ($result->num_rows == 0) ? 'initialize' : 'increment'
+        );
+        
     } catch (Exception $e) {
         $data = array(
             'success' => false,
@@ -140,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_GET['type'] === 'UPDATE_AND_ADD')
     }
 } elseif ($type === 'PRODUCTNAME') {
     // Fetch ProductName from tbl_invprodlist
-    $sql = "SELECT ProductName FROM tbl_invprodlist";
+    $sql = "SELECT ProductName FROM tbl_productprofile";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
