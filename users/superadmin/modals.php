@@ -510,3 +510,57 @@
         </div>
     </div>
 </div>
+
+<!-- ADD COSTING DETAILS -->
+<div class="modal fade" id="productInfoModal" tabindex="-1" aria-labelledby="productInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productInfoModalLabel">POS Item Costing</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <h6>Product Information</h6>
+                    <div class="mb-3">
+                        <label for="barcode" class="form-label">Barcode</label>
+                        <input type="text" class="form-control" id="barcode" placeholder="Enter Barcode">
+                    </div>
+                    <div class="mb-3">
+                        <label for="supplier" class="form-label">Supplier</label>
+                        <select class="form-select" id="supplier">
+                            <option selected>Select Supplier</option>
+                            <!-- Options will be dynamically populated -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="uom" class="form-label">UOM</label>
+                        <select class="form-select" id="uom">
+                            <option selected>Select UOM</option>
+                            <!-- Add UOM options dynamically if required -->
+                        </select>
+                    </div>
+                    <hr>
+                    <h6>Costing Details</h6>
+                    <div class="mb-3">
+                        <label for="costPrice" class="form-label">Cost Price</label>
+                        <input type="text" class="form-control" id="costPrice" placeholder="Enter Cost Price">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="vatable">
+                        <label class="form-check-label" for="vatable">
+                            VAT-able
+                        </label>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

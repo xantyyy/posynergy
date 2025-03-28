@@ -213,10 +213,7 @@
                                         </div>
                                         <div class="form-group col-md-12 mt-2">
                                             <label for="productName">Product Name:</label>
-                                            <input type="text" class="form-control input-field" id="productName" list="productNameList" disabled>
-                                            <datalist id="productNameList">
-                                                <!-- Options will be populated dynamically -->
-                                            </datalist>
+                                            <input type="text" class="form-control input-field" id="productName" name="productName"disabled>
                                         </div>
                                         <div class="form-group col-md-12 mt-3">
                                             <div class="d-flex align-items-center">
@@ -261,7 +258,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Costing Details</h5>
-                                    <button type="button" class="btn addCosting-btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;">
+                                    <button type="button" class="btn addCosting-btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productInfoModal">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
                                     <button type="button" class="btn edit-btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" disabled>
@@ -338,238 +335,146 @@
 
 			<script>
                 $(document).ready(function () {
-                    // Track the last used codes
+                    // ================== VARIABLES ====================
                     let lastProductCode = null;
                     let lastPLUCode = null;
                     let codesGenerated = false;
 
-                    // Function to set the current date in the date input field
-                    function setCurrentDate() {
-                        const today = new Date();
-                        const year = today.getFullYear();
-                        const month = String(today.getMonth() + 1).padStart(2, '0');
-                        const day = String(today.getDate()).padStart(2, '0');
-                        const formattedDate = `${year}-${month}-${day}`;
-                        $('#date').val(formattedDate);
-                    }
-
-                    // Function to initialize the form state (disable all except "New" button)
-                    function initializeFormState() {
-                        // Disable all buttons except the "New" button
-                        $('.edit-btn').prop('disabled', true);
-                        $('.delete-btn').prop('disabled', true);
-                        $('.addCosting-btn').prop('disabled', true);
-                        $('.addRetail-btn2').prop('disabled', true);
-
-                        // Disable all input fields and textareas
-                        $('.input-field').prop('disabled', true);
-
-                        // Disable the dropdowns
-                        $('#category').prop('disabled', true);
-                        $('#shellOptions').prop('disabled', true);
-
-                        // Disable the Costing and Retail tables
-                        $('.costing-table tbody tr, .retail-table tbody tr').addClass('disabled-row');
-                        $('.costing-table, .retail-table').css('pointer-events', 'none');
-                    }
-
-                    // Function to enable all elements except the date field when "New" button is clicked
-                    function enableFormElements() {
-                        // Enable all buttons
-                        $('.edit-btn').prop('disabled', false);
-                        $('.delete-btn').prop('disabled', false);
-                        $('.addCosting-btn').prop('disabled', false);
-                        $('.addRetail-btn2').prop('disabled', false);
-
-                        // Enable all input fields and textareas except the date field
-                        $('.input-field').not('.date-field').prop('disabled', false);
-
-                        // Enable the dropdowns
-                        $('#category').prop('disabled', false);
-                        $('#shellOptions').prop('disabled', false);
-
-                        // Ensure the date field remains disabled
-                        $('.date-field').prop('disabled', true);
-
-                        // Enable the Costing and Retail tables
-                        $('.costing-table tbody tr, .retail-table tbody tr').removeClass('disabled-row');
-                        $('.costing-table, .retail-table').css('pointer-events', 'auto');
-                    }
-
-                    // Event handler for Save button
-                    $('.save-btn').on('click', function() {
-                        // Get the raw code numbers from hidden fields
-                        const codeData = {
-                            productCodeNo: $('#productCodeNo').val(),
-                            pluCodeNo: $('#pluCodeNo').val()
-                        };
-
-                        // Show loading state
-                        const saveBtn = $(this);
-                        saveBtn.prop('disabled', true);
-                        saveBtn.html('<i class="fas fa-spinner fa-spin"></i> Saving...');
-
-                        // Send to server
-                        fetch('manage-productProfile.php?type=UPDATE_CODES', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(codeData)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Codes updated successfully in tbl_idno!');
-                                // Reload the page after a successful update
-                                location.reload();
-                            } else {
-                                alert('Error: ' + data.message);
-                                saveBtn.prop('disabled', false);
-                                saveBtn.html('<i class="fas fa-save"></i> Save');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Error saving codes');
-                            saveBtn.prop('disabled', false);
-                            saveBtn.html('<i class="fas fa-save"></i> Save');
-                        });
-                    });
-
-                    // Function to generate the next product and PLU codes
-                    function generateNextCodes() {
-                        return fetch('manage-productProfile.php?type=GENERATE_CODES')
-                            .then(response => {
-                                if (!response.ok) throw new Error('Network response was not ok');
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data && data.productCode && data.pluCode) {
-                                    // Store both formatted codes and raw numbers
-                                    lastProductCode = data.productCode;
-                                    lastPLUCode = data.pluCode;
-                                    
-                                    // Set the values in the form
-                                    $('#productCode').val(data.productCode);
-                                    $('#pluCode').val(data.pluCode);
-                                    $('#productCodeNo').val(data.productCodeNo);
-                                    $('#pluCodeNo').val(data.pluCodeNo);
-                                    
-                                    // Enable Save button
-                                    $('.save-btn').prop('disabled', false);
-                                    
-                                    return data;
-                                }
-                                throw new Error('Invalid code format from server');
-                            })
-                            .catch(error => {
-                                console.error('Error generating codes:', error);
-                                // Fallback code generation...
-                                // Make sure to also set the hidden fields and enable Save button
-                                $('#productCodeNo').val(fallbackProductNum);
-                                $('#pluCodeNo').val(fallbackPLUNum);
-                                $('.save-btn').prop('disabled', false);
-                            });
-                    }
-
-                    // Mapping for DiscountType to display names
                     const discountTypeMapping = {
                         'SD': 'Senior Citizen',
                         'SP': 'Solo Parent',
                         'PWD': 'PWD'
                     };
 
-                    // Initialize the form state on page load
-                    initializeFormState();
+                    // ================== FUNCTIONS ====================
 
-                    // Set the current date on page load
-                    setCurrentDate();
+                    // Set current date to input field
+                    const setCurrentDate = () => {
+                        const today = new Date().toISOString().split('T')[0];
+                        $('#date').val(today);
+                    };
 
-                    // Event handler for the "New" button
-                    $('.new-btn').on('click', function () {
-                        const newBtn = $(this);
+                    // Initialize form (disable everything except "New" button)
+                    const initializeFormState = () => {
+                        $('.edit-btn, .delete-btn, .addCosting-btn, .addRetail-btn2').prop('disabled', true);
+                        $('.input-field').prop('disabled', true);
+                        $('#category, #shellOptions').prop('disabled', true);
+                        $('.costing-table, .retail-table').css('pointer-events', 'none').find('tbody tr').addClass('disabled-row');
+                    };
+
+                    // Enable form inputs except the date field
+                    const enableFormElements = () => {
+                        $('.edit-btn, .delete-btn, .addCosting-btn, .addRetail-btn2').prop('disabled', false);
+                        $('.input-field').not('.date-field').prop('disabled', false);
+                        $('#category, #shellOptions').prop('disabled', false);
+                        $('.costing-table, .retail-table').css('pointer-events', 'auto').find('tbody tr').removeClass('disabled-row');
+                    };
+
+                    // Generate product and PLU codes
+                    const generateNextCodes = () => {
+                        return fetch('manage-productProfile.php?type=GENERATE_CODES')
+                            .then(response => {
+                                if (!response.ok) throw new Error('Failed to fetch codes');
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.productCode && data.pluCode) {
+                                    lastProductCode = data.productCode;
+                                    lastPLUCode = data.pluCode;
+                                    $('#productCode').val(data.productCode);
+                                    $('#pluCode').val(data.pluCode);
+                                    $('#productCodeNo').val(data.productCodeNo);
+                                    $('#pluCodeNo').val(data.pluCodeNo);
+                                    $('.save-btn').prop('disabled', false);
+                                } else {
+                                    throw new Error('Invalid code data');
+                                }
+                            })
+                            .catch(error => console.error('Error generating codes:', error));
+                    };
+
+                    // Fetch and populate dropdown options
+                    const fetchDropdownData = (url, dropdownId, placeholder) => {
+                        return fetch(url)
+                            .then(response => response.json())
+                            .then(data => {
+                                const dropdown = $(dropdownId);
+                                dropdown.empty().append(`<option disabled selected>${placeholder}</option>`);
+                                data.forEach(item => {
+                                    const option = dropdownId === '#shellOptions'
+                                        ? `<option value="${item.ItemName}" data-subname="${item.ItemSubName}">${item.ItemName}</option>`
+                                        : `<option value="${item}">${item}</option>`;
+                                    dropdown.append(option);
+                                });
+                            })
+                            .catch(error => console.error(`Error fetching ${url}:`, error));
+                    };
+
+                    // Handle save button click
+                    const saveCodes = () => {
+                        const codeData = {
+                            productCodeNo: $('#productCodeNo').val(),
+                            pluCodeNo: $('#pluCodeNo').val()
+                        };
+
+                        const saveBtn = $('.save-btn');
+                        saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+
+                        fetch('manage-productProfile.php?type=UPDATE_CODES', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(codeData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Codes updated successfully in tbl_idno!');
+                                location.reload();
+                            } else {
+                                throw new Error(data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Save error:', error);
+                            alert('Error saving codes');
+                            saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+                        });
+                    };
+
+                    // Handle "New" button click
+                    const handleNewButton = () => {
+                        const newBtn = $('.new-btn');
                         const isCancel = newBtn.data('isCancel') || false;
 
                         if (!isCancel) {
-                            // Change button text to "Cancel" and enable form elements
-                            newBtn.html('<i class="fas fa-times"></i> Cancel');
-                            newBtn.data('isCancel', true);
+                            newBtn.html('<i class="fas fa-times"></i> Cancel').data('isCancel', true);
                             enableFormElements();
 
-                            // Generate and set both codes
-                            generateNextCodes().then(codes => {
-                                $('#productCode').val(codes.productCode);
-                                $('#pluCode').val(codes.pluCode);
+                            generateNextCodes();
+                            fetchDropdownData('manage-productProfile.php?type=CATEGORY', '#category', 'Select Category');
+                            fetchDropdownData('manage-productProfile.php?type=SHELF', '#shellOptions', 'Select Shelf').then(() => {
+                                $('#shellOptions').on('change', function () {
+                                    const subName = $(this).find(':selected').data('subname') || '';
+                                    $('#shelfTextbox').val(subName);
+                                });
                             });
-
-                            // Load Category dropdown data
-                            fetch('manage-productProfile.php?type=CATEGORY')
-                                .then(response => response.json())
-                                .then(data => {
-                                    const categoryDropdown = $('#category');
-                                    categoryDropdown.empty();
-                                    categoryDropdown.append('<option disabled selected>Select Category</option>');
-                                    data.forEach(category => {
-                                        categoryDropdown.append(`<option value="${category}">${category}</option>`);
-                                    });
-                                })
-                                .catch(error => console.error('Error fetching CATEGORY data:', error));
-
-                            // Load ProductName for datalist
-                            fetch('manage-productProfile.php?type=PRODUCTNAME')
-                                .then(response => response.json())
-                                .then(data => {
-                                    const productNameList = $('#productNameList');
-                                    productNameList.empty();
-                                    data.forEach(product => {
-                                        productNameList.append(`<option value="${product}">`);
-                                    });
-                                })
-                                .catch(error => console.error('Error fetching PRODUCTNAME data:', error));
-
-                            // Load Shelf dropdown data
-                            fetch('manage-productProfile.php?type=SHELF')
-                                .then(response => response.json())
-                                .then(data => {
-                                    const shelfDropdown = $('#shellOptions');
-                                    shelfDropdown.empty();
-                                    shelfDropdown.append('<option disabled selected>Select Shelf</option>');
-                                    data.forEach(shelf => {
-                                        shelfDropdown.append(
-                                            `<option value="${shelf.ItemName}" data-subname="${shelf.ItemSubName}">${shelf.ItemName}</option>`
-                                        );
-                                    });
-
-                                    // Handle Shelf dropdown change to update the textbox
-                                    shelfDropdown.on('change', function () {
-                                        const selectedOption = $(this).find(':selected');
-                                        const subName = selectedOption.data('subname') || '';
-                                        $('#shelfTextbox').val(subName);
-                                    });
-                                })
-                                .catch(error => console.error('Error fetching SHELF data:', error));
                         } else {
-                            // Reset form state and change button back to "New"
-                            newBtn.html('<i class="fas fa-plus"></i> New');
-                            newBtn.data('isCancel', false);
+                            newBtn.html('<i class="fas fa-plus"></i> New').data('isCancel', false);
                             initializeFormState();
-
-                            // Clear form inputs
                             $('#productCode, #pluCode, #productCodeNo, #pluCodeNo').val('');
-                            $('#category').empty().append('<option disabled selected>Select Category</option>');
-                            $('#productNameList').empty();
-                            $('#shellOptions').empty().append('<option disabled selected>Select Shelf</option>');
+                            $('#category, #shellOptions').empty().append('<option disabled selected>Select an option</option>');
                             $('#shelfTextbox').val('');
                             $('.save-btn').prop('disabled', true).html('<i class="fas fa-save"></i> Save');
                         }
-                    });
+                    };
 
-                    // Event handler for category dropdown change to fetch and display DiscountType
+                    // ================== EVENT LISTENERS ====================
+                    $('.new-btn').on('click', handleNewButton);
+                    $('.save-btn').on('click', saveCodes);
+
                     $('#category').on('change', function () {
                         const selectedCategory = $(this).val();
                         const tableBody = $('#discountTableBody');
-
                         tableBody.empty();
 
                         if (selectedCategory === 'Select Category') {
@@ -594,6 +499,10 @@
                                 tableBody.append('<tr><td>Error fetching discounts</td></tr>');
                             });
                     });
+
+                    // ================== INITIALIZATION ====================
+                    initializeFormState();
+                    setCurrentDate();
                 });
 
                 document.addEventListener("DOMContentLoaded", function () {
