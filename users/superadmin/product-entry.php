@@ -279,10 +279,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
+                                                    <td>No Data Available</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -293,13 +290,13 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Retail Details</h5>
-                                    <button type="button" class="btn addRetail-btn2 btn-outline-primary me-2" style="font-size: 13px;">
+                                    <button type="button" class="btn addRetail-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productModal">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn edit-btn btn-outline-primary me-2" style="font-size: 13px;" disabled>
+                                    <button type="button" class="btn editRetail-btn btn-outline-primary me-2" style="font-size: 13px;" disabled>
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn delete-btn btn-outline-primary" style="font-size: 13px;" disabled>
+                                    <button type="button" class="btn deleteRetail-btn btn-outline-primary" style="font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                     <div class="table-responsive table-container" style="height: calc(81.5vh - 250px); overflow-y: auto;">
@@ -316,12 +313,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
+                                                    <td>No Data Available</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -348,7 +340,7 @@
                         if (
                             tableBody.children.length === 0 ||
                             (tableBody.children.length === 1 &&
-                                tableBody.querySelector('tr td').textContent === 'Sample')
+                                tableBody.querySelector('tr td').textContent === 'No Data Available')
                         ) {
                             tableBody.innerHTML = `
                                 <tr class="no-data-row">
@@ -450,7 +442,8 @@
                             document.getElementById('edit-vatable').checked = vatable;
 
                             // Show the Edit modal
-                            const editModalInstance = new bootstrap.Modal(document.getElementById('editProductModal'));
+                            const editModal = document.getElementById('editProductModal');
+                            const editModalInstance = new bootstrap.Modal(editModal);
                             editModalInstance.show();
 
                             // Save changes
@@ -463,9 +456,17 @@
                                 selectedRow.cells[2].textContent = document.getElementById('edit-uom').value;
                                 selectedRow.cells[3].textContent = document.getElementById('edit-barcode').value;
 
-                                editModalInstance.hide(); // Dismiss the modal
+                                editModalInstance.hide();
                                 alert('Changes saved successfully!');
                             };
+
+                            // Close button functionality for edit modal
+                            const editCloseButton = editModal.querySelector('.btn-secondary[data-bs-dismiss="modal"]');
+                            if (editCloseButton) {
+                                editCloseButton.addEventListener('click', function() {
+                                    editModalInstance.hide();
+                                });
+                            }
                         }
                     });
 
@@ -538,7 +539,7 @@
 
                     // Initialize form (disable everything except "New" button)
                     const initializeFormState = () => {
-                        $('.addCosting-btn, .addRetail-btn2').prop('disabled', true);
+                        $('.addCosting-btn, .addRetail-btn').prop('disabled', true);
                         $('.input-field').prop('disabled', true);
                         $('#category, #shellOptions').prop('disabled', true);
                         $('.costing-table, .retail-table').css('pointer-events', 'none').find('tbody tr').addClass('disabled-row');
@@ -546,7 +547,7 @@
 
                     // Enable form inputs except the date field
                     const enableFormElements = () => {
-                        $('.addCosting-btn, .addRetail-btn2').prop('disabled', false);
+                        $('.addCosting-btn, .addRetail-btn').prop('disabled', false);
                         $('.input-field').not('.date-field').prop('disabled', false);
                         $('#category, #shellOptions').prop('disabled', false);
                         $('.costing-table, .retail-table').css('pointer-events', 'auto').find('tbody tr').removeClass('disabled-row');

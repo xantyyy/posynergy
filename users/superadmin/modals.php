@@ -140,9 +140,8 @@
     </div>
 </div>
 
-
-<!-- Product Modal -->
-<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+<!--Retails Add Modal -->
+<div class="modal fade" id="productModalRetail" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <!-- Modal Header -->
@@ -174,7 +173,7 @@
 
                 <div class="mb-3">
                     <label for="barcode" class="form-label">Barcode:</label>
-                    <input type="text" class="form-control" id="barcode" placeholder="Enter barcode">
+                    <input type="text" class="form-control" id="barcode" placeholder="Enter barcode" readonly>
                 </div>
                 <div class="mb-3">
                     <label for="productName" class="form-label">Product Name:</label>
