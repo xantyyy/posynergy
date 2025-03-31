@@ -54,11 +54,9 @@
                         </button>        
                     </nav>
                 </div>	  
-                <div>
-                <img src="../../assets/images/cashierbg.jpg" class="img-fluid" style="border-left: 200px solid black; margin-top: -20px;"/>
-
-                        
-                    </div>
+                    <div>
+                        <img src="../../assets/images/cashierbg.jpg" class="img-fluid" style="border-left: 200px solid black; margin-top: -20px;"/>    
+                    </div>  
                  </div>
 
                     <!--DASHBOARD CONTENT-->

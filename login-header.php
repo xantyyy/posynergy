@@ -6,7 +6,7 @@
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <title>iSynergies Inc. | POS System</title>
 
@@ -16,16 +16,19 @@
         <link rel="stylesheet" href="assets/css/login.css">
 
         <style>
-            body{
-                background: linear-gradient(to right,rgb(235, 110, 110),rgb(142, 188, 225),rgb(200, 223, 243));
-                background-size: 1550px 870px;
-                background-position: center;
-                background-repeat: no-repeat;
-                
-            }
+           body {
+                background: url('/posynergy/assets/images/loginbg.jpg') no-repeat center center fixed;;
+    }
         </style>
         
         <!-- JS -->
+       <script>
+            document.addEventListener("wheel", function(event) {
+                if (event.ctrlKey) {
+                    event.preventDefault();
+                }
+            }, { passive: false });
+        </script>
         <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
 
