@@ -24,8 +24,8 @@
 					<a href="tender-declare.php">Tender Declaration</a>
 				</li>
 				<li>
-					<a href="shift-reading.php">Shift Reading</a>
-				</li>
+                    <a href="#" onclick="checkPassword('shift-reading.php')">Shift Reading</a>
+                </li>
                 <li>
 					<a href="x-reading.php">X Reading</a>
 				</li>
@@ -76,6 +76,34 @@
                 </div>
 
                     <script>
+                        function checkPassword(redirectUrl) {
+                            const passwordInput = document.createElement('input');
+                            passwordInput.type = 'password';
+                            passwordInput.placeholder = 'Enter password';
+                            const modal = document.createElement('div');
+                            modal.style.position = 'fixed';
+                            modal.style.top = '50%';
+                            modal.style.left = '50%';
+                            modal.style.transform = 'translate(-50%, -50%)';
+                            modal.style.padding = '20px';
+                            modal.style.backgroundColor = 'Gainsboro';
+                            modal.style.boxShadow = '0 4px 6px rgba(99, 225, 245)';
+                            modal.style.zIndex = '1000';
+                            const confirmButton = document.createElement('button');
+                            confirmButton.textContent = 'Submit';
+                            confirmButton.style.marginTop = '10px';
+                            confirmButton.onclick = function() {
+                                if (passwordInput.value === '123') {
+                                    document.body.removeChild(modal);
+                                    window.location.href = redirectUrl;
+                                } else {
+                                    alert('Incorrect password. Access denied.');
+                                }
+                            };
+                            modal.appendChild(passwordInput);
+                            modal.appendChild(confirmButton);
+                            document.body.appendChild(modal);
+                        }
                         document.addEventListener("DOMContentLoaded", function () {
                             const currentUrl = window.location.pathname.split('/').pop();
                             
