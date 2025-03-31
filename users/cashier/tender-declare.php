@@ -67,102 +67,108 @@
                                 <tr>
                                     <td>₱1,000.00</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="1000" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱500.00</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="500" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱200.00</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="200" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱100.00</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="100" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱50.00</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="50" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱20.00</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="20" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱10.00</td>
-                                    <td>X</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td>×</td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="10" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱5.00</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="5" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱1.00</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="1" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱0.50</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="0.5" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱0.25</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="0.25" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱0.10</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="0.1" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱0.05</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="0.05" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                                 <tr>
                                     <td>₱0.01</td>
                                     <td>×</td>
-                                    <td><input type="number" class="form-control text-center" min="0" value="0"></td>
+                                    <td><input type="number" class="form-control text-center quantity" data-value="0.01" min="0" value="0"></td>
                                     <td>=</td>
-                                    <td><input type="number" class="form-control text-center" min="0" readonly></td>
+                                    <td><input type="number" class="form-control text-center total" readonly></td>
                                 </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-right" style="font-weight: bold;">Grand Total:</td>
+                                    <td><input type="number" class="form-control text-center" id="grand-total" readonly></td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -223,6 +229,32 @@
 </div>
 
     <script>
+            // Function to handle calculations
+        function calculateTotals() {
+            const rows = document.querySelectorAll('tbody tr');
+            let grandTotal = 0;
+
+            rows.forEach(row => {
+                const quantityInput = row.querySelector('.quantity');
+                const totalInput = row.querySelector('.total');
+
+                if (quantityInput && totalInput) {
+                    const value = parseFloat(quantityInput.dataset.value);
+                    const quantity = parseFloat(quantityInput.value) || 0;
+                    const total = value * quantity;
+                    totalInput.value = total.toFixed(2);
+
+                    grandTotal += total;
+                }
+            });
+
+            document.getElementById('grand-total').value = grandTotal.toFixed(2);
+        }
+
+        // Attach event listeners to quantity inputs
+        document.querySelectorAll('.quantity').forEach(input => {
+            input.addEventListener('input', calculateTotals);
+        });
         document.addEventListener("DOMContentLoaded", function () {
             const currentUrl = window.location.pathname.split('/').pop();
             

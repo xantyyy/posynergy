@@ -173,10 +173,10 @@
                                 <div class="card-body">
                                     <h5>Details</h5>
                                     <form>
-                                        <button type="button" class="btn me-2 new-btn btn-outline-primary opacity-50" style="font-size: 13px;">
+                                        <button type="button" class="btn me-2 new-btn btn-outline-primary" style="font-size: 13px;">
                                             <i class="fas fa-plus"></i> New
                                         </button>
-                                        <button type="button" class="btn save-btn btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
+                                        <button type="button" class="btn save-btn btn-outline-primary" style="font-size: 13px;" disabled>
                                             <i class="fas fa-save"></i> Save
                                         </button>
                                         <div class="form-row">
@@ -258,16 +258,16 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Costing Details</h5>
-                                    <button type="button" class="btn addCosting-btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productInfoModal">
+                                    <button type="button" class="btn addCosting-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productInfoModal" id="addButton">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn edit-btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" disabled>
+                                    <button type="button" class="btn edit-btn btn-outline-primary me-2" style="font-size: 13px;" disabled>
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn delete-btn btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
+                                    <button type="button" class="btn delete-btn btn-outline-primary" style="font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
-                                    <div class="table-responsive table-container" style="height: calc(76.5vh - 250px); overflow-y: auto;">
+                                    <div class="table-responsive table-container" style="height: calc(81.5vh - 250px); overflow-y: auto;">
                                         <table class="table table-bordered mt-2 table-data" id="table-bold">
                                             <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
@@ -279,10 +279,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
+                                                    <td>No Data Available</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -293,16 +290,16 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Retail Details</h5>
-                                    <button type="button" class="btn addRetail-btn2 btn-outline-primary opacity-50 me-2" style="font-size: 13px;">
+                                    <button type="button" class="btn addRetail-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productModal">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn edit-btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" disabled>
+                                    <button type="button" class="btn editRetail-btn btn-outline-primary me-2" style="font-size: 13px;" disabled>
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn delete-btn btn-outline-primary opacity-50" style="font-size: 13px;" disabled>
+                                    <button type="button" class="btn deleteRetail-btn btn-outline-primary" style="font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
-                                    <div class="table-responsive table-container" style="height: calc(76.5vh - 250px); overflow-y: auto;">
+                                    <div class="table-responsive table-container" style="height: calc(81.5vh - 250px); overflow-y: auto;">
                                         <table class="table table-bordered mt-2 table-data" id="table-bold">
                                             <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
@@ -316,12 +313,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
+                                                    <td>No Data Available</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -334,6 +326,197 @@
             </div>      
 
 			<script>
+                // Wait for the DOM to be fully loaded
+                document.addEventListener('DOMContentLoaded', function () {
+                    const saveButton = document.querySelector('#productInfoModal .modal-footer .btn-primary');
+                    const tableBody = document.querySelector('#table-bold tbody');
+                    const editButton = document.querySelector('.edit-btn');
+                    const deleteButton = document.querySelector('.delete-btn');
+
+                    // Check and update table for empty state
+                    checkAndUpdateEmptyTable();
+
+                    function checkAndUpdateEmptyTable() {
+                        if (
+                            tableBody.children.length === 0 ||
+                            (tableBody.children.length === 1 &&
+                                tableBody.querySelector('tr td').textContent === 'No Data Available')
+                        ) {
+                            tableBody.innerHTML = `
+                                <tr class="no-data-row">
+                                    <td colspan="4" class="text-center">No Data Available</td>
+                                </tr>
+                            `;
+                        }
+                    }
+
+                    // Function to clear modal and reset state
+                    function clearModal() {
+                        document.getElementById('barcode').value = '';
+                        document.getElementById('supplier').selectedIndex = 0;
+                        document.getElementById('uom').selectedIndex = 0;
+                        document.getElementById('costPrice').value = '';
+                        document.getElementById('vatable').checked = false;
+                        saveButton.removeAttribute('data-editing-row'); // Clear editing state
+                    }
+
+                    // Save button functionality
+                    saveButton.addEventListener('click', function () {
+                        const barcode = document.getElementById('barcode').value;
+                        const supplier = document.getElementById('supplier').value;
+                        const uom = document.getElementById('uom').value;
+                        const costPrice = document.getElementById('costPrice').value;
+                        const vatable = document.getElementById('vatable').checked;
+
+                        if (!supplier || !uom || !costPrice) {
+                            alert('Please fill in all required fields.');
+                            return;
+                        }
+
+                        const editingRowIndex = saveButton.getAttribute('data-editing-row');
+                        if (editingRowIndex !== null) {
+                            // Update existing row
+                            const editingRow = tableBody.children[editingRowIndex];
+                            editingRow.cells[0].textContent = supplier;
+                            editingRow.cells[1].textContent = costPrice + (vatable ? ' (VAT-able)' : '');
+                            editingRow.cells[2].textContent = uom;
+                            editingRow.cells[3].textContent = barcode;
+
+                            saveButton.removeAttribute('data-editing-row');
+                            alert('Data successfully updated!');
+                        } else {
+                            // Add new row
+                            const newRow = document.createElement('tr');
+                            newRow.innerHTML = `
+                                <td>${supplier}</td>
+                                <td>${costPrice}${vatable ? ' (VAT-able)' : ''}</td>
+                                <td>${uom}</td>
+                                <td>${barcode}</td>
+                            `;
+
+                            newRow.addEventListener('click', function () {
+                                document.querySelectorAll('#table-bold tbody tr').forEach((row) => {
+                                    row.classList.remove('selected-row');
+                                });
+
+                                this.classList.add('selected-row');
+                                editButton.disabled = false;
+                                editButton.classList.remove('opacity-50');
+                                deleteButton.disabled = false;
+                                deleteButton.classList.remove('opacity-50');
+                            });
+
+                            const noDataRow = tableBody.querySelector('.no-data-row');
+                            if (noDataRow) {
+                                tableBody.innerHTML = '';
+                            }
+
+                            tableBody.appendChild(newRow);
+                            alert('Data successfully saved!');
+                        }
+
+                        // Clear modal fields and hide modal
+                        clearModal();
+                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('productInfoModal'));
+                        modalInstance.hide();
+                    });
+
+                    // Edit button functionality
+                    editButton.addEventListener('click', function () {
+                        const selectedRow = document.querySelector('#table-bold tbody tr.selected-row');
+
+                        if (selectedRow) {
+                            // Populate modal fields with the selected row data
+                            const supplier = selectedRow.cells[0].textContent;
+                            const costText = selectedRow.cells[1].textContent;
+                            const uom = selectedRow.cells[2].textContent;
+                            const barcode = selectedRow.cells[3].textContent;
+
+                            const vatable = costText.includes('(VAT-able)');
+                            const costPrice = vatable ? costText.replace(' (VAT-able)', '') : costText;
+
+                            document.getElementById('edit-barcode').value = barcode;
+                            document.getElementById('edit-supplier').value = supplier;
+                            document.getElementById('edit-uom').value = uom;
+                            document.getElementById('edit-costPrice').value = costPrice;
+                            document.getElementById('edit-vatable').checked = vatable;
+
+                            // Show the Edit modal
+                            const editModal = document.getElementById('editProductModal');
+                            const editModalInstance = new bootstrap.Modal(editModal);
+                            editModalInstance.show();
+
+                            // Save changes
+                            document.getElementById('edit-save-btn').onclick = function () {
+                                // Update table row
+                                selectedRow.cells[0].textContent = document.getElementById('edit-supplier').value;
+                                selectedRow.cells[1].textContent =
+                                    document.getElementById('edit-costPrice').value +
+                                    (document.getElementById('edit-vatable').checked ? ' (VAT-able)' : '');
+                                selectedRow.cells[2].textContent = document.getElementById('edit-uom').value;
+                                selectedRow.cells[3].textContent = document.getElementById('edit-barcode').value;
+
+                                editModalInstance.hide();
+                                alert('Changes saved successfully!');
+                            };
+
+                            // Close button functionality for edit modal
+                            const editCloseButton = editModal.querySelector('.btn-secondary[data-bs-dismiss="modal"]');
+                            if (editCloseButton) {
+                                editCloseButton.addEventListener('click', function() {
+                                    editModalInstance.hide();
+                                });
+                            }
+                        }
+                    });
+
+                    // Delete button functionality
+                    deleteButton.addEventListener('click', function () {
+                        const selectedRow = document.querySelector('#table-bold tbody tr.selected-row');
+
+                        if (selectedRow) {
+                            if (confirm('Are you sure you want to delete this item?')) {
+                                selectedRow.remove();
+
+                                editButton.disabled = true;
+                                editButton.classList.add('opacity-50');
+                                deleteButton.disabled = true;
+                                deleteButton.classList.add('opacity-50');
+
+                                checkAndUpdateEmptyTable();
+                            }
+                        }
+                    });
+
+                    // Clear modal when the modal is closed
+                    const modalElement = document.getElementById('productInfoModal');
+                    modalElement.addEventListener('hidden.bs.modal', clearModal);
+
+                    // Add style for selected row
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        .selected-row {
+                            background-color: #e9ecef;
+                        }
+                    `;
+                    document.head.appendChild(style);
+
+                    checkAndUpdateEmptyTable();
+                });
+
+               document.addEventListener('DOMContentLoaded', function () {
+                    document.getElementById('addButton').addEventListener('click', function () {
+                        // Get the barcode value from the main page
+                        const barcodeValue = document.getElementById('barCode').value;
+
+                        // Set the value in the modal input field
+                        const modalBarcodeInput = document.getElementById('barcode');
+                        if (modalBarcodeInput) {
+                            modalBarcodeInput.value = barcodeValue;
+                        }
+                    });
+                });
+
                 $(document).ready(function () {
                     // ================== VARIABLES ====================
                     let lastProductCode = null;
@@ -356,7 +539,7 @@
 
                     // Initialize form (disable everything except "New" button)
                     const initializeFormState = () => {
-                        $('.edit-btn, .delete-btn, .addCosting-btn, .addRetail-btn2').prop('disabled', true);
+                        $('.addCosting-btn, .addRetail-btn').prop('disabled', true);
                         $('.input-field').prop('disabled', true);
                         $('#category, #shellOptions').prop('disabled', true);
                         $('.costing-table, .retail-table').css('pointer-events', 'none').find('tbody tr').addClass('disabled-row');
@@ -364,7 +547,7 @@
 
                     // Enable form inputs except the date field
                     const enableFormElements = () => {
-                        $('.edit-btn, .delete-btn, .addCosting-btn, .addRetail-btn2').prop('disabled', false);
+                        $('.addCosting-btn, .addRetail-btn').prop('disabled', false);
                         $('.input-field').not('.date-field').prop('disabled', false);
                         $('#category, #shellOptions').prop('disabled', false);
                         $('.costing-table, .retail-table').css('pointer-events', 'auto').find('tbody tr').removeClass('disabled-row');
@@ -642,7 +825,6 @@
                         color:rgb(6, 1, 1); /* Light gray text for disabled buttons */
                         background-color:rgb(241, 201, 201); /* Light gray background for better visibility */
                         cursor: not-allowed; /* Show "not-allowed" cursor */
-                        opacity: 1; /* Keep solid visibility */
                     }
 
                     /* Additional hover styles for enabled buttons */

@@ -275,30 +275,105 @@
     </script>
 
         <style>
+            /* Modal Overlay */
             .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        justify-content: center;
-        align-items: center;
-    }
-    .modal-content {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        width: 300px;
-    }
-    .modal-actions {
-        margin-top: 15px;
-    }
-    .modal-actions button {
-        margin: 5px;
-    }
+                display: none; /* Hidden by default */
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                justify-content: center;
+                align-items: center;
+            }
+
+            /* Modal Content */
+            .modal-content {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                width: 300px;
+                text-align: center;
+            }
+
+            /* Modal Title */
+            .modal-title {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+                color: #333;
+            }
+
+            /* Input Field */
+            .modal-input {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                font-size: 1em;
+            }
+
+            /* Modal Actions */
+            .modal-actions {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            /* Buttons */
+            .modal-button {
+                padding: 10px 20px;
+                font-size: 1em;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .modal-button.primary {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+            .modal-button.primary:hover {
+                background-color: #0056b3;
+            }
+
+            .modal-button.secondary {
+                background-color: #f8f9fa;
+                color: #333;
+            }
+
+            .modal-button.secondary:hover {
+                background-color: #e2e6ea;
+            }
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                justify-content: center;
+                align-items: center;
+            }
+            .modal-content {
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                width: 300px;
+            }
+            .modal-actions {
+                margin-top: 15px;
+            }
+            .modal-actions button {
+                margin: 5px;
+            }
             .modal {
             display: none;
             position: fixed;
@@ -309,7 +384,7 @@
             background: rgba(0, 0, 0, 0.5);
             justify-content: center;
             align-items: center;
-        }
+            }
         .modal-content {
             background: white;
             padding: 20px;
@@ -425,7 +500,7 @@
             font-weight: bold;
             font-style: italic;
         }
-        .disabled-link {
+        .disabled-link {    
             pointer-events: none; /* Disable click interactions */
             opacity: 0.7; /* Make the text appear faded */
             filter: blur(0.8px); /* Optionally add blur effect */
