@@ -283,16 +283,20 @@
 
 			<!--JAVASCRIPT FOR USER ACCOUNTS-->
 			<script>
-	document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
+    // Button elements
     let newBtn = document.getElementById("newBtn");
     let saveBtn = document.getElementById("saveBtn");
     let editBtn = document.getElementById("editBtn");
     let disableBtn = document.getElementById("disableBtn");
 
+    // Form input fields
     let inputs = document.querySelectorAll(".form-control");
     let userFullName = document.getElementById("fullName");
     let passwordInput = document.getElementById("passwordInput");
     let confirmInput = document.getElementById("confirmInput");
+
+    // Account details fields (role, username, password)
     let accountDetails = [
         document.getElementById("roleInput"),
         document.getElementById("usernameInput"),
@@ -300,16 +304,38 @@
         confirmInput
     ];
 
+    // Table and form elements
     let userTableBody = document.querySelector("#table-bold tbody");
     let form = document.getElementById("userForm");
-    let isAddingNewUser = false; // ✅ State para hindi clickable ang list kapag "New" ang naka-click
+    let isAddingNewUser = false;
 
+    // Set password inputs to "password" type for security
     passwordInput.type = "password";
     confirmInput.type = "password";
 
+    let editingUserIndex = null; // Track the user being edited
+
+    /**
+     * Highlights the selected row in the user table.
+     * @param {HTMLElement} selectedRow - The row element to highlight.
+     */
+    function highlightRow(selectedRow) {
+        document.querySelectorAll("#table-bold tbody tr").forEach(row => {
+            row.classList.remove("highlighted-row"); // Remove highlight from all rows
+        });
+
+        selectedRow.classList.add("highlighted-row"); // Highlight clicked row
+
+        // Set the editing user index based on clicked row
+        editingUserIndex = selectedRow.getAttribute("data-index");
+    }
+
+    /**
+     * Loads users from localStorage and populates the table.
+     */
     function loadUsers() {
         let users = JSON.parse(localStorage.getItem("users")) || [];
-        userTableBody.innerHTML = ""; // Clear table before adding rows
+        userTableBody.innerHTML = "";
 
         users.forEach((user, index) => {
             let newRow = document.createElement("tr");
@@ -319,42 +345,41 @@
                 <td>Enabled</td>
                 <td>No</td>
             `;
-            newRow.setAttribute("data-index", index); // Store index for reference
+            newRow.setAttribute("data-index", index);
             newRow.addEventListener("click", function () {
-                if (!isAddingNewUser) { // ✅ HINDI clickable kapag naka "New"
-                    highlightRow(newRow);
-                    loadUserData(index);
+                if (!isAddingNewUser) {
+                    highlightRow(newRow); // Highlight the clicked row
+                    loadUserData(index); // Load the selected user's data
                 }
             });
 
             userTableBody.appendChild(newRow);
         });
 
-        // ✅ Scrollable user list (max 5 users)
         let tableContainer = document.querySelector("#table-container");
-        tableContainer.style.maxHeight = "200px"; // Approx height for 5 rows
+        tableContainer.style.maxHeight = "200px"; 
         tableContainer.style.overflowY = users.length > 5 ? "auto" : "hidden";
     }
 
-    function highlightRow(selectedRow) {
-        document.querySelectorAll("#table-bold tbody tr").forEach(row => {
-            row.classList.remove("highlighted-row"); // Remove highlight from all rows
-        });
-
-        selectedRow.classList.add("highlighted-row"); // Highlight clicked row
-    }
-
-    function addUser(fullName, username, role) {
+    /**
+     * Nagse-save ng mga pagbabago sa isang existing na user sa user list.
+     * @param {string} fullName - Full name ng user.
+     * @param {string} username - Username ng user.
+     * @param {string} role - Role ng user.
+     */
+    function saveUserChanges(fullName, username, role) {
         let users = JSON.parse(localStorage.getItem("users")) || [];
-        users.push({ fullName, username, role });
+        users[editingUserIndex] = { fullName, username, role }; // Update the user at the selected index
 
         localStorage.setItem("users", JSON.stringify(users));
-        alert("User successfully added!");
+        alert("User details updated!");
 
-        // ✅ Auto-refresh page after save
-        location.reload();
+        location.reload(); // Refresh the page to show updated details
     }
 
+    /**
+     * Handles the save button click event to add a new user or save changes to an existing user.
+     */
     saveBtn.addEventListener("click", function () {
         let fullName = userFullName.value.trim();
         let username = document.getElementById("usernameInput").value.trim();
@@ -362,37 +387,53 @@
         let password = passwordInput.value;
         let confirmPassword = confirmInput.value;
 
+        // Validate required fields
         if (!fullName || !username || !role || !password || !confirmPassword) {
-            alert("Please fill in all fields.");
+            alert("Paki-puno ang lahat ng mga fields.");
             return;
         }
 
+        // Check if passwords match
         if (password !== confirmPassword) {
-            alert("Passwords do not match!");
+            alert("Hindi magkapareho ang password!");
             return;
         }
 
-        addUser(fullName, username, role);
+        if (editingUserIndex !== null) {
+            saveUserChanges(fullName, username, role); // Save changes to the selected user
+        } else {
+            addUser(fullName, username, role); // Add a new user
+        }
     });
 
+    /**
+     * Loads user data into the form fields for editing.
+     * @param {number} index - The index of the selected user in the user list.
+     */
     function loadUserData(index) {
         let users = JSON.parse(localStorage.getItem("users")) || [];
         let selectedUser = users[index];
 
         if (selectedUser) {
-            document.getElementById("fullName").value = selectedUser.fullName; // ✅ Load Full Name Correctly
+            document.getElementById("fullName").value = selectedUser.fullName;
             document.getElementById("usernameInput").value = selectedUser.username;
             document.getElementById("roleInput").value = selectedUser.role;
 
-            // ✅ Disable fields but keep values
             document.getElementById("fullName").disabled = true;
             document.getElementById("usernameInput").disabled = true;
             document.getElementById("roleInput").disabled = true;
             document.getElementById("passwordInput").disabled = true;
             document.getElementById("confirmInput").disabled = true;
+
+            editBtn.disabled = false;
+            disableBtn.disabled = false;
         }
     }
 
+    /**
+     * Enables or disables form fields.
+     * @param {boolean} enable - If true, fields will be enabled; otherwise, they will be disabled.
+     */
     function toggleFields(enable) {
         inputs.forEach(input => {
             input.disabled = !enable;
@@ -407,28 +448,81 @@
         disableBtn.disabled = true;
     }
 
+    // Disable fields initially
     toggleFields(false);
 
+    /**
+     * Handles the New/Cancel button click event.
+     * Toggles between adding a new user and resetting the form.
+     */
     newBtn.addEventListener("click", function () {
         if (newBtn.innerHTML.includes("New")) {
             newBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
             toggleFields(true);
-            isAddingNewUser = true; // ✅ Set to true para hindi clickable ang user list
+            isAddingNewUser = true;
+
+            document.querySelectorAll("#table-bold tbody tr").forEach(row => {
+                row.classList.remove("highlighted-row");
+            });
+
+            form.reset();
+            userFullName.value = "";
+            passwordInput.value = "";
+            confirmInput.value = "";
+
+            accountDetails.forEach(input => {
+                input.value = "";
+                input.disabled = false;
+            });
+
+            editBtn.disabled = true;
+            disableBtn.disabled = true;
         } else {
+            isAddingNewUser = false;
             newBtn.innerHTML = '<i class="fas fa-plus"></i> New';
             toggleFields(false);
+
             form.reset();
-            isAddingNewUser = false; // ✅ Reset para clickable ulit ang user list
+            userFullName.value = "";
+            passwordInput.value = "";
+            confirmInput.value = "";
+
+            accountDetails.forEach(input => {
+                input.value = "";
+                input.disabled = false;
+            });
+
+            editBtn.disabled = true;
+            disableBtn.disabled = true;
         }
     });
 
-    // ✅ Load users when page loads
+    /**
+     * Handles the Edit button click event.
+     * Allows the user to edit the details of the selected user.
+     */
+    editBtn.addEventListener("click", function () {
+        if (editingUserIndex !== null) {
+            document.getElementById("fullName").disabled = false;
+            document.getElementById("usernameInput").disabled = false;
+            document.getElementById("roleInput").disabled = false;
+            document.getElementById("passwordInput").disabled = false;
+            document.getElementById("confirmInput").disabled = false;
+
+            saveBtn.disabled = false;
+
+            editBtn.disabled = true;
+            disableBtn.disabled = true;
+        }
+    });
+
+    // Load users when page loads
     loadUsers();
 });
 
 
-
 </script>
+
 
 
 
@@ -572,6 +666,18 @@
     transition: background 0.3s ease-in-out;
 }
 
+.btn:disabled {
+                        border-color:rgb(6, 0, 0); /* Gray border for disabled buttons */
+                        color:rgb(6, 1, 1); /* Light gray text for disabled buttons */
+                        background-color:rgb(241, 201, 201); /* Light gray background for better visibility */
+                        cursor: not-allowed; /* Show "not-allowed" cursor */
+                    }
 
+                    /* Additional hover styles for enabled buttons */
+                    .btn:not(:disabled):hover {
+                        background-color: #007bff; /* Blue background */
+                        color: #ffffff; /* White text */
+                        border-color: #0056b3; /* Darker blue border */
+                    }
 			</style>
 <?php include_once 'footer.php'; ?>
