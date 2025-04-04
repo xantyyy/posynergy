@@ -172,12 +172,28 @@
 										<div class="card-body">
 											<h5>Setup</h5>
 											<form>
-												<div class="d-flex align-items-center mt-2">
-													<label for="categoryDropdown" class="me-2">Category:</label>
-													<select class="form-control" id="categoryDropdown">
-														<option value="option1">Option 1</option>
-														<option value="option2">Option 2</option>
+											<div class="form-group col-md-12 mt-2">
+											<label for="category">Category:</label>
+													<select class="form-select input-field" id="category">
+														<option value=""></option>
+														<?php
+														// Query to fetch only 'Category' items
+														$query = "SELECT ID, ItemType, ItemName FROM tbl_invmaintenance WHERE ItemType = 'Category' ORDER BY ItemName";
+														$result = mysqli_query($conn, $query);
+														
+														// Check if query was successful
+														if ($result && mysqli_num_rows($result) > 0) {
+															// Loop through results and create option elements
+															while ($row = mysqli_fetch_assoc($result)) {
+																echo '<option value="' . $row['ID'] . '">' . $row['ItemName'] . '</option>';
+															}
+														}
+														
+														// Close the database connection
+														mysqli_close($conn);
+														?>
 													</select>
+												</div>
 												</div>
 											</form>
 											<hr>
@@ -193,34 +209,7 @@
 																			<th>Category</th>
 																		</tr>
 																	</thead>
-																	<tbody>
-																		<tr>
-																			<td>BABY CARE</td>
-																		</tr>
-																		<tr>
-																			<td>BEVERAGES</td>
-																		</tr>
-																		<tr>
-																			<td>CANNED GOODS</td>
-																		</tr>
-																		<tr>
-																			<td>CANNED GOODS (LOCAL)</td>
-																		</tr>
-																		<tr>
-																			<td>CIGARS</td>
-																		</tr>
-																		<tr>
-																			<td>FORMULA MILK & BABY FOODS</td>
-																		</tr>
-																		<tr>
-																			<td>INFANTS</td>
-																		</tr>
-																		<tr>
-																			<td>POULTRY</td>
-																		</tr>
-																		<tr>
-																			<td>RICE & SUGAR (LOCAL)</td>
-																		</tr>
+																	<tbody>																	
 																	</tbody>
 																</table>
 															</div>
@@ -281,6 +270,414 @@
             </div>
 
             <script>
+				 document.addEventListener("DOMContentLoaded", function () {
+    const editButton = document.getElementById("editButton");
+    const deleteButton = document.getElementById("deleteButton");
+    const discountRadios = document.querySelectorAll('input[name="discountType"]');
+    const tbody = document.querySelector("#table-bold tbody"); // Table ng discounted categories
+    const addCategoryForm = document.getElementById("addCategoryForm"); // Form for adding new categories
+    const categoryInput = document.getElementById("categoryInput"); // Input field for new category
+    let isEditMode = false; // Track kung nasa Edit mode
+    let selectedRow = null; // Track selected row
+
+    // ❌ Initially disable all discount type radio buttons and delete button
+    discountRadios.forEach(radio => radio.disabled = true);
+    deleteButton.disabled = true;
+
+    // Clean up localStorage first - remove duplicates
+    cleanupLocalStorage();
+    
+    // Then load categories from localStorage
+    loadCategories();
+
+    // Form submission for adding new categories
+    if (addCategoryForm) {
+        addCategoryForm.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form from submitting normally
+            
+            const newCategory = categoryInput.value.trim();
+            
+            if (newCategory) {
+                addCategoryToLocalStorage(newCategory);
+                categoryInput.value = ''; // Clear the input field
+            }
+        });
+    }
+
+    // 🔄 Edit button click event
+    editButton.addEventListener("click", function () {
+        if (!isEditMode) {
+            // Change button to Update mode
+            editButton.innerHTML = `<i class="fas fa-save"></i> Update`;
+            editButton.classList.remove("btn-outline-primary", "opacity-50");
+            editButton.classList.add("btn-success");
+
+            isEditMode = true; // Now in Edit mode
+        } else {
+            // Change button back to Edit
+            editButton.innerHTML = `<i class="fas fa-save"></i> Edit`;
+            editButton.classList.remove("btn-success");
+            editButton.classList.add("btn-outline-primary", "opacity-50");
+
+            // ❌ Disable all radio buttons and reset selection
+            discountRadios.forEach(radio => radio.disabled = true);
+            deleteButton.disabled = true;
+
+            // ❌ Remove highlight from selected row
+            if (selectedRow) {
+                selectedRow.classList.remove("table-warning");
+                selectedRow = null;
+            }
+
+            isEditMode = false; // Exit Edit mode
+        }
+    });
+
+    // ✅ Enable radio buttons & delete button + Highlight row when clicking a category (only if in Edit mode)
+    tbody.addEventListener("click", function (event) {
+        if (isEditMode && event.target.tagName === "TD") { 
+            // Get the clicked row
+            const row = event.target.parentElement;
+
+            // Remove highlight from previously selected row
+            if (selectedRow) {
+                selectedRow.classList.remove("table-warning");
+            }
+
+            // Set the new selected row
+            selectedRow = row;
+            selectedRow.classList.add("table-warning"); // Highlight selected row
+
+            // Enable discount type radio buttons & delete button
+            discountRadios.forEach(radio => radio.disabled = false);
+            deleteButton.disabled = false;
+        }
+    });
+
+    // 🗑 Delete button functionality
+    deleteButton.addEventListener("click", function () {
+        if (selectedRow) {
+            // Get the category text that is being deleted
+            const categoryText = selectedRow.cells[0].textContent.trim();
+
+            // Remove the selected row from the table
+            selectedRow.remove();
+
+            // ❌ Reset the selection and disable buttons again
+            selectedRow = null;
+            discountRadios.forEach(radio => radio.disabled = true);
+            deleteButton.disabled = true;
+
+            // Remove the deleted category from localStorage
+            removeCategoryFromLocalStorage(categoryText);
+        }
+    });
+    
+    // Clean up potential duplicate categories in localStorage
+    function cleanupLocalStorage() {
+        const categories = JSON.parse(localStorage.getItem('categories')) || [];
+        
+        // Use Set to remove duplicates
+        const uniqueCategories = [...new Set(categories)];
+        
+        // Save back only the unique categories
+        localStorage.setItem('categories', JSON.stringify(uniqueCategories));
+    }
+
+    // Load categories from localStorage
+    function loadCategories() {
+        // Get categories from localStorage (already cleaned up)
+        const storedCategories = JSON.parse(localStorage.getItem('categories')) || [];
+        
+        // Clear the table completely
+        tbody.innerHTML = '';
+        
+        // Add each category to the table
+        storedCategories.forEach(category => {
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${category}</td>`;
+            tbody.appendChild(row);
+        });
+    }
+
+    // Remove category from localStorage
+    function removeCategoryFromLocalStorage(categoryText) {
+        let categories = JSON.parse(localStorage.getItem('categories')) || [];
+        categories = categories.filter(category => category !== categoryText); // Remove the deleted category
+        localStorage.setItem('categories', JSON.stringify(categories)); // Save updated list
+    }
+
+    // Add new category (only if it's not already in LocalStorage)
+    function addCategoryToLocalStorage(newCategory) {
+        let categories = JSON.parse(localStorage.getItem('categories')) || [];
+        
+        // Convert to lowercase for case-insensitive comparison
+        const lowerNewCategory = newCategory.toLowerCase();
+        const categoryExists = categories.some(cat => cat.toLowerCase() === lowerNewCategory);
+        
+        // Only add if category does not exist already
+        if (!categoryExists) {
+            categories.push(newCategory);
+            localStorage.setItem('categories', JSON.stringify(categories));
+            
+            // Add directly to table
+            const row = document.createElement("tr");
+            row.innerHTML = `<td>${newCategory}</td>`;
+            tbody.appendChild(row);
+        } else {
+            alert("This category already exists!");
+        }
+    }
+});
+
+				// Get references to the DOM elements
+				const addButton = document.getElementById('addButton');
+				const categoryDropdown = document.querySelector('.form-select#category'); // Your category dropdown
+
+				// Function to create and show the success modal
+				function showSuccessModal() {
+					// Create modal elements
+					const modalOverlay = document.createElement('div');
+					modalOverlay.className = 'modal-overlay';
+					modalOverlay.style.position = 'fixed';
+					modalOverlay.style.top = '0';
+					modalOverlay.style.left = '0';
+					modalOverlay.style.width = '100%';
+					modalOverlay.style.height = '100%';
+					modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+					modalOverlay.style.display = 'flex';
+					modalOverlay.style.justifyContent = 'center';
+					modalOverlay.style.alignItems = 'center';
+					modalOverlay.style.zIndex = '1000';
+					
+					const modalContent = document.createElement('div');
+					modalContent.className = 'modal-content';
+					modalContent.style.backgroundColor = 'white';
+					modalContent.style.padding = '20px';
+					modalContent.style.borderRadius = '5px';
+					modalContent.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+					modalContent.style.textAlign = 'center';
+					modalContent.style.maxWidth = '400px';
+					
+					const modalHeader = document.createElement('h4');
+					modalHeader.textContent = 'POSynergy';
+					modalHeader.style.marginBottom = '15px';
+					modalHeader.style.color = '#333';
+					
+					const modalMessage = document.createElement('p');
+					modalMessage.textContent = 'Category successfully added';
+					modalMessage.style.marginBottom = '20px';
+					
+					const closeButton = document.createElement('button');
+					closeButton.textContent = 'OK';
+					closeButton.className = 'btn btn-primary';
+					closeButton.addEventListener('click', function() {
+						document.body.removeChild(modalOverlay);
+						
+						// Reset the form and UI state
+						resetSetupSection();
+					});
+					
+					// Assemble the modal
+					modalContent.appendChild(modalHeader);
+					modalContent.appendChild(modalMessage);
+					modalContent.appendChild(closeButton);
+					modalOverlay.appendChild(modalContent);
+					
+					// Add to the DOM
+					document.body.appendChild(modalOverlay);
+					
+					// Auto-close after 2 seconds
+					setTimeout(function() {
+						if (document.body.contains(modalOverlay)) {
+							document.body.removeChild(modalOverlay);
+							resetSetupSection();
+						}
+					}, 2000);
+				}
+				function handleSaveButtonClick() {
+					const selectedCategoryText = categoryDropdown.options[categoryDropdown.selectedIndex].text;
+
+					if (selectedCategoryText.trim() !== '') {
+						// Send category to PHP via AJAX
+						fetch("add_category.php", {
+							method: "POST",
+							headers: { "Content-Type": "application/x-www-form-urlencoded" },
+							body: `category=${encodeURIComponent(selectedCategoryText)}`
+						})
+						.then(response => response.json())
+						.then(data => {
+							if (data.success) {
+								showSuccessModal();
+								loadCategoriesFromDB(); // Refresh the category list in the table
+							} else {
+								alert("Error saving category: " + data.message);
+							}
+						})
+						.catch(error => console.error("Error:", error));
+					} else {
+						alert('Please select a category first');
+					}
+				}
+
+				// Function to reset the setup section while preserving discount category display
+				function resetSetupSection() {
+					// Reset the dropdown to initial state
+					categoryDropdown.value = '';
+					categoryDropdown.disabled = true;
+					categoryDropdown.classList.remove('border-primary');
+					
+					// Reset the Add button
+					const saveButton = document.getElementById('saveButton');
+					if (saveButton) {
+						// Transform back to Add button
+						saveButton.innerHTML = '<i class="fas fa-plus"></i> Add';
+						saveButton.classList.remove('btn-primary');
+						saveButton.classList.add('btn-outline-primary', 'opacity-50');
+						
+						// Restore the original ID
+						saveButton.id = saveButton.dataset.originalId || 'addButton';
+						
+						// Re-establish the original event listeners
+						// This requires a more complex approach to properly restore the event handling
+						setupInitialEventListeners();
+					}
+				}
+
+				// Function to set up the initial event listeners
+				function setupInitialEventListeners() {
+					// Remove any existing listeners to avoid duplicates
+					const addBtn = document.getElementById('addButton');
+					
+					// Clone the node to remove all event listeners
+					const newAddBtn = addBtn.cloneNode(true);
+					addBtn.parentNode.replaceChild(newAddBtn, addBtn);
+					
+					// Set up the add button click handler
+					newAddBtn.addEventListener('click', handleAddButtonClick);
+				}
+
+				// Handler for Add button click
+				function handleAddButtonClick() {
+					// Enable the category dropdown
+					categoryDropdown.disabled = false;
+					
+					// Focus on the dropdown to make it obvious it's ready for selection
+					categoryDropdown.focus();
+					
+					// Transform the Add button into a Save button
+					this.innerHTML = '<i class="fas fa-save"></i> Save';
+					this.classList.remove('btn-outline-primary', 'opacity-50');
+					this.classList.add('btn-primary');
+					
+					// Change the button ID and store the old one as a data attribute
+					this.dataset.originalId = this.id;
+					this.id = 'saveButton';
+					
+					// Remove the current click event listener by cloning and replacing
+					const saveBtn = this.cloneNode(true);
+					this.parentNode.replaceChild(saveBtn, this);
+					
+					// Add new event listener for the Save button
+					saveBtn.addEventListener('click', handleSaveButtonClick);
+				}
+
+				// Handler for Save button click
+				function handleSaveButtonClick() {
+					const selectedCategoryText = categoryDropdown.options[categoryDropdown.selectedIndex].text;
+					
+					// Only proceed if a category is selected
+					if (selectedCategoryText.trim() !== '') {
+						// Find the Discount Category section (the box where "BABY CARE" is displayed)
+						// This selector needs to be adjusted to match your actual HTML structure
+						const discountCategoryBox = document.querySelector('.discount-category-box') || 
+												document.querySelector('[data-category-display]');
+						
+						// If we can't find it by class, look for any element in the Discount Category section
+						if (!discountCategoryBox) {
+							// This is a more generic approach - try to find the element by its content or position
+							const discountCategoryHeading = Array.from(document.querySelectorAll('h2, h3, h4, div'))
+								.find(el => el.textContent.includes('Discount Category'));
+							
+							if (discountCategoryHeading) {
+								// Find the element where the category should be displayed
+								const categoryDisplayElement = discountCategoryHeading.parentElement.querySelector('table td') || 
+															discountCategoryHeading.nextElementSibling;
+								
+								if (categoryDisplayElement) {
+									categoryDisplayElement.textContent = selectedCategoryText;
+								}
+							}
+						} else {
+							// If we found the right element, update it
+							const categoryValueElement = discountCategoryBox.querySelector('.category-value');
+							if (categoryValueElement) {
+								categoryValueElement.textContent = selectedCategoryText;
+							} else {
+								// Direct update as fallback
+								discountCategoryBox.textContent = selectedCategoryText;
+							}
+						}
+						
+						// Show success modal
+						showSuccessModal();
+					} else {
+						// If no category selected, show an alert
+						alert('Please select a category first');
+					}
+				}
+
+				// Initialize
+				document.addEventListener('DOMContentLoaded', function() {
+					// Initially disable the category dropdown
+					categoryDropdown.disabled = true;
+					
+					// Set up initial event listeners
+					setupInitialEventListeners();
+				});
+				function handleSaveButtonClick() {
+					const selectedCategoryText = categoryDropdown.options[categoryDropdown.selectedIndex].text;
+
+					if (selectedCategoryText.trim() !== '') {
+						const tbody = document.querySelector("#table-bold tbody");
+
+						// Get existing categories from localStorage
+						let savedCategories = JSON.parse(localStorage.getItem("categories")) || [];
+
+						if (!savedCategories.includes(selectedCategoryText)) {
+							// Add new category to the table
+							const row = document.createElement("tr");
+							row.innerHTML = `<td>${selectedCategoryText}</td>`;
+							tbody.appendChild(row);
+
+							// Save updated categories list to localStorage
+							savedCategories.push(selectedCategoryText);
+							localStorage.setItem("categories", JSON.stringify(savedCategories));
+						}
+
+						// Show success modal
+						showSuccessModal();
+					} else {
+						alert('Please select a category first');
+					}
+				}
+
+				// Function to load saved categories from localStorage
+				function loadCategories() {
+					const tbody = document.querySelector("#table-bold tbody");
+					let savedCategories = JSON.parse(localStorage.getItem("categories")) || [];
+
+					savedCategories.forEach(category => {
+						const row = document.createElement("tr");
+						row.innerHTML = `<td>${category}</td>`;
+						tbody.appendChild(row);
+					});
+				}
+
+				// Load categories when the page loads
+				document.addEventListener("DOMContentLoaded", loadCategories);
+
+
 				document.addEventListener("DOMContentLoaded", function () {
         const currentUrl = window.location.pathname.split('/').pop();
         
