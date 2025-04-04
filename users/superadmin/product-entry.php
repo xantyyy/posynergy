@@ -181,12 +181,12 @@
                                         </button>
                                         <div class="form-row">
                                             <div class="form-group col-md-12 mt-2">
-                                                <label for="barCode">Bar Code:</label>
-                                                <input type="text" class="form-control input-field" id="barCode" disabled>
+                                                <label for="barCode">Barcode:</label>
+                                                <input type="text" class="form-control input-field" id="barCode" placeholder="Enter Barcode" disabled>
                                             </div>
                                             <div class="form-group col-md-12 mt-2">
                                                 <label for="pluCode">PLU Code:</label>
-                                                <input type="text" class="form-control input-field" id="pluCode" readonly>
+                                                <input type="text" class="form-control input-field" id="pluCode" placeholder="Enter PLU Code" readonly>
                                                 <input type="hidden" id="pluCodeNo"> <!-- For raw number -->
                                             </div>
                                         </div>
@@ -204,16 +204,16 @@
                                         </div>
                                         <div class="form-group col-md-12 mt-2">
                                             <label for="productDetails">Product Details:</label>
-                                            <textarea class="form-control input-field" id="productDetails" rows="3" disabled></textarea>
+                                            <textarea class="form-control input-field" id="productDetails" placeholder="Description" rows="3" disabled></textarea>
                                         </div>
                                         <div class="form-group col-md-12 mt-2">
                                             <label for="productCode">Product Code:</label>
-                                            <input type="text" class="form-control input-field" id="productCode" readonly>
+                                            <input type="text" class="form-control input-field" id="productCode" placeholder="Enter Product Code" readonly>
                                             <input type="hidden" id="productCodeNo"> <!-- For raw number -->
                                         </div>
                                         <div class="form-group col-md-12 mt-2">
                                             <label for="productName">Product Name:</label>
-                                            <input type="text" class="form-control input-field" id="productName" name="productName"disabled>
+                                            <input type="text" class="form-control input-field" id="productName" placeholder="Enter Product Name" name="productName"disabled>
                                         </div>
                                         <div class="form-group col-md-12 mt-3">
                                             <div class="d-flex align-items-center">
@@ -290,7 +290,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Retail Details</h5>
-                                    <button type="button" class="btn addRetail-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productModal">
+                                    <button type="button" class="btn addRetail-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productModalRetail" id="addRetailButton">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
                                     <button type="button" class="btn editRetail-btn btn-outline-primary me-2" style="font-size: 13px;" disabled>
@@ -300,10 +300,11 @@
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                     <div class="table-responsive table-container" style="height: calc(81.5vh - 250px); overflow-y: auto;">
-                                        <table class="table table-bordered mt-2 table-data" id="table-bold">
+                                        <table class="table table-bordered mt-2 table-data" id="retail-table">
                                             <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                 <tr>
                                                     <th>Price Type</th>
+                                                    <th>Cost</th>
                                                     <th>Barcode</th>
                                                     <th>Product Name</th>
                                                     <th>UOM</th>
@@ -313,7 +314,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>No Data Available</td>
+                                                    <td colspan="6" class="text-center">No Data Available</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -326,7 +327,182 @@
             </div>      
 
 			<script>
-                // Wait for the DOM to be fully loaded
+                // RETAIL TABLE
+                document.addEventListener('DOMContentLoaded', function () {
+                    const saveRetailButton = document.querySelector('#productModalRetail .modal-footer .btn-primary');
+                    const editRetailButton = document.querySelector('#saveEditRetail');
+                    const tableRetailBody = document.querySelector('#retail-table tbody'); // Assuming may Retail table
+                    const editRetailBtn = document.querySelector('.edit-retail-btn');
+                    const deleteRetailBtn = document.querySelector('.delete-retail-btn');
+
+                    // Check and update table for empty state
+                    checkAndUpdateEmptyRetailTable();
+
+                    function checkAndUpdateEmptyRetailTable() {
+                        if (
+                            tableRetailBody.children.length === 0 ||
+                            (tableRetailBody.children.length === 1 &&
+                                tableRetailBody.querySelector('tr td').textContent === 'No Data Available')
+                        ) {
+                            tableRetailBody.innerHTML = `
+                                <tr class="no-data-row">
+                                    <td colspan="5" class="text-center">No Data Available</td>
+                                </tr>
+                            `;
+                        }
+                    }
+
+                    // Function to clear modal fields
+                    function clearRetailModal() {
+                        document.getElementById('retail-priceType').selectedIndex = 0;
+                        document.getElementById('retail-cost').value = '';
+                        document.getElementById('retailBarcode').value = '';
+                        document.getElementById('retailProductName').value = '';
+                        document.getElementById('retail-uom').selectedIndex = 0;
+                        document.getElementById('retail-markup').value = '';
+                        document.getElementById('retail-srp').value = '';
+                        document.getElementById('retail-appliedSrp').value = '';
+
+                        saveRetailButton.removeAttribute('data-editing-row'); // Clear editing state
+                    }
+
+                    // Save button functionality for Retail Table
+                    saveRetailButton.addEventListener('click', function () {
+                        const priceType = document.getElementById('retail-priceType').value;
+                        const cost = document.getElementById('retail-cost').value;
+                        const barcode = document.getElementById('retailBarcode').value;
+                        const productName = document.getElementById('retailProductName').value;
+                        const uom = document.getElementById('retail-uom').value;
+                        const markup = document.getElementById('retail-markup').value;
+                        const srp = document.getElementById('retail-srp').value;
+                        const appliedSrp = document.getElementById('retail-appliedSrp').value;
+
+                        if (!priceType || !cost || !productName || !uom || !markup || !srp || !appliedSrp) {
+                            alert('Please fill in all required fields.');
+                            return;
+                        }
+
+                        const editingRowIndex = saveRetailButton.getAttribute('data-editing-row');
+                        if (editingRowIndex !== null) {
+                            // Update existing row
+                            const editingRow = tableRetailBody.children[editingRowIndex];
+                            editingRow.cells[0].textContent = priceType;
+                            editingRow.cells[1].textContent = cost;
+                            editingRow.cells[2].textContent = barcode;
+                            editingRow.cells[3].textContent = productName;
+                            editingRow.cells[4].textContent = uom;
+                            editingRow.cells[5].textContent = markup;
+                            editingRow.cells[6].textContent = srp;
+                            editingRow.cells[7].textContent = appliedSrp;
+
+                            saveRetailButton.removeAttribute('data-editing-row');
+                            alert('Data successfully updated!');
+                        } else {
+                            // Add new row
+                            const newRow = document.createElement('tr');
+                            newRow.innerHTML = `
+                                <td>${priceType}</td>
+                                <td>${cost}</td>
+                                <td>${barcode}</td>
+                                <td>${productName}</td>
+                                <td>${uom}</td>
+                                <td>${markup}</td>
+                                <td>${srp}</td>
+                                <td>${appliedSrp}</td>
+                            `;
+
+                            newRow.addEventListener('click', function () {
+                                document.querySelectorAll('#table-retail tbody tr').forEach((row) => {
+                                    row.classList.remove('selected-row');
+                                });
+
+                                this.classList.add('selected-row');
+                                editRetailBtn.disabled = false;
+                                editRetailBtn.classList.remove('opacity-50');
+                                deleteRetailBtn.disabled = false;
+                                deleteRetailBtn.classList.remove('opacity-50');
+                            });
+
+                            const noDataRow = tableRetailBody.querySelector('.no-data-row');
+                            if (noDataRow) {
+                                tableRetailBody.innerHTML = '';
+                            }
+
+                            tableRetailBody.appendChild(newRow);
+                            alert('Data successfully saved!');
+                        }
+
+                        // Clear modal fields and hide modal
+                        clearRetailModal();
+                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('productModalRetail'));
+                        modalInstance.hide();
+                    });
+
+                    // Edit button functionality
+                    editRetailBtn.addEventListener('click', function () {
+                        const selectedRow = document.querySelector('#table-retail tbody tr.selected-row');
+
+                        if (selectedRow) {
+                            // Populate modal fields with the selected row data
+                            document.getElementById('edit-priceType').value = selectedRow.cells[0].textContent;
+                            document.getElementById('edit-cost').value = selectedRow.cells[1].textContent;
+                            document.getElementById('edit-barcode').value = selectedRow.cells[2].textContent;
+                            document.getElementById('edit-productName').value = selectedRow.cells[3].textContent;
+                            document.getElementById('edit-uom').value = selectedRow.cells[4].textContent;
+                            document.getElementById('edit-markup').value = selectedRow.cells[5].textContent;
+                            document.getElementById('edit-srp').value = selectedRow.cells[6].textContent;
+                            document.getElementById('edit-appliedSrp').value = selectedRow.cells[7].textContent;
+
+                            // Show the Edit modal
+                            const editModal = document.getElementById('editModalRetail');
+                            const editModalInstance = new bootstrap.Modal(editModal);
+                            editModalInstance.show();
+
+                            // Save changes
+                            editRetailButton.onclick = function () {
+                                // Update table row
+                                selectedRow.cells[0].textContent = document.getElementById('edit-priceType').value;
+                                selectedRow.cells[1].textContent = document.getElementById('edit-cost').value;
+                                selectedRow.cells[2].textContent = document.getElementById('edit-barcode').value;
+                                selectedRow.cells[3].textContent = document.getElementById('edit-productName').value;
+                                selectedRow.cells[4].textContent = document.getElementById('edit-uom').value;
+                                selectedRow.cells[5].textContent = document.getElementById('edit-markup').value;
+                                selectedRow.cells[6].textContent = document.getElementById('edit-srp').value;
+                                selectedRow.cells[7].textContent = document.getElementById('edit-appliedSrp').value;
+
+                                editModalInstance.hide();
+                                alert('Changes saved successfully!');
+                            };
+                        }
+                    });
+
+                    // Delete button functionality
+                    deleteRetailBtn.addEventListener('click', function () {
+                        const selectedRow = document.querySelector('#table-retail tbody tr.selected-row');
+
+                        if (selectedRow) {
+                            if (confirm('Are you sure you want to delete this item?')) {
+                                selectedRow.remove();
+
+                                editRetailBtn.disabled = true;
+                                editRetailBtn.classList.add('opacity-50');
+                                deleteRetailBtn.disabled = true;
+                                deleteRetailBtn.classList.add('opacity-50');
+
+                                checkAndUpdateEmptyRetailTable();
+                            }
+                        }
+                    });
+
+                    // Clear modal when the modal is closed
+                    const modalElement = document.getElementById('productModalRetail');
+                    modalElement.addEventListener('hidden.bs.modal', clearRetailModal);
+
+                    checkAndUpdateEmptyRetailTable();
+                });
+
+
+                // COSTING TABLE
                 document.addEventListener('DOMContentLoaded', function () {
                     const saveButton = document.querySelector('#productInfoModal .modal-footer .btn-primary');
                     const tableBody = document.querySelector('#table-bold tbody');
@@ -504,17 +680,23 @@
                     checkAndUpdateEmptyTable();
                 });
 
-               document.addEventListener('DOMContentLoaded', function () {
-                    document.getElementById('addButton').addEventListener('click', function () {
-                        // Get the barcode value from the main page
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Function for Retail Modal only
+                    function transferToRetailModal() {
                         const barcodeValue = document.getElementById('barCode').value;
+                        const productNameValue = document.getElementById('productName').value;
 
-                        // Set the value in the modal input field
-                        const modalBarcodeInput = document.getElementById('barcode');
-                        if (modalBarcodeInput) {
-                            modalBarcodeInput.value = barcodeValue;
-                        }
+                        document.getElementById('retailBarcode').value = barcodeValue;
+                        document.getElementById('retailProductName').value = productNameValue;
+                    }
+
+                    document.getElementById('addButton')?.addEventListener('click', function() {
+                        const barcodeValue = document.getElementById('barCode').value;
+                        document.getElementById('barcode').value = barcodeValue;
                     });
+
+                    // Retail Modal (barcode + product name)
+                    document.getElementById('addRetailButton')?.addEventListener('click', transferToRetailModal);
                 });
 
                 $(document).ready(function () {
@@ -817,6 +999,11 @@
                     }
                     
                     #table-bold thead th {
+                        font-weight: bold;
+                        font-style: italic;
+                    }
+
+                    #retail-table thead th {
                         font-weight: bold;
                         font-style: italic;
                     }

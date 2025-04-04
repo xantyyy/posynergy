@@ -21,7 +21,8 @@
 			<i class="material-icons">report</i><span>POS Reports</span></a>
 			<ul class="collapse list-unstyled menu" id="homeSubmenu1">
 				<li>
-					<a href="tender-declare.php">Tender Declaration</a>
+                <a href="#" onclick="checkPassword('tender-declare.php')">Tender Declaration</a>
+
 				</li>
 				<li>
                     <a href="#" onclick="checkPassword('shift-reading.php')">Shift Reading</a>
@@ -42,6 +43,25 @@
         </li>
     </ul>
 </nav>
+<!-- Password Modal -->
+<div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="passwordModalLabel">Input Password..</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="password" id="passwordInput" class="form-control" placeholder="Enter password" />
+        <div id="passwordError" class="text-danger mt-2" style="display: none;">Incorrect password. Try again.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="submitPassword" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
                 <!--TOP NAVBAR CONTENT-->
                 <div class="top-navbar">
                     <nav class="navbar  navbar-expand-lg">
@@ -74,6 +94,31 @@
                 </div>
 
                     <script>
+                        let redirectUrl = '';
+
+    function checkPassword(targetUrl) {
+        redirectUrl = targetUrl;
+        const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+        passwordModal.show();
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById('submitPassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('passwordInput').value;
+            const errorMsg = document.getElementById('passwordError');
+
+            if (passwordInput === '123') {
+                errorMsg.style.display = 'none';
+                const passwordModal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
+                passwordModal.hide();
+
+                // Proceed to the protected page
+                window.location.href = redirectUrl;
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        });
+    });
                         function checkPassword(redirectUrl) {
                             const passwordInput = document.createElement('input');
                             passwordInput.type = 'password';
