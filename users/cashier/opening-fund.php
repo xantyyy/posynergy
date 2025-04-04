@@ -112,7 +112,9 @@
             </button>        
         </nav>
     </div>	  
-
+    <div>
+                        <img src="../../assets/images/cashierbg.jpg" class="img-fluid" style=" margin-top: -20px;"/>    
+                    </div>  
     <!--DASHBOARD CONTENT-->
     <div class="main-content">
         <div class="row">

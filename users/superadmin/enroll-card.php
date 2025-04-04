@@ -166,115 +166,115 @@
 						</div>
 					</div>
 					<div class="row mb-3">
-                        <!-- Left Side - Product Data Entry Form -->
-                        <div class="col-md-12">
-							<div class="card">
-                                <div class="card-body">
-                                    <h6>Personal Information</h6>
-                                    <form>
-										<div class="d-flex align-items-center">
-											<div class="form-group col-md-3 me-4">
-												<label for="#">Last Name:</label>
-												<input type="text" class="form-control" id="#">
-											</div>
-											<div class="form-group col-md-3 me-4">
-												<label for="#">First Name:</label>
-												<input type="text" class="form-control" id="#">
-											</div>
-											<div class="form-group col-md-3 me-4">
-												<label for="#">Middle Name:</label>
-												<input type="text" class="form-control" id="#">
-											</div>
-											<div class="form-group col-md-1 me-4">
-												<label for="#" style="width: 150px;">Extention Name:</label>
-												<select class="form-control" id="#">
-													<option value="option1" selected hidden ></option>
-													<option value="option2">Option 1</option>
-													<option value="option3">Option 2</option>
-												</select>
-                                        	</div>
-										</div>
-										<div class="d-flex align-items-center mt-4">
-											<div class="form-group col-md-3 me-4">
-												<label for="#">Lot/House/Building/#:</label>
-												<input type="text" class="form-control" id="#">
-											</div>
-											<div class="form-group col-md-4 me-4">
-												<label for="#">Street/Purok:</label>
-												<input type="text" class="form-control" id="#">
-											</div>
-											<div class="form-group col-md-4 me-4">
-												<label for="#">Barangay:</label>
-												<input type="text" class="form-control" id="#">
-											</div>
-										</div>
-										<div class="d-flex align-items-center mt-4">
-											<div class="form-group col-md-3 me-4">
-												<label for="#">Town/City:</label>
-												<input type="text" class="form-control" id="#">
-											</div>
-											<div class="form-group col-md-4 me-4">
-												<label for="#">Province:</label>
-												<input type="text" class="form-control" id="#">
-											</div>
-											<div class="form-group col-md-4 me-4">
-												<label for="#">Civil Status:</label>
-												<select class="form-control" id="#">
-													<option value="option1" selected hidden ></option>
-													<option value="option2">Option 1</option>
-													<option value="option3">Option 2</option>
-												</select>
-                                        	</div>
-										</div>
-										<div class="d-flex align-items-center mt-4">
-											<div class="form-group col-md-3 me-4">
-                                                <label for="#">Birthday:</label>
-                                                <input type="date" class="form-control" id="#">
-                                            </div>
-											<label for="#" class="mr-3 me-3 mt-4">Gender:</label>
-											<div class="form-check me-3 mt-4">
-                                                <input class="form-check-input" type="radio" name="#" id="#" value="#" checked>
-                                                <label class="form-check-label" for="#">
-                                                    Male
-                                                </label>
-                                            </div>
-											<div class="form-check me-4 mt-4">
-                                                <input class="form-check-input" type="radio" name="#" id="#" value="#" checked>
-                                                <label class="form-check-label" for="#">
-                                                    Female
-                                                </label>
-                                            </div>
-											<div class="form-group col-md-4 me-2">
-												<label for="#">Card Details:</label>
-												<input type="text" class="form-control" id="#" placeholder="Card #">
-											</div>
-											<button type="button" class="btn btn-outline-primary opacity-50 me-2" onclick="window.location.href='product-entry.php';">
-												<i class="fas fa-plus"></i> New
-											</button>
-											<button type="button" class="btn btn-outline-primary opacity-50 me-2"
-												<i class="fas fa-save"></i> Edit
-											</button>
-											<button type="button" class="btn btn-outline-primary opacity-50 me-2"
-												<i class="fas fa-trash"></i> Delete
-											</button>
-
-										</div>
-                                    </form>
-                                </div>
-                            </div>
+    <!-- Left Side - Product Data Entry Form -->
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <h6>Personal Information</h6>
+                <form id="personalForm">
+                    <div class="d-flex align-items-center">
+                        <div class="form-group col-md-3 me-4">
+                            <label for="#">Last Name:</label>
+                            <input type="text" class="form-control" id="#">
                         </div>
-					</div>
+                        <div class="form-group col-md-3 me-4">
+                            <label for="#">First Name:</label>
+                            <input type="text" class="form-control" id="#">
+                        </div>
+                        <div class="form-group col-md-3 me-4">
+                            <label for="#">Middle Name:</label>
+                            <input type="text" class="form-control" id="#">
+                        </div>
+                        <div class="form-group col-md-1 me-4">
+                            <label for="#" style="width: 150px;">Extention Name:</label>
+                            <select class="form-control" id="#">
+                                <option value="option1" selected hidden></option>
+                                <option value="option2">Option 1</option>
+                                <option value="option3">Option 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mt-4">
+                        <div class="form-group col-md-3 me-4">
+                            <label for="#">Lot/House/Building/#:</label>
+                            <input type="text" class="form-control" id="#">
+                        </div>
+                        <div class="form-group col-md-4 me-4">
+                            <label for="#">Street/Purok:</label>
+                            <input type="text" class="form-control" id="#">
+                        </div>
+                        <div class="form-group col-md-4 me-4">
+                            <label for="#">Barangay:</label>
+                            <input type="text" class="form-control" id="#">
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mt-4">
+                        <div class="form-group col-md-3 me-4">
+                            <label for="#">Town/City:</label>
+                            <input type="text" class="form-control" id="#">
+                        </div>
+                        <div class="form-group col-md-4 me-4">
+                            <label for="#">Province:</label>
+                            <input type="text" class="form-control" id="#">
+                        </div>
+                        <div class="form-group col-md-4 me-4">
+                            <label for="#">Civil Status:</label>
+                            <select class="form-control" id="#">
+                                <option value="option1" selected hidden></option>
+                                <option value="option2">Option 1</option>
+                                <option value="option3">Option 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mt-4">
+                        <div class="form-group col-md-3 me-4">
+                            <label for="#">Birthday:</label>
+                            <input type="date" class="form-control" id="#">
+                        </div>
+                        <label for="#" class="mr-3 me-3 mt-4">Gender:</label>
+                        <div class="form-check me-3 mt-4">
+                            <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked>
+                            <label class="form-check-label" for="male">
+                                Male
+                            </label>
+                        </div>
+                        <div class="form-check me-4 mt-4">
+                            <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                            <label class="form-check-label" for="female">
+                                Female
+                            </label>
+                        </div>
+                        <div class="form-group col-md-4 me-2">
+                            <label for="#">Card Details:</label>
+                            <input type="text" class="form-control" id="#" placeholder="Card #">
+                        </div>
 
-            <script>
+                        <!-- May ID na ito for enable -->
+                        <button type="button" id="btnNew" class="btn btn-outline-primary opacity-50 me-2">
+                            <i class="fas fa-plus"></i> New
+                        </button>
+                        <button type="button" id="btnCancel" class="btn btn-outline-primary opacity-50 me-2">
+                            <i class="fas fa-save"></i> Cancel
+                        </button>
+                        <button type="button" class="btn btn-outline-primary opacity-50 me-2">
+                            <i class="fas fa-trash"></i> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
     document.addEventListener("DOMContentLoaded", function () {
         const currentUrl = window.location.pathname.split('/').pop();
-        
+
         document.querySelectorAll('.list-unstyled a').forEach(link => {
             const linkHref = link.getAttribute('href');
             const parentMenu = link.closest('.collapse');
             const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            // Mark the active link
             if (linkHref === currentUrl) {
                 link.classList.add('active');
                 if (parentMenu) {
@@ -286,7 +286,6 @@
                 }
             }
 
-            // Apply hover effect for menu items
             link.addEventListener("mouseenter", function () {
                 this.classList.add("hover-effect");
             });
@@ -295,14 +294,14 @@
                 this.classList.remove("hover-effect");
             });
         });
-        
+
         document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
             const parentMenu = dropdown.nextElementSibling;
             if (parentMenu && parentMenu.querySelector('.active')) {
                 dropdown.classList.add('highlighted-dropdown', 'active');
                 dropdown.setAttribute('aria-expanded', 'true');
             }
-            
+
             dropdown.addEventListener("mouseenter", function () {
                 this.classList.add('hovered-dropdown');
             });
@@ -311,8 +310,41 @@
                 this.classList.remove("hovered-dropdown");
             });
         });
+
+        // 🔒 Disable all form fields initially
+        const form = document.getElementById('personalForm');
+        if (form) {
+            const fields = form.querySelectorAll('input, select, textarea');
+            fields.forEach(field => field.disabled = true);
+        }
+
+        // 🔓 Enable all fields when New button is clicked
+        const newBtn = document.getElementById('btnNew');
+        if (newBtn) {
+            newBtn.addEventListener('click', function () {
+                const fields = form.querySelectorAll('input, select, textarea');
+                fields.forEach(field => field.disabled = false);
+            });
+        }
+
+        // ❌ Reset fields & disable when Cancel button is clicked
+        const cancelBtn = document.getElementById('btnCancel');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', function () {
+                const fields = form.querySelectorAll('input, select, textarea');
+                fields.forEach(field => {
+                    field.disabled = true;
+                    field.value = ''; // Reset value to empty
+                });
+
+                // Reset radio buttons
+                const radioButtons = form.querySelectorAll('input[type="radio"]');
+                radioButtons.forEach(radio => radio.checked = false);
+            });
+        }
     });
 </script>
+
 
 				<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */

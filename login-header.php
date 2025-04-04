@@ -17,7 +17,8 @@
 
         <style>
            body {
-                background: url('/posynergy/assets/images/loginbg.jpg') no-repeat center center fixed;;
+                background: url('/posynergy/assets/images/poslogindb.jpg') no-repeat center center fixed;
+                background-size: cover;
     }
         </style>
         
