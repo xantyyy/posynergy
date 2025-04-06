@@ -151,41 +151,61 @@
         };
         xhr.send("amount=" + amount);
     })
-        document.getElementById("confirmSubmit").addEventListener("click", function () {
-        let amount = document.getElementById("fundAmount").value;
-        closeModal("confirmModal"); // Close confirmation modal
-
-        // Generate receipt
-        let receiptWindow = window.open("", "_blank");
-        receiptWindow.document.write(`
-            <html>
-            <head>
-                <title>Receipt</title>
-                <style>
-                    body { font-family: Arial, sans-serif; text-align: center; }
-                    .receipt { border: 1px solid #000; padding: 20px; width: 300px; margin: auto; }
-                </style>
-            </head>
-            <body onload="window.print(); window.onafterprint = window.close;">
-                <div class="receipt">
-                    <h2>AM COMPANY</h2>
-                    <p>Owned & Operated By: AM Company Inc.</p>
-                    <p>#101 SAN PASCUAL, TALAVERA, N.E.</p>
-                    <p>VAT REG: TIN 000-000-000-000</p>
-                    <p>MIN: 12345678910111213</p>
-                    <p>SN: 1234BCD</p>
-                    <hr>
-                    <h3>OPENING FUND</h3>
-                    <p><b>DATE-TIME:</b> ${new Date().toLocaleString()}</p>
-                    <p><b>CASHIER NAME:</b> CASHIER</p>
-                    <p><b>AMOUNT:</b> ₱${parseFloat(amount).toLocaleString()}</p>
-                    <hr>
-                    <p>==============================</p>
-                </div>
-            </body>
-            </html>
-        `);
-    });
+    // Final Submit
+document.getElementById("confirmSubmit").addEventListener("click", function () {
+    let amount = document.getElementById("fundAmount").value;
+    
+    // Send data to server to update database
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "save_opening_fund.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                // Close the confirmation modal first
+                closeModal("confirmModal");
+                
+                // Show success message
+                //alert("Opening Fund Successfully Declared: " + amount);
+                
+                // Generate receipt - using your working code pattern
+                let receiptWindow = window.open("", "_blank");
+                receiptWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>Receipt</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; text-align: center; }
+                            .receipt { border: 1px solid #000; padding: 20px; width: 300px; margin: auto; }
+                        </style>
+                    </head>
+                    <body onload="window.print(); window.onafterprint = window.close;">
+                        <div class="receipt">
+                            <h2>AM COMPANY</h2>
+                            <p>Owned & Operated By: AM Company Inc.</p>
+                            <p>#101 SAN PASCUAL, TALAVERA, N.E.</p>
+                            <p>VAT REG: TIN 000-000-000-000</p>
+                            <p>MIN: 12345678910111213</p>
+                            <p>SN: 1234BCD</p>
+                            <hr>
+                            <h3>OPENING FUND</h3>
+                            <p><b>DATE-TIME:</b> ${new Date().toLocaleString()}</p>
+                            <p><b>CASHIER NAME:</b> CASHIER</p>
+                            <p><b>AMOUNT:</b> ₱${parseFloat(amount).toLocaleString()}</p>
+                            <hr>
+                            <p>==============================</p>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                
+            } else {
+                alert("Error saving opening fund data.");
+            }
+        }
+    };
+    xhr.send("amount=" + amount);
+});
             function showModal(modalId) {
         console.log("Showing modal:", modalId);
         document.getElementById(modalId).style.display = "flex";
@@ -238,14 +258,6 @@
     document.getElementById("closeConfirmModal").addEventListener("click", function () {
         closeModal("confirmModal");
     });
-
-    // Final Submit
-    document.getElementById("confirmSubmit").addEventListener("click", function () {
-        let amount = document.getElementById("fundAmount").value;
-        alert("Opening Fund Successfully Declared: " + amount);
-        closeModal("confirmModal"); // Close confirmation modal
-        window.location.href = "opening-fund.php"; // Redirect (optional)
-    })
 
         document.addEventListener("DOMContentLoaded", function () {
             const currentUrl = window.location.pathname.split('/').pop();

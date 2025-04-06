@@ -167,7 +167,7 @@
                     <!-- Cost -->
                     <div class="col-md-6">
                         <label for="cost" class="form-label">Cost:</label>
-                        <input type="text" class="form-control" id="retail-cost" placeholder="Enter cost">
+                        <input type="text" class="form-control" id="retail-cost" placeholder="Enter cost" readonly>
                     </div>
                 </div>
 
