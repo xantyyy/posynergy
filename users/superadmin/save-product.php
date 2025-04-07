@@ -225,7 +225,64 @@ foreach ($retailData as $retail) {
         'AppliedSRP' => $retail['appliedSrp']
     ], true));
 }
+// After tbl_productprice insertion
+// Add insertion into tbl_invincoming
+$transactionDate = date('Y-m-d H:i:s');
+$manufacturer = ""; // Populate if available
+$size = ""; // Populate if available
+$expirationDate = ""; // Set if available
 
+foreach ($retailData as $retail) {
+    $totalCostPrice = (float)($costingData[0]['cost'] ?? 0) * (int)($retail['quantity'] ?? 1);
+    $totalSellingPrice = (float)($retail['appliedSrp'] ?? 0) * (int)($retail['quantity'] ?? 1);
+    $isVat = $costingData[0]['isVat'] ?? 'NO';
+    
+    $stmt = $conn->prepare("INSERT INTO tbl_invincoming (
+        Batch, Barcode, ProductDescription, ProductCode, ProductName,
+        Manufacturer, Supplier, Category, Size, Unit, ExpirationDate,
+        Quantity, RetailCostPrice, RetailSellingPrice, TotalCostPrice,
+        TotalSellingPrice, Threshold, Reference, Purpose, Tag, Shelf,
+        ShelfDescription, TransactionDate, Location, isVat, companyVat
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    
+    // Execute with array of parameters instead of bind_param
+    $stmt->execute([
+        $batch,
+        $retail['barcode'],
+        $formData['productDetails'],
+        $formData['productCode'],
+        $formData['productName'],
+        $manufacturer,
+        $costingData[0]['supplier'] ?? '',
+        $formData['category'],
+        $size,
+        $retail['uom'],
+        $expirationDate,
+        $retail['quantity'],
+        $costingData[0]['cost'] ?? '0',
+        $retail['appliedSrp'],
+        $totalCostPrice,
+        $totalSellingPrice,
+        $threshold,
+        $reference,
+        $purpose,
+        $tag,
+        $formData['shelf'],
+        $formData['shelfDescription'],
+        $transactionDate,
+        $location,
+        $isVat,
+        $companyVat
+    ]);
+    
+    // Debug log
+    error_log("Inserting into tbl_invincoming: " . print_r([
+        'Batch' => $batch,
+        'Barcode' => $retail['barcode'],
+        'ProductDescription' => $formData['productDetails'],
+        // ... other fields as in the execute array
+    ], true));
+}
     // Commit the transaction
     $conn->commit();
     echo json_encode(['success' => true, 'message' => 'Product saved successfully in all tables']);
