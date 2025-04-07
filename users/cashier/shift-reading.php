@@ -79,11 +79,15 @@
                                 <div class="col-sm-12 d-flex">
                                     <select class="form-select me-2" id="cashierName">
                                         <option>Select Cashier</option>
+                                        <option>Cashier 1</option>
+
                                         <!-- Add options here -->
                                     </select>
-                                    <button type="button" class="btn btn-secondary">
-                                        <i class="fa fa-gear"></i>
+                                    <!-- Process button -->
+                                    <button type="button" class="btn btn-success" id="btn-process">
+                                        <i class="fa fa-cogs"></i> 
                                     </button>
+
                                 </div>
                             </div>
                             <div class="mb-3 row">
@@ -143,18 +147,18 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="table-responsive" style="max-height: 350px; overflow-y: auto;">
-                            <table class="table table-bordered" id="table-bold">
+                        <table class="table table-bordered" id="modal-transaction-table">
                                 <thead>
                                     <tr>
                                         <th>POS Type</th>
-                                        <th>Transaction</th>
+                                        <th>Transactions</th>
                                         <th>POS Amount</th>
                                         <th>Cashier Amount</th>
                                         <th>Short/Over</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- Add rows dynamically -->
+                                    <!-- Will be populated on Process -->
                                 </tbody>
                             </table>
                         </div>
@@ -164,9 +168,9 @@
         </div>
         <div class="row justify-content-end">
             <div class="col-auto">
-                <button type="button" class="btn btn-primary me-2">
-                    <i class="fa fa-print"></i> Print
-                </button>
+            <button type="button" class="btn btn-primary" id="btn-print">
+                <i class="fa fa-print"></i> Print
+            </button>
                 <button type="button" class="btn btn-danger">
                     <i class="fa fa-arrow-left"></i> Exit
                 </button>
@@ -176,6 +180,103 @@
 </div>
 
     <script>
+        document.getElementById('btn-print').addEventListener('click', function () {
+    // Sample data (you can later make these dynamic)
+    const date = '04/07/2024';
+    const transactionNo = '0001';
+    const cashierName = 'Juan Dela Cruz';
+    const gross = '352.50';
+    const discount = '0.00';
+    const returns = '0.00';
+    const net = '352.50';
+    const openingFund = '1,000.00';
+
+    const transactionData = {
+        posType: 'CASH',
+        transaction: '1',
+        posAmount: '352.50',
+        cashierAmount: '352.50',
+        shortOver: '0.00'
+    };
+
+    // Create printable content
+    const printWindow = window.open('', '', 'height=800,width=600');
+    printWindow.document.write('<html><head><title>Shift Reading Report</title>');
+    printWindow.document.write('<style>');
+    printWindow.document.write(`
+        body { font-family: monospace; padding: 20px; }
+        .center { text-align: center; }
+        .bold { font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        td, th { border-bottom: 1px dashed #000; padding: 5px 0; }
+    `);
+    printWindow.document.write('</style></head><body>');
+
+    printWindow.document.write(`<div class="center bold">AAA COMPANY</div>`);
+    printWindow.document.write(`<div class="center">123 Main St.,</div>`);
+    printWindow.document.write(`<div class="center">City, PH</div><hr>`);
+
+    printWindow.document.write(`<div class="center bold">SHIFT READING REPORT</div><br>`);
+    printWindow.document.write(`Date: ${date}<br>`);
+    printWindow.document.write(`Transaction No: ${transactionNo}<br>`);
+    printWindow.document.write(`Cashier: ${cashierName}<br>`);
+    printWindow.document.write(`Opening Fund: ${openingFund}<br><br>`);
+
+    printWindow.document.write(`<table>`);
+    printWindow.document.write(`<tr><td>Gross</td><td style="text-align:right">${gross}</td></tr>`);
+    printWindow.document.write(`<tr><td>Total Discount</td><td style="text-align:right">${discount}</td></tr>`);
+    printWindow.document.write(`<tr><td>Less Sales Return</td><td style="text-align:right">${returns}</td></tr>`);
+    printWindow.document.write(`<tr><td><b>NET</b></td><td style="text-align:right"><b>${net}</b></td></tr>`);
+    printWindow.document.write(`</table><br>`);
+
+    printWindow.document.write(`<div class="bold">CASHIER ACCOUNTABILITY</div>`);
+    printWindow.document.write(`<table>`);
+    printWindow.document.write(`<tr>
+        <td>${transactionData.posType}</td>
+        <td>${transactionData.transaction}</td>
+        <td style="text-align:right">${transactionData.posAmount}</td>
+        <td style="text-align:right">${transactionData.cashierAmount}</td>
+        <td style="text-align:right">${transactionData.shortOver}</td>
+    </tr>`);
+    printWindow.document.write(`</table><br><br>`);
+
+    printWindow.document.write(`<div class="center">*** END OF REPORT ***</div>`);
+
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+
+    // Wait for content to load before printing
+    printWindow.onload = function () {
+        printWindow.print();
+    };
+});
+                document.getElementById('btn-process').addEventListener('click', function () {
+            // Sample fixed data (can be replaced with dynamic values later)
+            const transactionData = {
+                posType: 'CASH',
+                transaction: '1',
+                posAmount: '352.50',
+                cashierAmount: '352.50',
+                shortOver: '0.00'
+            };
+
+            // Target the table inside the modal
+            const tbody = document.querySelector('#modal-transaction-table tbody');
+
+            // Clear old data (optional)
+            tbody.innerHTML = '';
+
+            // Create and append new row
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${transactionData.posType}</td>
+                <td>${transactionData.transaction}</td>
+                <td>${transactionData.posAmount}</td>
+                <td>${transactionData.cashierAmount}</td>
+                <td>${transactionData.shortOver}</td>
+            `;
+            tbody.appendChild(row);
+        });
         document.addEventListener("DOMContentLoaded", function () {
             const currentUrl = window.location.pathname.split('/').pop();
             

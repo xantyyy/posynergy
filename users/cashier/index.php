@@ -21,18 +21,18 @@
 			<i class="material-icons">report</i><span>POS Reports</span></a>
 			<ul class="collapse list-unstyled menu" id="homeSubmenu1">
 				<li>
-                <a href="#" onclick="checkPassword('tender-declare.php')">Tender Declaration</a>
-
+                    <a href="#" onclick="checkPassword('tender-declare.php')">Tender Declaration</a>
 				</li>
 				<li>
                     <a href="#" onclick="checkPassword('shift-reading.php')">Shift Reading</a>
                 </li>
                 <li>
-					<a href="x-reading.php">X Reading</a>
-				</li>
+                    <a href="#" onclick="checkPassword('x-reading.php')">X Reading</a>
+                </li>
                 <li>
-					<a href="z-reading.php">Z Reading</a>
-				</li>
+                    <a href="#" onclick="checkPassword('z-reading.php')">Z Reading</a>
+                </li>
+
                 <li>
 					<a href="opening-fund.php">Opening Fund</a>
 				</li>
@@ -94,31 +94,56 @@
                 </div>
 
                     <script>
+                        function checkPassword(page) {
+                            const password = prompt("Please enter the password:");
+
+                            // Check if the entered password matches the required one
+                            if (password === 'yourPasswordHere') {
+                                window.location.href = page;
+                            } else {
+                                alert("Incorrect password. Please try again.");
+                            }
+                        }
+
+                        function checkPassword(destination) {
+                        // Show a prompt for password input
+                        var password = prompt("Please enter your password to access this page:", "");
+                        
+                        // Check if password is correct
+                        if (password === "your_secure_password_here") { // Replace with your actual password
+                            // Redirect to the destination page if password is correct
+                            window.location.href = destination;
+                        } else if (password !== null) {
+                            // Show error if wrong password entered
+                            alert("Incorrect password. Access denied.");
+                        }
+                        // If user cancels, do nothing
+                    }
                         let redirectUrl = '';
 
-    function checkPassword(targetUrl) {
-        redirectUrl = targetUrl;
-        const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
-        passwordModal.show();
-    }
+                    function checkPassword(targetUrl) {
+                        redirectUrl = targetUrl;
+                        const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+                        passwordModal.show();
+                    }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById('submitPassword').addEventListener('click', function () {
-            const passwordInput = document.getElementById('passwordInput').value;
-            const errorMsg = document.getElementById('passwordError');
+                    document.addEventListener("DOMContentLoaded", function () {
+                        document.getElementById('submitPassword').addEventListener('click', function () {
+                            const passwordInput = document.getElementById('passwordInput').value;
+                            const errorMsg = document.getElementById('passwordError');
 
-            if (passwordInput === '123') {
-                errorMsg.style.display = 'none';
-                const passwordModal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
-                passwordModal.hide();
+                            if (passwordInput === '123') {
+                                errorMsg.style.display = 'none';
+                                const passwordModal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
+                                passwordModal.hide();
 
-                // Proceed to the protected page
-                window.location.href = redirectUrl;
-            } else {
-                errorMsg.style.display = 'block';
-            }
-        });
-    });
+                                // Proceed to the protected page
+                                window.location.href = redirectUrl;
+                            } else {
+                                errorMsg.style.display = 'block';
+                            }
+                        });
+                    });
                         function checkPassword(redirectUrl) {
                             const passwordInput = document.createElement('input');
                             passwordInput.type = 'password';
