@@ -63,7 +63,49 @@ try {
     $stmt->execute();
     $productProfileId = $conn->insert_id;
 
-    // 2. Insert into tbl_invprodlist
+    // 2. Insert into tbl_productcost for each costing entry
+    foreach ($costingData as $index => $costing) {
+        // Set isDefault to 'Yes' for the first entry, 'No' for others
+        $isDefault = ($index === 0) ? 'Yes' : 'No';
+        $currentDate = date('Y-m-d H:i:s');
+        
+        // Calculate landed cost - you may need to adjust this formula based on your business logic
+        // For now, I'm assuming it's the same as cost, but you might need to add shipping, taxes, etc.
+        $landedCost = $costing['cost'];
+        
+        // Determine VAT value (assuming standard 12% VAT if IsVAT is 'YES')
+        $vatValue = ($costing['isVat'] === 'YES') ? ($costing['cost'] * 0.12) : '0';
+        
+        // Insert into tbl_productcost
+        $stmt = $conn->prepare("INSERT INTO tbl_productcost (DateAdded, isDefault, SupplierName, Cost, Measurement, Barcode, IsVAT, VAT, LandedCost) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        
+        $stmt->execute([
+            $currentDate,
+            $isDefault,
+            $costing['supplier'],
+            $costing['cost'],
+            $costing['uom'],
+            $costing['barcode'],
+            $costing['isVat'],
+            $vatValue,
+            $landedCost
+        ]);
+        
+        // Debug: Log the values being inserted into tbl_productcost
+        error_log("Inserting into tbl_productcost: " . print_r([
+            'DateAdded' => $currentDate,
+            'isDefault' => $isDefault,
+            'SupplierName' => $costing['supplier'],
+            'Cost' => $costing['cost'],
+            'Measurement' => $costing['uom'],
+            'Barcode' => $costing['barcode'],
+            'IsVAT' => $costing['isVat'],
+            'VAT' => $vatValue,
+            'LandedCost' => $landedCost
+        ], true));
+    }
+
+    // 3. Insert into tbl_invprodlist
     $batch = "BATCH-" . time(); // Generate a unique batch number
     $asOf = date('Y-m-d H:i:s');
     $location = "Main Branch"; // You can make this dynamic if needed
@@ -129,13 +171,64 @@ try {
             'IsVat' => $costingData[0]['isVat'] ?? 'NO',
             'CompanyVat' => $companyVat
         ], true));
-
-        $stmt->execute();
     }
+
+    // Inside your try block, after handling tbl_invprodlist insertion
+// Add insertion into tbl_productprice for each retail entry
+foreach ($retailData as $retail) {
+    $currentDate = date('Y-m-d H:i:s');
+    $priceType = "Regular"; // Default price type, adjust as needed
+    
+    // Calculate markup percentage if not directly provided
+    // (Assuming markup is the percentage difference between selling price and cost)
+    $cost = (float)($costingData[0]['cost'] ?? 0);
+    $appliedSrp = (float)($retail['appliedSrp'] ?? 0);
+    $markupPercent = ($cost > 0) ? (($appliedSrp - $cost) / $cost * 100) : 0;
+    $markupPercent = number_format($markupPercent, 2); // Format to 2 decimal places
+    
+    // Determine VAT value (assuming standard 12% VAT if IsVAT is 'YES')
+    $isVat = $costingData[0]['isVat'] ?? 'NO';
+    $vatValue = ($isVat === 'YES') ? ($cost * 0.12) : '0';
+    
+    $stmt = $conn->prepare("INSERT INTO tbl_productprice (DateAdded, PriceType, Barcode, ProductName, Measurement, Quantity, Cost, MarkupPercent, SRP, IsVAT, VAT, AppliedSRP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    
+    $stmt->bind_param("ssssssssssss", 
+        $currentDate,
+        $priceType,
+        $retail['barcode'],
+        $formData['productName'],
+        $retail['uom'],
+        $retail['quantity'],
+        $cost,
+        $markupPercent,
+        $retail['appliedSrp'], // Using appliedSrp as SRP
+        $isVat,
+        $vatValue,
+        $retail['appliedSrp']
+    );
+    
+    $stmt->execute();
+    
+    // Debug: Log the values being inserted into tbl_productprice
+    error_log("Inserting into tbl_productprice: " . print_r([
+        'DateAdded' => $currentDate,
+        'PriceType' => $priceType,
+        'Barcode' => $retail['barcode'],
+        'ProductName' => $formData['productName'],
+        'Measurement' => $retail['uom'],
+        'Quantity' => $retail['quantity'],
+        'Cost' => $cost,
+        'MarkupPercent' => $markupPercent,
+        'SRP' => $retail['appliedSrp'],
+        'IsVAT' => $isVat,
+        'VAT' => $vatValue,
+        'AppliedSRP' => $retail['appliedSrp']
+    ], true));
+}
 
     // Commit the transaction
     $conn->commit();
-    echo json_encode(['success' => true, 'message' => 'Product saved successfully in tbl_productprofile and tbl_invprodlist']);
+    echo json_encode(['success' => true, 'message' => 'Product saved successfully in all tables']);
 } catch (Exception $e) {
     // Log detailed error information
     error_log("Database error: " . $e->getMessage());
