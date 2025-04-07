@@ -478,7 +478,7 @@
                                 <td>${barcode}</td>
                                 <td>${productName}</td>
                                 <td>${uom}</td>
-                                <td>${markup}</td>
+                                <td>1</td>
                                 <td>${appliedSrp}</td>
                             `;
 
@@ -520,9 +520,9 @@
                             document.getElementById('edit-barcode').value = selectedRow.cells[2].textContent;
                             document.getElementById('edit-productName').value = selectedRow.cells[3].textContent;
                             document.getElementById('edit-uom').value = selectedRow.cells[4].textContent;
-                            document.getElementById('edit-markup').value = selectedRow.cells[5].textContent;
-                            document.getElementById('edit-srp').value = selectedRow.cells[6].textContent;
-                            document.getElementById('edit-appliedSrp').value = selectedRow.cells[7].textContent;
+                            // Add a new field for quantity
+                            document.getElementById('edit-quantity').value = selectedRow.cells[5].textContent;
+                            document.getElementById('edit-appliedSrp').value = selectedRow.cells[6].textContent;
 
                             // Show the Edit modal
                             const editModal = document.getElementById('editModalRetail');
@@ -537,9 +537,8 @@
                                 selectedRow.cells[2].textContent = document.getElementById('edit-barcode').value;
                                 selectedRow.cells[3].textContent = document.getElementById('edit-productName').value;
                                 selectedRow.cells[4].textContent = document.getElementById('edit-uom').value;
-                                selectedRow.cells[5].textContent = document.getElementById('edit-markup').value;
-                                selectedRow.cells[6].textContent = document.getElementById('edit-srp').value;
-                                selectedRow.cells[7].textContent = document.getElementById('edit-appliedSrp').value;
+                                selectedRow.cells[5].textContent = document.getElementById('edit-quantity').value;
+                                selectedRow.cells[6].textContent = document.getElementById('edit-appliedSrp').value;
 
                                 editModalInstance.hide();
                                 alert('Changes saved successfully!');
