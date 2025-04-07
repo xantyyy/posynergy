@@ -1,31 +1,3 @@
-<?php
-    require_once '../../includes/config.php';
-
-    // Fetch suppliers
-    $sql_suppliers = "SELECT Supplier FROM tbl_suppliers ORDER BY Supplier ASC";
-    $result_suppliers = $conn->query($sql_suppliers);
-
-    $suppliers = [];
-    if ($result_suppliers->num_rows > 0) {
-        while ($row = $result_suppliers->fetch_assoc()) {
-            $suppliers[] = $row["Supplier"];
-        }
-    }
-
-    // Fetch UOM (ItemName where ItemType = 'UNIT')
-    $sql_uom = "SELECT ItemName FROM tbl_invmaintenance WHERE ItemType = 'UNIT' ORDER BY ItemName ASC";
-    $result_uom = $conn->query($sql_uom);
-
-    $uoms = [];
-    if ($result_uom->num_rows > 0) {
-        while ($row = $result_uom->fetch_assoc()) {
-            $uoms[] = $row["ItemName"];
-        }
-    }
-
-    $conn->close();
-?>
-
 <!-- Add Costing Modal -->
 <div class="modal fade" id="productInfoModal" tabindex="-1" aria-labelledby="productInfoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
