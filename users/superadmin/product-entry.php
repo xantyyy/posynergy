@@ -1,6 +1,6 @@
 <?php include_once 'header.php'; ?>
 <?php include_once 'modals.php'; ?>
-
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
 				<div class="sidebar-header">
@@ -324,7 +324,7 @@
                     </div>
                 </div>
             </div>      
-
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 			<script>
                 document.addEventListener('DOMContentLoaded', function() {
                     // Get references to all needed elements
@@ -403,111 +403,116 @@
                 });
                 // RETAIL TABLE
                 document.addEventListener('DOMContentLoaded', function () {
-                    const saveRetailButton = document.querySelector('#productModalRetail .modal-footer .btn-primary');
-                    const editRetailButton = document.querySelector('#saveEditRetail');
-                    const tableRetailBody = document.querySelector('#retail-table tbody'); // Assuming may Retail table
-                    const editRetailBtn = document.querySelector('.edit-retail-btn');
-                    const deleteRetailBtn = document.querySelector('.delete-retail-btn');
+    const saveRetailButton = document.querySelector('#productModalRetail .modal-footer .btn-primary');
+    const editRetailButton = document.querySelector('#saveEditRetail');
+    const tableRetailBody = document.querySelector('#retail-table tbody');
+    const editRetailBtn = document.querySelector('.edit-retail-btn');
+    const deleteRetailBtn = document.querySelector('.delete-retail-btn');
 
-                    // Check and update table for empty state
-                    checkAndUpdateEmptyRetailTable();
+    // Check and update table for empty state
+    checkAndUpdateEmptyRetailTable();
 
-                    function checkAndUpdateEmptyRetailTable() {
-                        if (
-                            tableRetailBody.children.length === 0 ||
-                            (tableRetailBody.children.length === 1 &&
-                                tableRetailBody.querySelector('tr td').textContent === 'No Data Available')
-                        ) {
-                            tableRetailBody.innerHTML = `
-                                <tr class="no-data-row">
-                                    <td colspan="6" class="text-center">No Data Available</td>
-                                </tr>
-                            `;
-                        }
-                    }
+    function checkAndUpdateEmptyRetailTable() {
+        if (
+            tableRetailBody.children.length === 0 ||
+            (tableRetailBody.children.length === 1 &&
+                tableRetailBody.querySelector('tr td').textContent === 'No Data Available')
+        ) {
+            tableRetailBody.innerHTML = `
+                <tr class="no-data-row">
+                    <td colspan="6" class="text-center">No Data Available</td>
+                </tr>
+            `;
+        }
+    }
 
-                    // Function to clear modal fields
-                    function clearRetailModal() {
-                        document.getElementById('retail-priceType').selectedIndex = 0;
-                        document.getElementById('retail-cost').value = '';
-                        document.getElementById('retailBarcode').value = '';
-                        document.getElementById('retailProductName').value = '';
-                        document.getElementById('retail-uom').selectedIndex = 0;
-                        document.getElementById('retail-markup').value = '';
-                        document.getElementById('retail-srp').value = '';
-                        document.getElementById('retail-appliedSrp').value = '';
+    // Function to clear modal fields
+    function clearRetailModal() {
+        document.getElementById('retail-priceType').selectedIndex = 0;
+        document.getElementById('retail-cost').value = '';
+        document.getElementById('retailBarcode').value = '';
+        document.getElementById('retailProductName').value = '';
+        document.getElementById('retail-uom').selectedIndex = 0;
+        document.getElementById('retail-markup').value = '';
+        document.getElementById('retail-srp').value = '';
+        document.getElementById('retail-appliedSrp').value = '';
+        saveRetailButton.removeAttribute('data-editing-row'); // Clear editing state
+    }
 
-                        saveRetailButton.removeAttribute('data-editing-row'); // Clear editing state
-                    }
+    // Save button functionality for Retail Table
+    saveRetailButton.addEventListener('click', function () {
+        const priceType = document.getElementById('retail-priceType').value;
+        const cost = document.getElementById('retail-cost').value;
+        const barcode = document.getElementById('retailBarcode').value;
+        const productName = document.getElementById('retailProductName').value;
+        const uom = document.getElementById('retail-uom').value;
+        const markup = document.getElementById('retail-markup').value;
+        const srp = document.getElementById('retail-srp').value;
+        const appliedSrp = document.getElementById('retail-appliedSrp').value;
 
-                    // Save button functionality for Retail Table
-                    saveRetailButton.addEventListener('click', function () {
-                        const priceType = document.getElementById('retail-priceType').value;
-                        const cost = document.getElementById('retail-cost').value;
-                        const barcode = document.getElementById('retailBarcode').value;
-                        const productName = document.getElementById('retailProductName').value;
-                        const uom = document.getElementById('retail-uom').value;
-                        const markup = document.getElementById('retail-markup').value;
-                        const srp = document.getElementById('retail-srp').value;
-                        const appliedSrp = document.getElementById('retail-appliedSrp').value;
+        console.log('Retail data to save:', { priceType, cost, barcode, productName, uom, markup, srp, appliedSrp });
 
-                        if (!priceType || !cost || !productName || !uom || !markup || !srp || !appliedSrp) {
-                            alert('Please fill in all required fields.');
-                            return;
-                        }
+        if (!priceType || !cost || !productName || !uom || !markup || !srp || !appliedSrp) {
+            alert('Please fill in all required fields (Price Type, Cost, Product Name, UOM, Markup, SRP, Applied SRP).');
+            return;
+        }
 
-                        const editingRowIndex = saveRetailButton.getAttribute('data-editing-row');
-                        if (editingRowIndex !== null) {
-                            // Update existing row
-                            const editingRow = tableRetailBody.children[editingRowIndex];
-                            editingRow.cells[0].textContent = priceType;
-                            editingRow.cells[2].textContent = barcode;
-                            editingRow.cells[3].textContent = productName;
-                            editingRow.cells[4].textContent = uom;
-                            editingRow.cells[5].textContent = markup;
-                            editingRow.cells[6].textContent = srp;
-                            editingRow.cells[7].textContent = appliedSrp;
+        const editingRowIndex = saveRetailButton.getAttribute('data-editing-row');
+        if (editingRowIndex !== null) {
+            // Update existing row
+            const editingRow = tableRetailBody.children[editingRowIndex];
+            editingRow.cells[0].textContent = priceType;
+            editingRow.cells[1].textContent = barcode;
+            editingRow.cells[2].textContent = productName;
+            editingRow.cells[3].textContent = uom;
+            editingRow.cells[4].textContent = '1'; // Quantity is hardcoded as 1
+            editingRow.cells[5].textContent = appliedSrp;
 
-                            saveRetailButton.removeAttribute('data-editing-row');
-                            alert('Data successfully updated!');
-                        } else {
-                            // Add new row
-                            const newRow = document.createElement('tr');
-                            newRow.innerHTML = `
-                                <td>${priceType}</td>
-                                <td>${barcode}</td>
-                                <td>${productName}</td>
-                                <td>${uom}</td>
-                                <td>1</td>
-                                <td>${appliedSrp}</td>
-                            `;
+            saveRetailButton.removeAttribute('data-editing-row');
+            alert('Data successfully updated!');
+        } else {
+            // Add new row
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${priceType}</td>
+                <td>${barcode}</td>
+                <td>${productName}</td>
+                <td>${uom}</td>
+                <td>1</td>
+                <td>${appliedSrp}</td>
+            `;
 
-                            newRow.addEventListener('click', function () {
-                                document.querySelectorAll('#table-retail tbody tr').forEach((row) => {
-                                    row.classList.remove('selected-row');
-                                });
+            newRow.addEventListener('click', function () {
+                document.querySelectorAll('#retail-table tbody tr').forEach((row) => {
+                    row.classList.remove('selected-row');
+                });
 
-                                this.classList.add('selected-row');
-                                editRetailBtn.disabled = false;
-                                editRetailBtn.classList.remove('opacity-50');
-                                deleteRetailBtn.disabled = false;
-                                deleteRetailBtn.classList.remove('opacity-50');
-                            });
+                this.classList.add('selected-row');
+                editRetailBtn.disabled = false;
+                editRetailBtn.classList.remove('opacity-50');
+                deleteRetailBtn.disabled = false;
+                deleteRetailBtn.classList.remove('opacity-50');
+            });
 
-                            const noDataRow = tableRetailBody.querySelector('.no-data-row');
-                            if (noDataRow) {
-                                tableRetailBody.innerHTML = '';
-                            }
+            const noDataRow = tableRetailBody.querySelector('.no-data-row');
+            if (noDataRow) {
+                tableRetailBody.innerHTML = '';
+            }
 
-                            tableRetailBody.appendChild(newRow);
-                            alert('Data successfully saved!');
-                        }
+            tableRetailBody.appendChild(newRow);
+            alert('Data successfully saved!');
+        }
 
-                        // Clear modal fields and hide modal
-                        clearRetailModal();
-                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('productModalRetail'));
-                        modalInstance.hide();
-                    });
+        // Clear modal fields and hide modal
+        clearRetailModal();
+        const modalElement = document.getElementById('productModalRetail');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) {
+            modalInstance.hide();
+        } else {
+            console.error('Modal instance not found for productModalRetail');
+        }
+    });
 
                     // Edit button functionality
                     editRetailBtn.addEventListener('click', function () {
@@ -566,7 +571,12 @@
 
                     // Clear modal when the modal is closed
                     const modalElement = document.getElementById('productModalRetail');
-                    modalElement.addEventListener('hidden.bs.modal', clearRetailModal);
+const modalInstance = modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
+if (modalInstance) {
+    modalInstance.hide();
+} else {
+    console.error('Modal instance not found for productModalRetail');
+}
 
                     checkAndUpdateEmptyRetailTable();
                 });
@@ -574,98 +584,105 @@
 
                 // COSTING TABLE
                 document.addEventListener('DOMContentLoaded', function () {
-                    const saveButton = document.querySelector('#productInfoModal .modal-footer .btn-primary');
-                    const tableBody = document.querySelector('#table-bold tbody');
-                    const editButton = document.querySelector('.edit-btn');
-                    const deleteButton = document.querySelector('.delete-btn');
+    const saveButton = document.querySelector('#productInfoModal .modal-footer .btn-primary');
+    const tableBody = document.querySelector('#table-bold tbody');
+    const editButton = document.querySelector('.edit-btn');
+    const deleteButton = document.querySelector('.delete-btn');
 
-                    // Check and update table for empty state
-                    checkAndUpdateEmptyTable();
+    // Check and update table for empty state
+    checkAndUpdateEmptyTable();
 
-                    function checkAndUpdateEmptyTable() {
-                        if (
-                            tableBody.children.length === 0 ||
-                            (tableBody.children.length === 1 &&
-                                tableBody.querySelector('tr td').textContent === 'No Data Available')
-                        ) {
-                            tableBody.innerHTML = `
-                                <tr class="no-data-row">
-                                    <td colspan="4" class="text-center">No Data Available</td>
-                                </tr>
-                            `;
-                        }
-                    }
+    function checkAndUpdateEmptyTable() {
+        if (
+            tableBody.children.length === 0 ||
+            (tableBody.children.length === 1 &&
+                tableBody.querySelector('tr td').textContent === 'No Data Available')
+        ) {
+            tableBody.innerHTML = `
+                <tr class="no-data-row">
+                    <td colspan="4" class="text-center">No Data Available</td>
+                </tr>
+            `;
+        }
+    }
 
-                    // Function to clear modal and reset state
-                    function clearModal() {
-                        document.getElementById('barcode').value = '';
-                        document.getElementById('supplier').selectedIndex = 0;
-                        document.getElementById('uom').selectedIndex = 0;
-                        document.getElementById('costPrice').value = '';
-                        document.getElementById('vatable').checked = false;
-                        saveButton.removeAttribute('data-editing-row'); // Clear editing state
-                    }
+    // Function to clear modal and reset state
+    function clearModal() {
+        document.getElementById('barcode').value = '';
+        document.getElementById('supplier').selectedIndex = 0;
+        document.getElementById('uom').selectedIndex = 0;
+        document.getElementById('costPrice').value = '';
+        document.getElementById('vatable').checked = false;
+        saveButton.removeAttribute('data-editing-row'); // Clear editing state
+    }
 
-                    // Save button functionality
-                    saveButton.addEventListener('click', function () {
-                        const barcode = document.getElementById('barcode').value;
-                        const supplier = document.getElementById('supplier').value;
-                        const uom = document.getElementById('uom').value;
-                        const costPrice = document.getElementById('costPrice').value;
-                        const vatable = document.getElementById('vatable').checked;
+    // Save button functionality
+    saveButton.addEventListener('click', function () {
+        const barcode = document.getElementById('barcode').value;
+        const supplier = document.getElementById('supplier').value;
+        const uom = document.getElementById('uom').value;
+        const costPrice = document.getElementById('costPrice').value;
+        const vatable = document.getElementById('vatable').checked;
 
-                        if (!supplier || !uom || !costPrice) {
-                            alert('Please fill in all required fields.');
-                            return;
-                        }
+        console.log('Costing data to save:', { barcode, supplier, uom, costPrice, vatable });
 
-                        const editingRowIndex = saveButton.getAttribute('data-editing-row');
-                        if (editingRowIndex !== null) {
-                            // Update existing row
-                            const editingRow = tableBody.children[editingRowIndex];
-                            editingRow.cells[0].textContent = supplier;
-                            editingRow.cells[1].textContent = costPrice + (vatable ? ' (VAT-able)' : '');
-                            editingRow.cells[2].textContent = uom;
-                            editingRow.cells[3].textContent = barcode;
+        if (!supplier || !uom || !costPrice) {
+            alert('Please fill in all required fields (Supplier, UOM, Cost Price).');
+            return;
+        }
 
-                            saveButton.removeAttribute('data-editing-row');
-                            alert('Data successfully updated!');
-                        } else {
-                            // Add new row
-                            const newRow = document.createElement('tr');
-                            newRow.innerHTML = `
-                                <td>${supplier}</td>
-                                <td>${costPrice}${vatable ? ' (VAT-able)' : ''}</td>
-                                <td>${uom}</td>
-                                <td>${barcode}</td>
-                            `;
+        const editingRowIndex = saveButton.getAttribute('data-editing-row');
+        if (editingRowIndex !== null) {
+            // Update existing row
+            const editingRow = tableBody.children[editingRowIndex];
+            editingRow.cells[0].textContent = supplier;
+            editingRow.cells[1].textContent = costPrice + (vatable ? ' (VAT-able)' : '');
+            editingRow.cells[2].textContent = uom;
+            editingRow.cells[3].textContent = barcode;
 
-                            newRow.addEventListener('click', function () {
-                                document.querySelectorAll('#table-bold tbody tr').forEach((row) => {
-                                    row.classList.remove('selected-row');
-                                });
+            saveButton.removeAttribute('data-editing-row');
+            alert('Data successfully updated!');
+        } else {
+            // Add new row
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${supplier}</td>
+                <td>${costPrice}${vatable ? ' (VAT-able)' : ''}</td>
+                <td>${uom}</td>
+                <td>${barcode}</td>
+            `;
 
-                                this.classList.add('selected-row');
-                                editButton.disabled = false;
-                                editButton.classList.remove('opacity-50');
-                                deleteButton.disabled = false;
-                                deleteButton.classList.remove('opacity-50');
-                            });
+            newRow.addEventListener('click', function () {
+                document.querySelectorAll('#table-bold tbody tr').forEach((row) => {
+                    row.classList.remove('selected-row');
+                });
 
-                            const noDataRow = tableBody.querySelector('.no-data-row');
-                            if (noDataRow) {
-                                tableBody.innerHTML = '';
-                            }
+                this.classList.add('selected-row');
+                editButton.disabled = false;
+                editButton.classList.remove('opacity-50');
+                deleteButton.disabled = false;
+                deleteButton.classList.remove('opacity-50');
+            });
 
-                            tableBody.appendChild(newRow);
-                            alert('Data successfully saved!');
-                        }
+            const noDataRow = tableBody.querySelector('.no-data-row');
+            if (noDataRow) {
+                tableBody.innerHTML = '';
+            }
 
-                        // Clear modal fields and hide modal
-                        clearModal();
-                        const modalInstance = bootstrap.Modal.getInstance(document.getElementById('productInfoModal'));
-                        modalInstance.hide();
-                    });
+            tableBody.appendChild(newRow);
+            alert('Data successfully saved!');
+        }
+
+        // Clear modal fields and hide modal
+        clearModal();
+        const modalElement = document.getElementById('productInfoModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) {
+            modalInstance.hide();
+        } else {
+            console.error('Modal instance not found for productInfoModal');
+        }
+    });
 
                     // Edit button functionality
                     editButton.addEventListener('click', function () {
@@ -912,35 +929,135 @@
 
                     // Handle save button click
                     const saveCodes = () => {
-                        const codeData = {
-                            productCodeNo: $('#productCodeNo').val(),
-                            pluCodeNo: $('#pluCodeNo').val()
-                        };
+    const saveBtn = $('.save-btn');
+    saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
 
-                        const saveBtn = $('.save-btn');
-                        saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+    // Collect form data
+    const formData = {
+        barcode: $('#barCode').val(),
+        pluCode: $('#pluCode').val(),
+        pluCodeNo: $('#pluCodeNo').val(),
+        date: $('#date').val(),
+        category: $('#category').val(),
+        productDetails: $('#productDetails').val(),
+        productCode: $('#productCode').val(),
+        productCodeNo: $('#productCodeNo').val(),
+        productName: $('#productName').val(),
+        shelf: $('#shellOptions').val(),
+        shelfDescription: $('#shelfTextbox').val(),
+    };
 
-                        fetch('manage-productProfile.php?type=UPDATE_CODES', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(codeData)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                alert('Codes updated successfully in tbl_idno!');
-                                location.reload();
-                            } else {
-                                throw new Error(data.message);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Save error:', error);
-                            alert('Error saving codes');
-                            saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
-                        });
-                    };
+    // Validate form data
+    if (!formData.productName || !formData.category || !formData.date) {
+        alert('Please fill in all required fields in the form (Product Name, Category, Date).');
+        saveBtn.prop('disabled', false).prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+                return;
+    }
 
+    // Collect costing details (from the Costing Details table)
+    const costingData = [];
+    $('#table-bold tbody tr').each(function () {
+        if (!$(this).hasClass('no-data-row')) {
+            const supplier = $(this).find('td:eq(0)').text();
+            const cost = $(this).find('td:eq(1)').text().replace(' (VAT-able)', '');
+            const uom = $(this).find('td:eq(2)').text();
+            const barcode = $(this).find('td:eq(3)').text();
+            const isVat = $(this).find('td:eq(1)').text().includes('(VAT-able)') ? 'YES' : 'NO';
+
+            if (!supplier || !cost || !uom) {
+                alert('Please ensure all costing details (Supplier, Cost, UOM) are filled.');
+                saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+                return;
+            }
+
+            costingData.push({
+                supplier: supplier,
+                cost: cost,
+                uom: uom,
+                barcode: barcode,
+                isVat: isVat
+            });
+        }
+    });
+
+    // Collect retail details (from the Retail Details table)
+    const retailData = [];
+    $('#retail-table tbody tr').each(function () {
+        if (!$(this).hasClass('no-data-row')) {
+            const priceType = $(this).find('td:eq(0)').text();
+            const barcode = $(this).find('td:eq(1)').text();
+            const productName = $(this).find('td:eq(2)').text();
+            const uom = $(this).find('td:eq(3)').text();
+            const quantity = $(this).find('td:eq(4)').text();
+            const appliedSrp = $(this).find('td:eq(5)').text();
+
+            if (!priceType || !productName || !uom || !quantity || !appliedSrp) {
+                alert('Please ensure all retail details (Price Type, Product Name, UOM, Quantity, Selling Price) are filled.');
+                saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+                return;
+            }
+
+            retailData.push({
+                priceType: priceType,
+                barcode: barcode,
+                productName: productName,
+                uom: uom,
+                quantity: quantity,
+                appliedSrp: appliedSrp
+            });
+        }
+    });
+
+    // Ensure at least one costing and retail entry exists
+    if (costingData.length === 0) {
+        alert('Please add at least one costing entry.');
+        saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+        return;
+    }
+    if (retailData.length === 0) {
+        alert('Please add at least one retail entry.');
+        saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+        return;
+    }
+
+    // Combine all data into one object
+    const allData = {
+        form: formData,
+        costing: costingData,
+        retail: retailData
+    };
+
+    // Log the data being sent
+    console.log('Data being sent to save-product.php:', allData);
+
+    // Send data to PHP script
+    fetch('save-product.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(allData)
+    })
+    .then(response => {
+        // Log the raw response text
+        return response.text().then(text => {
+            console.log('Raw response from save-product.php:', text);
+            return JSON.parse(text); // Try to parse as JSON
+        });
+    })
+    .then(data => {
+        if (data.success) {
+            alert('Product saved successfully!');
+            location.reload();
+        } else {
+            throw new Error(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Save error:', error);
+        alert('Error saving product: ' + error.message);
+        saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+    });
+};
+                   
                     // Handle "New" button click
                     const handleNewButton = () => {
                         const newBtn = $('.new-btn');

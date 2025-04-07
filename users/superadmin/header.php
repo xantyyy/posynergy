@@ -32,12 +32,12 @@
 		<!----css3---->
 		<link rel="stylesheet" href="../../assets/css/dashboard.css">
 		<link rel="icon" type="image/x-icon" href="../../assets/images/isynergiesinc.png">
-			
-		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
 		<!-- LINKS -->
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"><!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="../../assets/css/dashboard.css"><!-- EXTERNAL CSS -->
-		<link rel="stylesheet" href="../../assets/css/reports.css"><!-- EXTERNAL CSS -->
+		<!--<link rel="stylesheet" href="../../assets/css/reports.css">EXTERNAL CSS -->
         <link rel="icon" type="image/x-icon" href="../../assets/images/isynergiesinc.png"><!-- FAVICON -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><!-- Font Awesome -->
 		<link rel="preconnect" href="https://fonts.googleapis.com"><!-- GOOGLE FONTS -->
@@ -56,6 +56,7 @@
     	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css"><!-- FOR REPORTS PAGE TABLE -->
 		
 		<!-- SCRIPTS --> 
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script><!-- Include jQuery library -->
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script><!-- Include jQuery UI library -->
