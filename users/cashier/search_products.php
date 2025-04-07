@@ -1,6 +1,7 @@
 <?php
 require_once '../../includes/config.php'; // Database connection
 
+//
 // Get search query
 $search = $_POST['query'];
 
