@@ -740,69 +740,69 @@
                     });
 
                     document.addEventListener('DOMContentLoaded', function() {
-    // Get elements
-    const retailCostInput = document.getElementById('retail-cost');
-    const costPriceInput = document.getElementById('costPrice');
-    const productInfoModal = document.getElementById('productInfoModal');
-    const productModalRetail = document.getElementById('productModalRetail');
-    const saveButton = document.querySelector('#productInfoModal .btn-primary');
-    
-    // Store the retail cost value in a variable that persists between modal openings
-    let savedRetailCost = '';
-    
-    // Function to update cost price in the costing modal
-    function updateCostPrice() {
-        const retailCostValue = retailCostInput.value;
-        
-        if (retailCostValue) {
-            costPriceInput.value = retailCostValue;
-            savedRetailCost = retailCostValue; // Save the value for later use
-        }
-    }
-    
-    // Add event listener to retail cost input for real-time updates
-    if (retailCostInput) {
-        retailCostInput.addEventListener('input', function() {
-            savedRetailCost = this.value;
-            updateCostPrice();
-        });
-    }
-    
-    // When opening the costing modal
-    if (productInfoModal) {
-        productInfoModal.addEventListener('show.bs.modal', function() {
-            // Use the saved retail cost value if available
-            if (savedRetailCost) {
-                costPriceInput.value = savedRetailCost;
-            } else if (retailCostInput && retailCostInput.value) {
-                costPriceInput.value = retailCostInput.value;
-            }
-        });
-    }
-    
-    // When opening the retail modal
-    if (productModalRetail) {
-        productModalRetail.addEventListener('show.bs.modal', function() {
-            if (costPriceInput && costPriceInput.value && retailCostInput) {
-                retailCostInput.value = costPriceInput.value;
-                savedRetailCost = costPriceInput.value;
-            }
-        });
-    }
-    
-    // Modify the existing save button functionality
-    if (saveButton) {
-        saveButton.addEventListener('click', function() {
-            // Before closing the modal, make sure we have the latest retail cost value
-            if (retailCostInput && retailCostInput.value) {
-                costPriceInput.value = retailCostInput.value;
-            }
-            
-            // The rest of your save button code can remain as is
-            // This ensures the most up-to-date cost is used when saving
-        });
-    }
-});
+                        // Get elements
+                        const retailCostInput = document.getElementById('retail-cost');
+                        const costPriceInput = document.getElementById('costPrice');
+                        const productInfoModal = document.getElementById('productInfoModal');
+                        const productModalRetail = document.getElementById('productModalRetail');
+                        const saveButton = document.querySelector('#productInfoModal .btn-primary');
+                        
+                        // Store the retail cost value in a variable that persists between modal openings
+                        let savedRetailCost = '';
+                        
+                        // Function to update cost price in the costing modal
+                        function updateCostPrice() {
+                            const retailCostValue = retailCostInput.value;
+                            
+                            if (retailCostValue) {
+                                costPriceInput.value = retailCostValue;
+                                savedRetailCost = retailCostValue; // Save the value for later use
+                            }
+                        }
+                        
+                        // Add event listener to retail cost input for real-time updates
+                        if (retailCostInput) {
+                            retailCostInput.addEventListener('input', function() {
+                                savedRetailCost = this.value;
+                                updateCostPrice();
+                            });
+                        }
+                        
+                        // When opening the costing modal
+                        if (productInfoModal) {
+                            productInfoModal.addEventListener('show.bs.modal', function() {
+                                // Use the saved retail cost value if available
+                                if (savedRetailCost) {
+                                    costPriceInput.value = savedRetailCost;
+                                } else if (retailCostInput && retailCostInput.value) {
+                                    costPriceInput.value = retailCostInput.value;
+                                }
+                            });
+                        }
+                        
+                        // When opening the retail modal
+                        if (productModalRetail) {
+                            productModalRetail.addEventListener('show.bs.modal', function() {
+                                if (costPriceInput && costPriceInput.value && retailCostInput) {
+                                    retailCostInput.value = costPriceInput.value;
+                                    savedRetailCost = costPriceInput.value;
+                                }
+                            });
+                        }
+                        
+                        // Modify the existing save button functionality
+                        if (saveButton) {
+                            saveButton.addEventListener('click', function() {
+                                // Before closing the modal, make sure we have the latest retail cost value
+                                if (retailCostInput && retailCostInput.value) {
+                                    costPriceInput.value = retailCostInput.value;
+                                }
+                                
+                                // The rest of your save button code can remain as is
+                                // This ensures the most up-to-date cost is used when saving
+                            });
+                        }
+                    });
 
                     // Clear modal when the modal is closed
                     const modalElement = document.getElementById('productInfoModal');

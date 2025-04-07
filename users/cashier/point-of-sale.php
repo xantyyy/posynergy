@@ -51,27 +51,67 @@
             <a href="#" class="dashboard" accesskey="F10"><i class="material-icons">credit_card</i><span>Other Payment Type (F10)</span></a>
         </li>
         <li class="dropdown">
-            <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                <i class="material-icons">discount</i><span>Apply Discount</span>
-            </a>
-            <ul class="collapse list-unstyled menu" id="homeSubmenu1">
-                <li>
-                    <a href="#">Solo Parent</a>
-                </li>
-                <li>
-                    <a href="#">PWD</a>
-                </li>
-                <li>
-                    <a href="#">Senior Citizen</a>
-                </li>
-                <li>
-                    <a href="#">NAAC</a>
-                </li>
-                <li>
-                    <a href="#">Medal of Valor</a>
-                </li>
-            </ul>
+    <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+        <i class="material-icons">discount</i><span>Apply Discount</span>
+    </a>
+    <ul class="collapse list-unstyled menu" id="homeSubmenu1">
+        <li>
+            <a href="#" onclick="applyRegularDiscount()">Regular Discount <span class="shortcut-key">Ctrl+D</span></a>
         </li>
+        <li>
+            <a href="#" onclick="applySoloParent()">Solo Parent <span class="shortcut-key">Ctrl+S</span></a>
+        </li>
+        <li>
+            <a href="#" onclick="applyPWD()">PWD <span class="shortcut-key">F12</span></a>
+        </li>
+        <li>
+            <a href="#" onclick="showSeniorPasswordPrompt()">Senior Citizen <span class="shortcut-key">F11</span></a>
+        </li>
+        <li>
+            <a href="#" onclick="applyNAAC()">NAAC <span class="shortcut-key">Ctrl+N</span></a>
+        </li>
+        <li>
+            <a href="#" onclick="applyMedalOfValor()">Medal of Valor <span class="shortcut-key">Ctrl+M</span></a>
+        </li>
+    </ul>
+</li>
+
+
+
+<!-- Password Modal -->
+<div id="passwordModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>Senior Citizen Discount</h3>
+        <p>Please enter password:</p>
+        <input type="password" id="seniorPassword" placeholder="Enter password (123)">
+        <button onclick="verifySeniorPassword()">Submit</button>
+        <p id="passwordError" style="color:red; display:none;">Incorrect password!</p>
+    </div>
+</div>
+
+<!-- Client Details Modal -->
+<div id="clientModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>Senior Citizen Details</h3>
+        <form id="seniorForm">
+            <div>
+                <label>Full Name:</label>
+                <input type="text" id="seniorName" required>
+            </div>
+            <div>
+                <label>ID Number:</label>
+                <input type="text" id="seniorId" required>
+            </div>
+            <div>
+                <label>Birthdate:</label>
+                <input type="date" id="seniorBirthdate" required>
+            </div>
+            <button type="button" onclick="submitSeniorDetails()">Apply Discount</button>
+        </form>
+    </div>
+</div>
         <li>
             <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#priceCheckModal" accesskey="F12">
                 <i class="material-icons">price_check</i><span>Price Check (F12)</span>
@@ -267,6 +307,84 @@
 </div>
 
 <script>
+    // Handle F11 key press
+    document.addEventListener('keydown', function(event) {
+    if (event.key === 'F11') {
+        event.preventDefault();
+        showSeniorPasswordPrompt();  // Trigger password modal on F11 press
+    }
+});
+
+// Senior Citizen Discount Functions
+function showSeniorPasswordPrompt() {
+    $('#seniorPasswordModal').modal('show');  // Show the password modal
+    $('#seniorPassword').val('');  // Clear the password input field
+    $('#passwordError').hide();  // Hide the error message initially
+}
+
+function verifySeniorPassword() {
+    const password = $('#seniorPassword').val();  // Get the entered password
+    if (password === '123') {  // Check if the entered password matches the correct one
+        $('#seniorPasswordModal').modal('hide');  // Hide the password modal
+        $('#seniorDetailsModal').modal('show');  // Show the details modal
+    } else {
+        $('#passwordError').show();  // Show the error message if the password is incorrect
+        $('#seniorPassword').addClass('is-invalid');  // Add invalid class to input
+    }
+}
+
+function submitSeniorDetails() {
+    const name = $('#seniorName').val();  // Get the name value
+    const idNumber = $('#seniorId').val();  // Get the ID number value
+    const birthdate = $('#seniorBirthdate').val();  // Get the birthdate value
+    
+    // Validate that all fields are filled in
+    if (name && idNumber && birthdate) {
+        // Process discount application
+        const discountData = {
+            name: name,
+            idNumber: idNumber,
+            birthdate: birthdate,
+            discountType: 'Senior Citizen'
+        };
+        
+        // Here you would typically send this data to your backend
+        console.log('Applying discount:', discountData);
+        alert(`Senior Citizen discount applied for:\nName: ${name}\nID: ${idNumber}\nBirthdate: ${birthdate}`);
+        
+        // Close the Senior Details modal and reset the form
+        $('#seniorDetailsModal').modal('hide');
+        $('#seniorForm')[0].reset();  // Reset the form fields
+        
+        // Update UI to reflect the discount applied
+        updateTransactionWithDiscount(discountData);
+    } else {
+        alert('Please fill all required fields!');  // Alert if any field is missing
+    }
+}
+
+function updateTransactionWithDiscount(discountData) {
+    // Update your transaction display with the discount applied
+    // This is a placeholder - implement according to your system
+    $('#discountDisplay').text('20% Senior Citizen Discount');
+    // Recalculate totals, etc.
+}
+
+
+// Keyboard Shortcut for F11
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'F11') {
+        event.preventDefault();
+        showSeniorPasswordPrompt();
+    }
+});
+
+// Placeholder functions for other discounts
+function applyRegularDiscount() { alert('Regular discount applied'); }
+function applySoloParent() { alert('Solo Parent discount applied'); }
+function applyPWD() { alert('PWD discount applied'); }
+function applyNAAC() { alert('NAAC discount applied'); }
+function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
     document.addEventListener("keydown", function(event) {
         switch (event.key) {
             case "F1":
@@ -373,6 +491,142 @@
 </script>
 
 <style>
+    .senior-container {
+    width: 350px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.senior-header {
+    background: #4CAF50;
+    color: white;
+    padding: 15px 20px;
+}
+
+.senior-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.senior-body {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.senior-footer {
+    padding: 15px 20px;
+    background: #f9f9f9;
+    text-align: right;
+    border-top: 1px solid #eee;
+}
+
+.apply-btn {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.apply-btn:hover {
+    background: #45a049;
+}
+
+    .shortcut-key {
+    float: right;
+    color: #999;
+    font-size: 0.8em;
+    margin-left: 10px;
+}
+/* Add these styles to your existing CSS */
+.shortcut-key {
+    float: right;
+    color: #888;
+    font-size: 0.85em;
+    margin-left: 10px;
+}
+
+/* Modal styling to match your existing design */
+.modal-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.modal-body {
+    padding: 15px;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-control {
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+.invalid-feedback {
+    display: none;
+    font-size: 0.85em;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
     /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
     .navbar {
         background: rgb(65, 165, 232) !important;

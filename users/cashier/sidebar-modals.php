@@ -236,6 +236,66 @@
 </div>
 
 
+<!-- Senior Citizen Password Modal -->
+<div class="modal fade" id="seniorPasswordModal" tabindex="-1" aria-labelledby="seniorPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="seniorPasswordModalLabel">Input Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="form-group mb-3">
+                    <label for="seniorPassword" class="form-label">Password</label>
+                    <input type="password" id="seniorPassword" class="form-control" placeholder="Enter password">
+                    <div id="passwordError" class="invalid-feedback" style="display:none;">Incorrect password!</div>
+                </div>
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="verifySeniorPassword()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Senior Citizen Details Modal -->
+<div class="modal fade" id="seniorDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">Senior Citizen Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="seniorForm">
+                    <div class="form-group mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" id="seniorName" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">ID Number</label>
+                        <input type="text" id="seniorId" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="form-label">Birthdate</label>
+                        <input type="date" id="seniorBirthdate" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="submitSeniorDetails()">Apply Discount</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Customer Points Modal -->
 <div class="modal fade" id="customerPointsModal" tabindex="-1" aria-labelledby="customerPointsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
