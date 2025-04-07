@@ -1,35 +1,28 @@
 <?php
-// Database connection
-$conn = new mysqli("localhost", "username", "password", "database");
+require_once '../../includes/config.php'; // Database connection
 
-// Sanitize input
-$search = $conn->real_escape_string($_POST['search']);
+// Get search query
+$search = $_POST['query'];
 
-// Query products table (prioritize barcode matches first)
-$query = "(SELECT * FROM tbl_productprice 
-          WHERE Barcode LIKE '$search%' 
-          ORDER BY Barcode LIMIT 5)
-          UNION
-          (SELECT * FROM tbl_productprice 
-          WHERE ProductName LIKE '%$search%' 
-          ORDER BY ProductName LIMIT 5)";
+// Search in multiple columns
+$sql = "SELECT ID, Barcode, ProductName, SRP FROM tbl_productprice 
+        WHERE Barcode LIKE '%$search%' 
+        OR ProductName LIKE '%$search%' 
+        OR SRP LIKE '%$search%'
+        LIMIT 10";
+        
+$result = $conn->query($sql);
 
-$result = $conn->query($query);
-
-if($result->num_rows > 0) {
-    echo '<div class="item-list">';
+// Generate HTML for search results
+if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
-        echo '<div class="item">';
-        echo '<div class="item-name">'.$row['ProductName'].'</div>';
-        echo '<div class="item-details">';
-        echo '<span>Qty: 1</span>';
-        echo '<span>Price: '.$row['SRP'].'</span>';
-        echo '<span>Amount: '.$row['AppliedSRP'].'</span>';
-        echo '</div></div>';
+        echo '<div class="search-item" data-value="'.$row['ID'].'">';
+        echo '<strong>'.$row['ProductName'].'</strong><br>';
+        echo 'Barcode: '.$row['Barcode'].' | SRP: ₱'.$row['SRP'];
+        echo '</div>';
     }
-    echo '</div>';
 } else {
-    echo '<p>No products found</p>';
+    echo '<div class="search-item">No results found</div>';
 }
 
 $conn->close();

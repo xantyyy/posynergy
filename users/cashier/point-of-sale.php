@@ -181,11 +181,13 @@
             <div class="col-md-8" style="margin-top: -15px;">
                 <div class="card">
                     <div class="card-header bg-success text-white text-center"></div>
-                    <div class="card-body" style="padding: 0px;">
+                    <div class="card-body" style="padding: 0px; position: relative;">
                         <form>
                             <div class="form-row">
                                 <div class="form-group col-md-12" style="margin-bottom: 0;">
-                                    <input type="text" class="form-control" id="#" style="padding: 5px; margin: 0;">
+                                    <input type="text" class="form-control" id="productSearch" 
+                                        placeholder="Search products..." style="padding: 5px; margin: 0;">
+                                    <div id="searchResults" class="search-results"></div>
                                 </div>
                             </div>
                         </form>
@@ -307,6 +309,44 @@
 </div>
 
 <script>
+    // COMMENT //
+    $(document).ready(function() {
+            $('#productSearch').on('input', function() {
+                var query = $(this).val();
+                
+                if(query.length >= 2) {
+                    $.ajax({
+                        url: 'search_products.php',
+                        method: 'POST',
+                        data: { query: query },
+                        success: function(data) {
+                            $('#searchResults').html(data);
+                            $('#searchResults').show();
+                        }
+                    });
+                } else {
+                    $('#searchResults').hide();
+                }
+            });
+            
+            // Hide search results when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('#productSearch, #searchResults').length) {
+                    $('#searchResults').hide();
+                }
+            });
+            
+            // Handle click on search result
+            $(document).on('click', '.search-item', function() {
+                var selectedValue = $(this).data('value');
+                var selectedText = $(this).text();
+                $('#productSearch').val(selectedText);
+                $('#searchResults').hide();
+                // You can redirect or perform other actions here
+                // window.location.href = 'product_details.php?id=' + selectedValue;
+            });
+        });
+    //COMMENT//
     // Handle F11 key press
     document.addEventListener('keydown', function(event) {
     if (event.key === 'F11') {
@@ -491,6 +531,25 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
 </script>
 
 <style>
+    /* 🔹 SEARCH BAR STYLES */
+    .search-results {
+            position: absolute; 
+            background-color: white;
+            width: 100%;
+            border: 1px solid #ddd;
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+    }
+        .search-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        .search-item:hover {
+            background-color: #f5f5f5;
+        }
     .senior-container {
     width: 350px;
     background: white;
