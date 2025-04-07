@@ -161,9 +161,9 @@
                         <select class="form-select" id="retail-uom">
                             <option selected value="" hidden>Select unit of measure</option>
                             <?php
-                                foreach ($uoms as $uom) {
-                                    echo "<option value=\"$uom\">$uom</option>";
-                                }
+                            foreach ($uoms as $uom) {
+                                echo "<option value='" . htmlspecialchars($uom) . "'>" . htmlspecialchars($uom) . "</option>";
+                            }
                             ?>
                         </select>
                     </div>
@@ -523,3 +523,133 @@
         </div>
     </div>
 </div>
+
+<script>
+// Add this to your existing JavaScript file or in a script tag at the bottom of your page
+$(document).ready(function() {
+    // Function to load suppliers
+    function loadSuppliers() {
+        $.ajax({
+            url: 'manage-productProfile.php?type=SUPPLIERS',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#supplier').empty();
+                $('#supplier').append('<option selected value="" hidden>Select Supplier</option>');
+                
+                $.each(data, function(index, supplier) {
+                    $('#supplier').append('<option value="' + supplier + '">' + supplier + '</option>');
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading suppliers:', error);
+            }
+        });
+    }
+    
+    // Function to load UOM (Units of Measurement)
+    function loadUOMs(selector) {
+        $.ajax({
+            url: 'manage-productProfile.php?type=UOM',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $(selector).empty();
+                $(selector).append('<option selected value="" hidden>Select unit of measure</option>');
+                
+                $.each(data, function(index, uom) {
+                    $(selector).append('<option value="' + uom + '">' + uom + '</option>');
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading UOMs:', error);
+            }
+        });
+    }
+    
+    // Load suppliers and UOMs when the product info modal is shown
+    $('#productInfoModal').on('show.bs.modal', function(e) {
+        loadSuppliers();
+        loadUOMs('#uom');
+        
+        // You can also get the barcode from the button that triggered the modal
+        var barcode = $(e.relatedTarget).data('barcode');
+        $('#barcode').val(barcode);
+    });
+    
+    // Load UOMs when the retail modal is shown
+    $('#productModalRetail').on('show.bs.modal', function(e) {
+        loadUOMs('#retail-uom');
+        
+        // Get the barcode and product name from the button that triggered the modal
+        var barcode = $(e.relatedTarget).data('barcode');
+        var productName = $(e.relatedTarget).data('product-name');
+        var cost = $(e.relatedTarget).data('cost');
+        
+        $('#retailBarcode').val(barcode);
+        $('#retailProductName').val(productName);
+        $('#retail-cost').val(cost);
+    });
+    
+    // Add an event handler for the Save button in product info modal
+    $('#productInfoModal .btn-primary').click(function() {
+        // Get values from form
+        var productData = {
+            barcode: $('#barcode').val(),
+            supplier: $('#supplier').val(),
+            uom: $('#uom').val(),
+            costPrice: $('#costPrice').val(),
+            vatable: $('#vatable').is(':checked')
+        };
+        
+        // Here you would add an AJAX call to save the product information
+        console.log('Product data to save:', productData);
+    });
+    
+    // Add an event handler for the Save button in retail modal
+    $('#productModalRetail .btn-primary').click(function() {
+        // Get values from form
+        var retailData = {
+            barcode: $('#retailBarcode').val(),
+            productName: $('#retailProductName').val(),
+            priceType: $('#retail-priceType').val(),
+            cost: $('#retail-cost').val(),
+            uom: $('#retail-uom').val(),
+            markup: $('#retail-markup').val(),
+            srp: $('#retail-srp').val(),
+            appliedSrp: $('#retail-appliedSrp').val()
+        };
+        
+        // Here you would add an AJAX call to save the retail information
+        console.log('Retail data to save:', retailData);
+        
+        // Example AJAX call (you would need to implement the server-side handler)
+        /*
+        $.ajax({
+            url: 'manage-productProfile.php?type=SAVE_RETAIL_INFO',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(retailData),
+            success: function(response) {
+                if (response.success) {
+                    alert('Retail information saved successfully!');
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            }
+        });
+        */
+    });
+    
+    // Calculate SRP based on cost and markup
+    $('#retail-markup').on('input', function() {
+        var cost = parseFloat($('#retail-cost').val()) || 0;
+        var markup = parseFloat($(this).val()) || 0;
+        
+        if (cost > 0 && markup > 0) {
+            var srp = cost * (1 + (markup / 100));
+            $('#retail-srp').val(srp.toFixed(2));
+        }
+    });
+});
+</script>

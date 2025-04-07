@@ -136,6 +136,42 @@ if ($type === 'SAVE_PRODUCT_PROFILE') {
             );
         }
     }
+} elseif ($type === 'SUPPLIERS') {
+    // New functionality to fetch suppliers from tbl_suppliers
+    try {
+        $sql = "SELECT Supplier FROM tbl_suppliers ORDER BY Supplier ASC";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row['Supplier'];
+            }
+        }
+    } catch (Exception $e) {
+        $data = array(
+            'success' => false,
+            'message' => 'Database error: ' . $e->getMessage(),
+            'error_code' => $e->getCode()
+        );
+    }
+} elseif ($type === 'UOM') {
+    // Fetch UOM (Units of Measurement) from tbl_invmaintenance where ItemType = 'UNIT'
+    try {
+        $sql = "SELECT ItemName FROM tbl_invmaintenance WHERE ItemType = 'UNIT' ORDER BY ItemName ASC";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row['ItemName'];
+            }
+        }
+    } catch (Exception $e) {
+        $data = array(
+            'success' => false,
+            'message' => 'Database error: ' . $e->getMessage(),
+            'error_code' => $e->getCode()
+        );
+    }
 } elseif (isset($_GET['selectedCategory'])) {
     $selectedCategory = $_GET['selectedCategory'];
 
