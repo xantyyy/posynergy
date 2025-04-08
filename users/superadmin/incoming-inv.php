@@ -1,4 +1,5 @@
 <?php include_once 'header.php'; ?>
+<?php include_once 'incoming-item.php'; ?>
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -161,7 +162,7 @@
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h2 style="margin: 0 20px; margin-top: 15px;">Incoming Inventory</h2>
+							<h2 style="margin: 0 20px; margin-top: 15px;">Incoming Item</h2>
 						</div>
 					</div>
 					<div class="row">
@@ -295,7 +296,7 @@
 
 							<div class="col-md-7">
 								<div class="form-group col-md-12 d-flex align-items-center">
-									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#inventoryModal">
 										<i class="fas fa-plus"></i> Create
 									</button>
 									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
