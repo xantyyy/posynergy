@@ -1,3 +1,30 @@
+<?php
+    require_once '../../includes/config.php';
+
+    $sql = "SELECT Supplier, Address, Name, ContactNumber FROM tbl_suppliers ORDER BY Supplier ASC";
+    $result = $conn->query($sql);
+    if (!$result) {
+        die("Query failed: " . $conn->error);
+    }
+
+    // Fetch Address from tbl_invconfig
+    $sqlAddress = "SELECT Value FROM tbl_invconfig WHERE ConfigName = 'ADDRESS'";
+    $resultAddress = $conn->query($sqlAddress);
+    $addressValue = ($resultAddress && $resultAddress->num_rows > 0) ? $resultAddress->fetch_assoc()['Value'] : '';
+
+    // Fetch Company (Ship To) from tbl_invconfig
+    $sqlCompany = "SELECT Value FROM tbl_invconfig WHERE ConfigName = 'COMPANY'";
+    $resultCompany = $conn->query($sqlCompany);
+    $companyValue = ($resultCompany && $resultCompany->num_rows > 0) ? $resultCompany->fetch_assoc()['Value'] : '';
+
+    // Fetch Company (Purpose) from tbl_invmaintenance
+    $sqlPurpose = "SELECT ItemName FROM tbl_invmaintenance WHERE ItemType = 'INCOMING PURPOSE'";
+    $resultPurpose = $conn->query($sqlPurpose);
+    if (!$resultPurpose) {
+        die("Query failed: " . $conn->error);
+    }
+?>
+
 <!-- Modal -->
 <div class="modal fade" id="inventoryModal" tabindex="-1" aria-labelledby="inventoryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -15,16 +42,30 @@
                                 <form>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                         <label for="invItem-no" style="width: 150px; white-space: nowrap;">Inventory No:</label>
-                                        <input type="text" class="form-control" id="invItem-no" style="flex: 1;">
+                                        <input type="text" class="form-control" id="invItem-no" style="flex: 1;" readonly>
                                     </div>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                         <label for="invItem-date" style="width: 150px; white-space: nowrap;">Inventory Date:</label>
-                                        <input type="date" class="form-control" id="invItem-date" style="flex: 1;">
+                                        <input type="date" class="form-control" id="invItem-date" style="flex: 1;" readonly>
                                     </div>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                         <label for="invItem-supplier" style="width: 150px; white-space: nowrap;">Supplier:</label>
                                         <select class="form-select" id="invItem-supplier" style="flex: 1;">
-                                            <option></option>
+                                            <option value="" selected hidden>Select Supplier</option>
+                                            <?php
+                                            if ($result->num_rows > 0) {
+                                                while ($row = $result->fetch_assoc()) {
+                                                    // Idagdag ang data-* attributes sa bawat option
+                                                    echo '<option value="' . htmlspecialchars($row['Supplier']) . '" 
+                                                        data-address="' . htmlspecialchars($row['Address']) . '" 
+                                                        data-contact-person="' . htmlspecialchars($row['Name']) . '" 
+                                                        data-contact-no="' . htmlspecialchars($row['ContactNumber']) . '">
+                                                        ' . htmlspecialchars($row['Supplier']) . '</option>';
+                                                }
+                                            } else {
+                                                echo '<option value="">No Suppliers Available</option>';
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
@@ -51,16 +92,25 @@
                                 <form>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                         <label for="invItem-ship" style="width: 150px; white-space: nowrap;">Ship To:</label>
-                                        <input type="text" class="form-control" id="invItem-ship" style="flex: 1;">
+                                        <input type="text" class="form-control" id="invItem-ship" style="flex: 1;" value="<?php echo htmlspecialchars($companyValue); ?>" readonly>
                                     </div>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                         <label for="invItem-address2" style="width: 150px; white-space: nowrap;">Address:</label>
-                                        <textarea class="form-control" id="invItem-address2" rows="2" style="flex: 1;"></textarea>
+                                        <textarea class="form-control" id="invItem-address2" rows="2" style="flex: 1;" readonly><?php echo htmlspecialchars($addressValue); ?></textarea>
                                     </div>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                         <label for="invItem-purpose" style="width: 150px; white-space: nowrap;">Purpose:</label>
                                         <select class="form-select" id="invItem-purpose" style="flex: 1;">
-                                            <option></option>
+                                            <option value="" selected hidden>Select Purpose</option>
+                                            <?php
+                                            if ($resultPurpose->num_rows > 0) {
+                                                while ($row = $resultPurpose->fetch_assoc()) {
+                                                    echo '<option value="' . htmlspecialchars($row['ItemName']) . '">' . htmlspecialchars($row['ItemName']) . '</option>';
+                                                }
+                                            } else {
+                                                echo '<option value="">No Purpose Available</option>';
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
@@ -87,11 +137,11 @@
                                         <form style="margin-top: 50px;">
                                             <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                                 <label for="invItem-barcode" style="width: 100px; white-space: nowrap;">Barcode:</label>
-                                                <input type="text" class="form-control" id="invItem-barcode" style="flex: 1;">
+                                                <input type="number" class="form-control" id="invItem-barcode" style="flex: 1;">
                                             </div>
                                             <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                                 <label for="invItem-description" style="width: 100px; white-space: nowrap;">Description:</label>
-                                                <input type="text" class="form-control" id="invItem-description" style="flex: 1;">
+                                                <input type="text" class="form-control" id="invItem-description" style="flex: 1;" readonly>
                                             </div>
                                         </form>
                                     </div>
@@ -103,7 +153,7 @@
                                                 <h6>Add Quantity</h6>
                                                 <form>
                                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
-                                                        <input type="text" class="form-control" id="invItem-quantity" style="flex: 1;">
+                                                        <input type="number" class="form-control" min="1" step="1" id="invItem-quantity" style="flex: 1;">
                                                     </div>
                                                     <button type="button" class="btn btn-outline-primary" style="font-size: 13px;">
                                                         <i class="fas fa-plus"></i> Add
@@ -221,3 +271,58 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Function to set current date
+    function setCurrentDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const currentDate = `${year}-${month}-${day}`;
+        
+        document.getElementById('invItem-date').value = currentDate;
+    }
+
+    // Function to generate inventory number
+    function generateInventoryNumber() {
+        const today = new Date();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const year = today.getFullYear();
+        
+        const randomNum = String(Math.floor(10000 + Math.random() * 90000));
+        const baseNumber = `II${month}${day}${year}${randomNum}`;
+        
+        let inventoryNumber = baseNumber;
+        const usedNumbers = JSON.parse(localStorage.getItem('usedInventoryNumbers') || '[]');
+        
+        while (usedNumbers.includes(inventoryNumber)) {
+            const newRandomNum = String(Math.floor(10000 + Math.random() * 90000));
+            inventoryNumber = `II${month}${day}${year}${newRandomNum}`;
+        }
+        
+        usedNumbers.push(inventoryNumber);
+        localStorage.setItem('usedInventoryNumbers', JSON.stringify(usedNumbers));
+        
+        return inventoryNumber;
+    }
+
+    // Combine both functions in a single window.onload
+    window.onload = function() {
+        setCurrentDate();  // Set the current date
+        document.getElementById('invItem-no').value = generateInventoryNumber();  // Set the inventory number
+    };
+
+    // Supplier selection handler
+    document.getElementById('invItem-supplier').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const address = selectedOption.getAttribute('data-address') || '';
+        const contactPerson = selectedOption.getAttribute('data-contact-person') || '';
+        const contactNo = selectedOption.getAttribute('data-contact-no') || '';
+        
+        document.getElementById('invItem-address').value = address;
+        document.getElementById('invItem-contactPerson').value = contactPerson;
+        document.getElementById('invItem-contactNo').value = contactNo;
+    });
+</script>
