@@ -106,8 +106,8 @@ try {
     }
 
     // 3. Insert into tbl_invprodlist
-    $batch = "BATCH-" . time(); // Generate a unique batch number
-    $asOf = date('Y-m-d H:i:s');
+    /*$batch = "BATCH-" . time(); // Generate a unique batch number
+    $asOf = date('Y/m/d');
     $location = "Main Branch"; // You can make this dynamic if needed
     $threshold = "10"; // Default threshold, adjust as needed
     $reference = "REF-" . time(); // Generate a unique reference
@@ -171,16 +171,19 @@ try {
             'IsVat' => $costingData[0]['isVat'] ?? 'NO',
             'CompanyVat' => $companyVat
         ], true));
-    }
+    }*/
 
     // Inside your try block, after handling tbl_invprodlist insertion
 // Add insertion into tbl_productprice for each retail entry
 foreach ($retailData as $retail) {
-    $currentDate = date('Y-m-d H:i:s');
-    $priceType = "Regular"; // Default price type, adjust as needed
+    $currentDate = date('Y/m/d');
+    
+    // Get PriceType from form submission, with validation
+    $priceType = isset($_POST['retail-priceType']) && in_array($_POST['retail-priceType'], ['retail', 'wholesale'])
+        ? $_POST['retail-priceType']
+        : 'Retail'; // Default to 'Retail' if invalid or not provided
     
     // Calculate markup percentage if not directly provided
-    // (Assuming markup is the percentage difference between selling price and cost)
     $cost = (float)($costingData[0]['cost'] ?? 0);
     $appliedSrp = (float)($retail['appliedSrp'] ?? 0);
     $markupPercent = ($cost > 0) ? (($appliedSrp - $cost) / $cost * 100) : 0;
@@ -223,64 +226,6 @@ foreach ($retailData as $retail) {
         'IsVAT' => $isVat,
         'VAT' => $vatValue,
         'AppliedSRP' => $retail['appliedSrp']
-    ], true));
-}
-// After tbl_productprice insertion
-// Add insertion into tbl_invincoming
-$transactionDate = date('Y-m-d H:i:s');
-$manufacturer = ""; // Populate if available
-$size = ""; // Populate if available
-$expirationDate = ""; // Set if available
-
-foreach ($retailData as $retail) {
-    $totalCostPrice = (float)($costingData[0]['cost'] ?? 0) * (int)($retail['quantity'] ?? 1);
-    $totalSellingPrice = (float)($retail['appliedSrp'] ?? 0) * (int)($retail['quantity'] ?? 1);
-    $isVat = $costingData[0]['isVat'] ?? 'NO';
-    
-    $stmt = $conn->prepare("INSERT INTO tbl_invincoming (
-        Batch, Barcode, ProductDescription, ProductCode, ProductName,
-        Manufacturer, Supplier, Category, Size, Unit, ExpirationDate,
-        Quantity, RetailCostPrice, RetailSellingPrice, TotalCostPrice,
-        TotalSellingPrice, Threshold, Reference, Purpose, Tag, Shelf,
-        ShelfDescription, TransactionDate, Location, isVat, companyVat
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    
-    // Execute with array of parameters instead of bind_param
-    $stmt->execute([
-        $batch,
-        $retail['barcode'],
-        $formData['productDetails'],
-        $formData['productCode'],
-        $formData['productName'],
-        $manufacturer,
-        $costingData[0]['supplier'] ?? '',
-        $formData['category'],
-        $size,
-        $retail['uom'],
-        $expirationDate,
-        $retail['quantity'],
-        $costingData[0]['cost'] ?? '0',
-        $retail['appliedSrp'],
-        $totalCostPrice,
-        $totalSellingPrice,
-        $threshold,
-        $reference,
-        $purpose,
-        $tag,
-        $formData['shelf'],
-        $formData['shelfDescription'],
-        $transactionDate,
-        $location,
-        $isVat,
-        $companyVat
-    ]);
-    
-    // Debug log
-    error_log("Inserting into tbl_invincoming: " . print_r([
-        'Batch' => $batch,
-        'Barcode' => $retail['barcode'],
-        'ProductDescription' => $formData['productDetails'],
-        // ... other fields as in the execute array
     ], true));
 }
     // Commit the transaction

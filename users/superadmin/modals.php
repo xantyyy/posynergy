@@ -130,7 +130,7 @@
                     <!-- Price Type -->
                     <div class="col-md-6">
                         <label for="priceType" class="form-label">Price Type:</label>
-                        <select class="form-select" id="retail-priceType">
+                        <select class="form-select" id="retail-priceType" name="retail-priceType">
                             <option selected value hidden>Select price type</option>
                             <option value="retail">Retail</option>
                             <option value="wholesale">Wholesale</option>
