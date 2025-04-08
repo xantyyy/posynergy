@@ -200,7 +200,7 @@
 											</tbody>
 										</table>
 									</div>
-									<button type="button" class="btn btn-outline-primary opacity-50 me-2" onclick="window.location.href='product-entry.php';">
+									<button type="button" class="btn btn-outline-primary opacity-50 me-2" onclick="window.location.href='incoming-inv.php';">
 										<i class="fas fa-plus"></i> New
 									</button>
 									<button type="button" class="btn btn-outline-primary opacity-50 me-2"

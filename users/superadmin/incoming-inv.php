@@ -3,17 +3,16 @@
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
 				<div class="sidebar-header">
-					<img src="../../assets/images/isynergies.png" class="img-fluid"/>
-					
+					<img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
+
 					<div class="ml-auto" id="userInfo">
 						<p class="text-right">Admin</p>
 						<p class="text-right">Main Branch</p>
 					</div>
-					
 				</div>
 				<ul class="list-unstyled components">
-					<li class="">
-						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
+					<li class="#">
+						<a href="index.php" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</b></span></a>
 						
 					</li>
 						
@@ -165,372 +164,336 @@
 							<h2 style="margin: 0 20px; margin-top: 15px;">Incoming Inventory</h2>
 						</div>
 					</div>
-					<div class="row mb-3">
+					<div class="row">
                         <!-- Left Side - Product Data Entry Form -->
-                        <div class="col-md-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <form>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="inventoryNo">Inventory No.:</label>
-                                                <input type="text" class="form-control" id="inventoryNo">
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="inventoryDate">Inventory Date:</label>
-                                                <input type="text" class="form-control" id="inventoryDate">
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label for="supplier">Supplier:</label>
-                                            <textarea class="form-control" id="supplier" rows="4"></textarea>
-                                        </div>
-                                    </form>
-                                </div>
+                            <div class="col-md-4">
+								<div class="card" style="height: 90%;">
+									<div class="card-body">
+										<form>
+											<div class="form-group col-md-12 d-flex align-items-center">
+												<label for="inv-no" style="width: 120px; white-space: nowrap;">Inventory No:</label>
+												<input type="text" class="form-control input-field" id="inv-no" disabled style="flex: 1;">
+											</div>
+											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
+												<label for="inv-date" style="width: 120px; white-space: nowrap;">Inventory Date:</label>
+												<input type="date" class="form-control input-field date-field" id="inv-date" disabled style="flex: 1;">
+											</div>
+											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
+												<label for="inv-supplier" style="width: 120px; white-space: nowrap;">Supplier:</label>
+												<textarea class="form-control input-field" id="inv-supplier" placeholder="Description" rows="2" disabled style="flex: 1;"></textarea>
+											</div>
+										</form>
+									</div>
+								</div>
                             </div>
-                        </div>
 
-                        <div class="col-md-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <form>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="ship">Ship To:</label>
-                                                <input type="text" class="form-control" id="ship">
+                            <!-- Right Side - Additional Table -->
+                            <div class="col-md-4">
+								<div class="card">
+                                    <div class="card-body">
+                                        <form>
+                                            <div class="form-group col-md-12 d-flex align-items-center">
+												<label for="inv-ship" style="width: 80px; white-space: nowrap;">Ship To:</label>
+												<input type="text" class="form-control input-field" id="inv-ship" style="flex: 1;" disabled>
                                             </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="ship">Address:</label>
-                                                <input type="text" class="form-control" id="address">
+                                            <div class="form-group col-md-12 mt-2 d-flex align-items-center">
+												<label for="inv-address" style="width: 80px; white-space: nowrap;">Address:</label>
+												<textarea class="form-control input-field" id="inv-address" placeholder="Description" rows="2" style="flex: 1;" disabled></textarea>
+											</div>
+											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
+												<label for="inv-remarks" style="width: 80px; white-space: nowrap;">Remarks:</label>
+												<textarea class="form-control input-field" id="inv-remarks" placeholder="Description" rows="2" style="flex: 1;"></textarea>
+											</div>
+											<div class="form-group mt-2 col-md-12 d-flex align-items-center">
+												<label class="me-2" for="inv-purpose" style="width: 120px; white-space: nowrap;">Purpose:</label>
+												<input type="text" class="form-control input-field me-2" id="inv-purpose" disabled>
+												<label class="me-2" for="inv-terms" style="width: 120px; white-space: nowrap;">Terms:</label>
+												<input type="text" class="form-control input-field" id="inv-terms">
                                             </div>
-                                        </div>
-                                        <div class="form-group col-md-12">
-                                            <label for="remarks">Remarks:</label>
-                                            <textarea class="form-control" id="remarks" rows="3"></textarea>
-                                        </div>
-                                        <div class="form-group d-flex align-items-center">
-                                            <div class="me-3">
-                                                <label for="purpose" class="me-2">Purpose:</label>
-                                                <input type="text" class="form-control d-inline-block" id="purpose" style="width: 170px;">
-                                            </div>
-                                            <div>
-                                                <label for="terms" class="me-2">Terms:</label>
-                                                <input type="text" class="form-control d-inline-block" id="terms" style="width: 170px;">
-                                            </div>
-                                        </div>                                 
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <form>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="#">Total Quantity:</label>
-                                                <input type="text" class="form-control" id="#">
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="#">Gross Amount:</label>
-                                                <input type="text" class="form-control" id="#">
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="#">Product Discount:</label>
-                                                <input type="text" class="form-control" id="#">
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="#">Purchase Discount:</label>
-                                                <input type="text" class="form-control" id="#">
-                                            </div>
-                                            <div class="form-group col-md-12">
-                                                <label for="#">Net Amount:</label>
-                                                <input type="text" class="form-control" id="#">
-                                            </div>
-                                        </div>                                    
-                                    </form>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#" style="width: auto; margin-right: 5px; font-size: 12px; margin-top: 15px;">
-                                        <i class="fas fa-save"></i> Send to Server
-                                    </button>
-                                    <button type="button" class="btn btn-success" style="width: auto; margin-right: 5px; font-size: 12px; margin-top: 15px;" data-bs-toggle="modal" data-bs-target="#">
-										<i class="fas fa-save"></i> Reveiced Items
-									</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12 mt-4">
-                            <div class="card">
-                                <div class="card-body">
-                                    <!-- Scrollable Table Wrapper -->
-                                    <div style="overflow-x: auto; white-space: nowrap;">
-                                        <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                            <thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Barcode</th>
-                                                    <th>Description</th>
-                                                    <th>Qty</th>
-                                                    <th>Partial Qty</th>
-                                                    <th>UOM</th>
-                                                    <th>Unit Price</th>
-                                                    <th>Vat</th>
-                                                    <th>Disc</th>
-                                                    <th>Amount</th>
-                                                    <th>Location</th>
-                                                    <th>Vatable</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td><input type="radio" name="selectItem" value="1"></td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        </form>
                                     </div>
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#" style="width: 80px; margin-right: 5px; font-size: 12px;">
-                                        <i class="fas fa-plus"></i> New
-                                    </button>
-                                    <button type="button" class="btn btn-success" style="width: 80px; margin-right: 5px; font-size: 12px;" data-bs-toggle="modal" data-bs-target="#">
-                                        <i class="fas fa-save"></i> Open
-                                    </button>
-                                    <button type="button" class="btn btn-danger" style="width: 80px; margin-right: 5px; font-size: 12px;" data-bs-toggle="modal" data-bs-target="#">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-5">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6>Product Discounts</h6>
-                                    <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
-                                            <tr>
-												<th>#</th>
-                                                <th>Description</th>
-                                                <th>Disc.</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                <tr>
-													<td><input type="radio" name="selectItem" value="1"></td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                </tr>
-                                        </tbody>
-                                    </table>
+							<div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+										<p style="text-transform: none; font-style: italic; color: blue;">
+											Selected Category discountable for the following discount type in the list.
+										</p>
+                                        <div class="table-responsive" style="height: calc(75vh - 300px); overflow-y: auto;">
+                                            <table class="table table-bordered" id="table-bold">
+                                                <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+                                                    <tr>
+                                                        <th>Barcode</th>
+                                                        <th>Description</th>
+                                                        <th>Qty</th>
+                                                        <th>Partial Qty</th>
+														<th>UOM</th>
+														<th>Unit Price</th>
+														<th>VAT</th>
+														<th>Dics.</th>
+														<th>Amount</th>
+														<th>Location</th>
+														<th>Vatable</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="11" class="text-center">No Data Available</td>
+                                                    </tr>
+                                                </tbody>                                            
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-7">
-                            <div class="card">
-                                <div class="card-body">
-									<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal" style="width: auto; margin-right: 5px; font-size: 15px  ;">
-                                        <i class="fas fa-plus"></i> Create
-                                    </button>
-                                    <button type="button" class="btn btn-primary" style="width: auto; margin-right: 5px; font-size: 15px;" data-bs-toggle="modal" data-bs-target="#">
-										<i class="fas fa-save"></i> Set Expiration
+							<div class="col-md-5">
+                                <div class="card">
+                                    <div class="card-body">
+										<h6>Product Discount</h6>
+                                        <div class="table-responsive" style="height: calc(60vh - 300px); overflow-y: auto;">
+                                            <table class="table table-bordered" id="table-bold">
+                                                <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+                                                    <tr>
+                                                        <th>Description</th>
+														<th>Disc.</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">No Data Available</td>
+                                                    </tr>
+                                                </tbody>                                            
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+								<div class="card">
+                                    <div class="card-body">
+										<h6>Expiration Details</h6>
+                                        <div class="table-responsive" style="height: calc(60vh - 300px); overflow-y: auto;">
+										<table class="table table-bordered" id="table-bold">
+                                                <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+                                                    <tr>
+                                                        <th>Description</th>
+														<th>Expiration</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">No Data Available</td>
+                                                    </tr>
+                                                </tbody>                                            
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+							<div class="col-md-7">
+								<div class="form-group col-md-12 d-flex align-items-center">
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
+										<i class="fas fa-plus"></i> Create
 									</button>
-                                    <button type="button" class="btn btn-primary" style="width: auto; margin-right: 5px; font-size: 15px;" data-bs-toggle="modal" data-bs-target="#">
-                                        <i class="fas fa-plus"></i> Add Product Disc.
-                                    </button>
-                                    <button type="button" class="btn btn-danger" style="width: auto; margin-right: 5px; font-size: 15px;" data-bs-toggle="modal" data-bs-target="#">
-                                        <i class="fas fa-trash"></i> Delete Item
-                                    </button>
-                                    <button type="button" class="btn btn-warning" style="width: auto; margin-right: 5px; font-size: 15px;" data-bs-toggle="modal" data-bs-target="#">
-										<i class="fas fa-save"></i> Set Expiration
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
+										<i class="fas fa-plus"></i> Set Expiration
+									</button>
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
+										<i class="fas fa-plus"></i> Add Product Discount
+									</button>
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
+										<i class="fas fa-trash"></i> Delete Item
+									</button>
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
+										<i class="fas fa-save"></i> Save Pending
 									</button>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="col-md-5">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h6>Expiration Details</h6>
-                                    <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                        <thead class="fw-bold fs-6 fst-italic card-header bg-dark opacity-60 text-white">
-                                            <tr>
-												<th>#</th>
-                                                <th>Description</th>
-                                                <th>Expiration</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                <tr>
-													<td><input type="radio" name="selectItem" value="1"></td>
-                                                    <td>Sample</td>
-                                                    <td>Sample</td>
-                                                </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+								<div class="card" style="width: 88%; height: 80%;">
+									<div class="card-body">
+										<form>
+											<div class="form-group col-md-12 d-flex align-items-center">
+												<label for="total-qty" style="white-space: nowrap; width: 150px;">Total Quantity:</label>
+												<input type="text" style="flex: 1;" class="form-control input-field" id="total-qty" disabled>
+											</div>
+											<div class="form-group col-md-12 d-flex align-items-center">
+												<label class="mt-3" for="gross-amt" style="white-space: nowrap; width: 150px;">Gross Amount:</label>
+												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="gross-amt" disabled>
+											</div>
+											<div class="form-group col-md-12 d-flex align-items-center">
+												<label class="mt-3" for="prod-disc" style="white-space: nowrap; width: 150px;">Product Discount:</label>
+												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="prod-disc" disabled>
+											</div>
+											<div class="form-group col-md-12 d-flex align-items-center">
+												<label class="mt-3" for="purc-disc" style="white-space: nowrap; width: 150px;">Purchase Discount:</label>
+												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="purc-disc" disabled>
+											</div>
+											<div class="form-group col-md-12 d-flex align-items-center">
+												<label class="mt-3" for="net-amt" style="white-space: nowrap; width: 150px;">Net Amount:</label>
+												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="net-amt" disabled>
+											</div>
+										</form>
+										<div class="form-group col-md-12 d-flex align-items-end justify-content-end mt-3">
+											<button type="button" class="btn me-2 new-btn btn-outline-primary" style="font-size: 13px; width: auto;">
+												<i class="fas fa-save"></i> SEND TO SERVER
+											</button>
+											<button type="button" class="btn me-2 new-btn btn-outline-primary" style="font-size: 13px;">
+												<i class="fas fa-plus"></i> RECIEVE ITEM
+											</button>
+										</div>
+									</div>
+								</div>
                             </div>
                         </div>
                     </div>
-				</div>
-                
-                <script>
-								document.addEventListener("DOMContentLoaded", function () {
-						const currentUrl = window.location.pathname.split('/').pop();
-						
-						document.querySelectorAll('.list-unstyled a').forEach(link => {
-							const linkHref = link.getAttribute('href');
-							const parentMenu = link.closest('.collapse');
-							const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+				</div>                   
+            </div>
+			
+			<script>
+				document.addEventListener("DOMContentLoaded", function () {
+					const currentUrl = window.location.pathname.split('/').pop();
+					
+					document.querySelectorAll('.list-unstyled a').forEach(link => {
+						const linkHref = link.getAttribute('href');
+						const parentMenu = link.closest('.collapse');
+						const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-							// Mark the active link
-							if (linkHref === currentUrl) {
-								link.classList.add('active');
-								if (parentMenu) {
-									parentMenu.classList.add('show');
-									if (dropdownToggle) {
-										dropdownToggle.classList.add('highlighted-dropdown', 'active');
-										dropdownToggle.setAttribute('aria-expanded', 'true');
-									}
+						// Mark the active link
+						if (linkHref === currentUrl) {
+							link.classList.add('active');
+							if (parentMenu) {
+								parentMenu.classList.add('show');
+								if (dropdownToggle) {
+									dropdownToggle.classList.add('highlighted-dropdown', 'active');
+									dropdownToggle.setAttribute('aria-expanded', 'true');
 								}
 							}
+						}
 
-							// Apply hover effect for menu items
-							link.addEventListener("mouseenter", function () {
-								this.classList.add("hover-effect");
-							});
-
-							link.addEventListener("mouseleave", function () {
-								this.classList.remove("hover-effect");
-							});
+						// Apply hover effect for menu items
+						link.addEventListener("mouseenter", function () {
+							this.classList.add("hover-effect");
 						});
-						
-						document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-							const parentMenu = dropdown.nextElementSibling;
-							if (parentMenu && parentMenu.querySelector('.active')) {
-								dropdown.classList.add('highlighted-dropdown', 'active');
-								dropdown.setAttribute('aria-expanded', 'true');
-							}
-							
-							dropdown.addEventListener("mouseenter", function () {
-								this.classList.add('hovered-dropdown');
-							});
 
-							dropdown.addEventListener("mouseleave", function () {
-								this.classList.remove("hovered-dropdown");
-							});
+						link.addEventListener("mouseleave", function () {
+							this.classList.remove("hover-effect");
 						});
 					});
-				</script>
-
-				<style>
-						/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
-						.navbar {
-							background: rgb(0, 0, 128) !important;
+					
+					document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+						const parentMenu = dropdown.nextElementSibling;
+						if (parentMenu && parentMenu.querySelector('.active')) {
+							dropdown.classList.add('highlighted-dropdown', 'active');
+							dropdown.setAttribute('aria-expanded', 'true');
 						}
+						
+						dropdown.addEventListener("mouseenter", function () {
+							this.classList.add('hovered-dropdown');
+						});
 
-						/* 🔹 NAVBAR BRAND COLOR (White) */
-						.navbar-brand {
-							color: #ffffff !important;
-						}
+						dropdown.addEventListener("mouseleave", function () {
+							this.classList.remove("hovered-dropdown");
+						});
+					});
+				});
+			</script>
 
-						/* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
-						.nav-link, 
-						.dropdown-toggle, 
-						.list-unstyled a {
-							color: #333;
-							font-size: 16px;
-							transition: all 0.3s ease-in-out;
-						}
+			<style>
+					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
+					.navbar {
+						background: rgb(65, 165, 232) !important;
+					}
 
-						/* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
-						.nav-link:hover, 
-						.list-unstyled a:hover, 
-						.dropdown-toggle:hover,
-						.hovered-dropdown, .hover-effect {
-							background: rgb(0, 0, 128) !important; /* Navy Blue */
-							color: #ffffff !important; /* White Text */
-							transform: scale(1.05);
-						}
+					/* 🔹 NAVBAR BRAND COLOR (White) */
+					.navbar-brand {
+						color: #ffffff !important;
+					}
 
-						/* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
-						.nav-link.active, 
-						.list-unstyled a.active, 
-						.dropdown-toggle.active {
-							color: rgb(0, 0, 0) !important; /* Black */
-							font-weight: bold !important;
-							background: transparent !important;
-						}
+					/* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
+					.nav-link, 
+					.dropdown-toggle, 
+					.list-unstyled a {
+						color: #333;
+						font-size: 16px;
+						transition: all 0.3s ease-in-out;
+					}
 
-						/* 🔹 WHEN DROPDOWN IS EXPANDED */
-						.dropdown-toggle[aria-expanded="true"], 
-						.dropdown-toggle.highlighted-dropdown {
-							background: rgb(255, 255, 255) !important; /* White Background */
-							color: rgb(0, 0, 0) !important; /* Black Text */
-							font-weight: bold;
-						}
+					/* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
+					.nav-link:hover, 
+					.list-unstyled a:hover, 
+					.dropdown-toggle:hover,
+					.hovered-dropdown, .hover-effect {
+						background: rgb(65, 165, 232) !important; /* Navy Blue */
+						color: #ffffff !important; /* White Text */
+						transform: scale(1.05);
+					}
 
-						/* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
-						.collapse.show {
-							background-color: rgb(255, 255, 255);
-							border-left: 4px solid rgb(0, 0, 128); /* Navy Blue Border */
-						}
+					/* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
+					.nav-link.active, 
+					.list-unstyled a.active, 
+					.dropdown-toggle.active {
+						color: rgb(0, 0, 0) !important; /* Black */
+						font-weight: bold !important;
+						background: transparent !important;
+					}
 
-						/* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
-						.dropdown-toggle:hover, 
-						.dropdown-toggle.highlighted-dropdown:hover {
-							background: rgb(0, 0, 128) !important; /* Navy Blue */
-							color: white !important; /* White Text */
-						}
+					/* 🔹 WHEN DROPDOWN IS EXPANDED */
+					.dropdown-toggle[aria-expanded="true"], 
+					.dropdown-toggle.highlighted-dropdown {
+						background: rgb(255, 255, 255) !important; /* White Background */
+						color: rgb(0, 0, 0) !important; /* Black Text */
+						font-weight: bold;
+					}
 
-						/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
-						.dropdown-toggle:hover *, 
-						.dropdown-toggle.highlighted-dropdown:hover * {
-							color: white !important;
-						}
+					/* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
+					.collapse.show {
+						background-color: rgb(255, 255, 255);
+						border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
+					}
+					
+					/* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+					.list-unstyled a:hover, 
+					.list-unstyled a.highlighted-dropdown:hover {
+						background: rgb(65, 165, 232) !important; /* Navy Blue */
+						color: white !important; /* White Text */
+					}
 
-						/* 🔹 SIDEBAR STYLE */
-						.sidebar {
-							width: 250px;
-							background: rgb(0, 0, 128) !important; /* Navy Blue */
-							overflow: visible !important;
-						}
+					/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
+					.dropdown-toggle:hover *, 
+					.dropdown-toggle.highlighted-dropdown:hover * {
+						color: white !important;
+					}
 
-						.sidebar .collapse {
-							display: none;
-						}
+					/* 🔹 SIDEBAR STYLE */
+					.sidebar {
+						width: 250px;
+						background: rgb(65, 165, 232) !important; /* Navy Blue */
+						overflow: visible !important;
+					}
 
-						.sidebar .collapse.show {
-							display: block !important;
-						}
+					.sidebar .collapse {
+						display: none;
+					}
 
-						/* 🔹 BLUE BORDER AROUND DROPDOWN BUTTONS */
-						.dropdown-toggle {
-							border: 2px solid rgb(0, 0, 128); /* Navy Blue Border */
-							border-radius: 5px;
-							padding: 5px 10px;
-						}
+					.sidebar .collapse.show {
+						display: block !important;
+					}
 
-						/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
-						.dropdown-toggle:hover, 
-						.dropdown-toggle.highlighted-dropdown {
-							border: 2px solid rgb(0, 0, 128) !important; /* Navy Blue Border */
-						}
+					/* 🔹 HOVER EFFECT ON DROPDOWN BUTTONS */
+					.dropdown-toggle:hover, 
+					.dropdown-toggle.highlighted-dropdown {
+						background: rgb(65, 165, 232) !important; /* Navy Blue Background */
+    					color: #ffffff !important; /* White Text */
+    					transform: scale(1.05);
+					}
 
-							#table-bold thead th {
-							font-weight: bold;
-							font-style: italic;
-						}
-				</style>
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
+					}
+			</style>
+
 <?php include_once 'footer.php'; ?>
