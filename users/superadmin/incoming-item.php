@@ -23,6 +23,7 @@
     if (!$resultPurpose) {
         die("Query failed: " . $conn->error);
     }
+
 ?>
 
 <!-- Modal -->
@@ -34,6 +35,27 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <!-- Toast Notification -->
+                <div class="toast-container position-fixed top-0 end-0 p-3">
+                    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">Success</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            Item successfully submitted!
+                        </div>
+                    </div>
+                    <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto">Error</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            Failed to submit item. Please try again.
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <!-- Left Side - Product Data Entry Form -->
                     <div class="col-md-6">
@@ -100,7 +122,7 @@
                                     </div>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                         <label for="invItem-purpose" style="width: 150px; white-space: nowrap;">Purpose:</label>
-                                        <select class="form-select" id="invItem-purpose" style="flex: 1;">
+                                        <select class="form-select" id="invItem-purpose" style="flex: 1;" required>
                                             <option value="" selected hidden>Select Purpose</option>
                                             <?php
                                             if ($resultPurpose->num_rows > 0) {
@@ -115,11 +137,11 @@
                                     </div>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                         <label for="invItem-remarks" style="width: 150px; white-space: nowrap;">Remarks:</label>
-                                        <textarea class="form-control" id="invItem-remarks" placeholder="Description" rows="2" style="flex: 1;"></textarea>
+                                        <textarea class="form-control" id="invItem-remarks" placeholder="Description" rows="2" style="flex: 1;" required></textarea>
                                     </div>
                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                         <label for="invItem-terms" style="width: 150px; white-space: nowrap;">Terms:</label>
-                                        <input type="text" class="form-control" id="invItem-terms" style="flex: 1;">
+                                        <input type="text" class="form-control" id="invItem-terms" style="flex: 1;" required>
                                     </div>
                                 </form>
                             </div>
@@ -137,7 +159,7 @@
                                         <form style="margin-top: 50px;">
                                             <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                                 <label for="invItem-barcode" style="width: 100px; white-space: nowrap;">Barcode:</label>
-                                                <input type="number" class="form-control" id="invItem-barcode" style="flex: 1;">
+                                                <input type="number" class="form-control" id="invItem-barcode" style="flex: 1;" required>
                                             </div>
                                             <div class="form-group col-md-12 d-flex align-items-center mb-3">
                                                 <label for="invItem-description" style="width: 100px; white-space: nowrap;">Product:</label>
@@ -153,7 +175,7 @@
                                                 <h6>Add Quantity</h6>
                                                 <form>
                                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
-                                                        <input type="number" class="form-control" min="1" step="1" id="invItem-quantity" style="flex: 1;" disabled>
+                                                        <input type="number" class="form-control" min="1" step="1" id="invItem-quantity" style="flex: 1;" required disabled>
                                                     </div>
                                                     <button type="button" id="add-button" class="btn btn-outline-primary" style="font-size: 13px;" disabled>
                                                         <i class="fas fa-plus"></i> Add
@@ -205,7 +227,7 @@
                                         <thead class="fw-bold fs-6 fst-italic" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                             <tr>
                                                 <th>Barcode</th>
-                                                <th>Description</th>
+                                                <th>Product Name</th>
                                                 <th>Qty</th>
                                                 <th>UOM</th>
                                                 <th>Unit Price</th>
@@ -261,7 +283,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary" style="font-size: 13px;">
+                <button type="button" id="submit-button" class="btn btn-outline-primary" style="font-size: 13px;">
                     <i class="fas fa-save"></i> Submit
                 </button>
                 <button type="button" class="btn btn-outline-secondary" style="font-size: 13px;" data-bs-dismiss="modal">
@@ -273,6 +295,184 @@
 </div>
 
 <script>
+    // Add event listener for the "Submit" button
+    document.getElementById('submit-button').addEventListener('click', function() {
+        console.log('Submit button clicked');
+
+        // Collect form data
+        let poNumber = document.getElementById('invItem-no').value;
+        let poDate = document.getElementById('invItem-date').value;
+        let supplier = document.getElementById('invItem-supplier').value;
+        let supAddress = document.getElementById('invItem-address').value;
+        let contactPerson = document.getElementById('invItem-contactPerson').value;
+        let contactNo = document.getElementById('invItem-contactNo').value;
+        let shipTo = document.getElementById('invItem-ship').value;
+        let address = document.getElementById('invItem-address2').value;
+        let purpose = document.getElementById('invItem-purpose').value;
+        let remarks = document.getElementById('invItem-remarks').value;
+        let terms = document.getElementById('invItem-terms').value;
+        let tableDiscountBody = document.querySelector('#table-product-discount tbody');
+        let rows = tableDiscountBody.querySelectorAll('tr');
+
+        console.log('Form data collected:', { poNumber, poDate, supplier, purpose, remarks, terms, rows: rows.length });
+
+        // Validate required fields
+        if (!supplier || !purpose || !remarks || !terms) {
+            console.log('Validation failed: Missing required fields');
+            alert('Please fill in all required fields (Supplier, Purpose, Remarks, Terms).');
+            return;
+        }
+
+        // Check if there are items in the table
+        if (rows.length === 0 || tableDiscountBody.querySelector('tr td').textContent === 'No Data Available') {
+            console.log('Validation failed: No items in the table');
+            alert('Please add at least one item to the table.');
+            return;
+        }
+
+        // Collect items from the table
+        let items = [];
+        rows.forEach(row => {
+            let barcode = row.cells[0].textContent;
+            let productName = row.cells[1].textContent;
+            let quantity = row.cells[2].textContent;
+            let uom = row.cells[3].textContent;
+            let costPrice = row.cells[4].textContent;
+            let totalCostPrice = row.cells[5].textContent;
+
+            items.push({
+                barcode: barcode,
+                category: '',
+                productName: productName,
+                quantity: parseInt(quantity),
+                unit: uom,
+                costPrice: parseFloat(costPrice),
+                totalCostPrice: parseFloat(totalCostPrice),
+                shelf: '',
+                shelfDescription: '',
+                productCode: '',
+                isVat: 'No'
+            });
+        });
+
+        console.log('Items collected:', items);
+
+        // Fetch ProductCode, ProductName, and ShelfDescription for each item
+        let fetchPromises = items.map(item => {
+            console.log('Fetching product details for barcode:', item.barcode);
+            return fetch('getProductDetails.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'barcode=' + encodeURIComponent(item.barcode)
+            })
+            .then(response => {
+                console.log('Response status for barcode', item.barcode, ':', response.status);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Product details for barcode', item.barcode, ':', data);
+                if (data.success) {
+                    item.productCode = data.productCode || '';
+                    item.productName = data.productName || item.productName;
+                    item.shelf = data.shelf || '';
+                    item.shelfDescription = data.shelfDescription || '';
+                    item.category = data.category || '';
+                    item.isVat = data.isVat || 'No';
+                } else {
+                    throw new Error('Failed to fetch product details for barcode: ' + item.barcode + ' - ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Fetch error for barcode', item.barcode, ':', error);
+                throw error;
+            });
+        });
+
+        // Wait for all fetch requests to complete
+        Promise.all(fetchPromises)
+            .then(() => {
+                console.log('All product details fetched, updated items:', items);
+
+                // Prepare data to send to the backend
+                let data = {
+                    poNumber: poNumber,
+                    poDate: poDate,
+                    supplier: supplier,
+                    supAddress: supAddress,
+                    contactPerson: contactPerson,
+                    contactNo: contactNo,
+                    shipTo: shipTo,
+                    address: address,
+                    purpose: purpose,
+                    remarks: remarks,
+                    terms: terms,
+                    receivingNo: poNumber,
+                    user: 'ADMIN',
+                    location: '',
+                    companyVat: '',
+                    items: items
+                };
+
+                console.log('Data to send to backend:', data);
+
+                // Send data to the backend
+                fetch('savePurchasePending.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    
+                    V: 'application/json',
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    console.log('Save response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    console.log('Save result:', result);
+                    if (result.success) {
+                        alert('Item successfully submitted!');
+
+                        // Reset the form and table
+                        document.getElementById('invItem-supplier').value = '';
+                        document.getElementById('invItem-address').value = '';
+                        document.getElementById('invItem-contactPerson').value = '';
+                        document.getElementById('invItem-contactNo').value = '';
+                        document.getElementById('invItem-purpose').value = '';
+                        document.getElementById('invItem-remarks').value = '';
+                        document.getElementById('invItem-terms').value = '';
+                        document.getElementById('invItem-barcode').value = '';
+                        document.getElementById('invItem-description').value = '';
+                        document.getElementById('invItem-quantity').value = '';
+                        document.getElementById('total-qty').value = '';
+                        document.getElementById('net-amt').value = '';
+                        tableDiscountBody.innerHTML = '<tr><td colspan="6" class="text-center">No Data Available</td></tr>';
+                        document.querySelector('#table-product-details tbody').innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+
+                    } else {
+                        alert(result.message || 'Failed to submit item. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting data:', error);
+                    alert('Error submitting data: ' + error.message);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching product details:', error);
+                alert('Error fetching product details: ' + error.message);
+            });
+    });
+
     document.getElementById('invItem-barcode').addEventListener('input', function() {
         let barcode = this.value;
         let selectedSupplier = document.getElementById('invItem-supplier').value;
@@ -355,6 +555,70 @@
             addButton.disabled = true; // Disable the Add button
             tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Error loading data</td></tr>';
         });
+    });
+
+    // Add event listener for the "Add" button
+    document.getElementById('add-button').addEventListener('click', function() {
+        // Get the values
+        let barcode = document.getElementById('invItem-barcode').value;
+        let productName = document.getElementById('invItem-description').value;
+        let quantity = document.getElementById('invItem-quantity').value;
+        let tableBody = document.querySelector('#table-product-details tbody');
+        let tableDiscountBody = document.querySelector('#table-product-discount tbody');
+
+        // Get UOM and Cost from the product details table
+        let productDetailsRow = tableBody.querySelector('tr');
+        let uom = productDetailsRow.cells[2].textContent; // UOM is the 3rd column
+        let cost = parseFloat(productDetailsRow.cells[3].textContent); // Cost is the 4th column
+
+        // Validate quantity
+        if (!quantity || quantity <= 0) {
+            alert('Please enter a valid quantity greater than 0.');
+            return;
+        }
+
+        // Calculate the amount (quantity * cost)
+        let amount = quantity * cost;
+
+        // Check if the table currently says "No Data Available"
+        if (tableDiscountBody.querySelector('tr td').textContent === 'No Data Available') {
+            tableDiscountBody.innerHTML = ''; // Clear the "No Data Available" row
+        }
+
+        // Add a new row to the table-product-discount
+        let newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${barcode}</td>
+            <td>${productName}</td>
+            <td>${quantity}</td>
+            <td>${uom}</td>
+            <td>${cost.toFixed(2)}</td>
+            <td>${amount.toFixed(2)}</td>
+        `;
+        tableDiscountBody.appendChild(newRow);
+
+        // Show success alert
+        alert('Item successfully added!');
+
+        // Optionally, clear the quantity field after adding
+        document.getElementById('invItem-quantity').value = '';
+
+        // Update Total Quantity and Net Amount (as per previous suggestion)
+        let totalQtyField = document.getElementById('total-qty');
+        let netAmountField = document.getElementById('net-amt');
+        let rows = tableDiscountBody.querySelectorAll('tr');
+        let totalQty = 0;
+        let totalAmount = 0;
+
+        rows.forEach(row => {
+            let qty = parseInt(row.cells[2].textContent);
+            let amount = parseFloat(row.cells[5].textContent);
+            totalQty += qty;
+            totalAmount += amount;
+        });
+
+        totalQtyField.value = totalQty;
+        netAmountField.value = totalAmount.toFixed(2);
     });
 
     // Function to set current date
