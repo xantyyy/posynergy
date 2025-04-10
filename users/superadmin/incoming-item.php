@@ -283,7 +283,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="submit-button" class="btn btn-outline-primary" style="font-size: 13px;">
+                <button type="button" id="submit-button" class="btn btn-outline-primary" data-bs-dismiss="modal" style="font-size: 13px;">
                     <i class="fas fa-save"></i> Submit
                 </button>
                 <button type="button" class="btn btn-outline-secondary" style="font-size: 13px;" data-bs-dismiss="modal">
@@ -568,8 +568,8 @@
 
         // Get UOM and Cost from the product details table
         let productDetailsRow = tableBody.querySelector('tr');
-        let uom = productDetailsRow.cells[2].textContent; // UOM is the 3rd column
-        let cost = parseFloat(productDetailsRow.cells[3].textContent); // Cost is the 4th column
+        let uom = productDetailsRow.cells[2].textContent;
+        let cost = parseFloat(productDetailsRow.cells[3].textContent);
 
         // Validate quantity
         if (!quantity || quantity <= 0) {
@@ -597,13 +597,16 @@
         `;
         tableDiscountBody.appendChild(newRow);
 
+        // Disable the supplier dropdown after adding an item
+        document.getElementById('invItem-supplier').disabled = true;
+
         // Show success alert
         alert('Item successfully added!');
 
-        // Optionally, clear the quantity field after adding
+        // Clear the quantity field after adding
         document.getElementById('invItem-quantity').value = '';
 
-        // Update Total Quantity and Net Amount (as per previous suggestion)
+        // Update Total Quantity and Net Amount
         let totalQtyField = document.getElementById('total-qty');
         let netAmountField = document.getElementById('net-amt');
         let rows = tableDiscountBody.querySelectorAll('tr');
@@ -658,9 +661,9 @@
 
     // Combine both functions in a single window.onload
     window.onload = function() {
-        setCurrentDate();  // Set the current date
-        document.getElementById('invItem-no').value = generateInventoryNumber();  // Set the inventory number
-        document.getElementById('invItem-quantity').disabled = true; // Initially disable quantity field
+        setCurrentDate();
+        document.getElementById('invItem-no').value = generateInventoryNumber();
+        document.getElementById('invItem-quantity').disabled = true;
     };
 
     // Supplier selection handler

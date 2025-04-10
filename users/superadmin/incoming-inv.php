@@ -1,5 +1,6 @@
 <?php include_once 'header.php'; ?>
 <?php include_once 'incoming-item.php'; ?>
+<?php include_once 'modals.php'; ?>
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -156,7 +157,60 @@
 					</nav>
 				</div>	  
 
-				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
+				<?php
+					// Place this code at the beginning of incoming-inv.php, after your includes
+					if (isset($_GET['po'])) {
+						$poNumber = $_GET['po'];
+						
+						// Prepare the SQL statement to prevent SQL injection
+						$sql = "SELECT * FROM tbl_purchasepending WHERE POnumber = ?";
+						$stmt = $conn->prepare($sql);
+						$stmt->bind_param("s", $poNumber);
+						$stmt->execute();
+						$result = $stmt->get_result();
+						
+						if ($result->num_rows > 0) {
+							// Get the main PO data
+							$poData = $result->fetch_assoc();
+							
+							// Calculate totals
+							$totalQtySql = "SELECT SUM(Quantity) as TotalQty, 
+													SUM(TotalCostPrice) as GrossAmount 
+											FROM tbl_purchasepending 
+											WHERE POnumber = ?";
+							$totalStmt = $conn->prepare($totalQtySql);
+							$totalStmt->bind_param("s", $poNumber);
+							$totalStmt->execute();
+							$totalResult = $totalStmt->get_result();
+							$totals = $totalResult->fetch_assoc();
+							
+							// Get all items for this PO
+							$itemsSql = "SELECT Barcode, ProductName, Quantity, Unit, CostPrice, 
+												isVat, Discount, TotalCostPrice, Location, CompanyVat 
+										FROM tbl_purchasepending 
+										WHERE POnumber = ? AND ProductName IS NOT NULL";
+							$itemsStmt = $conn->prepare($itemsSql);
+							$itemsStmt->bind_param("s", $poNumber);
+							$itemsStmt->execute();
+							$itemsResult = $itemsStmt->get_result();
+							
+							// Store items in an array
+							$items = [];
+							while ($row = $itemsResult->fetch_assoc()) {
+								$items[] = $row;
+							}
+						} else {
+							// No PO found with the given number
+							echo "<script>alert('No inventory found with the specified number.');</script>";
+							echo "<script>window.location.href='incoming.php';</script>";
+							exit;
+						}
+					} else {
+						// No PO number provided, redirect back
+						echo "<script>window.location.href='incoming.php';</script>";
+						exit;
+					}
+					?>
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 				<div class="container">
@@ -173,15 +227,15 @@
 										<form>
 											<div class="form-group col-md-12 d-flex align-items-center">
 												<label for="inv-no" style="width: 120px; white-space: nowrap;">Inventory No:</label>
-												<input type="text" class="form-control input-field" id="inv-no" disabled style="flex: 1;">
+												<input type="text" class="form-control input-field" id="inv-no" value="<?php echo isset($poData['POnumber']) ? htmlspecialchars($poData['POnumber']) : ''; ?>" disabled style="flex: 1;">
 											</div>
 											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
 												<label for="inv-date" style="width: 120px; white-space: nowrap;">Inventory Date:</label>
-												<input type="date" class="form-control input-field date-field" id="inv-date" disabled style="flex: 1;">
+												<input type="date" class="form-control input-field date-field" id="inv-date" value="<?php echo isset($poData['POdate']) ? htmlspecialchars($poData['POdate']) : ''; ?>" disabled style="flex: 1;">
 											</div>
 											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
 												<label for="inv-supplier" style="width: 120px; white-space: nowrap;">Supplier:</label>
-												<textarea class="form-control input-field" id="inv-supplier" placeholder="Description" rows="2" disabled style="flex: 1;"></textarea>
+												<textarea class="form-control input-field" id="inv-supplier" placeholder="Description" rows="2" disabled style="flex: 1;"><?php echo isset($poData['Supplier']) ? htmlspecialchars($poData['Supplier']) : ''; ?></textarea>
 											</div>
 										</form>
 									</div>
@@ -193,24 +247,24 @@
 								<div class="card">
                                     <div class="card-body">
                                         <form>
-                                            <div class="form-group col-md-12 d-flex align-items-center">
+											<div class="form-group col-md-12 d-flex align-items-center">
 												<label for="inv-ship" style="width: 80px; white-space: nowrap;">Ship To:</label>
-												<input type="text" class="form-control input-field" id="inv-ship" style="flex: 1;" disabled>
-                                            </div>
-                                            <div class="form-group col-md-12 mt-2 d-flex align-items-center">
+												<input type="text" class="form-control input-field" id="inv-ship" value="<?php echo isset($poData['ShipTo']) ? htmlspecialchars($poData['ShipTo']) : ''; ?>" style="flex: 1;" disabled>
+											</div>
+											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
 												<label for="inv-address" style="width: 80px; white-space: nowrap;">Address:</label>
-												<textarea class="form-control input-field" id="inv-address" placeholder="Description" rows="2" style="flex: 1;" disabled></textarea>
+												<textarea class="form-control input-field" id="inv-address" placeholder="Description" rows="2" style="flex: 1;" disabled><?php echo isset($poData['Address']) ? htmlspecialchars($poData['Address']) : ''; ?></textarea>
 											</div>
 											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
 												<label for="inv-remarks" style="width: 80px; white-space: nowrap;">Remarks:</label>
-												<textarea class="form-control input-field" id="inv-remarks" placeholder="Description" rows="2" style="flex: 1;"></textarea>
+												<textarea class="form-control input-field" id="inv-remarks" placeholder="Description" disabled rows="2" style="flex: 1;"><?php echo isset($poData['Remarks']) ? htmlspecialchars($poData['Remarks']) : ''; ?></textarea>
 											</div>
 											<div class="form-group mt-2 col-md-12 d-flex align-items-center">
 												<label class="me-2" for="inv-purpose" style="width: 120px; white-space: nowrap;">Purpose:</label>
-												<input type="text" class="form-control input-field me-2" id="inv-purpose" disabled>
+												<input type="text" class="form-control input-field me-2" id="inv-purpose" value="<?php echo isset($poData['Purpose']) ? htmlspecialchars($poData['Purpose']) : ''; ?>" disabled>
 												<label class="me-2" for="inv-terms" style="width: 120px; white-space: nowrap;">Terms:</label>
-												<input type="text" class="form-control input-field" id="inv-terms">
-                                            </div>
+												<input type="text" class="form-control input-field" id="inv-terms" value="<?php echo isset($poData['Terms']) ? htmlspecialchars($poData['Terms']) : ''; ?>" disabled>
+											</div>
                                         </form>
                                     </div>
                                 </div>
@@ -227,7 +281,7 @@
                                                 <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                     <tr>
                                                         <th>Barcode</th>
-                                                        <th>Description</th>
+                                                        <th>Product Name</th>
                                                         <th>Qty</th>
                                                         <th>Partial Qty</th>
 														<th>UOM</th>
@@ -240,10 +294,28 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td colspan="11" class="text-center">No Data Available</td>
-                                                    </tr>
-                                                </tbody>                                            
+													<?php if (isset($items) && count($items) > 0): ?>
+														<?php foreach($items as $item): ?>
+															<tr>
+																<td><?php echo htmlspecialchars($item['Barcode'] ?? ''); ?></td>
+																<td><?php echo htmlspecialchars($item['ProductName'] ?? ''); ?></td>
+																<td><?php echo htmlspecialchars($item['Quantity'] ?? ''); ?></td>
+																<td>-</td>
+																<td><?php echo htmlspecialchars($item['Unit'] ?? ''); ?></td>
+																<td><?php echo htmlspecialchars($item['CostPrice'] ?? ''); ?></td>
+																<td><?php echo htmlspecialchars($item['isVat'] ?? ''); ?></td>
+																<td><?php echo htmlspecialchars($item['Discount'] ?? ''); ?></td>
+																<td><?php echo htmlspecialchars($item['TotalCostPrice'] ?? ''); ?></td>
+																<td><?php echo htmlspecialchars($item['Location'] ?? ''); ?></td>
+																<td><?php echo htmlspecialchars($item['CompanyVat'] ?? ''); ?></td>
+															</tr>
+														<?php endforeach; ?>
+													<?php else: ?>
+														<tr>
+															<td colspan="11" class="text-center">No Data Available</td>
+														</tr>
+													<?php endif; ?>
+												</tbody>                                           
                                             </table>
                                         </div>
                                     </div>
@@ -251,44 +323,91 @@
                             </div>
 
 							<div class="col-md-5">
-                                <div class="card">
-                                    <div class="card-body">
+								<div class="card">
+									<div class="card-body">
 										<h6>Product Discount</h6>
-                                        <div class="table-responsive" style="height: calc(60vh - 300px); overflow-y: auto;">
-                                            <table class="table table-bordered" id="table-bold">
-                                                <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
-                                                    <tr>
-                                                        <th>Description</th>
-														<th>Disc.</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td colspan="2" class="text-center">No Data Available</td>
-                                                    </tr>
-                                                </tbody>                                            
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+										<div class="table-responsive" style="height: calc(60vh - 300px); overflow-y: auto;">
+											<table class="table table-bordered" id="table-bold">
+												<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+													<tr>
+														<th>Product Name</th>
+														<th>Discount</th>
+													</tr>
+												</thead>
+												<tbody id="discountTableBody">
+													<?php
+													if (isset($poNumber)) {
+														$sql = "SELECT ProductName, Discount 
+																FROM tbl_purchasepending 
+																WHERE POnumber = ? AND ProductName IS NOT NULL 
+																AND Discount IS NOT NULL AND Discount > 0";
+														$stmt = $conn->prepare($sql);
+														$stmt->bind_param("s", $poNumber);
+														$stmt->execute();
+														$result = $stmt->get_result();
+
+														if ($result->num_rows > 0) {
+															while ($row = $result->fetch_assoc()) {
+																echo "<tr>";
+																echo "<td>" . htmlspecialchars($row['ProductName']) . "</td>";
+																echo "<td>" . number_format($row['Discount'], 2) . "</td>";
+																echo "</tr>";
+															}
+														} else {
+															echo "<tr><td colspan='2' class='text-center'>No Data Available</td></tr>";
+														}
+														$stmt->close();
+													} else {
+														echo "<tr><td colspan='2' class='text-center'>No Data Available</td></tr>";
+													}
+													?>
+												</tbody>                                            
+											</table>
+										</div>
+									</div>
+								</div>
 
 								<div class="card">
                                     <div class="card-body">
 										<h6>Expiration Details</h6>
                                         <div class="table-responsive" style="height: calc(60vh - 300px); overflow-y: auto;">
-										<table class="table table-bordered" id="table-bold">
-                                                <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
-                                                    <tr>
-                                                        <th>Description</th>
+											<table class="table table-bordered" id="table-bold">
+												<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+													<tr>
+														<th>Product Name</th>
 														<th>Expiration</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td colspan="2" class="text-center">No Data Available</td>
-                                                    </tr>
-                                                </tbody>                                            
-                                            </table>
+													</tr>
+												</thead>
+												<tbody id="expirationTableBody">
+													<?php
+													// Assuming $poNumber is already defined from earlier in your code
+													if (isset($poNumber)) {
+														$sql = "SELECT ProductName, ExpirationDate 
+																FROM tbl_purchasepending 
+																WHERE POnumber = ? AND ProductName IS NOT NULL 
+																AND ExpirationDate IS NOT NULL";
+														$stmt = $conn->prepare($sql);
+														$stmt->bind_param("s", $poNumber);
+														$stmt->execute();
+														$result = $stmt->get_result();
+
+														if ($result->num_rows > 0) {
+															while ($row = $result->fetch_assoc()) {
+																echo "<tr>";
+																echo "<td>" . htmlspecialchars($row['ProductName']) . "</td>";
+																echo "<td>" . htmlspecialchars($row['ExpirationDate']) . "</td>";
+																echo "</tr>";
+															}
+														} else {
+															echo "<tr><td colspan='2' class='text-center'>No Data Available</td></tr>";
+														}
+														$stmt->close();
+													} else {
+														echo "<tr><td colspan='2' class='text-center'>No Data Available</td></tr>";
+													}
+													?>
+												</tbody>                                            
+											</table>
                                         </div>
                                     </div>
                                 </div>
@@ -296,13 +415,13 @@
 
 							<div class="col-md-7">
 								<div class="form-group col-md-12 d-flex align-items-center">
-									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#inventoryModal">
+									<!--<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#inventoryModal">
 										<i class="fas fa-plus"></i> Create
-									</button>
-									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
+									</button>-->
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="setExpirationBtn">
 										<i class="fas fa-plus"></i> Set Expiration
 									</button>
-									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="addDiscountBtn">
 										<i class="fas fa-plus"></i> Add Product Discount
 									</button>
 									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
@@ -318,23 +437,23 @@
 										<form>
 											<div class="form-group col-md-12 d-flex align-items-center">
 												<label for="total-qty" style="white-space: nowrap; width: 150px;">Total Quantity:</label>
-												<input type="text" style="flex: 1;" class="form-control input-field" id="total-qty" disabled>
+												<input type="text" style="flex: 1;" class="form-control input-field" id="total-qty" value="<?php echo isset($totals['TotalQty']) ? htmlspecialchars($totals['TotalQty']) : '0'; ?>" disabled>
 											</div>
 											<div class="form-group col-md-12 d-flex align-items-center">
 												<label class="mt-3" for="gross-amt" style="white-space: nowrap; width: 150px;">Gross Amount:</label>
-												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="gross-amt" disabled>
+												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="gross-amt" value="<?php echo isset($totals['GrossAmount']) ? number_format($totals['GrossAmount'], 2) : '0.00'; ?>" disabled>
 											</div>
 											<div class="form-group col-md-12 d-flex align-items-center">
 												<label class="mt-3" for="prod-disc" style="white-space: nowrap; width: 150px;">Product Discount:</label>
-												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="prod-disc" disabled>
+												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="prod-disc" value="0.00" disabled>
 											</div>
 											<div class="form-group col-md-12 d-flex align-items-center">
 												<label class="mt-3" for="purc-disc" style="white-space: nowrap; width: 150px;">Purchase Discount:</label>
-												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="purc-disc" disabled>
+												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="purc-disc" value="0.00" disabled>
 											</div>
 											<div class="form-group col-md-12 d-flex align-items-center">
 												<label class="mt-3" for="net-amt" style="white-space: nowrap; width: 150px;">Net Amount:</label>
-												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="net-amt" disabled>
+												<input type="text" style="flex: 1;" class="form-control input-field mt-3" id="net-amt" value="<?php echo isset($totals['GrossAmount']) ? number_format($totals['GrossAmount'], 2) : '0.00'; ?>" disabled>
 											</div>
 										</form>
 										<div class="form-group col-md-12 d-flex align-items-end justify-content-end mt-3">
@@ -354,6 +473,56 @@
             </div>
 			
 			<script>
+				//SET EXPIRATION
+				document.getElementById('setExpirationBtn').addEventListener('click', function() {
+					// Show the modal
+					$('#expirationModal').modal('show');
+					
+					// Set minimum date to tomorrow
+					const today = new Date();
+					const tomorrow = new Date(today);
+					tomorrow.setDate(tomorrow.getDate() + 1);
+					
+					const minDate = tomorrow.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+					document.getElementById('expirationDate').setAttribute('min', minDate);
+				});
+
+				document.getElementById('saveExpiration').addEventListener('click', function() {
+					const expirationDate = document.getElementById('expirationDate').value;
+					const poNumber = document.getElementById('inv-no').value;
+
+					if (!expirationDate) {
+						alert('Please select an expiration date');
+						return;
+					}
+
+					// AJAX request to update expiration date
+					$.ajax({
+						url: 'update-incomingItem.php', // File to handle the update
+						type: 'POST',
+						data: {
+							poNumber: poNumber,
+							expirationDate: expirationDate
+						},
+						success: function(response) {
+							const result = JSON.parse(response);
+							if (result.success) {
+								alert('Expiration date updated successfully');
+								$('#expirationModal').modal('hide');
+								// Auto-reload the page after successful update
+								setTimeout(function() {
+									location.reload();
+								}, 500);
+							} else {
+								alert('Failed to update expiration date: ' + result.message);
+							}
+						},
+						error: function(xhr, status, error) {
+							alert('Error updating expiration date: ' + error);
+						}
+					});
+				});
+
 				document.addEventListener("DOMContentLoaded", function () {
 					const currentUrl = window.location.pathname.split('/').pop();
 					

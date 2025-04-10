@@ -1,4 +1,5 @@
 <?php include_once 'header.php'; ?>
+<?php include_once 'incoming-item.php'; ?>
 
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
@@ -178,8 +179,8 @@
                         </div>
 
                         <div class="col-md-12">
-                            <div class="card">
-                                <div class="card-body">
+							<div class="card">
+								<div class="card-body">
 									<div class="table-responsive" style="height: calc(94vh - 300px); overflow-y: auto;">
 										<table class="table table-bordered table-hover" id="table-bold">
 											<thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
@@ -190,36 +191,116 @@
 													<th>Net Amount</th>
 												</tr>
 											</thead>
-											<tbody>
-													<tr>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-													</tr>
+											<tbody id="purchase-pending-tbody">
+												<?php
+												$sql = "SELECT POnumber, POdate, Supplier, TotalCostPrice 
+														FROM tbl_purchasepending 
+														ORDER BY POdate DESC";
+												$result = $conn->query($sql);
+
+												if ($result) {
+													if ($result->num_rows > 0) {
+														while ($row = $result->fetch_assoc()) {
+															echo '<tr class="clickable-row" data-ponumber="' . htmlspecialchars($row['POnumber']) . '">';
+															echo '<td>' . htmlspecialchars($row['POnumber']) . '</td>';
+															echo '<td>' . htmlspecialchars($row['POdate']) . '</td>';
+															echo '<td>' . htmlspecialchars($row['Supplier']) . '</td>';
+															echo '<td>' . number_format($row['TotalCostPrice'], 2) . '</td>';
+															echo '</tr>';
+														}
+													} else {
+														echo '<tr><td colspan="4" class="text-center">No Data Available</td></tr>';
+													}
+												} else {
+													echo '<tr><td colspan="4" class="text-center">Error: ' . htmlspecialchars($conn->error) . '</td></tr>';
+												}
+												?>
 											</tbody>
 										</table>
 									</div>
-									<button type="button" class="btn btn-outline-primary opacity-50 me-2" onclick="window.location.href='incoming-inv.php';">
-										<i class="fas fa-plus"></i> New
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#inventoryModal">
+										<i class="fas fa-plus"></i> Create
 									</button>
-									<button type="button" class="btn btn-outline-primary opacity-50 me-2"
-										<i class="fas fa-save"></i> Edit
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="openBtn" disabled>
+										<i class="fas fa-edit"></i> Open
 									</button>
-									<button type="button" class="btn btn-outline-primary opacity-50 me-2"
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="deleteBtn" disabled>
 										<i class="fas fa-trash"></i> Delete
 									</button>
-                                </div>
-                            </div>
-                        </div>
+								</div>
+							</div>
+						</div>
                     </div>
-				</div>
-                <!-- Table Here -->
-                <div class="container">
-                    
+				</div>                   
             </div>
 			
 			<script>
+				// Add this to your existing JavaScript in incoming.php
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.clickable-row');
+    const openBtn = document.getElementById('openBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
+    let selectedRow = null;
+    let selectedPONumber = null;
+
+    rows.forEach(row => {
+        row.addEventListener('click', function() {
+            // Remove active class from previously selected row
+            if (selectedRow) {
+                selectedRow.classList.remove('table-active');
+            }
+            
+            // Add active class to clicked row
+            this.classList.add('table-active');
+            selectedRow = this;
+            
+            // Enable buttons
+            openBtn.disabled = false;
+            deleteBtn.disabled = false;
+            
+            // Get the PO number from the selected row
+            selectedPONumber = this.getAttribute('data-ponumber');
+            console.log('Selected PO Number:', selectedPONumber);
+        });
+    });
+
+    // Add click event for the Open button
+    openBtn.addEventListener('click', function() {
+        if (selectedPONumber) {
+            // Redirect to incoming-inv.php with the selected PO number
+            window.location.href = 'incoming-inv.php?po=' + encodeURIComponent(selectedPONumber);
+        }
+    });
+});
+
+				document.addEventListener('DOMContentLoaded', function() {
+					const rows = document.querySelectorAll('.clickable-row');
+					const openBtn = document.getElementById('openBtn');
+					const deleteBtn = document.getElementById('deleteBtn');
+					let selectedRow = null;
+
+					rows.forEach(row => {
+						row.addEventListener('click', function() {
+							// Remove active class from previously selected row
+							if (selectedRow) {
+								selectedRow.classList.remove('table-active');
+							}
+							
+							// Add active class to clicked row
+							this.classList.add('table-active');
+							selectedRow = this;
+							
+							// Enable buttons
+							openBtn.disabled = false;
+							deleteBtn.disabled = false;
+							
+							// Get the PO number from the selected row
+							const poNumber = this.getAttribute('data-ponumber');
+							console.log('Selected PO Number:', poNumber);
+						});
+					});
+				});
+
 				document.addEventListener("DOMContentLoaded", function () {
 					const currentUrl = window.location.pathname.split('/').pop();
 					
@@ -360,6 +441,26 @@
 					#table-bold thead th {
 						font-weight: bold;
 						font-style: italic;
+					}
+
+					.clickable-row {
+						cursor: pointer;
+					}
+					.clickable-row:hover {
+						background-color: #f5f5f5;
+					}
+
+					.btn:disabled {
+						border-color: rgb(6, 0, 0); /* Gray border for disabled buttons */
+						color: rgb(6, 1, 1); /* Light gray text for disabled buttons */
+						background-color: rgb(241, 201, 201); /* Light gray background for better visibility */
+						cursor: not-allowed; /* Show "not-allowed" cursor */
+					}
+
+					.btn:not(:disabled):hover {
+						background-color: #007bff; /* Blue background */
+						color: #ffffff; /* White text */
+						border-color: #0056 fraseb3; /* Darker blue border */
 					}
 			</style>
 

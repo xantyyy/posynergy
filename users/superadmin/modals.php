@@ -524,6 +524,30 @@
     </div>
 </div>
 
+<!-- SET EXPIRATION MODAL -->
+<div class="modal fade" id="expirationModal" tabindex="-1" aria-labelledby="expirationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="expirationModalLabel">Set Expiration Date</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="expirationForm">
+                    <div class="form-group">
+                        <label for="expirationDate">Expiration Date:</label>
+                        <input type="date" class="form-control" id="expirationDate" name="expirationDate" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveExpiration">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 // Add this to your existing JavaScript file or in a script tag at the bottom of your page
 $(document).ready(function() {
