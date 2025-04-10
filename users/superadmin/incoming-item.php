@@ -140,7 +140,7 @@
                                                 <input type="number" class="form-control" id="invItem-barcode" style="flex: 1;">
                                             </div>
                                             <div class="form-group col-md-12 d-flex align-items-center mb-3">
-                                                <label for="invItem-description" style="width: 100px; white-space: nowrap;">Description:</label>
+                                                <label for="invItem-description" style="width: 100px; white-space: nowrap;">Product:</label>
                                                 <input type="text" class="form-control" id="invItem-description" style="flex: 1;" readonly>
                                             </div>
                                         </form>
@@ -273,6 +273,73 @@
 </div>
 
 <script>
+    document.getElementById('invItem-barcode').addEventListener('input', function() {
+        let barcode = this.value;
+        console.log('Barcode entered:', barcode); // Debug
+
+        // Clear the table if barcode is empty
+        if (!barcode) {
+            document.getElementById('invItem-description').value = '';
+            // Reset table to "No Data Available"
+            document.querySelector('#table-product-details tbody').innerHTML = 
+                '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+            return;
+        }
+
+        fetch('getProduct.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'barcode=' + encodeURIComponent(barcode)
+        })
+        .then(response => {
+            // Log the raw response
+            return response.text().then(text => {
+                console.log('Raw response:', text);
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Error parsing JSON:', e);
+                    throw new Error('Invalid JSON response');
+                }
+            });
+        })
+        .then(data => {
+            console.log('Parsed data:', data);
+            let productNameField = document.getElementById('invItem-description');
+            
+            if (data.success) {
+                // Set product name
+                productNameField.value = data.productName;
+                
+                // Update the table with product details
+                let tableBody = document.querySelector('#table-product-details tbody');
+                tableBody.innerHTML = `
+                    <tr>
+                        <td>${data.shelf || 'N/A'}</td>
+                        <td>${data.category || 'N/A'}</td>
+                        <td>${data.uom || 'N/A'}</td>
+                        <td>${data.cost || 'N/A'}</td>
+                        <td>${data.vatable || 'No'}</td>
+                    </tr>
+                `;
+            } else {
+                productNameField.value = 'Product not found';
+                // Reset table to "No Data Available"
+                document.querySelector('#table-product-details tbody').innerHTML = 
+                    '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('invItem-description').value = 'Error fetching product';
+            // Reset table in case of error
+            document.querySelector('#table-product-details tbody').innerHTML = 
+                '<tr><td colspan="5" class="text-center">Error loading data</td></tr>';
+        });
+    });
+
     // Function to set current date
     function setCurrentDate() {
         const today = new Date();
