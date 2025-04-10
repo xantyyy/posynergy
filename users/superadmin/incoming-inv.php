@@ -350,7 +350,7 @@
 															while ($row = $result->fetch_assoc()) {
 																echo "<tr>";
 																echo "<td>" . htmlspecialchars($row['ProductName']) . "</td>";
-																echo "<td>" . number_format($row['Discount'], 2) . "</td>";
+																echo "<td>" . number_format($row['Discount']) . "</td>";
 																echo "</tr>";
 															}
 														} else {
