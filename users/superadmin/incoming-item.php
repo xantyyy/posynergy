@@ -153,9 +153,9 @@
                                                 <h6>Add Quantity</h6>
                                                 <form>
                                                     <div class="form-group col-md-12 d-flex align-items-center mb-3">
-                                                        <input type="number" class="form-control" min="1" step="1" id="invItem-quantity" style="flex: 1;">
+                                                        <input type="number" class="form-control" min="1" step="1" id="invItem-quantity" style="flex: 1;" disabled>
                                                     </div>
-                                                    <button type="button" class="btn btn-outline-primary" style="font-size: 13px;">
+                                                    <button type="button" id="add-button" class="btn btn-outline-primary" style="font-size: 13px;" disabled>
                                                         <i class="fas fa-plus"></i> Add
                                                     </button>
                                                 </form>
@@ -275,14 +275,21 @@
 <script>
     document.getElementById('invItem-barcode').addEventListener('input', function() {
         let barcode = this.value;
-        console.log('Barcode entered:', barcode); // Debug
+        let selectedSupplier = document.getElementById('invItem-supplier').value;
+        let quantityField = document.getElementById('invItem-quantity');
+        let addButton = document.getElementById('add-button'); // Reference the Add button
+        let productNameField = document.getElementById('invItem-description');
+        let tableBody = document.querySelector('#table-product-details tbody');
 
-        // Clear the table if barcode is empty
-        if (!barcode) {
-            document.getElementById('invItem-description').value = '';
-            // Reset table to "No Data Available"
-            document.querySelector('#table-product-details tbody').innerHTML = 
-                '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+        console.log('Barcode entered:', barcode); // Debug
+        console.log('Selected Supplier:', selectedSupplier); // Debug
+
+        // Reset fields if barcode or supplier is empty
+        if (!barcode || !selectedSupplier) {
+            productNameField.value = '';
+            quantityField.disabled = true;
+            addButton.disabled = true; // Disable the Add button
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
             return;
         }
 
@@ -294,7 +301,8 @@
             body: 'barcode=' + encodeURIComponent(barcode)
         })
         .then(response => {
-            // Log the raw response
+            console.log('Response status:', response.status); // Debug
+            console.log('Response headers:', response.headers.get('Content-Type')); // Debug
             return response.text().then(text => {
                 console.log('Raw response:', text);
                 try {
@@ -307,36 +315,45 @@
         })
         .then(data => {
             console.log('Parsed data:', data);
-            let productNameField = document.getElementById('invItem-description');
-            
+
             if (data.success) {
-                // Set product name
                 productNameField.value = data.productName;
-                
-                // Update the table with product details
-                let tableBody = document.querySelector('#table-product-details tbody');
-                tableBody.innerHTML = `
-                    <tr>
-                        <td>${data.shelf || 'N/A'}</td>
-                        <td>${data.category || 'N/A'}</td>
-                        <td>${data.uom || 'N/A'}</td>
-                        <td>${data.cost || 'N/A'}</td>
-                        <td>${data.vatable || 'No'}</td>
-                    </tr>
-                `;
+
+                // Check if the supplier matches
+                if (data.supplier === selectedSupplier) {
+                    // Display product details if supplier matches
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td>${data.shelf || 'N/A'}</td>
+                            <td>${data.category || 'N/A'}</td>
+                            <td>${data.uom || 'N/A'}</td>
+                            <td>${data.cost || 'N/A'}</td>
+                            <td>${data.vatable || 'No'}</td>
+                        </tr>
+                    `;
+                    quantityField.disabled = false;
+                    addButton.disabled = false; // Enable the Add button
+                } else {
+                    // If supplier doesn't match, show "No Data Available" and disable both quantity and Add button
+                    tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+                    quantityField.disabled = true;
+                    addButton.disabled = true; // Disable the Add button
+                    console.log('Supplier mismatch:', data.supplier, '!=', selectedSupplier);
+                }
             } else {
+                // If product is not found, reset fields
                 productNameField.value = 'Product not found';
-                // Reset table to "No Data Available"
-                document.querySelector('#table-product-details tbody').innerHTML = 
-                    '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+                quantityField.disabled = true;
+                addButton.disabled = true; // Disable the Add button
+                tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('invItem-description').value = 'Error fetching product';
-            // Reset table in case of error
-            document.querySelector('#table-product-details tbody').innerHTML = 
-                '<tr><td colspan="5" class="text-center">Error loading data</td></tr>';
+            console.error('Fetch error:', error);
+            productNameField.value = 'Error fetching product';
+            quantityField.disabled = true;
+            addButton.disabled = true; // Disable the Add button
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Error loading data</td></tr>';
         });
     });
 
@@ -379,6 +396,7 @@
     window.onload = function() {
         setCurrentDate();  // Set the current date
         document.getElementById('invItem-no').value = generateInventoryNumber();  // Set the inventory number
+        document.getElementById('invItem-quantity').disabled = true; // Initially disable quantity field
     };
 
     // Supplier selection handler
@@ -391,5 +409,8 @@
         document.getElementById('invItem-address').value = address;
         document.getElementById('invItem-contactPerson').value = contactPerson;
         document.getElementById('invItem-contactNo').value = contactNo;
+
+        // Trigger barcode input check when supplier changes
+        document.getElementById('invItem-barcode').dispatchEvent(new Event('input'));
     });
 </script>
