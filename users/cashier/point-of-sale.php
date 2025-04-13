@@ -256,8 +256,8 @@
                                             <tbody>
                                                 <tr>
                                                     <th style="width: 50%;">Terminal No:</th>
-                                                    <td id="#"> </td>
-                                                </tr>
+                                                    <td id="terminal-display"><?php echo isset($_SESSION['terminal_no']) ? $_SESSION['terminal_no'] : 'N/A'; ?></td>
+                                                    </tr>
                                                 <tr>
                                                     <th style="width: 50%;">Transaction No:</th>
                                                     <td id="#"> </td>

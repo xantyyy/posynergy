@@ -30,7 +30,10 @@
                     if (password_verify($password, $row['Password'])) {
                         // Regenerate session ID after successful login
                         session_regenerate_id(true);
-
+                        
+                        // Fetch and store terminal number - MOVED HERE BEFORE REDIRECTS
+                        $_SESSION['terminal_no'] = $row['Terminal']; // Use the data from the row we already fetched
+                        
                         if ($row['Role'] == 'ADMIN/IT') {
                             $_SESSION['superadmin_name'] = $row['Username'];
                             header('location: users/superadmin/index.php');
