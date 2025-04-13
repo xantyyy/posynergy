@@ -350,7 +350,7 @@
 															while ($row = $result->fetch_assoc()) {
 																echo "<tr>";
 																echo "<td>" . htmlspecialchars($row['ProductName']) . "</td>";
-																echo "<td>" . number_format($row['Discount']) . "</td>";
+																echo "<td>" . number_format($row['Discount']) . "%</td>"; // Added % sign here
 																echo "</tr>";
 															}
 														} else {
@@ -421,7 +421,7 @@
 									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="setExpirationBtn">
 										<i class="fas fa-plus"></i> Set Expiration
 									</button>
-									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="addDiscountBtn">
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="addDiscountBtn" data-product-id="123" data-product-name="Product Name Example">
 										<i class="fas fa-plus"></i> Add Product Discount
 									</button>
 									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
@@ -566,6 +566,96 @@
 
 						dropdown.addEventListener("mouseleave", function () {
 							this.classList.remove("hovered-dropdown");
+						});
+					});
+				});
+				document.addEventListener('DOMContentLoaded', function() {
+					// Add click event to all table rows to make them selectable
+					const tableRows = document.querySelectorAll('#table-bold tbody tr');
+					let selectedRow = null;
+					let discountModal;
+
+					tableRows.forEach(row => {
+						// Skip rows with "No Data Available" text
+						if (row.cells.length > 1 && row.cells[1].textContent.trim() !== 'No Data Available') {
+							row.addEventListener('click', function() {
+								// Remove 'selected' class from all rows
+								tableRows.forEach(r => r.classList.remove('selected'));
+								// Add 'selected' class to clicked row
+								this.classList.add('selected');
+								selectedRow = this;
+							});
+						}
+					});
+					
+					// Add click event to the Add Product Discount button
+				document.getElementById('addDiscountBtn').addEventListener('click', function() {
+					// Get the first product from the table (or you can choose any specific one)
+					const productTable = document.querySelector('#table-bold tbody');
+					const firstProductRow = productTable.querySelector('tr');
+					
+					// Check if there are any products in the table
+					if (firstProductRow && firstProductRow.cells.length > 1 && firstProductRow.cells[1].textContent.trim() !== 'No Data Available') {
+						// Get product name and barcode from the first row
+						const productName = firstProductRow.cells[1].textContent.trim();
+						const barcode = firstProductRow.cells[0].textContent.trim();
+						
+						// Set the values in the modal
+						document.getElementById('productId').value = barcode;
+						document.getElementById('productName').value = productName;
+						
+						// Show the modal
+						const addDiscountModal = document.getElementById('addDiscountModal');
+						const discountModal = new bootstrap.Modal(addDiscountModal);
+						discountModal.show();
+					} else {
+						alert('No products available to add discount.');
+					}
+				});
+
+					// Event listener for saving the discount
+					document.getElementById('saveDiscount').addEventListener('click', function() {
+						const productId = document.getElementById('productId').value;
+						const productName = document.getElementById('productName').value;
+						const discountPercentage = document.getElementById('discountPercentage').value;
+						const poNumber = document.getElementById('inv-no').value;
+						
+						// Validate input
+						if (!discountPercentage || discountPercentage < 0 || discountPercentage > 100) {
+							alert('Please enter a valid discount percentage between 0 and 100.');
+							return;
+						}
+						
+						// Send data to backend using fetch or AJAX
+						fetch('save-discount.php', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/x-www-form-urlencoded',
+							},
+							body: 'productId=' + encodeURIComponent(productId) + 
+								'&productName=' + encodeURIComponent(productName) + 
+								'&discountPercentage=' + encodeURIComponent(discountPercentage) + 
+								'&poNumber=' + encodeURIComponent(poNumber)
+						})
+						.then(response => response.json())
+						.then(data => {
+							if (data.success) {
+								alert('Discount saved successfully!');
+								
+								// Close the modal - different approach
+								const addDiscountModal = document.getElementById('addDiscountModal');
+								// Use jQuery approach which is more reliable
+								$(addDiscountModal).modal('hide');
+								
+								// Refresh the page to show updated discounts
+								location.reload();
+							} else {
+								alert('Error saving discount: ' + data.message);
+							}
+						})
+						.catch(error => {
+							console.error('Error:', error);
+							alert('An error occurred while saving the discount.');
 						});
 					});
 				});
