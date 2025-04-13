@@ -1,8 +1,63 @@
 <?php include_once 'header.php'; ?>
 <?php include 'sidebar-modals.php'; ?>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<?php
+// Add this at the top of cashier/index.php
 
+// Fetch the most recent opening fund record for the current cashier
+function getLatestOpeningFund($username) {
+    global $conn; // Assuming you have a database connection variable
+    
+    $query = "SELECT * FROM tbl_openingfund WHERE Username = ? ORDER BY TransDate DESC LIMIT 1";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if($result->num_rows > 0) {
+        return $result->fetch_assoc();
+    }
+    
+    return null;
+}
+
+// Get current cashier's username (adjust based on your session variable)
+$cashier_username = $_SESSION['username'] ?? 'CASHIER'; 
+
+// Get the latest opening fund
+$latest_fund = getLatestOpeningFund($cashier_username);
+?>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Opening Fund Modal -->
+<div class="modal fade" id="openingFundModal" tabindex="-1" aria-labelledby="openingFundModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="openingFundModalLabel">Opening Fund Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <?php if($latest_fund): ?>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Current Opening Fund Details</h5>
+                        <p class="card-text"><strong>Amount:</strong> ₱<?php echo number_format($latest_fund['Amount'], 2); ?></p>
+                        <p class="card-text"><strong>Date/Time:</strong> <?php echo date('F d, Y h:i A', strtotime($latest_fund['TransDate'])); ?></p>
+                    </div>
+                </div>
+                <?php else: ?>
+                <div class="alert alert-warning">
+                    No opening fund has been declared yet. Please contact your supervisor.
+                </div>
+                <?php endif; ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--MENU SIDEBAR CONTENT-->
 <nav id="sidebar">
     <div class="sidebar-header">
@@ -21,18 +76,18 @@
 			<i class="material-icons">report</i><span>POS Reports</span></a>
 			<ul class="collapse list-unstyled menu" id="homeSubmenu1">
 				<li>
-                    <a href="#" onclick="checkPassword('tender-declare.php')">Tender Declaration</a>
+                <a href="#" onclick="checkPassword('tender-declare.php')">Tender Declaration</a>
+
 				</li>
 				<li>
                     <a href="#" onclick="checkPassword('shift-reading.php')">Shift Reading</a>
                 </li>
                 <li>
-                    <a href="#" onclick="checkPassword('x-reading.php')">X Reading</a>
-                </li>
+					<a href="x-reading.php">X Reading</a>
+				</li>
                 <li>
-                    <a href="#" onclick="checkPassword('z-reading.php')">Z Reading</a>
-                </li>
-
+					<a href="z-reading.php">Z Reading</a>
+				</li>
                 <li>
 					<a href="opening-fund.php">Opening Fund</a>
 				</li>
@@ -43,24 +98,24 @@
         </li>
     </ul>
 </nav>
-<!-- Password Modal -->
-<div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="passwordModalLabel">Input Password..</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <input type="password" id="passwordInput" class="form-control" placeholder="Enter password" />
-        <div id="passwordError" class="text-danger mt-2" style="display: none;">Incorrect password. Try again.</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" id="submitPassword" class="btn btn-primary">Submit</button>
-      </div>
-    </div>
-  </div>
-</div>
+                <!-- Password Modal -->
+                <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="passwordModalLabel">Input Password..</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="password" id="passwordInput" class="form-control" placeholder="Enter password" />
+                        <div id="passwordError" class="text-danger mt-2" style="display: none;">Incorrect password. Try again.</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="submitPassword" class="btn btn-primary">Submit</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
 
                 <!--TOP NAVBAR CONTENT-->
                 <div class="top-navbar">
@@ -74,9 +129,11 @@
                         </button>        
                     </nav>
                 </div>	  
-                    <div>
-                        <img src="../../assets/images/cashierbg.jpg" class="img-fluid" style="border-left: 200px solid black; margin-top: -20px;"/>    
-                    </div>  
+                <div>
+                <img src="../../assets/images/cashierbg.jpg" class="img-fluid" style="border-left: 200px solid black; margin-top: -20px;"/>
+
+                        
+                    </div>
                  </div>
 
                     <!--DASHBOARD CONTENT-->
@@ -93,112 +150,138 @@
                     </div>
                 </div>
 
-                    <script>
-                        function checkPassword(page) {
-                            const password = prompt("Please enter the password:");
-
-                            // Check if the entered password matches the required one
-                            if (password === 'yourPasswordHere') {
-                                window.location.href = page;
-                            } else {
-                                alert("Incorrect password. Please try again.");
+                     <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Initialize and show the opening fund modal
+                            var openingFundModal = new bootstrap.Modal(document.getElementById('openingFundModal'));
+                            openingFundModal.show();
+                            
+                            // Add click event listeners to close the modal
+                            const closeButton = document.querySelector('#openingFundModal .btn-close');
+                            const acknowledgeButton = document.querySelector('#openingFundModal .modal-footer .btn-primary');
+                            
+                            if (closeButton) {
+                                closeButton.addEventListener('click', function() {
+                                    openingFundModal.hide();
+                                });
                             }
-                        }
-
-                        function checkPassword(destination) {
-                        // Show a prompt for password input
-                        var password = prompt("Please enter your password to access this page:", "");
-                        
-                        // Check if password is correct
-                        if (password === "your_secure_password_here") { // Replace with your actual password
-                            // Redirect to the destination page if password is correct
-                            window.location.href = destination;
-                        } else if (password !== null) {
-                            // Show error if wrong password entered
-                            alert("Incorrect password. Access denied.");
-                        }
-                        // If user cancels, do nothing
-                    }
-                        let redirectUrl = '';
-
-                    function checkPassword(targetUrl) {
-                        redirectUrl = targetUrl;
-                        const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
-                        passwordModal.show();
-                    }
-
-                    document.addEventListener("DOMContentLoaded", function () {
-                        document.getElementById('submitPassword').addEventListener('click', function () {
-                            const passwordInput = document.getElementById('passwordInput').value;
-                            const errorMsg = document.getElementById('passwordError');
-
-                            if (passwordInput === '123') {
-                                errorMsg.style.display = 'none';
-                                const passwordModal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
-                                passwordModal.hide();
-
-                                // Proceed to the protected page
-                                window.location.href = redirectUrl;
-                            } else {
-                                errorMsg.style.display = 'block';
+                            
+                            if (acknowledgeButton) {
+                                acknowledgeButton.addEventListener('click', function() {
+                                    openingFundModal.hide();
+                                });
                             }
                         });
-                    });
-                        function checkPassword(redirectUrl) {
-                            const passwordInput = document.createElement('input');
-                            passwordInput.type = 'password';
-                            passwordInput.placeholder = 'Enter password';
-                            const modal = document.createElement('div');
-                            modal.style.position = 'fixed';
-                            modal.style.top = '50%';
-                            modal.style.left = '50%';
-                            modal.style.transform = 'translate(-50%, -50%)';
-                            modal.style.padding = '20px';
-                            modal.style.backgroundColor = 'Gainsboro';
-                            modal.style.boxShadow = '0 4px 6px rgba(99, 225, 245)';
-                            modal.style.zIndex = '1000';
-                            const confirmButton = document.createElement('button');
-                            confirmButton.textContent = 'Submit';
-                            confirmButton.style.marginTop = '10px';
-                            confirmButton.onclick = function() {
-                                if (passwordInput.value === '123') {
+                        let redirectUrl = '';
+
+                            function checkPassword(targetUrl) {
+                                redirectUrl = targetUrl;
+                                const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
+                                passwordModal.show();
+                            }
+
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const submitPasswordBtn = document.getElementById('submitPassword');
+                                const passwordInput = document.getElementById('passwordInput');
+                                const errorMsg = document.getElementById('passwordError');
+
+                                // Click event for the submit button
+                                submitPasswordBtn.addEventListener('click', function () {
+                                    validatePassword(passwordInput, errorMsg);
+                                });
+
+                                // Enter key event for the password input
+                                passwordInput.addEventListener('keypress', function (e) {
+                                    if (e.key === 'Enter') {
+                                        validatePassword(passwordInput, errorMsg);
+                                    }
+                                });
+
+                                // Function to validate password and redirect
+                                function validatePassword(input, error) {
+                                    if (input.value === '123') {
+                                        error.style.display = 'none';
+                                        const passwordModal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
+                                        passwordModal.hide();
+                                        window.location.href = redirectUrl;
+                                    } else {
+                                        error.style.display = 'block';
+                                    }
+                                }
+                            });
+
+                            // Second checkPassword function (custom modal)
+                            function checkPassword(redirectUrl) {
+                                const passwordInput = document.createElement('input');
+                                passwordInput.type = 'password';
+                                passwordInput.placeholder = 'Enter password';
+                                const modal = document.createElement('div');
+                                modal.style.position = 'fixed';
+                                modal.style.top = '50%';
+                                modal.style.left = '50%';
+                                modal.style.transform = 'translate(-50%, -50%)';
+                                modal.style.padding = '20px';
+                                modal.style.backgroundColor = 'Gainsboro';
+                                modal.style.boxShadow = '0 4px 6px rgba(99, 225, 245)';
+                                modal.style.zIndex = '1000';
+                                const confirmButton = document.createElement('button');
+                                confirmButton.textContent = 'Submit';
+                                confirmButton.style.marginTop = '10px';
+
+                                // Click event for the submit button
+                                confirmButton.onclick = function () {
+                                    validateCustomPassword(passwordInput, modal, redirectUrl);
+                                };
+
+                                // Enter key event for the custom password input
+                                passwordInput.addEventListener('keypress', function (e) {
+                                    if (e.key === 'Enter') {
+                                        validateCustomPassword(passwordInput, modal, redirectUrl);
+                                    }
+                                });
+
+                                modal.appendChild(passwordInput);
+                                modal.appendChild(confirmButton);
+                                document.body.appendChild(modal);
+                            }
+
+                            // Function to validate password in custom modal
+                            function validateCustomPassword(input, modal, url) {
+                                if (input.value === '123') {
                                     document.body.removeChild(modal);
-                                    window.location.href = redirectUrl;
+                                    window.location.href = url;
                                 } else {
                                     alert('Incorrect password. Access denied.');
                                 }
-                            };
-                            modal.appendChild(passwordInput);
-                            modal.appendChild(confirmButton);
-                            document.body.appendChild(modal);
-                        }
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const currentUrl = window.location.pathname.split('/').pop();
-                            
-                            document.querySelectorAll('.list-unstyled a').forEach(link => {
-                                const linkHref = link.getAttribute('href');
-                                const parentMenu = link.closest('.collapse');
-                                const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+                            }
 
-                                // Mark the active link
-                                if (linkHref === currentUrl) {
-                                    link.classList.add('active');
-                                    if (parentMenu) {
-                                        parentMenu.classList.add('show');
-                                        if (dropdownToggle) {
-                                            dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                                            dropdownToggle.setAttribute('aria-expanded', 'true');
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const currentUrl = window.location.pathname.split('/').pop();
+
+                                document.querySelectorAll('.list-unstyled a').forEach(link => {
+                                    const linkHref = link.getAttribute('href');
+                                    const parentMenu = link.closest('.collapse');
+                                    const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+
+                                    // Mark the active link
+                                    if (linkHref === currentUrl) {
+                                        link.classList.add('active');
+                                        if (parentMenu) {
+                                            parentMenu.classList.add('show');
+                                            if (dropdownToggle) {
+                                                dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                                                dropdownToggle.setAttribute('aria-expanded', 'true');
+                                            }
                                         }
                                     }
-                                }
 
-                                /* Add 'disabled-link' class to Edit Item and Void Item
-                                if (link.querySelector('span') && link.querySelector('span').textContent.includes('Edit Item') || 
-                                    link.querySelector('span') && link.querySelector('span').textContent.includes('Void Item')) {
-                                        link.classList.add('disabled-link');
-                                }*/
+                                    /* Add 'disabled-link' class to Edit Item and Void Item
+                                    if (link.querySelector('span') && link.querySelector('span').textContent.includes('Edit Item') || 
+                                        link.querySelector('span') && link.querySelector('span').textContent.includes('Void Item')) {
+                                            link.classList.add('disabled-link');
+                                    }*/
+                                });
                             });
-                        });
                     </script>
 
                 <style>
