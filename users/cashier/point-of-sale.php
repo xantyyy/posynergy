@@ -76,9 +76,6 @@
     </ul>
 </li>
 
-
-
-<!-- Password Modal -->
 <div id="passwordModal" class="modal" style="display:none;">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
@@ -309,8 +306,6 @@
 </div>
 
 <script>
-    // COMMENT //
-    // Enhanced product search handling
 $(document).ready(function() {
     let cart = []; // Array to store cart items
     
@@ -331,39 +326,30 @@ $(document).ready(function() {
             $('#searchResults').hide();
         }
     });
-    
-    // Hide search results when clicking outside
+
     $(document).on('click', function(e) {
         if (!$(e.target).closest('#productSearch, #searchResults').length) {
             $('#searchResults').hide();
         }
     });
     
-    // Handle click on search result
     $(document).on('click', '.search-item', function() {
         const productId = $(this).data('value');
         const productName = $(this).data('name');
         const productPrice = parseFloat($(this).data('price'));
         const productBarcode = $(this).data('barcode');
-        
-        // Add to cart array with initial quantity of 1
         addProductToCart(productId, productName, productPrice, productBarcode);
-        
-        // Clear the search field and hide results
         $('#productSearch').val('');
         $('#searchResults').hide();
     });
     
-    // Function to add product to cart
     function addProductToCart(id, name, price, barcode) {
-        // Check if product already exists in cart, if so increment quantity
         const existingProductIndex = cart.findIndex(item => item.id === id);
         
         if (existingProductIndex !== -1) {
             cart[existingProductIndex].quantity += 1;
             cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
         } else {
-            // Add new product to cart
             cart.push({
                 id: id,
                 name: name,
@@ -374,39 +360,34 @@ $(document).ready(function() {
             });
         }
         
-        // Update the display
         updateCartDisplay();
         updateTotals();
     }
     
-    // Function to update the cart display
     function updateCartDisplay() {
-        const tableBody = $('table#table-bold tbody');
-        tableBody.empty(); // Clear existing rows
-        
-        cart.forEach(item => {
-            const row = `
-                <tr data-product-id="${item.id}">
-                    <td>${item.name}</td>
-                    <td>${item.quantity}</td>
-                    <td>₱${item.price.toFixed(2)}</td>
-                    <td>₱${item.price.toFixed(2)}</td>
-                    <td>₱${item.totalPrice.toFixed(2)}</td>
-                </tr>
-            `;
-            tableBody.append(row);
-        });
-        
-        // Show product barcode in the header section
-        if (cart.length > 0) {
-            const lastItem = cart[cart.length - 1];
-            const productInfoDisplay = `${lastItem.name} Barcode: ${lastItem.barcode} | SRP: ₱${lastItem.price.toFixed(2)}`;
-            // Update the header info with the selected product
-            $('.card-header.bg-success').first().text(productInfoDisplay);
-        }
-    }
+    const tableBody = $('table#table-bold tbody');
+    tableBody.empty(); // Clear existing rows
     
-    // Function to update totals
+    cart.forEach(item => {
+        const row = `
+            <tr data-product-id="${item.id}">
+                <td>${item.name}</td>
+                <td>${item.quantity}</td>
+                <td>₱${item.price.toFixed(2)}</td>
+                <td>₱${item.price.toFixed(2)}</td>
+                <td>₱${item.totalPrice.toFixed(2)}</td>
+            </tr>
+        `;
+        tableBody.append(row);
+    });
+    
+    if (cart.length > 0) {
+        const lastItem = cart[cart.length - 1];
+        const productInfoDisplay = `${lastItem.name} Barcode: ${lastItem.barcode} | SRP: ₱${lastItem.price.toFixed(2)}`;
+        $('.card-header.bg-success').first().text(productInfoDisplay);
+    }
+}
+    
     function updateTotals() {
         let totalAmount = 0;
         let totalItems = 0;
@@ -416,27 +397,20 @@ $(document).ready(function() {
             totalItems += item.quantity;
         });
         
-        // Update the total display sections
         $('#totalRetailDisplay').text(`₱${totalAmount.toFixed(2)}`);
         $('#totalTransactionDisplay').text(`₱${totalAmount.toFixed(2)}`);
         
-        // Update transaction details
         $('th:contains("# of Item:")').next().text(totalItems);
         $('th:contains("Amount:")').next().text(`₱${totalAmount.toFixed(2)}`);
         $('th:contains("TOTAL:")').next().text(`₱${totalAmount.toFixed(2)}`);
-        
-        // Also update the amount due in the cash tender modal
-        //$('#amountDue').val(totalAmount.toFixed(2));
     }
     
-    // Function to handle item editing (F1 key)
     $('a[accesskey="F1"]').on('click', function(e) {
         e.preventDefault();
         if ($('table#table-bold tbody tr.selected').length > 0) {
             const selectedRow = $('table#table-bold tbody tr.selected');
             const productId = selectedRow.data('product-id');
             
-            // Here you would open a modal for editing quantity
             const newQuantity = prompt("Enter new quantity:", "1");
             if (newQuantity !== null) {
                 updateItemQuantity(productId, parseInt(newQuantity));
@@ -446,7 +420,6 @@ $(document).ready(function() {
         }
     });
     
-    // Function to update item quantity
     function updateItemQuantity(productId, newQuantity) {
         if (newQuantity <= 0) {
             removeItemFromCart(productId);
@@ -462,20 +435,17 @@ $(document).ready(function() {
         }
     }
     
-    // Function to remove item from cart
     function removeItemFromCart(productId) {
         cart = cart.filter(item => item.id !== productId);
         updateCartDisplay();
         updateTotals();
     }
     
-    // Add event listener for selecting a row in the table
     $(document).on('click', 'table#table-bold tbody tr', function() {
         $('table#table-bold tbody tr').removeClass('selected');
         $(this).addClass('selected');
     });
     
-    // Void Item (F6) implementation
     $('a[accesskey="F6"]').on('click', function(e) {
         e.preventDefault();
         if ($('table#table-bold tbody tr.selected').length > 0) {
@@ -486,8 +456,7 @@ $(document).ready(function() {
             alert("Please select an item to void first");
         }
     });
-    
-    // Void All (F8) implementation
+
     $('a[accesskey="F8"]').on('click', function(e) {
         e.preventDefault();
         if (cart.length > 0) {
@@ -502,7 +471,6 @@ $(document).ready(function() {
         }
     });
     
-    // Calculate Change function enhancement
     window.calculateChange = function() {
         const amountDue = parseFloat(document.getElementById('amountDue').value);
         const tender = parseFloat(document.getElementById('tenderInput').value);
@@ -520,34 +488,35 @@ $(document).ready(function() {
         const change = tender - amountDue;
         document.getElementById('changeOutput').value = change.toFixed(2);
 
-        // Update the Transaction Details table with the tender and change values
         document.getElementById('tenderDisplay').textContent = `₱${tender.toFixed(2)}`;
         document.getElementById('changeDisplay').textContent = `₱${change.toFixed(2)}`;
 
-        // Optionally, close the modal after submission
         bootstrap.Modal.getInstance(document.getElementById('cashTenderModal')).hide();
     };
     
-    // Add product using F2 key
     $('a[accesskey="F2"]').on('click', function(e) {
-        e.preventDefault();
-        if ($('table#table-bold tbody tr.selected').length > 0) {
-            const selectedRow = $('table#table-bold tbody tr.selected');
-            const productId = selectedRow.data('product-id');
-            const itemIndex = cart.findIndex(item => item.id === productId);
-            
-            if (itemIndex !== -1) {
-                cart[itemIndex].quantity += 1;
-                cart[itemIndex].totalPrice = cart[itemIndex].price * cart[itemIndex].quantity;
-                updateCartDisplay();
-                updateTotals();
-            }
-        } else {
-            alert("Please select an item first");
-        }
-    });
-    
-    // CSS for selected row
+    e.preventDefault();
+    if (cart.length > 0) {
+        const transactionNo = 'TRX' + Date.now().toString().slice(-6);
+        const transactionDate = new Date().toISOString().slice(0, 10);
+        const totalQty = cart.reduce((total, item) => total + item.quantity, 0);
+        const totalAmount = cart.reduce((total, item) => total + item.totalPrice, 0);
+        
+        const pendingTransaction = {
+            transactionNo: transactionNo,
+            transactionDate: transactionDate,
+            items: cart,
+            totalQty: totalQty,
+            totalAmount: totalAmount
+        };
+        
+        savePendingTransaction(pendingTransaction);
+        location.reload();
+
+    } else {
+        alert("No items in cart to save");
+    }
+});
     $('<style>')
         .prop('type', 'text/css')
         .html(`
@@ -558,6 +527,277 @@ $(document).ready(function() {
         .appendTo('head');
 });
 
+function updateCartDisplay() {
+    const tableBody = $('table#table-bold tbody');
+    tableBody.empty(); // Clear existing rows
+    
+    cart.forEach(item => {
+        const row = `
+            <tr data-product-id="${item.id}">
+                <td>${item.name}</td>
+                <td>${item.quantity}</td>
+                <td>₱${item.price.toFixed(2)}</td>
+                <td>₱${item.price.toFixed(2)}</td>
+                <td>₱${item.totalPrice.toFixed(2)}</td>
+            </tr>
+        `;
+        tableBody.append(row);
+    });
+    
+    if (cart.length > 0) {
+        const lastItem = cart[cart.length - 1];
+        const productInfoDisplay = `${lastItem.name} Barcode: ${lastItem.barcode} | SRP: ₱${lastItem.price.toFixed(2)}`;
+        $('.card-header.bg-success').first().text(productInfoDisplay);
+    }
+}
+
+function updateTotals() {
+        let totalAmount = 0;
+        let totalItems = 0;
+        
+        cart.forEach(item => {
+            totalAmount += item.totalPrice;
+            totalItems += item.quantity;
+        });
+        
+        $('#totalRetailDisplay').text(`₱${totalAmount.toFixed(2)}`);
+        $('#totalTransactionDisplay').text(`₱${totalAmount.toFixed(2)}`);
+        
+        $('th:contains("# of Item:")').next().text(totalItems);
+        $('th:contains("Amount:")').next().text(`₱${totalAmount.toFixed(2)}`);
+        $('th:contains("TOTAL:")').next().text(`₱${totalAmount.toFixed(2)}`);
+    }
+    
+
+function savePendingTransaction(transaction) {
+    $.ajax({
+    url: 'save_pending_transaction.php',
+    method: 'POST',
+    data: {
+        transaction: JSON.stringify(transaction)
+    },
+    dataType: 'json', // Add this line
+    success: function(response) {
+        if (response.status === 'success') {
+            alert('Transaction saved successfully!');
+            cart = [];
+            updateCartDisplay();
+            updateTotals();
+            $('.card-header.bg-success').first().text("");
+        } else {
+            alert('Error: ' + response.message);
+        }
+    },
+    error: function() {
+        alert('Server error. Could not save transaction.');
+    }
+});
+}
+
+function loadPendingTransactions() {
+    $.ajax({
+        url: 'get_pending_transactions.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                $('#pendingTransactionModal tbody').empty();
+                
+                if (response.transactions.length > 0) {
+                    response.transactions.forEach(function(transaction) {
+                        let row = `
+                            <tr data-transaction-no="${transaction.transactionNo}" class="transaction-row">
+                                <td>${transaction.transactionNo}</td>
+                                <td>${transaction.transactionDate}</td>
+                                <td>${transaction.totalQty}</td>
+                                <td>₱${parseFloat(transaction.totalAmount).toFixed(2)}</td>
+                            </tr>
+                        `;
+                        $('#pendingTransactionModal tbody').append(row);
+                    });
+                } else {
+                    $('#pendingTransactionModal tbody').html('<tr><td colspan="4" class="text-center">No pending transactions found.</td></tr>');
+                }
+            } else {
+                $('#pendingTransactionModal tbody').html('<tr><td colspan="4" class="text-center text-danger">Error: ' + response.message + '</td></tr>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", error);
+            console.log("Response:", xhr.responseText);
+            $('#pendingTransactionModal tbody').html('<tr><td colspan="4" class="text-center text-danger">Server error. Could not load transactions.</td></tr>');
+        }
+    });
+}
+
+// Make sure this runs when the document is ready
+$(document).ready(function() {
+    // This will attach the click handler to all transaction rows, even ones added dynamically
+    $(document).on('click', '.transaction-row', function() {
+        // First remove the selection class from all rows
+        $('.transaction-row').removeClass('table-primary');
+        // Then add it to the clicked row
+        $(this).addClass('table-primary');
+        console.log("Selected transaction:", $(this).attr('data-transaction-no'));
+    });
+    
+    // When the modal is shown, load the transactions
+    $('#pendingTransactionModal').on('show.bs.modal', function() {
+    console.log("Modal opened, loading transactions...");
+    loadPendingTransactions();
+});
+    
+    $('#pendingTransactionModal .btn-primary').click(function() {
+    let selectedRow = $('#pendingTransactionModal tbody tr.table-primary');
+    
+    if (selectedRow.length > 0) {
+        let transactionNo = selectedRow.data('transaction-no'); // Use .data() for reliability
+        console.log("Attempting to load transaction:", transactionNo); // Debug log
+        if (transactionNo) {
+            loadTransactionToCart(transactionNo);
+            $('#pendingTransactionModal').modal('hide');
+        } else {
+            alert('Error: Transaction number not found.');
+        }
+    } else {
+        alert('Please select a transaction to load.');
+    }
+});
+    
+    // Fix the Delete button click handler as well
+    $('#pendingTransactionModal .btn-danger').click(function() {
+        let selectedRow = $('#pendingTransactionModal tbody tr.table-primary');
+        
+        if (selectedRow.length > 0) {
+            if (confirm('Are you sure you want to delete this transaction?')) {
+                let transactionNo = selectedRow.attr('data-transaction-no');
+                deletePendingTransaction(transactionNo);
+            }
+        } else {
+            alert('Please select a transaction to delete.');
+        }
+    });
+});
+
+function loadPendingTransactions() {
+    $.ajax({
+        url: 'get_pending_transactions.php',
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                $('#pendingTransactionModal tbody').empty();
+                
+                if (response.transactions.length > 0) {
+                    response.transactions.forEach(function(transaction) {
+                        let row = `
+                            <tr data-transaction-no="${transaction.transactionNo}" class="transaction-row">
+                                <td>${transaction.transactionNo}</td>
+                                <td>${transaction.transactionDate}</td>
+                                <td>${transaction.totalQty}</td>
+                                <td>₱${parseFloat(transaction.totalAmount).toFixed(2)}</td>
+                            </tr>
+                        `;
+                        $('#pendingTransactionModal tbody').append(row);
+                    });
+                } else {
+                    $('#pendingTransactionModal tbody').html('<tr><td colspan="4" class="text-center">No pending transactions found.</td></tr>');
+                }
+            } else {
+                $('#pendingTransactionModal tbody').html('<tr><td colspan="4" class="text-center text-danger">Error: ' + response.message + '</td></tr>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", error);
+            console.log("Response:", xhr.responseText);
+            $('#pendingTransactionModal tbody').html('<tr><td colspan="4" class="text-center text-danger">Server error. Could not load transactions.</td></tr>');
+        }
+    });
+}
+
+function loadTransactionToCart(transactionNo) {
+    $.ajax({
+        url: 'get_transaction_items.php',
+        method: 'GET',
+        data: {
+            transactionNo: transactionNo
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                cart = [];
+                
+                response.items.forEach(function(item) {
+                    cart.push({
+                        barcode: item.Barcode,
+                        name: item.ProductName,
+                        price: parseFloat(item.SRP),
+                        quantity: parseFloat(item.Quantity),
+                        totalPrice: parseFloat(item.Amount)
+                    });
+                });
+                
+                updateCartDisplay();
+                updateTotals();
+                removePendingTransaction(transactionNo);
+            } else {
+                alert('Error: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", error);
+            console.log("Response:", xhr.responseText);
+            alert('Server error. Could not load transaction items.');
+        }
+    });
+}
+
+function removePendingTransaction(transactionNo) {
+    $.ajax({
+        url: 'remove_pending_transaction.php',
+        method: 'POST',
+        data: {
+            transactionNo: transactionNo,
+            action: 'remove_after_load'
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                alert('Transaction loaded successfully and removed from pending list!');
+                $('#pendingTransactionModal').modal('hide');
+            } else {
+                alert('Error: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", error);
+            console.log("Response:", xhr.responseText);
+            alert('Server error. Could not remove pending transaction.');
+        }
+    });
+}
+
+function updatePendingTransactionsTable(transactions) {
+    const tableBody = $('#pendingTransactionModal tbody');
+    tableBody.empty();
+    
+    if (transactions.length === 0) {
+        tableBody.append('<tr><td colspan="4" class="text-center">No pending transactions found</td></tr>');
+        return;
+    }
+    
+    transactions.forEach(transaction => {
+        const row = `
+            <tr data-transaction-no="${transaction.id}" class="transaction-row">
+                <td>${transaction.transactionNo}</td>
+                <td>${transaction.transactionDate}</td>
+                <td>${transaction.totalQty}</td>
+                <td>₱${parseFloat(transaction.totalAmount).toFixed(2)}</td>
+            </tr>
+        `;
+        tableBody.append(row);
+    });
+}
 // Senior Citizen Discount Functions
 function showSeniorPasswordPrompt() {
     $('#seniorPasswordModal').modal('show');  // Show the password modal
@@ -581,9 +821,7 @@ function submitSeniorDetails() {
     const idNumber = $('#seniorId').val();  // Get the ID number value
     const birthdate = $('#seniorBirthdate').val();  // Get the birthdate value
     
-    // Validate that all fields are filled in
     if (name && idNumber && birthdate) {
-        // Process discount application
         const discountData = {
             name: name,
             idNumber: idNumber,
@@ -591,15 +829,11 @@ function submitSeniorDetails() {
             discountType: 'Senior Citizen'
         };
         
-        // Here you would typically send this data to your backend
         console.log('Applying discount:', discountData);
         alert(`Senior Citizen discount applied for:\nName: ${name}\nID: ${idNumber}\nBirthdate: ${birthdate}`);
         
-        // Close the Senior Details modal and reset the form
         $('#seniorDetailsModal').modal('hide');
-        $('#seniorForm')[0].reset();  // Reset the form fields
-        
-        // Update UI to reflect the discount applied
+        $('#seniorForm')[0].reset();  
         updateTransactionWithDiscount(discountData);
     } else {
         alert('Please fill all required fields!');  // Alert if any field is missing
@@ -607,23 +841,16 @@ function submitSeniorDetails() {
 }
 
 function updateTransactionWithDiscount(discountData) {
-    // Calculate the discount amount (20% for Senior)
     const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
-    const discountAmount = totalAmount * 0.20; // 20% discount for seniors
-
-    // Update the discount display in the transaction details table
+    const discountAmount = totalAmount * 0.20; 
     $('th:contains("Discount:")').next().text(`₱${discountAmount.toFixed(2)} (${discountData.discountType})`);
 
-    // Recalculate the final total after discount
     const finalTotal = totalAmount - discountAmount;
     $('#totalTransactionDisplay').text(`₱${finalTotal.toFixed(2)}`);
-    $('#totalRetailDisplay').text(`₱${finalTotal.toFixed(2)}`); // Sync with retail display
-
-    // Update amount due in cash tender modal
+    $('#totalRetailDisplay').text(`₱${finalTotal.toFixed(2)}`);
     $('#amountDue').val(finalTotal.toFixed(2));
 }
 
-// Keyboard Shortcut for F11
 document.addEventListener('keydown', function(event) {
     if (event.key === 'F11') {
         event.preventDefault();
@@ -631,7 +858,6 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-// Placeholder functions for other discounts
 function applyRegularDiscount() { alert('Regular discount applied'); }
 function applySoloParent() { alert('Solo Parent discount applied'); }
 function applyPWD() { alert('PWD discount applied'); }
@@ -666,7 +892,6 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
             case "F7":
                 event.preventDefault();
                 document.querySelector('a[accesskey="F7"]').click();
-                // If the modal is open, F7 can also trigger the calculateChange function
                 if (document.getElementById('cashTenderModal').classList.contains('show')) {
                     calculateChange();
                 }
@@ -685,9 +910,7 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
                 break;
             case "F11":
                 event.preventDefault();
-                // Kunin ang Apply Discount button
                 let discountBtn = document.getElementById("discountDropdown");
-                // I-toggle ang dropdown gamit ang Bootstrap API
                 let discountMenu = new bootstrap.Dropdown(discountBtn);
                 if (discountBtn.getAttribute("aria-expanded") === "true") {
                     discountMenu.hide();
@@ -707,12 +930,10 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
     function syncAmountDue() {
     const finalTotal = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
     $('#amountDue').val(finalTotal.toFixed(2));
-    // Reset tender and change fields
     $('#tenderInput').val('');
     $('#changeOutput').val('0.00');
 }
 $('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
-    // Function to calculate the change and update the transaction details
     let submitClickCount = 0; // Counter for Submit button clicks
 
    function calculateChange() {
@@ -731,29 +952,19 @@ $('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
 
     const change = tender - amountDue;
     document.getElementById('changeOutput').value = change.toFixed(2);
-
-    // Update the Transaction Details table with the tender and change values
     document.getElementById('tenderDisplay').textContent = `₱${tender.toFixed(2)}`;
     document.getElementById('changeDisplay').textContent = `₱${change.toFixed(2)}`;
-
-    // Increment the submit click counter
     submitClickCount++;
 
     if (submitClickCount === 1) {
-        // First click: Just close the modal and wait for the second click
         bootstrap.Modal.getInstance(document.getElementById('cashTenderModal')).hide();
     } else if (submitClickCount === 2) {
-        // Second click: Generate and display the receipt
         generateReceipt();
-        // Reset the counter after showing the receipt
         submitClickCount = 0;
-        // Reset the transaction
         resetTransaction();
     }
 }
-    // Fetch the total amount and reset the modal fields when it is shown
     document.getElementById('cashTenderModal').addEventListener('shown.bs.modal', function () {
-        // Fetch the total amount from the transaction details or the top display
         const totalElement = document.querySelector('.col-md-8.text-right.d-flex.justify-content-end');
         const totalValue = totalElement.textContent.replace('₱', '').trim();
         document.getElementById('amountDue').value = totalValue || '0.00';
@@ -763,7 +974,6 @@ $('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
     });
 
     function generateReceipt() {
-    // Collect transaction data
     const cart = window.cart || []; // Access the cart array (ensure it's globally accessible)
     const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
     const tender = parseFloat(document.getElementById('tenderDisplay').textContent.replace('₱', '')) || 0;
@@ -776,7 +986,6 @@ $('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
         hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true 
     });
 
-    // Generate receipt content
     let receiptContent = `
         <div style="font-family: monospace; text-align: center; padding: 20px;">
             <h4>AAA GROCERY</h4>
@@ -791,7 +1000,6 @@ $('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
             <hr>
     `;
 
-    // Add items from the cart
     cart.forEach(item => {
         receiptContent += `
             <p style="text-align: left;">${item.name} ${item.quantity} x ₱${item.price.toFixed(2)}</p>
@@ -828,7 +1036,6 @@ $('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
         </div>
     `;
 
-    // Create a new modal to display the receipt
     const receiptModal = `
         <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -849,11 +1056,8 @@ $('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
         </div>
     `;
 
-    // Append the modal to the body and show it
     $('body').append(receiptModal);
     $('#receiptModal').modal('show');
-
-    // Remove the modal from DOM after it's hidden to prevent duplicates
     $('#receiptModal').on('hidden.bs.modal', function () {
         $(this).remove();
     });
@@ -880,14 +1084,11 @@ function printReceipt() {
 }
 
 function resetTransaction() {
-    // Clear the cart
     window.cart = [];
     
-    // Reset the cart display
     updateCartDisplay();
     updateTotals();
 
-    // Reset transaction details
     $('th:contains("# of Item:")').next().text('0');
     $('th:contains("Amount:")').next().text('₱0.00');
     $('th:contains("Discount:")').next().text('₱0.00');
@@ -895,8 +1096,6 @@ function resetTransaction() {
     $('th:contains("TOTAL:")').next().text('₱0.00');
     $('#tenderDisplay').text('₱0.00');
     $('#changeDisplay').text('₱0.00');
-    
-    // Reset the header
     $('.card-header.bg-success').first().text('');
 }
     

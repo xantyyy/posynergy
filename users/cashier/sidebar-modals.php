@@ -1,6 +1,6 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-<!-- Pending Transaction -->
+<!-- Pending Transaction Modal -->
 <div class="modal fade" id="pendingTransactionModal" tabindex="-1" aria-labelledby="pendingTransactionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -13,7 +13,7 @@
             <!-- Modal Body -->
             <div class="modal-body">
                 <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-hover">
                         <thead class="bg-dark text-white">
                             <tr>
                                 <th>Transaction No.</th>
@@ -23,11 +23,9 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <!-- Transaction data will be loaded here -->
                             <tr>
-                                <td>TRX12345</td>
-                                <td>2025-03-17</td>
-                                <td>50</td>
-                                <td>₱5,000.00</td>
+                                <td colspan="4" class="text-center">Loading transactions...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -37,6 +35,7 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary">Load Transaction</button>
+                <button type="button" class="btn btn-danger">Delete Transaction</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -519,3 +518,83 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+
+$('#pendingTransactionModal .btn-primary').off('click').on('click', function() {
+    // Find the selected row
+    let selectedRow = $('#pendingTransactionModal tbody tr.table-primary');
+    
+    if (selectedRow.length > 0) {
+        // Use .attr() instead of .data() to avoid jQuery caching issues
+        let transactionNo = selectedRow.attr('data-transaction-no');
+        console.log("Load button clicked, selected transactionNo:", transactionNo);
+        
+        if (transactionNo) {
+            loadTransactionToCart(transactionNo);
+            $('#pendingTransactionModal').modal('hide');
+        } else {
+            console.error("Transaction number not found on selected row");
+            alert('Error: Transaction number not found.');
+        }
+    } else {
+        console.log("No row selected when Load button was clicked");
+        alert('Please select a transaction to load.');
+    }
+});
+// Function to load a transaction into the cart
+function loadTransactionIntoCart(transactionId) {
+    $.ajax({
+        url: 'get_pending_transaction_details.php',
+        method: 'GET',
+        data: { id: transactionId },
+        success: function(response) {
+            try {
+                const transaction = JSON.parse(response);
+                
+                // Clear current cart
+                cart = [];
+                
+                // Add items from pending transaction to cart
+                transaction.items.forEach(item => {
+                    cart.push({
+                        id: item.id,
+                        name: item.name,
+                        price: parseFloat(item.price),
+                        barcode: item.barcode,
+                        quantity: parseInt(item.quantity),
+                        totalPrice: parseFloat(item.totalPrice)
+                    });
+                });
+                
+                // Update display
+                updateCartDisplay();
+                updateTotals();
+                
+                // Close the modal
+                $('#pendingTransactionModal').modal('hide');
+                
+                // Show success message
+                alert('Transaction loaded successfully!');
+                
+            } catch (e) {
+                console.error('Error parsing transaction details', e);
+                alert('Could not load transaction details');
+            }
+        },
+        error: function() {
+            alert('Server error. Could not load transaction details.');
+        }
+    });
+}
+</script>
+<style>
+    #pendingTransactionModal table tbody tr.selected-row {
+        background-color: #e0f7fa;
+    }
+    #pendingTransactionModal table tbody tr {
+        cursor: pointer;
+    }
+</style>
