@@ -310,49 +310,252 @@
 
 <script>
     // COMMENT //
-    $(document).ready(function() {
-            $('#productSearch').on('input', function() {
-                var query = $(this).val();
-                
-                if(query.length >= 2) {
-                    $.ajax({
-                        url: 'search_products.php',
-                        method: 'POST',
-                        data: { query: query },
-                        success: function(data) {
-                            $('#searchResults').html(data);
-                            $('#searchResults').show();
-                        }
-                    });
-                } else {
-                    $('#searchResults').hide();
+    // Enhanced product search handling
+$(document).ready(function() {
+    let cart = []; // Array to store cart items
+    
+    $('#productSearch').on('input', function() {
+        var query = $(this).val();
+        
+        if(query.length >= 2) {
+            $.ajax({
+                url: 'search_products.php',
+                method: 'POST',
+                data: { query: query },
+                success: function(data) {
+                    $('#searchResults').html(data);
+                    $('#searchResults').show();
                 }
             });
-            
-            // Hide search results when clicking outside
-            $(document).on('click', function(e) {
-                if (!$(e.target).closest('#productSearch, #searchResults').length) {
-                    $('#searchResults').hide();
-                }
+        } else {
+            $('#searchResults').hide();
+        }
+    });
+    
+    // Hide search results when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#productSearch, #searchResults').length) {
+            $('#searchResults').hide();
+        }
+    });
+    
+    // Handle click on search result
+    $(document).on('click', '.search-item', function() {
+        const productId = $(this).data('value');
+        const productName = $(this).data('name');
+        const productPrice = parseFloat($(this).data('price'));
+        const productBarcode = $(this).data('barcode');
+        
+        // Add to cart array with initial quantity of 1
+        addProductToCart(productId, productName, productPrice, productBarcode);
+        
+        // Clear the search field and hide results
+        $('#productSearch').val('');
+        $('#searchResults').hide();
+    });
+    
+    // Function to add product to cart
+    function addProductToCart(id, name, price, barcode) {
+        // Check if product already exists in cart, if so increment quantity
+        const existingProductIndex = cart.findIndex(item => item.id === id);
+        
+        if (existingProductIndex !== -1) {
+            cart[existingProductIndex].quantity += 1;
+            cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
+        } else {
+            // Add new product to cart
+            cart.push({
+                id: id,
+                name: name,
+                price: price,
+                barcode: barcode,
+                quantity: 1,
+                totalPrice: price
             });
-            
-            // Handle click on search result
-            $(document).on('click', '.search-item', function() {
-                var selectedValue = $(this).data('value');
-                var selectedText = $(this).text();
-                $('#productSearch').val(selectedText);
-                $('#searchResults').hide();
-                // You can redirect or perform other actions here
-                // window.location.href = 'product_details.php?id=' + selectedValue;
-            });
-        });
-    //COMMENT//
-    // Handle F11 key press
-    document.addEventListener('keydown', function(event) {
-    if (event.key === 'F11') {
-        event.preventDefault();
-        showSeniorPasswordPrompt();  // Trigger password modal on F11 press
+        }
+        
+        // Update the display
+        updateCartDisplay();
+        updateTotals();
     }
+    
+    // Function to update the cart display
+    function updateCartDisplay() {
+        const tableBody = $('table#table-bold tbody');
+        tableBody.empty(); // Clear existing rows
+        
+        cart.forEach(item => {
+            const row = `
+                <tr data-product-id="${item.id}">
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>₱${item.price.toFixed(2)}</td>
+                    <td>₱${item.price.toFixed(2)}</td>
+                    <td>₱${item.totalPrice.toFixed(2)}</td>
+                </tr>
+            `;
+            tableBody.append(row);
+        });
+        
+        // Show product barcode in the header section
+        if (cart.length > 0) {
+            const lastItem = cart[cart.length - 1];
+            const productInfoDisplay = `${lastItem.name} Barcode: ${lastItem.barcode} | SRP: ₱${lastItem.price.toFixed(2)}`;
+            // Update the header info with the selected product
+            $('.card-header.bg-success').first().text(productInfoDisplay);
+        }
+    }
+    
+    // Function to update totals
+    function updateTotals() {
+        let totalAmount = 0;
+        let totalItems = 0;
+        
+        cart.forEach(item => {
+            totalAmount += item.totalPrice;
+            totalItems += item.quantity;
+        });
+        
+        // Update the total display sections
+        $('#totalRetailDisplay').text(`₱${totalAmount.toFixed(2)}`);
+        $('#totalTransactionDisplay').text(`₱${totalAmount.toFixed(2)}`);
+        
+        // Update transaction details
+        $('th:contains("# of Item:")').next().text(totalItems);
+        $('th:contains("Amount:")').next().text(`₱${totalAmount.toFixed(2)}`);
+        $('th:contains("TOTAL:")').next().text(`₱${totalAmount.toFixed(2)}`);
+        
+        // Also update the amount due in the cash tender modal
+        $('#amountDue').val(totalAmount.toFixed(2));
+    }
+    
+    // Function to handle item editing (F1 key)
+    $('a[accesskey="F1"]').on('click', function(e) {
+        e.preventDefault();
+        if ($('table#table-bold tbody tr.selected').length > 0) {
+            const selectedRow = $('table#table-bold tbody tr.selected');
+            const productId = selectedRow.data('product-id');
+            
+            // Here you would open a modal for editing quantity
+            const newQuantity = prompt("Enter new quantity:", "1");
+            if (newQuantity !== null) {
+                updateItemQuantity(productId, parseInt(newQuantity));
+            }
+        } else {
+            alert("Please select an item to edit first");
+        }
+    });
+    
+    // Function to update item quantity
+    function updateItemQuantity(productId, newQuantity) {
+        if (newQuantity <= 0) {
+            removeItemFromCart(productId);
+            return;
+        }
+        
+        const itemIndex = cart.findIndex(item => item.id === productId);
+        if (itemIndex !== -1) {
+            cart[itemIndex].quantity = newQuantity;
+            cart[itemIndex].totalPrice = cart[itemIndex].price * newQuantity;
+            updateCartDisplay();
+            updateTotals();
+        }
+    }
+    
+    // Function to remove item from cart
+    function removeItemFromCart(productId) {
+        cart = cart.filter(item => item.id !== productId);
+        updateCartDisplay();
+        updateTotals();
+    }
+    
+    // Add event listener for selecting a row in the table
+    $(document).on('click', 'table#table-bold tbody tr', function() {
+        $('table#table-bold tbody tr').removeClass('selected');
+        $(this).addClass('selected');
+    });
+    
+    // Void Item (F6) implementation
+    $('a[accesskey="F6"]').on('click', function(e) {
+        e.preventDefault();
+        if ($('table#table-bold tbody tr.selected').length > 0) {
+            const selectedRow = $('table#table-bold tbody tr.selected');
+            const productId = selectedRow.data('product-id');
+            removeItemFromCart(productId);
+        } else {
+            alert("Please select an item to void first");
+        }
+    });
+    
+    // Void All (F8) implementation
+    $('a[accesskey="F8"]').on('click', function(e) {
+        e.preventDefault();
+        if (cart.length > 0) {
+            if (confirm("Are you sure you want to void all items?")) {
+                cart = [];
+                updateCartDisplay();
+                updateTotals();
+                $('.card-header.bg-success').first().text("");
+            }
+        } else {
+            alert("Cart is already empty");
+        }
+    });
+    
+    // Calculate Change function enhancement
+    window.calculateChange = function() {
+        const amountDue = parseFloat(document.getElementById('amountDue').value);
+        const tender = parseFloat(document.getElementById('tenderInput').value);
+
+        if (isNaN(tender)) {
+            alert('Please enter a valid amount.');
+            return;
+        }
+
+        if (tender < amountDue) {
+            alert('Tendered amount is less than the amount due.');
+            return;
+        }
+
+        const change = tender - amountDue;
+        document.getElementById('changeOutput').value = change.toFixed(2);
+
+        // Update the Transaction Details table with the tender and change values
+        document.getElementById('tenderDisplay').textContent = `₱${tender.toFixed(2)}`;
+        document.getElementById('changeDisplay').textContent = `₱${change.toFixed(2)}`;
+
+        // Optionally, close the modal after submission
+        bootstrap.Modal.getInstance(document.getElementById('cashTenderModal')).hide();
+    };
+    
+    // Add product using F2 key
+    $('a[accesskey="F2"]').on('click', function(e) {
+        e.preventDefault();
+        if ($('table#table-bold tbody tr.selected').length > 0) {
+            const selectedRow = $('table#table-bold tbody tr.selected');
+            const productId = selectedRow.data('product-id');
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            
+            if (itemIndex !== -1) {
+                cart[itemIndex].quantity += 1;
+                cart[itemIndex].totalPrice = cart[itemIndex].price * cart[itemIndex].quantity;
+                updateCartDisplay();
+                updateTotals();
+            }
+        } else {
+            alert("Please select an item first");
+        }
+    });
+    
+    // CSS for selected row
+    $('<style>')
+        .prop('type', 'text/css')
+        .html(`
+            table#table-bold tbody tr.selected {
+                background-color: #e0f7fa;
+            }
+        `)
+        .appendTo('head');
 });
 
 // Senior Citizen Discount Functions
@@ -885,6 +1088,59 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
         background-color: #dc3545;
         border-color: #dc3545;
     }
+    /* CSS for the search results */
+.search-results {
+    position: absolute;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.search-item {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-item:hover {
+    background-color: #f5f5f5;
+}
+
+/* Styles for the selected row in the table */
+table#table-bold tbody tr.selected {
+    background-color: #e0f7fa;
+}
+
+table#table-bold tbody tr {
+    cursor: pointer;
+}
+
+/* Style for the total display */
+#totalRetailDisplay, #totalTransactionDisplay {
+    font-weight: bold;
+}
+
+/* Better styling for the transaction details */
+.table-borderless th {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Animation for adding items to cart */
+@keyframes highlight {
+    0% { background-color: #e0f7fa; }
+    100% { background-color: transparent; }
+}
+
+.highlight-row {
+    animation: highlight 1s ease-in-out;
+}
 </style>
 
 <?php include_once 'footer.php'; ?>

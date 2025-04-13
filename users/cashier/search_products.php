@@ -17,7 +17,11 @@ $result = $conn->query($sql);
 // Generate HTML for search results
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
-        echo '<div class="search-item" data-value="'.$row['ID'].'">';
+        echo '<div class="search-item" 
+            data-value="'.$row['ID'].'" 
+            data-name="'.$row['ProductName'].'" 
+            data-price="'.$row['SRP'].'" 
+            data-barcode="'.$row['Barcode'].'">';
         echo '<strong>'.$row['ProductName'].'</strong><br>';
         echo 'Barcode: '.$row['Barcode'].' | SRP: ₱'.$row['SRP'];
         echo '</div>';
