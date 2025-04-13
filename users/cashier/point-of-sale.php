@@ -1107,7 +1107,197 @@ function resetTransaction() {
     $('#changeDisplay').text('₱0.00');
     $('.card-header.bg-success').first().text('');
 }
-    
+
+// SEARCH PRODUCT F4
+$(document).ready(function() {
+    // Search functionality for product filter
+    $('#productFilter').on('input', function() {
+        const query = $(this).val().trim();
+        const $filterResults = $('#filterResults');
+        
+        if (query.length >= 2) {
+            $.ajax({
+                url: 'search.php', // Updated to match the correct script
+                method: 'POST',
+                data: { query: query },
+                dataType: 'json',
+                success: function(response) {
+                    $filterResults.empty();
+                    if (response.status === 'success' && response.products.length > 0) {
+                        response.products.forEach(product => {
+                            const item = `
+                                <div class="search-item" 
+                                     data-value="${product.Barcode}" 
+                                     data-name="${product.ProductName}" 
+                                     data-price="${product.SRP}" 
+                                     data-barcode="${product.Barcode}"
+                                     data-quantity="${product.Quantity || 0}"
+                                     style="padding: 10px; cursor: pointer; border-bottom: 1px solid #eee;">
+                                    ${product.ProductName} (Barcode: ${product.Barcode})
+                                </div>
+                            `;
+                            $filterResults.append(item);
+                        });
+                        $filterResults.show();
+                    } else {
+                        $filterResults.append('<div style="padding: 10px;">No products found</div>');
+                        $filterResults.show();
+                    }
+                },
+                error: function() {
+                    $filterResults.html('<div style="padding: 10px; color: red;">Error fetching products</div>');
+                    $filterResults.show();
+                }
+            });
+        } else {
+            $filterResults.hide();
+            $filterResults.empty();
+        }
+    });
+
+    // Hide filter results when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#productFilter, #filterResults').length) {
+            $('#filterResults').hide();
+        }
+    });
+
+    // Handle selection from filter results
+    $(document).on('click', '.search-item', function() {
+        const barcode = $(this).data('barcode');
+        const name = $(this).data('name');
+        const price = parseFloat($(this).data('price'));
+        const quantity = parseInt($(this).data('quantity'));
+
+        // Update table with the selected product
+        const $tableBody = $('#productTable tbody');
+        $tableBody.empty();
+        $tableBody.append(`
+            <tr class="product-row" 
+                data-barcode="${barcode}" 
+                data-name="${name}" 
+                data-price="${price}" 
+                data-quantity="${quantity}">
+                <td>${name}</td>
+                <td>${barcode}</td>
+            </tr>
+        `);
+
+        // Populate right section fields
+        $('#productBarcode').val(barcode);
+        $('#quantityAvailable').val(quantity);
+        $('#quantity').val(1);
+        $('#priceType').val('retail');
+        $('#sellingPrice').val(price.toFixed(2));
+        $('#total').val(price.toFixed(2));
+
+        $('#filterResults').hide();
+        $('#productFilter').val('');
+    });
+
+    // Handle table row click to populate right section
+    $(document).on('click', '.product-row', function() {
+        const $row = $(this);
+        $('#productTable tbody tr').removeClass('table-primary');
+        $row.addClass('table-primary');
+
+        const barcode = $row.data('barcode');
+        const name = $row.data('name');
+        const price = parseFloat($row.data('price'));
+        const quantity = parseInt($row.data('quantity'));
+
+        $('#productBarcode').val(barcode);
+        $('#quantityAvailable').val(quantity);
+        $('#quantity').val(1);
+        $('#priceType').val('retail');
+        $('#sellingPrice').val(price.toFixed(2));
+        $('#total').val(price.toFixed(2));
+    });
+
+    // Update total when quantity or price type changes
+    function updateTotal() {
+        const quantity = parseInt($('#quantity').val());
+        const priceType = $('#priceType').val();
+        let price = parseFloat($('#sellingPrice').val()) || 0;
+
+        // Adjust price based on price type (assuming wholesale price is different)
+        if (priceType === 'wholesale') {
+            price *= 0.9; // Example: 10% discount for wholesale
+        }
+
+        const total = quantity * price;
+        $('#total').val(total.toFixed(2));
+    }
+
+    $('#quantity').on('input', updateTotal);
+    $('#priceType').on('change', updateTotal);
+
+    // Add product to cart
+    $('#addProductBtn').on('click', function() {
+        const barcode = $('#productBarcode').val();
+        const name = $('#productTable tbody tr').data('name');
+        const price = parseFloat($('#sellingPrice').val());
+        const quantity = parseInt($('#quantity').val());
+        const quantityAvailable = parseInt($('#quantityAvailable').val()) || 0;
+
+        if (!barcode || !name || !price) {
+            alert('Please select a product first.');
+            return;
+        }
+
+        if (quantity <= 0) {
+            alert('Please enter a valid quantity.');
+            return;
+        }
+
+        if (quantity > quantityAvailable) {
+            alert('Quantity to add exceeds available quantity.');
+            return;
+        }
+
+        // Add to cart (assuming cart is globally defined as in your POS code)
+        addProductToCart(barcode, name, price, barcode, quantity);
+        $('#searchProductModal').modal('hide');
+        resetModal();
+    });
+
+    // Reset modal fields when closed
+    function resetModal() {
+        $('#productFilter').val('');
+        $('#filterResults').hide();
+        $('#productTable tbody').empty();
+        $('#productBarcode').val('');
+        $('#quantityAvailable').val('');
+        $('#quantity').val('');
+        $('#priceType').val('retail');
+        $('#sellingPrice').val('');
+        $('#total').val('');
+    }
+
+    $('#searchProductModal').on('hidden.bs.modal', resetModal);
+
+    // Modified addProductToCart to handle quantity
+    function addProductToCart(id, name, price, barcode, quantity) {
+        const existingProductIndex = cart.findIndex(item => item.barcode === barcode);
+        
+        if (existingProductIndex !== -1) {
+            cart[existingProductIndex].quantity += quantity;
+            cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
+        } else {
+            cart.push({
+                id: barcode,
+                name: name,
+                price: price,
+                barcode: barcode,
+                quantity: quantity,
+                totalPrice: price * quantity
+            });
+        }
+        
+        updateCartDisplay();
+        updateTotals();
+    }
+});
 </script>
 
 <style>
@@ -1517,6 +1707,25 @@ table#table-bold tbody tr {
 
 .highlight-row {
     animation: highlight 1s ease-in-out;
+}
+
+.search-results {
+    position: absolute;
+    z-index: 1000;
+    background: white;
+    border: 1px solid #ccc;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.search-item:hover {
+    background-color: #f0f0f0;
+}
+
+#productTable tbody tr:hover {
+    cursor: pointer;
 }
 </style>
 

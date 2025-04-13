@@ -56,9 +56,10 @@
             <!-- Modal Body -->
             <div class="modal-body">
                 <!-- Filter Section -->
-                <div class="mb-3">
+                <div class="mb-3 position-relative">
                     <label for="productFilter" class="form-label">Filter:</label>
                     <input type="text" class="form-control" id="productFilter" placeholder="Enter product name or barcode">
+                    <div id="filterResults" class="search-results" style="display: none; position: absolute; z-index: 1000; background: white; border: 1px solid #ccc; width: 100%; max-height: 200px; overflow-y: auto;"></div>
                 </div>
 
                 <!-- Main Content -->
@@ -66,7 +67,7 @@
                     <!-- Left Section: Details Table -->
                     <div class="col-lg-8">
                         <div class="table-responsive" style="max-height: 560px; overflow-y: auto;">
-                            <table class="table table-bordered table-hover">
+                            <table class="table table-bordered table-hover" id="productTable">
                                 <thead class="bg-dark text-white">
                                     <tr>
                                         <th>Product Name</th>
@@ -74,14 +75,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Sample Product 1</td>
-                                        <td>123456789</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sample Product 2</td>
-                                        <td>987654321</td>
-                                    </tr>
+                                    <!-- Dynamically populated -->
                                 </tbody>
                             </table>
                         </div>
@@ -91,15 +85,15 @@
                     <div class="col-lg-4">
                         <div class="mb-3">
                             <label for="productBarcode" class="form-label">Barcode:</label>
-                            <input type="text" class="form-control" id="productBarcode" placeholder="Enter barcode" disabled>
+                            <input type="text" class="form-control" id="productBarcode" placeholder="Enter barcode" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="stocksAvailable" class="form-label">Stocks Available:</label>
-                            <input type="text" class="form-control" id="stocksAvailable" readonly>
+                            <label for="quantityAvailable" class="form-label">Stocks Available:</label>
+                            <input type="text" class="form-control" id="quantityAvailable" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="quantity" class="form-label">Quantity:</label>
-                            <input type="number" class="form-control" id="quantity" placeholder="Enter quantity">
+                            <label for="quantity" class="form-label">Quantity to Add:</label>
+                            <input type="number" class="form-control" id="quantity" placeholder="Enter quantity to add" min="1">
                         </div>
                         <div class="mb-3">
                             <label for="priceType" class="form-label">Price Type:</label>
@@ -116,7 +110,7 @@
                             <label for="total" class="form-label">Total:</label>
                             <input type="text" class="form-control" id="total" readonly>
                         </div>
-                        <button type="button" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-primary" id="addProductBtn">Add</button>
                     </div>
                 </div>
             </div>
@@ -127,7 +121,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Return Modal -->
 <div class="modal fade" id="returnModal" tabindex="-1" aria-labelledby="returnModalLabel" aria-hidden="true">
