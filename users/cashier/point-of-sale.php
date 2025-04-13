@@ -306,8 +306,9 @@
 </div>
 
 <script>
+let cart = []; // Array to store cart items
+
 $(document).ready(function() {
-    let cart = []; // Array to store cart items
     
     $('#productSearch').on('input', function() {
         var query = $(this).val();
@@ -344,25 +345,25 @@ $(document).ready(function() {
     });
     
     function addProductToCart(id, name, price, barcode) {
-        const existingProductIndex = cart.findIndex(item => item.id === id);
-        
-        if (existingProductIndex !== -1) {
-            cart[existingProductIndex].quantity += 1;
-            cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
-        } else {
-            cart.push({
-                id: id,
-                name: name,
-                price: price,
-                barcode: barcode,
-                quantity: 1,
-                totalPrice: price
-            });
-        }
-        
-        updateCartDisplay();
-        updateTotals();
+    const existingProductIndex = cart.findIndex(item => item.barcode === barcode); // Use barcode for comparison
+    
+    if (existingProductIndex !== -1) {
+        cart[existingProductIndex].quantity += 1;
+        cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
+    } else {
+        cart.push({
+            id: barcode, // Use barcode as the ID for consistency
+            name: name,
+            price: price,
+            barcode: barcode,
+            quantity: 1,
+            totalPrice: price
+        });
     }
+    
+    updateCartDisplay();
+    updateTotals();
+}
     
     function updateCartDisplay() {
     const tableBody = $('table#table-bold tbody');
@@ -533,7 +534,7 @@ function updateCartDisplay() {
     
     cart.forEach(item => {
         const row = `
-            <tr data-product-id="${item.id}">
+            <tr data-product-id="${item.barcode}"> <!-- Use barcode as the ID -->
                 <td>${item.name}</td>
                 <td>${item.quantity}</td>
                 <td>₱${item.price.toFixed(2)}</td>
@@ -725,16 +726,24 @@ function loadTransactionToCart(transactionNo) {
         dataType: 'json',
         success: function(response) {
             if (response.status === 'success') {
-                cart = [];
-                
+                // Do not clear the cart; append instead
                 response.items.forEach(function(item) {
-                    cart.push({
-                        barcode: item.Barcode,
-                        name: item.ProductName,
-                        price: parseFloat(item.SRP),
-                        quantity: parseFloat(item.Quantity),
-                        totalPrice: parseFloat(item.Amount)
-                    });
+                    const existingProductIndex = cart.findIndex(cartItem => cartItem.barcode === item.Barcode);
+                    if (existingProductIndex !== -1) {
+                        // If the item already exists in the cart, update its quantity and totalPrice
+                        cart[existingProductIndex].quantity += parseFloat(item.Quantity);
+                        cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
+                    } else {
+                        // Add the new item to the cart
+                        cart.push({
+                            id: item.Barcode, // Use barcode as the ID for consistency
+                            barcode: item.Barcode,
+                            name: item.ProductName,
+                            price: parseFloat(item.SRP),
+                            quantity: parseFloat(item.Quantity),
+                            totalPrice: parseFloat(item.Amount)
+                        });
+                    }
                 });
                 
                 updateCartDisplay();
