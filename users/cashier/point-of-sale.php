@@ -426,7 +426,7 @@ $(document).ready(function() {
         $('th:contains("TOTAL:")').next().text(`₱${totalAmount.toFixed(2)}`);
         
         // Also update the amount due in the cash tender modal
-        $('#amountDue').val(totalAmount.toFixed(2));
+        //$('#amountDue').val(totalAmount.toFixed(2));
     }
     
     // Function to handle item editing (F1 key)
@@ -607,12 +607,21 @@ function submitSeniorDetails() {
 }
 
 function updateTransactionWithDiscount(discountData) {
-    // Update your transaction display with the discount applied
-    // This is a placeholder - implement according to your system
-    $('#discountDisplay').text('20% Senior Citizen Discount');
-    // Recalculate totals, etc.
-}
+    // Calculate the discount amount (20% for Senior)
+    const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
+    const discountAmount = totalAmount * 0.20; // 20% discount for seniors
 
+    // Update the discount display in the transaction details table
+    $('th:contains("Discount:")').next().text(`₱${discountAmount.toFixed(2)} (${discountData.discountType})`);
+
+    // Recalculate the final total after discount
+    const finalTotal = totalAmount - discountAmount;
+    $('#totalTransactionDisplay').text(`₱${finalTotal.toFixed(2)}`);
+    $('#totalRetailDisplay').text(`₱${finalTotal.toFixed(2)}`); // Sync with retail display
+
+    // Update amount due in cash tender modal
+    $('#amountDue').val(finalTotal.toFixed(2));
+}
 
 // Keyboard Shortcut for F11
 document.addEventListener('keydown', function(event) {
@@ -695,32 +704,53 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
         }
     });
 
+    function syncAmountDue() {
+    const finalTotal = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
+    $('#amountDue').val(finalTotal.toFixed(2));
+    // Reset tender and change fields
+    $('#tenderInput').val('');
+    $('#changeOutput').val('0.00');
+}
+$('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
     // Function to calculate the change and update the transaction details
-    function calculateChange() {
-        const amountDue = parseFloat(document.getElementById('amountDue').value);
-        const tender = parseFloat(document.getElementById('tenderInput').value);
+    let submitClickCount = 0; // Counter for Submit button clicks
 
-        if (isNaN(tender)) {
-            alert('Please enter a valid amount.');
-            return;
-        }
+   function calculateChange() {
+    const amountDue = parseFloat(document.getElementById('amountDue').value) || 0;
+    const tender = parseFloat(document.getElementById('tenderInput').value) || 0;
 
-        if (tender < amountDue) {
-            alert('Tendered amount is less than the amount due.');
-            return;
-        }
-
-        const change = tender - amountDue;
-        document.getElementById('changeOutput').value = change.toFixed(2);
-
-        // Update the Transaction Details table with the tender and change values
-        document.getElementById('tenderDisplay').textContent = `₱${tender.toFixed(2)}`;
-        document.getElementById('changeDisplay').textContent = `₱${change.toFixed(2)}`;
-
-        // Optionally, close the modal after submission
-        bootstrap.Modal.getInstance(document.getElementById('cashTenderModal')).hide();
+    if (isNaN(tender) || tender <= 0) {
+        alert('Please enter a valid amount.');
+        return;
     }
 
+    if (tender < amountDue) {
+        alert('Tendered amount is less than the amount due.');
+        return;
+    }
+
+    const change = tender - amountDue;
+    document.getElementById('changeOutput').value = change.toFixed(2);
+
+    // Update the Transaction Details table with the tender and change values
+    document.getElementById('tenderDisplay').textContent = `₱${tender.toFixed(2)}`;
+    document.getElementById('changeDisplay').textContent = `₱${change.toFixed(2)}`;
+
+    // Increment the submit click counter
+    submitClickCount++;
+
+    if (submitClickCount === 1) {
+        // First click: Just close the modal and wait for the second click
+        bootstrap.Modal.getInstance(document.getElementById('cashTenderModal')).hide();
+    } else if (submitClickCount === 2) {
+        // Second click: Generate and display the receipt
+        generateReceipt();
+        // Reset the counter after showing the receipt
+        submitClickCount = 0;
+        // Reset the transaction
+        resetTransaction();
+    }
+}
     // Fetch the total amount and reset the modal fields when it is shown
     document.getElementById('cashTenderModal').addEventListener('shown.bs.modal', function () {
         // Fetch the total amount from the transaction details or the top display
@@ -731,6 +761,145 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
         document.getElementById('changeOutput').value = '0.00';
         document.getElementById('tenderInput').focus();
     });
+
+    function generateReceipt() {
+    // Collect transaction data
+    const cart = window.cart || []; // Access the cart array (ensure it's globally accessible)
+    const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
+    const tender = parseFloat(document.getElementById('tenderDisplay').textContent.replace('₱', '')) || 0;
+    const change = parseFloat(document.getElementById('changeDisplay').textContent.replace('₱', '')) || 0;
+    const terminalNo = document.getElementById('terminal-display').textContent || 'N/A';
+    const transactionNo = '000-0000108'; // You can dynamically generate this
+    const cashier = 'ADMIN'; // Replace with actual cashier name if available
+    const dateTime = new Date().toLocaleString('en-US', { 
+        year: 'numeric', month: 'numeric', day: 'numeric', 
+        hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true 
+    });
+
+    // Generate receipt content
+    let receiptContent = `
+        <div style="font-family: monospace; text-align: center; padding: 20px;">
+            <h4>AAA GROCERY</h4>
+            <p>101 SAN PASCUAL, TALAVERA, N.E.</p>
+            <p>VAT-REG - TIN 000-000-000-000</p>
+            <p>MIN 123456781011213</p>
+            <hr>
+            <p style="text-align: left;">SI No.: 0000000036</p>
+            <p style="text-align: left;">Date-Time: ${dateTime}</p>
+            <p style="text-align: left;">Name: __________________________</p>
+            <p style="text-align: left;">TIN: __________________________</p>
+            <hr>
+    `;
+
+    // Add items from the cart
+    cart.forEach(item => {
+        receiptContent += `
+            <p style="text-align: left;">${item.name} ${item.quantity} x ₱${item.price.toFixed(2)}</p>
+            <p style="text-align: right;">₱${item.totalPrice.toFixed(2)}</p>
+        `;
+    });
+
+    receiptContent += `
+            <hr>
+            <p style="text-align: left;">No. of Items: ${cart.length}</p>
+            <hr>
+            <p style="text-align: left;">TOTAL ₱${totalAmount.toFixed(2)}</p>
+            <p style="text-align: left;">CASH ₱${tender.toFixed(2)}</p>
+            <p style="text-align: left;">CHANGE ₱${change.toFixed(2)}</p>
+            <hr>
+            <p style="text-align: left;">Cashier: ${cashier}</p>
+            <p style="text-align: left;">Terminal No.: ${terminalNo}</p>
+            <p style="text-align: left;">Txn No.: ${transactionNo}</p>
+            <hr>
+            <p style="text-align: left;">VATABLE Sale (T) ₱${totalAmount.toFixed(2)}</p>
+            <p style="text-align: left;">VAT-Exempt Sale (X) ₱0.00</p>
+            <p style="text-align: left;">VAT Zero Rated Sale (Z) ₱0.00</p>
+            <p style="text-align: left;">VAT ₱0.00</p>
+            <p style="text-align: left;">Total ₱${totalAmount.toFixed(2)}</p>
+            <hr>
+            <p>THANK YOU!!!</p>
+            <p>THIS SERVES AS YOUR INVOICE</p>
+            <hr>
+            <p>ISYNERGIES, INCORPORATED</p>
+            <p>105 MAHARLIKA HIGHWAY, CABANATUAN CITY</p>
+            <p>VAT-REG TIN 429-357-807-000</p>
+            <p>ACCR # 000-000000000-0000</p>
+            <p>ACCR DATE: 01/01/0001</p>
+        </div>
+    `;
+
+    // Create a new modal to display the receipt
+    const receiptModal = `
+        <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="receiptModalLabel">Transaction Receipt</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ${receiptContent}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="printReceipt()">Print</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Append the modal to the body and show it
+    $('body').append(receiptModal);
+    $('#receiptModal').modal('show');
+
+    // Remove the modal from DOM after it's hidden to prevent duplicates
+    $('#receiptModal').on('hidden.bs.modal', function () {
+        $(this).remove();
+    });
+}
+
+function printReceipt() {
+    const receiptContent = document.querySelector('#receiptModal .modal-body').innerHTML;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Transaction Receipt</title>
+            <style>
+                body { font-family: monospace; text-align: center; padding: 20px; }
+                p { margin: 5px 0; }
+            </style>
+        </head>
+        <body onload="window.print(); window.close();">
+            ${receiptContent}
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}
+
+function resetTransaction() {
+    // Clear the cart
+    window.cart = [];
+    
+    // Reset the cart display
+    updateCartDisplay();
+    updateTotals();
+
+    // Reset transaction details
+    $('th:contains("# of Item:")').next().text('0');
+    $('th:contains("Amount:")').next().text('₱0.00');
+    $('th:contains("Discount:")').next().text('₱0.00');
+    $('th:contains("BSC Points:")').next().text('₱0.00');
+    $('th:contains("TOTAL:")').next().text('₱0.00');
+    $('#tenderDisplay').text('₱0.00');
+    $('#changeDisplay').text('₱0.00');
+    
+    // Reset the header
+    $('.card-header.bg-success').first().text('');
+}
+    
 </script>
 
 <style>
