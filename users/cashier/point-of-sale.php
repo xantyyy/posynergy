@@ -672,7 +672,7 @@ $(document).ready(function() {
         if (selectedRow.length > 0) {
             if (confirm('Are you sure you want to delete this transaction?')) {
                 let transactionNo = selectedRow.attr('data-transaction-no');
-                deletePendingTransaction(transactionNo);
+                removePendingTransaction(transactionNo);
             }
         } else {
             alert('Please select a transaction to delete.');
