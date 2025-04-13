@@ -548,32 +548,7 @@
     </div>
 </div>
 
-<!-- Product Discount Modal -->
-<div class="modal fade" id="addDiscountModal" tabindex="-1" aria-labelledby="addDiscountModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addDiscountModalLabel">Add Product Discount</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label for="productName" class="form-label">Product Name</label>
-          <input type="text" class="form-control" id="productName" name="productName" disabled>
-          <input type="hidden" id="productId" name="productId">
-        </div>
-        <div class="mb-3">
-          <label for="discountPercentage" class="form-label">Discount Percentage (%)</label>
-          <input type="number" class="form-control" id="discountPercentage" name="discountPercentage" min="0" max="100" step="0.01" placeholder="Enter discount percentage">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="saveDiscount">Save Discount</button>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 <script>
 // Add this to your existing JavaScript file or in a script tag at the bottom of your page

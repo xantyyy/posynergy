@@ -84,8 +84,11 @@ if ($type === 'SAVE_PRODUCT_PROFILE') {
         }
     }
 } elseif ($type === 'GENERATE_CODES') {
-    // Existing logic for generating codes
     try {
+        // Start a transaction to ensure atomicity
+        $conn->begin_transaction();
+
+        // Fetch the latest ProductCodeNo and PLUCodeNo
         $result = $conn->query("SELECT ProductCodeNo, PLUCodeNo FROM tbl_idno ORDER BY ID DESC LIMIT 1");
         
         if ($result->num_rows > 0) {
@@ -95,8 +98,26 @@ if ($type === 'SAVE_PRODUCT_PROFILE') {
         } else {
             $productCodeNo = 6435; // Starting product code
             $pluCodeNo = 6435;    // Starting PLU code
+
+            // Insert initial record if table is empty
+            $stmt = $conn->prepare("INSERT INTO tbl_idno (ProductCodeNo, PLUCodeNo) VALUES (?, ?)");
+            $stmt->bind_param("ii", $productCodeNo, $pluCodeNo);
+            $stmt->execute();
+            $stmt->close();
         }
 
+        // Update tbl_idno with the incremented values
+        $updateStmt = $conn->prepare("UPDATE tbl_idno SET ProductCodeNo = ?, PLUCodeNo = ? ORDER BY ID DESC LIMIT 1");
+        $updateStmt->bind_param("ii", $productCodeNo, $pluCodeNo);
+        if (!$updateStmt->execute()) {
+            throw new Exception('Failed to update codes: ' . $updateStmt->error);
+        }
+        $updateStmt->close();
+
+        // Commit the transaction
+        $conn->commit();
+
+        // Prepare the response
         $data = array(
             'success' => true,
             'productCode' => 'PROD' . str_pad($productCodeNo, 6, '0', STR_PAD_LEFT),
@@ -107,6 +128,8 @@ if ($type === 'SAVE_PRODUCT_PROFILE') {
         );
         
     } catch (Exception $e) {
+        // Rollback the transaction on error
+        $conn->rollback();
         $data = array(
             'success' => false,
             'message' => $e->getMessage(),
