@@ -596,30 +596,7 @@ function updateTransactionDetails() {
             alert("Cart is already empty");
         }
     });
-    
-    window.calculateChange = function() {
-        const amountDue = parseFloat(document.getElementById('amountDue').value);
-        const tender = parseFloat(document.getElementById('tenderInput').value);
 
-        if (isNaN(tender)) {
-            alert('Please enter a valid amount.');
-            return;
-        }
-
-        if (tender < amountDue) {
-            alert('Tendered amount is less than the amount due.');
-            return;
-        }
-
-        const change = tender - amountDue;
-        document.getElementById('changeOutput').value = change.toFixed(2);
-
-        document.getElementById('tenderDisplay').textContent = `₱${tender.toFixed(2)}`;
-        document.getElementById('changeDisplay').textContent = `₱${change.toFixed(2)}`;
-
-        bootstrap.Modal.getInstance(document.getElementById('cashTenderModal')).hide();
-    };
-    
     $('a[accesskey="F2"]').on('click', function(e) {
     e.preventDefault();
     if (cart.length > 0) {
@@ -1066,38 +1043,42 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
     $('#amountDue').val(finalTotal.toFixed(2));
     $('#tenderInput').val('');
     $('#changeOutput').val('0.00');
-}
-$('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
-    let submitClickCount = 0; // Counter for Submit button clicks
+}$('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
 
-   function calculateChange() {
-    const amountDue = parseFloat(document.getElementById('amountDue').value) || 0;
-    const tender = parseFloat(document.getElementById('tenderInput').value) || 0;
+let submitClickCount = 0; // Counter for Submit button clicks
 
-    if (isNaN(tender) || tender <= 0) {
-        alert('Please enter a valid amount.');
-        return;
-    }
+// Real-time change calculation on tender input
+$('#tenderInput').on('input', function() {
+    calculateChange();
+});
 
-    if (tender < amountDue) {
-        alert('Tendered amount is less than the amount due.');
-        return;
-    }
+// Function to calculate change in real-time
+function calculateChange() {
+    const amountDue = parseFloat($('#amountDue').val()) || 0; // Get the amount due
+    const tender = parseFloat($('#tenderInput').val()) || 0; // Get the tender amount
 
+    // Calculate the change (allow negative values)
     const change = tender - amountDue;
-    document.getElementById('changeOutput').value = change.toFixed(2);
-    document.getElementById('tenderDisplay').textContent = `₱${tender.toFixed(2)}`;
-    document.getElementById('changeDisplay').textContent = `₱${change.toFixed(2)}`;
-    submitClickCount++;
 
-    if (submitClickCount === 1) {
-        bootstrap.Modal.getInstance(document.getElementById('cashTenderModal')).hide();
-    } else if (submitClickCount === 2) {
-        generateReceipt();
-        submitClickCount = 0;
-        resetTransaction();
-    }
+    // Update the change output field (display even if negative)
+    $('#changeOutput').val(change.toFixed(2)); // Display change with 2 decimal places
 }
+
+// Event listener for the Submit button to print receipt
+$('#cashTenderModal .btn-success').on('click', function() {
+    const tender = parseFloat($('#tenderInput').val()) || 0;
+    const change = parseFloat($('#changeOutput').val()) || 0;
+
+    // Update the Transaction Details section with tender and change
+    $('#tenderDisplay').text(`₱${tender.toFixed(2)}`);
+    $('#changeDisplay').text(`₱${change.toFixed(2)}`);
+
+    // Close the modal
+    $('#cashTenderModal').modal('hide');
+
+    // Call the function to print the receipt
+    printReceipt();
+});
     document.getElementById('cashTenderModal').addEventListener('shown.bs.modal', function () {
         const totalElement = document.querySelector('.col-md-8.text-right.d-flex.justify-content-end');
         const totalValue = totalElement.textContent.replace('₱', '').trim();
@@ -1197,42 +1178,96 @@ $('#cashTenderModal').on('shown.bs.modal', syncAmountDue);
     });
 }
 
+// LYKA ITO YUNG RESIBO
 function printReceipt() {
-    const receiptContent = document.querySelector('#receiptModal .modal-body').innerHTML;
+    // Gather transaction details
+    const transactionNo = $('table.table-borderless tbody tr').eq(1).find('td').text().trim(); // Transaction No
+    const itemCount = $('table.table-borderless tbody tr').eq(2).find('td').text().trim(); // # of Item
+    const amount = $('table.table-borderless tbody tr').eq(3).find('td').text().trim(); // Amount
+    const total = $('#totalTransactionDisplay').text().trim(); // TOTAL
+    const tender = $('#tenderDisplay').text().trim(); // Tender
+    const change = $('#changeDisplay').text().trim(); // Change
+
+    // Gather items from the table
+    let items = [];
+    $('table#table-bold tbody tr').each(function() {
+        const itemName = $(this).find('td').eq(0).text().trim(); // Items
+        if (itemName !== '') { // Exclude empty rows
+            const qty = $(this).find('td').eq(1).text().trim(); // Qty
+            const price = $(this).find('td').eq(2).text().trim(); // Price (first Price column)
+            const amount = $(this).find('td').eq(4).text().trim(); // Amount
+            items.push({ itemName, qty, price, amount });
+        }
+    });
+
+    // Create a simple receipt content (you can customize this)
+    let receiptContent = `
+        ========== RECEIPT ==========
+        Transaction No: ${transactionNo}
+        Date: ${new Date().toLocaleString()}
+        --------------------------------
+        Items:
+    `;
+
+    items.forEach(item => {
+        receiptContent += `
+        ${item.itemName}
+        Qty: ${item.qty} | Price: ${item.price} | Amount: ${item.amount}
+        `;
+    });
+
+    receiptContent += `
+        --------------------------------
+        Total Items: ${itemCount}
+        Amount: ${amount}
+        TOTAL: ${total}
+        Tender: ${tender}
+        Change: ${change}
+        ==============================
+    `;
+
+    // Open a new window and print the receipt
     const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <html>
-        <head>
-            <title>Transaction Receipt</title>
-            <style>
-                body { font-family: monospace; text-align: center; padding: 20px; }
-                p { margin: 5px 0; }
-            </style>
-        </head>
-        <body onload="window.print(); window.close();">
-            ${receiptContent}
-        </body>
-        </html>
-    `);
+    printWindow.document.write('<pre>' + receiptContent + '</pre>');
     printWindow.document.close();
+    printWindow.print();
+    printWindow.close();
+
+    location.reload();
+    resetTransaction();
 }
 
+// HANGGANG DITO LYKAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+// Function to reset the transaction after printing (optional)
 function resetTransaction() {
-    window.cart = [];
-    
-    updateCartDisplay();
-    updateTotals();
+    // Clear the table
+    $('table#table-bold tbody').empty();
+    $('table#table-bold tbody').append(`
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    `);
 
-    $('th:contains("# of Item:")').next().text('0');
-    $('th:contains("Amount:")').next().text('₱0.00');
-    $('th:contains("Discount:")').next().text('₱0.00');
-    $('th:contains("BSC Points:")').next().text('₱0.00');
-    $('th:contains("TOTAL:")').next().text('₱0.00');
-    $('#tenderDisplay').text('₱0.00');
-    $('#changeDisplay').text('₱0.00');
-    $('.card-header.bg-success').first().text('');
+    // Reset transaction details
+    $('table.table-borderless tbody tr').eq(1).find('td').text(''); // Transaction No
+    $('table.table-borderless tbody tr').eq(2).find('td').text('0'); // # of Item
+    $('table.table-borderless tbody tr').eq(3).find('td').text('₱0.00'); // Amount
+    $('table.table-borderless tbody tr').eq(6).find('td').text('₱0.00'); // TOTAL
+    $('#tenderDisplay').text('₱0.00'); // Tender
+    $('#changeDisplay').text('₱0.00'); // Change
+
+    // Reset retail display
+    $('#totalRetailDisplay').text('₱0.00');
+
+    // Reset tender modal inputs
+    $('#tenderInput').val('');
+    $('#changeOutput').val('0.00');
 }
-
 // SEARCH PRODUCT F4
 $(document).ready(function() {
     // Search functionality for product filter
