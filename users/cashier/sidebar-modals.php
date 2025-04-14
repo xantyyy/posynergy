@@ -512,7 +512,56 @@
     </div>
 </div>
 
+<!-- Password Modal for Void Item -->
+<div class="modal fade" id="voidPasswordModal" tabindex="-1" aria-labelledby="voidPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="voidPasswordModalLabel">Enter Void Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="voidPassword">Password:</label>
+                    <input type="password" class="form-control" id="voidPassword" placeholder="Enter password">
+                    <div class="invalid-feedback" id="voidPasswordError">
+                        Incorrect password. Please try again.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="verifyVoidPassword">Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Void Reason Modal -->
+<div class="modal fade" id="voidReasonModal" tabindex="-1" aria-labelledby="voidReasonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="voidReasonModalLabel">Enter Void Reason</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="voidReason">Reason:</label>
+                    <select class="form-control" id="voidReason">
+                        <option value="My Reason 1">My Reason 1</option>
+                        <option value="My Reason 2">My Reason 2</option>
+                        <option value="My Reason 3">My Reason 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmVoid">Void Item</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 

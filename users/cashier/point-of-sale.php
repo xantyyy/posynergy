@@ -381,12 +381,6 @@ $(document).ready(function() {
         `;
         tableBody.append(row);
     });
-    
-    if (cart.length > 0) {
-        const lastItem = cart[cart.length - 1];
-        const productInfoDisplay = `${lastItem.name} Barcode: ${lastItem.barcode} | SRP: ₱${lastItem.price.toFixed(2)}`;
-        $('.card-header.bg-success').first().text(productInfoDisplay);
-    }
 }
     
     function updateTotals() {
@@ -447,16 +441,147 @@ $(document).ready(function() {
         $(this).addClass('selected');
     });
     
-    $('a[accesskey="F6"]').on('click', function(e) {
-        e.preventDefault();
-        if ($('table#table-bold tbody tr.selected').length > 0) {
-            const selectedRow = $('table#table-bold tbody tr.selected');
-            const productId = selectedRow.data('product-id');
-            removeItemFromCart(productId);
-        } else {
-            alert("Please select an item to void first");
+    // Modified F6 handler for void item
+$('a[accesskey="F6"]').on('click', function(e) {
+    e.preventDefault();
+    if ($('table#table-bold tbody tr.selected').length > 0) {
+        // Show the password modal instead of directly removing the item
+        $('#voidPasswordModal').modal('show');
+    } else {
+        alert("Please select an item to void first");
+    }
+});
+
+// Add password verification handler
+$('#verifyVoidPassword').on('click', function() {
+    const password = $('#voidPassword').val();
+    
+    // Verify password against database
+    $.ajax({
+        url: 'verify_void_password.php',
+        method: 'POST',
+        data: {
+            password: password,
+            type: 'POS'
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                // Password is correct, proceed to reason modal
+                $('#voidPasswordModal').modal('hide');
+                $('#voidReasonModal').modal('show');
+            } else {
+                // Password is incorrect, show error
+                $('#voidPassword').addClass('is-invalid');
+                $('#voidPasswordError').show();
+            }
+        },
+        error: function() {
+            alert('Server error. Could not verify password.');
         }
     });
+});
+
+// Reset password field when modal is hidden
+$('#voidPasswordModal').on('hidden.bs.modal', function() {
+    $('#voidPassword').val('').removeClass('is-invalid');
+    $('#voidPasswordError').hide();
+});$('#confirmVoid').on('click', function() {
+    const selectedRow = $('table#table-bold tbody tr.selected');
+    const productId = selectedRow.data('product-id'); // Barcode value
+    const reason = $('#voidReason').val();
+    const quantity = selectedRow.find('td').eq(1).text().trim(); // Get quantity from the second column (Qty)
+
+    console.log("Product ID: " + productId); // Debugging
+    console.log("Reason: " + reason); // Debugging
+    console.log("Quantity: " + quantity); // Debugging
+
+    // Log the void and remove item
+    $.ajax({
+        url: 'log_void_item.php',
+        method: 'POST',
+        data: {
+            productId: productId,
+            reason: reason,
+            quantity: quantity // Include quantity in the request
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                // Close the modal
+                $('#voidReasonModal').modal('hide');
+
+                // Remove the selected row from the table
+                selectedRow.remove();
+
+                // Check if the table is empty after removal
+                if ($('table#table-bold tbody tr').length === 0) {
+                    // Add an empty row to maintain table structure
+                    $('table#table-bold tbody').append(`
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    `);
+                }
+
+                // Update the total retail display
+                updateTotalRetail();
+
+                // Update the transaction details
+                updateTransactionDetails();
+            } else {
+                alert('Error: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.responseText); // Debugging
+            alert('Server error. Could not log void transaction.');
+        }
+    });
+});
+
+// Function to update the total retail display
+function updateTotalRetail() {
+    let total = 0;
+    $('table#table-bold tbody tr').each(function() {
+        const amountText = $(this).find('td').eq(4).text().trim(); // Amount is in the 5th column
+        const amount = parseFloat(amountText.replace('₱', '')) || 0; // Remove currency symbol and parse
+        total += amount;
+    });
+    $('#totalRetailDisplay').text(`₱${total.toFixed(2)}`); // Update the total retail display
+}
+// Function to update the transaction details
+function updateTransactionDetails() {
+    // Calculate the number of items (exclude empty rows)
+    let itemCount = 0;
+    $('table#table-bold tbody tr').each(function() {
+        const itemName = $(this).find('td').eq(0).text().trim(); // Check if the first column (Items) is not empty
+        if (itemName !== '') {
+            itemCount++;
+        }
+    });
+
+    // Update the number of items
+    $('table.table-borderless tbody tr').eq(2).find('td').text(itemCount); // "# of Item" is the 3rd row (index 2)
+
+    // Calculate the total amount (same as totalRetailDisplay)
+    let total = 0;
+    $('table#table-bold tbody tr').each(function() {
+        const amountText = $(this).find('td').eq(4).text().trim(); // Amount is in the 5th column
+        const amount = parseFloat(amountText.replace('₱', '')) || 0; // Remove currency symbol and parse
+        total += amount;
+    });
+
+    // Update the Amount field
+    $('table.table-borderless tbody tr').eq(3).find('td').text(`₱${total.toFixed(2)}`); // "Amount" is the 4th row (index 3)
+
+    // Update the total transaction display
+    $('#totalTransactionDisplay').text(`₱${total.toFixed(2)}`); // Update the TOTAL in transaction details
+}
 
     $('a[accesskey="F8"]').on('click', function(e) {
         e.preventDefault();
@@ -1298,6 +1423,9 @@ $(document).ready(function() {
         updateTotals();
     }
 });
+
+//Void
+
 </script>
 
 <style>
