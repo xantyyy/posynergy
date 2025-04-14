@@ -457,10 +457,10 @@
 											</div>
 										</form>
 										<div class="form-group col-md-12 d-flex align-items-end justify-content-end mt-3">
-											<button type="button" class="btn me-2 new-btn btn-outline-primary" style="font-size: 13px; width: auto;">
+											<button type="button" id="sendToServerBtn" class="btn me-2 new-btn btn-outline-primary" style="font-size: 13px; width: auto;">
 												<i class="fas fa-save"></i> SEND TO SERVER
 											</button>
-											<button type="button" class="btn me-2 new-btn btn-outline-primary" style="font-size: 13px;">
+											<button type="button" id="recieveBtn" class="btn me-2 new-btn btn-outline-primary" style="font-size: 13px;">
 												<i class="fas fa-plus"></i> RECIEVE ITEM
 											</button>
 										</div>
@@ -473,6 +473,153 @@
             </div>
 			
 			<script>
+				// Function to handle the click event for the "SEND TO SERVER" button
+				document.addEventListener('DOMContentLoaded', function() {
+					// Get PO number
+					const invNoInput = document.getElementById('inv-no');
+					if (!invNoInput) {
+						console.error('Error: inv-no input not found');
+						return;
+					}
+					const poNumber = invNoInput.value;
+
+					// Get button references
+					const setExpirationBtn = document.getElementById('setExpirationBtn');
+					const addDiscountBtn = document.getElementById('addDiscountBtn');
+					const deleteItemBtn = document.getElementById('deleteItemBtn');
+					const sendToServerBtn = document.getElementById('sendToServerBtn');
+
+					// Get table references
+					const mainTable = document.querySelector('#table-bold'); // Main items table
+					const mainTableRows = document.querySelectorAll('#table-bold tbody tr');
+					const discountTable = document.querySelector('#discountTableBody').closest('table');
+					const expirationTable = document.querySelector('#expirationTableBody').closest('table');
+
+					// Function to update UI based on sent state
+					function updateUIForSentState(isSent) {
+						// Handle buttons
+						const buttons = document.querySelectorAll('.new-btn.btn-outline-primary');
+						buttons.forEach(button => {
+							if (!button.textContent.includes('RECIEVE ITEM')) {
+								button.disabled = isSent;
+								button.style.pointerEvents = isSent ? 'none' : 'auto'; // Prevent clicks
+								if (isSent) {
+									button.classList.add('disabled-btn');
+								} else {
+									button.classList.remove('disabled-btn');
+								}
+							}
+						});
+
+						// Handle all tables
+						[mainTable, discountTable, expirationTable].forEach(table => {
+							if (table) {
+								if (isSent) {
+									table.classList.add('disabled-table');
+									table.style.pointerEvents = 'none'; // Prevent all interactions
+								} else {
+									table.classList.remove('disabled-table');
+									table.style.pointerEvents = 'auto';
+								}
+							}
+						});
+
+						// Ensure table-specific buttons are disabled when sent
+						if (isSent) {
+							if (setExpirationBtn) setExpirationBtn.disabled = true;
+							if (addDiscountBtn) addDiscountBtn.disabled = true;
+							if (deleteItemBtn) deleteItemBtn.disabled = true;
+							if (setExpirationBtn) setExpirationBtn.classList.add('disabled-btn');
+							if (addDiscountBtn) addDiscountBtn.classList.add('disabled-btn');
+							if (deleteItemBtn) deleteItemBtn.classList.add('disabled-btn');
+							// Clear any selected row
+							mainTableRows.forEach(row => row.classList.remove('selected'));
+						} else {
+							// Initial state: table buttons disabled until row selected
+							if (setExpirationBtn) setExpirationBtn.disabled = true;
+							if (addDiscountBtn) addDiscountBtn.disabled = true;
+							if (deleteItemBtn) deleteItemBtn.disabled = true;
+							if (setExpirationBtn) setExpirationBtn.classList.add('disabled-btn');
+							if (addDiscountBtn) addDiscountBtn.classList.add('disabled-btn');
+							if (deleteItemBtn) deleteItemBtn.classList.add('disabled-btn');
+						}
+					}
+
+					// Check sent state from localStorage
+					const sentPOs = JSON.parse(localStorage.getItem('sentPOs') || '{}');
+					if (poNumber && sentPOs[poNumber]) {
+						updateUIForSentState(true);
+					} else {
+						updateUIForSentState(false);
+					}
+
+					// Table row selection logic (only active when not sent)
+					let selectedRow = null;
+					mainTableRows.forEach(row => {
+						// Skip rows with "No Data Available"
+						if (row.cells.length > 1 && 
+							row.cells[0].textContent.trim() !== '' && 
+							row.cells[1].textContent.trim() !== 'No Data Available') {
+							row.addEventListener('click', function(e) {
+								// Only allow selection if table is not disabled
+								if (!mainTable.classList.contains('disabled-table')) {
+									// Remove 'selected' class from all rows
+									mainTableRows.forEach(r => r.classList.remove('selected'));
+									// Add 'selected' class to clicked row
+									this.classList.add('selected');
+									selectedRow = this;
+
+									// Enable table-specific buttons
+									if (setExpirationBtn) setExpirationBtn.disabled = false;
+									if (addDiscountBtn) addDiscountBtn.disabled = false;
+									if (deleteItemBtn) deleteItemBtn.disabled = false;
+									if (setExpirationBtn) setExpirationBtn.classList.remove('disabled-btn');
+									if (addDiscountBtn) addDiscountBtn.classList.remove('disabled-btn');
+									if (deleteItemBtn) deleteItemBtn.classList.remove('disabled-btn');
+
+									// Set product data for discount modal
+									if (this.cells.length > 1) {
+										const barcode = this.cells[0].textContent.trim();
+										const productName = this.cells[1].textContent.trim();
+										if (addDiscountBtn) {
+											addDiscountBtn.setAttribute('data-product-id', barcode);
+											addDiscountBtn.setAttribute('data-product-name', productName);
+										}
+									}
+								}
+							});
+						}
+					});
+
+					// SEND TO SERVER button logic
+					if (sendToServerBtn) {
+						sendToServerBtn.addEventListener('click', function(e) {
+							e.preventDefault();
+
+							// Show confirmation alert
+							if (!confirm('Are you sure you want to send to server? This action cannot be undone.')) {
+								return;
+							}
+
+							// Simulate sending to server
+							setTimeout(() => {
+								// Show success message
+								alert('Successfully sent to server!');
+
+								// Update UI to sent state
+								updateUIForSentState(true);
+
+								// Save sent state to localStorage
+								sentPOs[poNumber] = true;
+								localStorage.setItem('sentPOs', JSON.stringify(sentPOs));
+								console.log(`Saved sent state for PO: ${poNumber}`);
+							}, 500); // Simulate network delay
+						});
+					} else {
+						console.error('Error: sendToServerBtn not found');
+					}
+				});
+
 				//SET EXPIRATION
 				document.getElementById('setExpirationBtn').addEventListener('click', function() {
 					// Show the modal
