@@ -309,11 +309,10 @@
 let cart = []; // Array to store cart items
 
 $(document).ready(function() {
-    
     $('#productSearch').on('input', function() {
         var query = $(this).val();
         
-        if(query.length >= 2) {
+        if (query.length >= 2) {
             $.ajax({
                 url: 'search_products.php',
                 method: 'POST',
@@ -333,8 +332,8 @@ $(document).ready(function() {
             $('#searchResults').hide();
         }
     });
-    
-    $(document).on('click', '.search-item', function() {
+
+    $(document).on('click', '#searchResults .search-item', function() {
         const productId = $(this).data('value');
         const productName = $(this).data('name');
         const productPrice = parseFloat($(this).data('price'));
@@ -343,6 +342,7 @@ $(document).ready(function() {
         $('#productSearch').val('');
         $('#searchResults').hide();
     });
+});
     
     function addProductToCart(id, name, price, barcode) {
     const existingProductIndex = cart.findIndex(item => item.barcode === barcode); // Use barcode for comparison
@@ -628,8 +628,6 @@ function updateTransactionDetails() {
             }
         `)
         .appendTo('head');
-});
-
 function updateCartDisplay() {
     const tableBody = $('table#table-bold tbody');
     tableBody.empty(); // Clear existing rows
@@ -646,12 +644,6 @@ function updateCartDisplay() {
         `;
         tableBody.append(row);
     });
-    
-    if (cart.length > 0) {
-        const lastItem = cart[cart.length - 1];
-        const productInfoDisplay = `${lastItem.name} Barcode: ${lastItem.barcode} | SRP: ₱${lastItem.price.toFixed(2)}`;
-        $('.card-header.bg-success').first().text(productInfoDisplay);
-    }
 }
 
 function updateTotals() {
@@ -1269,15 +1261,16 @@ function resetTransaction() {
     $('#changeOutput').val('0.00');
 }
 // SEARCH PRODUCT F4
+
 $(document).ready(function() {
-    // Search functionality for product filter
+    // Search functionality for product filter in F4 modal
     $('#productFilter').on('input', function() {
         const query = $(this).val().trim();
         const $filterResults = $('#filterResults');
         
         if (query.length >= 2) {
             $.ajax({
-                url: 'search.php', // Updated to match the correct script
+                url: 'search.php', // Ensure this points to the correct endpoint
                 method: 'POST',
                 data: { query: query },
                 dataType: 'json',
@@ -1323,13 +1316,13 @@ $(document).ready(function() {
     });
 
     // Handle selection from filter results
-    $(document).on('click', '.search-item', function() {
+    $(document).on('click', '#filterResults .search-item', function() {
         const barcode = $(this).data('barcode');
         const name = $(this).data('name');
         const price = parseFloat($(this).data('price'));
         const quantity = parseInt($(this).data('quantity'));
 
-        // Update table with the selected product
+        // Update table in the modal with the selected product
         const $tableBody = $('#productTable tbody');
         $tableBody.empty();
         $tableBody.append(`
@@ -1343,7 +1336,7 @@ $(document).ready(function() {
             </tr>
         `);
 
-        // Populate right section fields
+        // Populate right section fields in the modal
         $('#productBarcode').val(barcode);
         $('#quantityAvailable').val(quantity);
         $('#quantity').val(1);
@@ -1356,7 +1349,7 @@ $(document).ready(function() {
     });
 
     // Handle table row click to populate right section
-    $(document).on('click', '.product-row', function() {
+    $(document).on('click', '#productTable .product-row', function() {
         const $row = $(this);
         $('#productTable tbody tr').removeClass('table-primary');
         $row.addClass('table-primary');
@@ -1376,11 +1369,10 @@ $(document).ready(function() {
 
     // Update total when quantity or price type changes
     function updateTotal() {
-        const quantity = parseInt($('#quantity').val());
+        const quantity = parseInt($('#quantity').val()) || 1;
         const priceType = $('#priceType').val();
         let price = parseFloat($('#sellingPrice').val()) || 0;
 
-        // Adjust price based on price type (assuming wholesale price is different)
         if (priceType === 'wholesale') {
             price *= 0.9; // Example: 10% discount for wholesale
         }
@@ -1415,7 +1407,7 @@ $(document).ready(function() {
             return;
         }
 
-        // Add to cart (assuming cart is globally defined as in your POS code)
+        // Add to cart
         addProductToCart(barcode, name, price, barcode, quantity);
         $('#searchProductModal').modal('hide');
         resetModal();
@@ -1458,9 +1450,6 @@ $(document).ready(function() {
         updateTotals();
     }
 });
-
-//Void
-
 </script>
 
 <style>
