@@ -473,6 +473,57 @@
             </div>
 			
 			<script>
+				document.getElementById('recieveBtn').addEventListener('click', function() {
+					const poNumber = document.getElementById('inv-no').value;
+					
+					if (!poNumber) {
+						alert('No inventory number found!');
+						return;
+					}
+					
+					if (!confirm('Are you sure you want to receive this inventory? This will transfer the items to the incoming inventory.')) {
+						return;
+					}
+					
+					this.disabled = true;
+					this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+					
+					$.ajax({
+						url: 'process-receive-item.php',
+						type: 'POST',
+						data: {
+							poNumber: poNumber
+						},
+						success: function(response) {
+							console.log('Raw response:', response); // Log the response for debugging
+							try {
+								// No need for JSON.parse() since jQuery already parsed the response
+								const result = response; // Use the response directly
+								if (result.success) {
+									alert('Inventory successfully received!');
+									window.location.href = 'incoming.php';
+								} else {
+									alert('Failed to receive inventory: ' + result.message);
+									document.getElementById('recieveBtn').disabled = false;
+									document.getElementById('recieveBtn').innerHTML = '<i class="fas fa-plus"></i> RECIEVE ITEM';
+								}
+							} catch (e) {
+								console.error('Error processing response:', e);
+								alert('An error occurred while processing your request.');
+								document.getElementById('recieveBtn').disabled = false;
+								document.getElementById('recieveBtn').innerHTML = '<i class="fas fa-plus"></i> RECIEVE ITEM';
+							}
+						},
+						error: function(xhr, status, error) {
+							console.error('AJAX Error:', status, error);
+							console.log('Response Text:', xhr.responseText);
+							alert('Error processing request: ' + error + '\nDetails: ' + xhr.responseText);
+							document.getElementById('recieveBtn').disabled = false;
+							document.getElementById('recieveBtn').innerHTML = '<i class="fas fa-plus"></i> RECIEVE ITEM';
+						}
+					});
+				});
+
 				// Function to handle the click event for the "SEND TO SERVER" button
 				document.addEventListener('DOMContentLoaded', function() {
 					// Get PO number
@@ -643,9 +694,8 @@
 						return;
 					}
 
-					// AJAX request to update expiration date
 					$.ajax({
-						url: 'update-incomingItem.php', // File to handle the update
+						url: 'update-incomingItem.php',
 						type: 'POST',
 						data: {
 							poNumber: poNumber,
@@ -656,7 +706,6 @@
 							if (result.success) {
 								alert('Expiration date updated successfully');
 								$('#expirationModal').modal('hide');
-								// Auto-reload the page after successful update
 								setTimeout(function() {
 									location.reload();
 								}, 500);
