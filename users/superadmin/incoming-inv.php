@@ -424,7 +424,7 @@
 									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="addDiscountBtn" data-product-id="123" data-product-name="Product Name Example">
 										<i class="fas fa-plus"></i> Add Product Discount
 									</button>
-									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
+									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="deleteItemBtn">
 										<i class="fas fa-trash"></i> Delete Item
 									</button>
 									<button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;">
@@ -519,6 +519,61 @@
 						},
 						error: function(xhr, status, error) {
 							alert('Error updating expiration date: ' + error);
+						}
+					});
+				});
+
+				document.addEventListener('DOMContentLoaded', function() {
+					// Get references to the buttons using their IDs
+					const setExpirationBtn = document.getElementById('setExpirationBtn');
+					const addDiscountBtn = document.getElementById('addDiscountBtn');
+					const deleteItemBtn = document.getElementById('deleteItemBtn'); // Using the ID directly
+					
+					// Initially disable the buttons
+					setExpirationBtn.disabled = true;
+					addDiscountBtn.disabled = true;
+					deleteItemBtn.disabled = true;
+					
+					// Add visual indication of disabled state
+					setExpirationBtn.classList.add('disabled-btn');
+					addDiscountBtn.classList.add('disabled-btn');
+					deleteItemBtn.classList.add('disabled-btn');
+					
+					// Add click event to all table rows to make them selectable
+					const tableRows = document.querySelectorAll('#table-bold tbody tr');
+					let selectedRow = null;
+					
+					tableRows.forEach(row => {
+						// Skip rows with "No Data Available" text
+						if (row.cells.length > 1 && row.cells[0].textContent.trim() !== '' && 
+							row.cells[1].textContent.trim() !== 'No Data Available') {
+							row.addEventListener('click', function() {
+								// Remove 'selected' class from all rows
+								tableRows.forEach(r => r.classList.remove('selected'));
+								// Add 'selected' class to clicked row
+								this.classList.add('selected');
+								selectedRow = this;
+								
+								// Enable the buttons when a row is selected
+								setExpirationBtn.disabled = false;
+								addDiscountBtn.disabled = false;
+								deleteItemBtn.disabled = false;
+								
+								// Remove visual indication of disabled state
+								setExpirationBtn.classList.remove('disabled-btn');
+								addDiscountBtn.classList.remove('disabled-btn');
+								deleteItemBtn.classList.remove('disabled-btn');
+								
+								// Set product data for the discount modal
+								if (this.cells.length > 1) {
+									const barcode = this.cells[0].textContent.trim();
+									const productName = this.cells[1].textContent.trim();
+									
+									// Update the button data attributes for use in the modal
+									addDiscountBtn.setAttribute('data-product-id', barcode);
+									addDiscountBtn.setAttribute('data-product-name', productName);
+								}
+							});
 						}
 					});
 				});
@@ -753,6 +808,40 @@
 					#table-bold thead th {
 						font-weight: bold;
 						font-style: italic;
+					}
+
+					.btn:disabled {
+						border-color: rgb(6, 0, 0); /* Gray border for disabled buttons */
+						color: rgb(6, 1, 1); /* Light gray text for disabled buttons */
+						background-color: rgb(241, 201, 201); /* Light gray background for better visibility */
+						cursor: not-allowed; /* Show "not-allowed" cursor */
+					}
+
+					.btn:not(:disabled):hover {
+						background-color: #007bff; /* Blue background */
+						color: #ffffff; /* White text */
+						border-color: #0056 fraseb3; /* Darker blue border */
+					}
+
+					#table-bold tbody tr.selected {
+						background-color: #e0f0ff;
+						cursor: pointer;
+					}
+
+					/* Table row hover effect */
+					#table-bold tbody tr:hover {
+						background-color: #f0f8ff;
+						cursor: pointer;
+					}
+
+					/* Make sure other rows are clickable */
+					#table-bold tbody tr {
+						cursor: pointer;
+					}
+
+					/* Exception for "No Data Available" row */
+					#table-bold tbody tr td[colspan] {
+						cursor: default;
 					}
 			</style>
 

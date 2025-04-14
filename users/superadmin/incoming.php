@@ -346,93 +346,95 @@ document.addEventListener('DOMContentLoaded', function() {
 							this.classList.remove("hovered-dropdown");
 						});
 					});
-				});document.addEventListener('DOMContentLoaded', function() {
-    // Add click event to all table rows to make them selectable
-    const tableRows = document.querySelectorAll('#table-bold tbody tr');
-    let selectedRow = null;
-    const deleteBtn = document.getElementById('deleteBtn');
+				});
+				
+				document.addEventListener('DOMContentLoaded', function() {
+					// Add click event to all table rows to make them selectable
+					const tableRows = document.querySelectorAll('#table-bold tbody tr');
+					let selectedRow = null;
+					const deleteBtn = document.getElementById('deleteBtn');
 
-    // Initially disable delete button
-    if (deleteBtn) {
-        deleteBtn.disabled = true;
-    }
+					// Initially disable delete button
+					if (deleteBtn) {
+						deleteBtn.disabled = true;
+					}
 
-    tableRows.forEach(row => {
-        // Skip rows with "No Data Available" text
-        if (row.cells.length > 1 && row.cells[1].textContent.trim() !== 'No Data Available') {
-            row.addEventListener('click', function() {
-                // Remove 'selected' class from all rows
-                tableRows.forEach(r => r.classList.remove('selected'));
-                // Add 'selected' class to clicked row
-                this.classList.add('selected');
-                selectedRow = this;
-                
-                // Enable delete button when a row is selected
-                if (deleteBtn) {
-                    deleteBtn.disabled = false;
-                }
-            });
-        }
-    });
-    
-    // Add click event to the Delete button
-    if (deleteBtn) {
-        deleteBtn.addEventListener('click', function() {
-            if (!selectedRow) {
-                alert('Please select an item to delete.');
-                return;
-            }
-            
-            // Get item details from the selected row
-            const barcode = selectedRow.cells[0].textContent.trim();
-            const productName = selectedRow.cells[1].textContent.trim();
-            const poNumber = document.getElementById('inv-no') ? document.getElementById('inv-no').value : '';
-            
-            // Confirm deletion
-            if (confirm(`Are you sure you want to delete ${productName}?`)) {
-                // Send delete request to server
-                fetch('delete-item.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'barcode=' + encodeURIComponent(barcode) + 
-                        '&poNumber=' + encodeURIComponent(poNumber)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('Item deleted successfully!');
-                        // Remove the row from the table
-                        selectedRow.remove();
-                        selectedRow = null;
-                        
-                        // Disable delete button again
-                        if (deleteBtn) {
-                            deleteBtn.disabled = true;
-                        }
-                        
-                        // Refresh the page to update totals and other information
-                        location.reload();
-                    } else {
-                        alert('Error deleting item: ' + (data.message || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while deleting the item.');
-                });
-            }
-        });
-    } else {
-        console.error('Delete button with ID "deleteBtn" not found');
-    }
-});
+					tableRows.forEach(row => {
+						// Skip rows with "No Data Available" text
+						if (row.cells.length > 1 && row.cells[1].textContent.trim() !== 'No Data Available') {
+							row.addEventListener('click', function() {
+								// Remove 'selected' class from all rows
+								tableRows.forEach(r => r.classList.remove('selected'));
+								// Add 'selected' class to clicked row
+								this.classList.add('selected');
+								selectedRow = this;
+								
+								// Enable delete button when a row is selected
+								if (deleteBtn) {
+									deleteBtn.disabled = false;
+								}
+							});
+						}
+					});
+					
+					// Add click event to the Delete button
+					if (deleteBtn) {
+						deleteBtn.addEventListener('click', function() {
+							if (!selectedRow) {
+								alert('Please select an item to delete.');
+								return;
+							}
+							
+							// Get item details from the selected row
+							const barcode = selectedRow.cells[0].textContent.trim();
+							const productName = selectedRow.cells[1].textContent.trim();
+							const poNumber = document.getElementById('inv-no') ? document.getElementById('inv-no').value : '';
+							
+							// Confirm deletion
+							if (confirm(`Are you sure you want to delete ${productName}?`)) {
+								// Send delete request to server
+								fetch('delete-item.php', {
+									method: 'POST',
+									headers: {
+										'Content-Type': 'application/x-www-form-urlencoded',
+									},
+									body: 'barcode=' + encodeURIComponent(barcode) + 
+										'&poNumber=' + encodeURIComponent(poNumber)
+								})
+								.then(response => {
+									if (!response.ok) {
+										throw new Error('Network response was not ok');
+									}
+									return response.json();
+								})
+								.then(data => {
+									if (data.success) {
+										alert('Item deleted successfully!');
+										// Remove the row from the table
+										selectedRow.remove();
+										selectedRow = null;
+										
+										// Disable delete button again
+										if (deleteBtn) {
+											deleteBtn.disabled = true;
+										}
+										
+										// Refresh the page to update totals and other information
+										location.reload();
+									} else {
+										alert('Error deleting item: ' + (data.message || 'Unknown error'));
+									}
+								})
+								.catch(error => {
+									console.error('Error:', error);
+									alert('An error occurred while deleting the item.');
+								});
+							}
+						});
+					} else {
+						console.error('Delete button with ID "deleteBtn" not found');
+					}
+				});
 			</script>
 
 			<style>
