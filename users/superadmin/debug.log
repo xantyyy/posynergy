@@ -1,0 +1,18 @@
+Array
+(
+    [lastName] => Balmores
+    [firstName] => Santy
+    [middleName] => Palma
+    [lotHouse] => 3
+    [street] => 2
+    [barangay] => Sta. Veronica
+    [townCity] => guimba
+    [province] => nueva ecija
+    [civilStatus] => MARRIED
+    [birthday] => 2025-01-07
+    [gender] => MALE
+    [cardNumber] => 5678
+    [pointsEarned] => 1000
+    [pointsUsed] => 0
+    [balance] => 1000
+)

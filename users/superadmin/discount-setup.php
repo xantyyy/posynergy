@@ -219,27 +219,27 @@
 												<div class="col-md-4" style="font-size: 16px;">
 													<h5>Discount Type</h5>
 													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="overallDiscount" value="overall">
+														<input class="form-check-input" type="checkbox" name="discountType" id="overallDiscount" value="overall">
 														<label class="form-check-label" for="overallDiscount">Overall</label>
 													</div>
 													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="seniorDiscount" value="senior">
+														<input class="form-check-input" type="checkbox" name="discountType" id="seniorDiscount" value="senior">
 														<label class="form-check-label" for="seniorDiscount">Senior</label>
 													</div>
 													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="pwdDiscount" value="pwd">
+														<input class="form-check-input" type="checkbox" name="discountType" id="pwdDiscount" value="pwd">
 														<label class="form-check-label" for="pwdDiscount">PWD</label>
 													</div>
 													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="naacDiscount" value="naac">
+														<input class="form-check-input" type="checkbox" name="discountType" id="naacDiscount" value="naac">
 														<label class="form-check-label" for="naacDiscount">NAAC</label>
 													</div>
 													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="soloDiscount" value="solo">
+														<input class="form-check-input" type="checkbox" name="discountType" id="soloDiscount" value="solo">
 														<label class="form-check-label" for="soloDiscount">Solo Parent</label>
 													</div>
 													<div class="form-check me-4" style="margin-top: 10px;">
-														<input class="form-check-input" type="radio" name="discountType" id="valorDiscount" value="valor">
+														<input class="form-check-input" type="checkbox" name="discountType" id="valorDiscount" value="valor">
 														<label class="form-check-label" for="valorDiscount">Medal of Valor</label>
 													</div>
 													
@@ -266,10 +266,42 @@
 							</div>
 						</div>
 					</div>
-
             </div>
-
+<!-- Display Section -->
+    <div id="displaySection" style="display: none; margin-top: 20px;">
+        <h5>Selected Discount Types:</h5>
+        <p id="selectedDiscounts"></p>
+        <button id="editBtn" class="btn btn-secondary">Edit</button>
+    </div>
+</div>
             <script>
+				// Get all checkboxes
+				const overallCheckbox = document.getElementById('overallDiscount');
+    const otherCheckboxes = [
+        document.getElementById('seniorDiscount'),
+        document.getElementById('pwdDiscount'),
+        document.getElementById('naacDiscount'),
+        document.getElementById('soloDiscount'),
+        document.getElementById('valorDiscount')
+    ];
+
+    // When "Overall" is checked, uncheck all others
+    overallCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            otherCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        }
+    });
+
+    // When any other checkbox is checked, uncheck "Overall"
+    otherCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                overallCheckbox.checked = false;
+            }
+        });
+    });
 				 document.addEventListener("DOMContentLoaded", function () {
     const editButton = document.getElementById("editButton");
     const deleteButton = document.getElementById("deleteButton");

@@ -166,183 +166,291 @@
 						</div>
 					</div>
 					<div class="row mb-3">
-    <!-- Left Side - Product Data Entry Form -->
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <h6>Personal Information</h6>
-                <form id="personalForm">
-                    <div class="d-flex align-items-center">
-                        <div class="form-group col-md-3 me-4">
-                            <label for="#">Last Name:</label>
-                            <input type="text" class="form-control" id="#">
-                        </div>
-                        <div class="form-group col-md-3 me-4">
-                            <label for="#">First Name:</label>
-                            <input type="text" class="form-control" id="#">
-                        </div>
-                        <div class="form-group col-md-3 me-4">
-                            <label for="#">Middle Name:</label>
-                            <input type="text" class="form-control" id="#">
-                        </div>
-                        <div class="form-group col-md-1 me-4">
-                            <label for="#" style="width: 150px;">Extention Name:</label>
-                            <select class="form-control" id="#">
-                                <option value="option1" selected hidden></option>
-                                <option value="option2">Option 1</option>
-                                <option value="option3">Option 2</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mt-4">
-                        <div class="form-group col-md-3 me-4">
-                            <label for="#">Lot/House/Building/#:</label>
-                            <input type="text" class="form-control" id="#">
-                        </div>
-                        <div class="form-group col-md-4 me-4">
-                            <label for="#">Street/Purok:</label>
-                            <input type="text" class="form-control" id="#">
-                        </div>
-                        <div class="form-group col-md-4 me-4">
-                            <label for="#">Barangay:</label>
-                            <input type="text" class="form-control" id="#">
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mt-4">
-                        <div class="form-group col-md-3 me-4">
-                            <label for="#">Town/City:</label>
-                            <input type="text" class="form-control" id="#">
-                        </div>
-                        <div class="form-group col-md-4 me-4">
-                            <label for="#">Province:</label>
-                            <input type="text" class="form-control" id="#">
-                        </div>
-                        <div class="form-group col-md-4 me-4">
-                            <label for="#">Civil Status:</label>
-                            <select class="form-control" id="#">
-                                <option value="option1" selected hidden></option>
-                                <option value="option2">Option 1</option>
-                                <option value="option3">Option 2</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center mt-4">
-                        <div class="form-group col-md-3 me-4">
-                            <label for="#">Birthday:</label>
-                            <input type="date" class="form-control" id="#">
-                        </div>
-                        <label for="#" class="mr-3 me-3 mt-4">Gender:</label>
-                        <div class="form-check me-3 mt-4">
-                            <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked>
-                            <label class="form-check-label" for="male">
-                                Male
-                            </label>
-                        </div>
-                        <div class="form-check me-4 mt-4">
-                            <input class="form-check-input" type="radio" name="gender" id="female" value="female">
-                            <label class="form-check-label" for="female">
-                                Female
-                            </label>
-                        </div>
-                        <div class="form-group col-md-4 me-2">
-                            <label for="#">Card Details:</label>
-                            <input type="text" class="form-control" id="#" placeholder="Card #">
-                        </div>
-
-                        <!-- May ID na ito for enable -->
-                        <button type="button" id="btnNew" class="btn btn-outline-primary opacity-50 me-2">
-                            <i class="fas fa-plus"></i> New
-                        </button>
-                        <button type="button" id="btnCancel" class="btn btn-outline-primary opacity-50 me-2">
-                            <i class="fas fa-save"></i> Cancel
-                        </button>
-                        <button type="button" class="btn btn-outline-primary opacity-50 me-2">
-                            <i class="fas fa-trash"></i> Save
-                        </button>
-                    </div>
-                </form>
-            </div>
+					<!-- Left Side - Product Data Entry Form -->
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-body">
+								<h6>Personal Information</h6>
+								<form id="personalForm">
+    <div class="d-flex align-items-center">
+        <div class="form-group col-md-3 me-4">
+            <label for="lastName">Last Name:</label>
+            <input type="text" class="form-control" id="lastName">
+        </div>
+        <div class="form-group col-md-3 me-4">
+            <label for="firstName">First Name:</label>
+            <input type="text" class="form-control" id="firstName">
+        </div>
+        <div class="form-group col-md-3 me-4">
+            <label for="middleName">Middle Name:</label>
+            <input type="text" class="form-control" id="middleName">
         </div>
     </div>
-</div>
+    <div class="d-flex align-items-center mt-4">
+        <div class="form-group col-md-3 me-4">
+            <label for="lotHouse">Lot/House/Building/#:</label>
+            <input type="text" class="form-control" id="lotHouse">
+        </div>
+        <div class="form-group col-md-4 me-4">
+            <label for="street">Street/Purok:</label>
+            <input type="text" class="form-control" id="street">
+        </div>
+        <div class="form-group col-md-4 me-4">
+            <label for="barangay">Barangay:</label>
+            <input type="text" class="form-control" id="barangay">
+        </div>
+    </div>
+    <div class="d-flex align-items-center mt-4">
+        <div class="form-group col-md-3 me-4">
+            <label for="townCity">Town/City:</label>
+            <input type="text" class="form-control" id="townCity">
+        </div>
+        <div class="form-group col-md-4 me-4">
+            <label for="province">Province:</label>
+            <input type="text" class="form-control" id="province">
+        </div>
+        <div class="form-group col-md-4 me-4">
+            <label for="civilStatus">Civil Status:</label>
+            <select class="form-control" id="civilStatus">
+                <option value="" selected disabled>Select Civil Status</option>
+                <option value="SINGLE">SINGLE</option>
+                <option value="MARRIED">MARRIED</option>
+                <option value="SEPARATED">SEPARATED</option>
+                <option value="WIDOW">WIDOW</option>
+            </select>
+        </div>
+    </div>
+    <div class="d-flex align-items-center mt-4">
+        <div class="form-group col-md-3 me-4">
+            <label for="birthday">Birthday:</label>
+            <input type="date" class="form-control" id="birthday">
+        </div>
+        <label for="gender" class="mr-3 me-3 mt-4">Gender:</label>
+        <div class="form-check me-3 mt-4">
+            <input class="form-check-input" type="radio" name="gender" id="male" value="MALE" checked>
+            <label class="form-check-label" for="male">
+                Male
+            </label>
+        </div>
+        <div class="form-check me-4 mt-4">
+            <input class="form-check-input" type="radio" name="gender" id="female" value="FEMALE">
+            <label class="form-check-label" for="female">
+                Female
+            </label>
+        </div>
+        <div class="form-group col-md-4 me-2">
+            <label for="cardNumber">Card Details:</label>
+            <input type="text" class="form-control" id="cardNumber" placeholder="Card #">
+        </div>
+
+        <!-- Buttons -->
+        <button type="button" id="btnNew" class="btn btn-outline-primary opacity-50 me-2">
+            <i class="fas fa-plus"></i> New
+        </button>
+        <button type="button" id="btnCancel" class="btn btn-outline-primary opacity-50 me-2">
+            <i class="fas fa-save"></i> Cancel
+        </button>
+        <button type="button" id="btnSave" class="btn btn-outline-primary opacity-50 me-2">
+            <i class="fas fa-trash"></i> Save
+        </button>
+    </div>
+</form>
+							</div>
+						</div>
+					</div>
+				</div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
+	document.addEventListener('DOMContentLoaded', function() {
+    // Get the save button
+    const saveButton = document.getElementById('btnSave');
+    
+    // Function to check if all required fields are filled
+    function validateForm() {
+        const inputs = document.querySelectorAll('#personalForm input');
+        let isValid = true;
 
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+        // Check each input field
+        inputs.forEach(input => {
+            if (input.type !== 'radio' && !input.value.trim()) {
+                isValid = false;
+            }
+        });
 
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
+        // Check if gender is selected
+        const genderSelected = document.querySelector('input[name="gender"]:checked');
+        if (!genderSelected) {
+            isValid = false;
+        }
+
+        // Check if civil status is selected
+        const civilStatus = document.querySelector('#civilStatus');
+        if (!civilStatus.value) {
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    // Add click event to save button
+    saveButton.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        if (validateForm()) {
+            // Get all form data
+            saveButton.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    if (validateForm()) {
+        // Get all form data
+        const formData = {
+            lastName: document.getElementById('lastName').value,
+            firstName: document.getElementById('firstName').value,
+            middleName: document.getElementById('middleName').value,
+            lotHouse: document.getElementById('lotHouse').value,
+            street: document.getElementById('street').value,
+            barangay: document.getElementById('barangay').value,
+            townCity: document.getElementById('townCity').value,
+            province: document.getElementById('province').value,
+            civilStatus: document.getElementById('civilStatus').value,
+            birthday: document.getElementById('birthday').value,
+            gender: document.querySelector('input[name="gender"]:checked').value,
+            cardNumber: document.getElementById('cardNumber').value,
+            pointsEarned: 1000, // Default value as per your database
+            pointsUsed: 0,      // Default value as per your database
+            balance: 1000       // Default value as per your database
+        };
+
+        // Log the formData to the console for debugging
+        console.log('Form Data being sent:', formData);
+
+        // Send data to PHP script via AJAX
+        fetch('save-cardholder.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Cardholder saved successfully!');
+                document.getElementById('personalForm').reset();
+            } else {
+                alert('Error saving cardholder: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while saving the cardholder.');
+        });
+    } else {
+        alert('Please fill in all required fields!');
+    }
+});
+
+            // Send data to PHP script via AJAX
+            fetch('save-cardholder.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Cardholder saved successfully!');
+                    document.getElementById('personalForm').reset();
+                } else {
+                    alert('Error saving cardholder: ' + data.message);
                 }
-            }
-
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while saving the cardholder.');
             });
-
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
-        });
-
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
-
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
-        });
-
-        // 🔒 Disable all form fields initially
-        const form = document.getElementById('personalForm');
-        if (form) {
-            const fields = form.querySelectorAll('input, select, textarea');
-            fields.forEach(field => field.disabled = true);
-        }
-
-        // 🔓 Enable all fields when New button is clicked
-        const newBtn = document.getElementById('btnNew');
-        if (newBtn) {
-            newBtn.addEventListener('click', function () {
-                const fields = form.querySelectorAll('input, select, textarea');
-                fields.forEach(field => field.disabled = false);
-            });
-        }
-
-        // ❌ Reset fields & disable when Cancel button is clicked
-        const cancelBtn = document.getElementById('btnCancel');
-        if (cancelBtn) {
-            cancelBtn.addEventListener('click', function () {
-                const fields = form.querySelectorAll('input, select, textarea');
-                fields.forEach(field => {
-                    field.disabled = true;
-                    field.value = ''; // Reset value to empty
-                });
-
-                // Reset radio buttons
-                const radioButtons = form.querySelectorAll('input[type="radio"]');
-                radioButtons.forEach(radio => radio.checked = false);
-            });
+        } else {
+            alert('Please fill in all required fields!');
         }
     });
+
+    // Existing code for sidebar and form enable/disable
+    const currentUrl = window.location.pathname.split('/').pop();
+    document.querySelectorAll('.list-unstyled a').forEach(link => {
+        const linkHref = link.getAttribute('href');
+        const parentMenu = link.closest('.collapse');
+        const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+
+        if (linkHref === currentUrl) {
+            link.classList.add('active');
+            if (parentMenu) {
+                parentMenu.classList.add('show');
+                if (dropdownToggle) {
+                    dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                    dropdownToggle.setAttribute('aria-expanded', 'true');
+                }
+            }
+        }
+
+        link.addEventListener("mouseenter", function () {
+            this.classList.add("hover-effect");
+        });
+
+        link.addEventListener("mouseleave", function () {
+            this.classList.remove("hover-effect");
+        });
+    });
+
+    document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+        const parentMenu = dropdown.nextElementSibling;
+        if (parentMenu && parentMenu.querySelector('.active')) {
+            dropdown.classList.add('highlighted-dropdown', 'active');
+            dropdown.setAttribute('aria-expanded', 'true');
+        }
+
+        dropdown.addEventListener("mouseenter", function () {
+            this.classList.add('hovered-dropdown');
+        });
+
+        dropdown.addEventListener("mouseleave", function () {
+            this.classList.remove("hovered-dropdown");
+        });
+    });
+
+    // Disable all form fields initially
+    const form = document.getElementById('personalForm');
+    if (form) {
+        const fields = form.querySelectorAll('input, select, textarea');
+        fields.forEach(field => field.disabled = true);
+    }
+
+    // Enable all fields when New button is clicked
+    const newBtn = document.getElementById('btnNew');
+    if (newBtn) {
+        newBtn.addEventListener('click', function () {
+            const fields = form.querySelectorAll('input, select, textarea');
+            fields.forEach(field => field.disabled = false);
+        });
+    }
+
+    // Reset fields & disable when Cancel button is clicked
+    const cancelBtn = document.getElementById('btnCancel');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', function () {
+            const fields = form.querySelectorAll('input, select, textarea');
+            fields.forEach(field => {
+                field.disabled = true;
+                field.value = ''; // Reset value to empty
+            });
+
+            // Reset radio buttons
+            const radioButtons = form.querySelectorAll('input[type="radio"]');
+            radioButtons.forEach(radio => radio.checked = false);
+        });
+    }
+});
 </script>
 
 
