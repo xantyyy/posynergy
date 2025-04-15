@@ -183,7 +183,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-12" style="margin-bottom: 0;">
                                     <input type="text" class="form-control" id="productSearch" 
-                                        placeholder="Search products..." style="padding: 5px; margin: 0;">
+                                        placeholder="Search products..." style="padding: 5px; margin: 0;" autocomplete="off">
                                     <div id="searchResults" class="search-results"></div>
                                 </div>
                             </div>
@@ -309,17 +309,52 @@
 let cart = []; // Array to store cart items
 
 $(document).ready(function() {
+    // Prevent form submission and handle barcode scans in #productSearch
+    $('#productSearch').on('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent form submission
+            const query = $(this).val().trim(); // Get the scanned barcode
+            if (query) {
+                lookupBarcode(query);
+            }
+        }
+    });
+
+    // Handle input for real-time search (for manual typing in #productSearch)
     $('#productSearch').on('input', function() {
-        var query = $(this).val();
+        var query = $(this).val().trim();
         
         if (query.length >= 2) {
             $.ajax({
                 url: 'search_products.php',
                 method: 'POST',
                 data: { query: query },
-                success: function(data) {
-                    $('#searchResults').html(data);
-                    $('#searchResults').show();
+                dataType: 'json',
+                success: function(response) {
+                    const $searchResults = $('#searchResults');
+                    $searchResults.empty();
+                    if (response.status === 'success' && response.products.length > 0) {
+                        response.products.forEach(product => {
+                            const item = `
+                                <div class="search-item" 
+                                     data-value="${product.Barcode}" 
+                                     data-name="${product.ProductName}" 
+                                     data-price="${product.SRP}" 
+                                     data-barcode="${product.Barcode}">
+                                    <strong>${product.ProductName}</strong><br>
+                                    Barcode: ${product.Barcode} | SRP: ₱${parseFloat(product.SRP).toFixed(2)}
+                                </div>
+                            `;
+                            $searchResults.append(item);
+                        });
+                        $searchResults.show();
+                    } else {
+                        $searchResults.append('<div class="search-item">No results found</div>');
+                        $searchResults.show();
+                    }
+                },
+                error: function() {
+                    $('#searchResults').html('<div class="search-item">Error fetching products</div>').show();
                 }
             });
         } else {
@@ -327,12 +362,7 @@ $(document).ready(function() {
         }
     });
 
-    $(document).on('click', function(e) {
-        if (!$(e.target).closest('#productSearch, #searchResults').length) {
-            $('#searchResults').hide();
-        }
-    });
-
+    // Handle clicking a search result
     $(document).on('click', '#searchResults .search-item', function() {
         const productId = $(this).data('value');
         const productName = $(this).data('name');
@@ -342,6 +372,75 @@ $(document).ready(function() {
         $('#productSearch').val('');
         $('#searchResults').hide();
     });
+
+    // Global barcode scanner detection
+    let barcodeBuffer = '';
+    let lastKeyTime = 0;
+    const barcodeTimeout = 50; // Time in ms to group keypresses as a barcode
+    const minBarcodeLength = 4; // Minimum length to consider a barcode
+
+    $(document).on('keydown', function(event) {
+        const currentTime = new Date().getTime();
+        const key = event.key;
+
+        // Ignore modifier keys and function keys
+        if (event.ctrlKey || event.altKey || event.metaKey || key.startsWith('F') || key === 'Shift' || key === 'Control' || key === 'Alt') {
+            return;
+        }
+
+        // If an input or textarea is focused, let it handle the input
+        if ($(event.target).is('input, textarea')) {
+            return;
+        }
+
+        // Handle Enter key to process barcode
+        if (key === 'Enter') {
+            event.preventDefault();
+            if (barcodeBuffer.length >= minBarcodeLength) {
+                lookupBarcode(barcodeBuffer);
+            }
+            barcodeBuffer = ''; // Reset buffer
+            return;
+        }
+
+        // Accumulate printable characters
+        if (key.length === 1) {
+            if (currentTime - lastKeyTime < barcodeTimeout) {
+                barcodeBuffer += key;
+            } else {
+                barcodeBuffer = key; // Start new buffer
+            }
+            lastKeyTime = currentTime;
+        }
+    });
+
+    // Function to lookup barcode and add to cart
+    function lookupBarcode(barcode) {
+        $.ajax({
+            url: 'search_products.php',
+            method: 'POST',
+            data: { query: barcode, isBarcode: true },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success' && response.products && response.products.length > 0) {
+                    const product = response.products[0]; // Assume first product is the match
+                    addProductToCart(
+                        product.Barcode, // Use Barcode as ID
+                        product.ProductName,
+                        parseFloat(product.SRP),
+                        product.Barcode
+                    );
+                    $('#productSearch').val(''); // Clear input if it was used
+                    $('#searchResults').hide(); // Hide any search results
+                } else {
+                    alert('Product not found for barcode: ' + barcode);
+                }
+            },
+            error: function() {
+                alert('Error looking up barcode. Please try again.');
+            }
+        });
+    }
 });
     
     function addProductToCart(id, name, price, barcode) {
