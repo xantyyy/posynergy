@@ -463,7 +463,7 @@
                         <button type="button" data-bs-dismiss="modal" class="btn btn-danger me-2" style="font-size: 12px;">
                             <i class="fas fa-times"></i> Cancel
                         </button>
-                        <button type="button" class="btn btn-warning" style="font-size: 12px;">
+                        <button type="button" id="saveCustomerBtn" class="btn btn-warning" style="font-size: 12px;">
                             <i class="fas fa-save"></i> Save
                         </button>
                     </div>

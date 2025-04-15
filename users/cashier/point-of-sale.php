@@ -2165,13 +2165,90 @@ $(document).ready(function() {
         $('#currentPoints').val('0');
     }
 
-    // Handle clicking on a customer in the table
-    $(document).on('click', '.customer-row', function() {
-        const cardNo = $(this).data('cardno');
-        $('.modal-body input.form-control').first().val(cardNo);
-        $('#cardNoRadio').prop('checked', true);
-        searchCustomer(cardNo, 'cardNo');
+    $('#saveCustomerBtn').on('click', function() {
+        // Explicitly target fields within the modal
+        const lastNameVal = $('#enrollCustomerModal #lastName').val();
+        const firstNameVal = $('#enrollCustomerModal #firstName').val();
+        
+        console.log("Direct element check:");
+        console.log("lastName field exists:", $('#enrollCustomerModal #lastName').length);
+        console.log("firstName field exists:", $('#enrollCustomerModal #firstName').length);
+        console.log("lastName value:", lastNameVal);
+        console.log("firstName value:", firstNameVal);
+        
+        // Collect data from the form
+        const customerData = {
+            lastName: lastNameVal,
+            firstName: firstNameVal,
+            middleName: $('#enrollCustomerModal #middleName').val() || '',
+            lotHouse: $('#enrollCustomerModal #lotNumber').val(),
+            street: $('#enrollCustomerModal #street').val(),
+            barangay: $('#enrollCustomerModal #barangay').val(),
+            townCity: $('#enrollCustomerModal #townCity').val(),
+            province: $('#enrollCustomerModal #province').val(),
+            civilStatus: $('#enrollCustomerModal #civilStatus').val(),
+            birthday: $('#enrollCustomerModal #birthday').val(),
+            gender: $('#enrollCustomerModal input[name="gender"]:checked').val(),
+            cardNumber: $('#enrollCustomerModal #cardNumber').val(),
+            pointsEarned: 0,
+            pointsUsed: 0,
+            balance: 0
+        };
+        
+        console.log("Form data collected:", customerData);
+        
+        // Validate required fields
+        const requiredFields = [
+            'lastName', 'firstName', 'lotHouse', 'street', 
+            'barangay', 'townCity', 'province', 'civilStatus', 
+            'birthday', 'gender', 'cardNumber'
+        ];
+        
+        let missingFields = [];
+        for (const field of requiredFields) {
+            if (customerData[field] === undefined || customerData[field] === null || customerData[field] === '') {
+                missingFields.push(field);
+            }
+        }
+        
+        if (missingFields.length > 0) {
+            alert('Please fill in all required fields: ' + 
+                  missingFields.map(field => field.replace(/([A-Z])/g, ' $1').toLowerCase()).join(', '));
+            return;
+        }
+        
+        // Send data to server
+        $.ajax({
+            url: 'enroll_Card.php',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(customerData),
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    alert('Customer enrolled successfully!');
+                    // Clear the form
+                    $('#enrollCustomerModal input, #enrollCustomerModal select').val('');
+                    $('#enrollCustomerModal input[name="gender"]').prop('checked', false);
+                    // Close the modal
+                    $('#enrollCustomerModal').modal('hide');
+                } else {
+                    alert('Error: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Save error:', xhr.responseText);
+                alert('Error saving customer. Please try again.');
+            }
+        });
     });
+    
+    // Function to refresh customer list after adding new customer
+    function refreshCustomerList() {
+        // If you have a function to reload the customer table, call it here
+        // For example, you might want to run a search with empty parameters
+        searchCustomer('', 'customerName');
+    }
 });
 
 </script>

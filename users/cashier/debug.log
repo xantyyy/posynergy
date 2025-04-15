@@ -1,0 +1,18 @@
+Array
+(
+    [lastName] => Coloma
+    [firstName] => Charmaine Joyce
+    [middleName] => Baldo
+    [lotHouse] => 111
+    [street] => Purok 4
+    [barangay] => Maturanoc
+    [townCity] => Guimba
+    [province] => Nueva Ecija
+    [civilStatus] => Single
+    [birthday] => 1999-11-20
+    [gender] => Female
+    [cardNumber] => 1111
+    [pointsEarned] => 0
+    [pointsUsed] => 0
+    [balance] => 0
+)
