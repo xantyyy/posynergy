@@ -1393,61 +1393,108 @@ $('#cashTenderModal .btn-success').on('click', function() {
 
 // LYKA ITO YUNG RESIBO
 function printReceipt() {
+    // Function to clean and parse numeric values
+    const parseNumber = (text) => {
+        if (!text) return 0; // Return 0 if text is empty or undefined
+        // Remove any non-numeric characters except for the decimal point
+        const cleanedText = text.replace(/[^0-9.]/g, '');
+        const number = parseFloat(cleanedText);
+        return isNaN(number) ? 0 : number; // Return 0 if parsing fails
+    };
+
     // Gather transaction details
     const transactionNo = $('table.table-borderless tbody tr').eq(1).find('td').text().trim(); // Transaction No
-    const itemCount = $('table.table-borderless tbody tr').eq(2).find('td').text().trim(); // # of Item
-    const amount = $('table.table-borderless tbody tr').eq(3).find('td').text().trim(); // Amount
-    const total = $('#totalTransactionDisplay').text().trim(); // TOTAL
-    const tender = $('#tenderDisplay').text().trim(); // Tender
-    const change = $('#changeDisplay').text().trim(); // Change
+    const itemCount = parseNumber($('table.table-borderless tbody tr').eq(2).find('td').text().trim()); // # of Item
+    const amount = parseNumber($('table.table-borderless tbody tr').eq(3).find('td').text().trim()); // Amount
+    const total = parseNumber($('#totalTransactionDisplay').text().trim()); // TOTAL
+    const tender = parseNumber($('#tenderDisplay').text().trim()); // Tender
+    const change = parseNumber($('#changeDisplay').text().trim()); // Change
 
     // Gather items from the table
     let items = [];
     $('table#table-bold tbody tr').each(function() {
         const itemName = $(this).find('td').eq(0).text().trim(); // Items
         if (itemName !== '') { // Exclude empty rows
-            const qty = $(this).find('td').eq(1).text().trim(); // Qty
-            const price = $(this).find('td').eq(2).text().trim(); // Price (first Price column)
-            const amount = $(this).find('td').eq(4).text().trim(); // Amount
+            const qty = parseNumber($(this).find('td').eq(1).text().trim()); // Qty
+            const price = parseNumber($(this).find('td').eq(2).text().trim()); // Price (first Price column)
+            const amount = parseNumber($(this).find('td').eq(4).text().trim()); // Amount
             items.push({ itemName, qty, price, amount });
         }
     });
 
-    // Create a simple receipt content (you can customize this)
-    let receiptContent = `
-        ========== RECEIPT ==========
-        Transaction No: ${transactionNo}
-        Date: ${new Date().toLocaleString()}
-        --------------------------------
-        Items:
-    `;
+    // Function to center text within a 40-character width
+    const centerText = (text, width = 40) => {
+        const padding = Math.floor((width - text.length) / 2);
+        return ' '.repeat(padding) + text + ' '.repeat(padding);
+    };
 
-    items.forEach(item => {
-        receiptContent += `
-        ${item.itemName}
-        Qty: ${item.qty} | Price: ${item.price} | Amount: ${item.amount}
-        `;
+    // Format the receipt content with centered sections
+    let receiptContent = `
+${centerText('AAA COMPANY')}
+${centerText('#101 SAN PASCUAL, TALAVERA, N.E.')}
+${centerText('VAT-REG - TIN 000-000-000-000')}
+${centerText('MIN 12345678910111213')}
+----------------------------------------
+SI No. 0000000036
+Date-Time: ${new Date().toLocaleString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })}
+Name: ___________________________
+Address: ________________________
+TIN: ___________________________
+`;
+
+    // Add items
+    items.forEach((item, index) => {
+        receiptContent += `${item.itemName.padEnd(36, ' ')} ${item.amount.toFixed(2).padStart(7, ' ')}\n`;
+        receiptContent += `SEASONING ${Math.floor(item.qty).toString().padStart(3, '0')}X${item.price.toFixed(2).padStart(5, ' ')} ${item.amount.toFixed(2).padStart(7, ' ')}\n`;
     });
 
+    // Add summary and footer with centered sections
     receiptContent += `
-        --------------------------------
-        Total Items: ${itemCount}
-        Amount: ${amount}
-        TOTAL: ${total}
-        Tender: ${tender}
-        Change: ${change}
-        ==============================
-    `;
+No. of Items: ${Math.floor(itemCount).toString().padStart(2, ' ')}
+----------------------------------------
+TOTAL                                 P${total.toFixed(2).padStart(7, ' ')}
+CASH                                  P${tender.toFixed(2).padStart(7, ' ')}
+CHANGE                                P${change.toFixed(2).padStart(7, ' ')}
+----------------------------------------
+Cashier: ADMIN
+Terminal No. 1
+Txn No.: 000-000108
+----------------------------------------
+VATable Sale                           P0.00
+VAT-Exempt Sale (X)                   P${total.toFixed(2).padStart(7, ' ')}
+VAT Zero Rated Sale (Z)               P0.00
+VAT                                   P0.00
+----------------------------------------
+TOTAL                                 P${total.toFixed(2).padStart(7, ' ')}
+----------------------------------------
+${centerText('THANK YOU!!!')}
+${centerText('THIS SERVES AS YOUR INVOICE')}
+----------------------------------------
+${centerText('ISYNERGIES, INCORPORATED')}
+${centerText('105 MAHARLIKA HIGHWAY, CABANATUAN CITY')}
+${centerText('VAT-REG-TIN 429-387-807-000')}
+${centerText('ACCR.# 000-000000000-00000')}
+${centerText('DATE: 01/01/0001')}
+${centerText('PTU#: 0000000-000000-00000')}
+----------------------------------------
+${centerText('PLEASE BRING THIS RECEIPT IF')}
+${centerText('YOU WISH TO EXCHANGE THIS ITEM')}
+${centerText('SUBJECT TO THE ACCEPTANCE')}
+${centerText('POLICY OF THE COMPANY')}
+`;
 
     // Open a new window and print the receipt
     const printWindow = window.open('', '_blank');
-    printWindow.document.write('<pre>' + receiptContent + '</pre>');
+    printWindow.document.write('<pre style="font-family: monospace; font-size: 12px; white-space: pre;">' + receiptContent + '</pre>');
     printWindow.document.close();
     printWindow.print();
     printWindow.close();
 
-    location.reload();
+    // Call resetTransaction and reload the page with a slight delay
     resetTransaction();
+    setTimeout(() => {
+        location.reload();
+    }, 500); // Delay of 500ms to ensure print dialog closes
 }
 
 // HANGGANG DITO LYKAAAAAAAAAAAAAAAAAAAAAAAAAAAA
