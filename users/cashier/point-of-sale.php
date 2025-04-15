@@ -464,21 +464,35 @@
     updateTotals();
 }
     
-    function updateCartDisplay() {
+function updateCartDisplay() {
     const tableBody = $('table#table-bold tbody');
-    tableBody.empty(); // Clear existing rows
+    tableBody.empty();
     
+    if (cart.length === 0) {
+        // Add an empty row if cart is empty
+        tableBody.append(`
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        `);
+        return;
+    }
+    
+    // Add each product to the table with barcode as data attribute
     cart.forEach(item => {
-        const row = `
-            <tr data-product-id="${item.id}">
+        tableBody.append(`
+            <tr data-barcode="${item.barcode}" data-id="${item.id}">
                 <td>${item.name}</td>
                 <td>${item.quantity}</td>
                 <td>₱${item.price.toFixed(2)}</td>
                 <td>₱${item.price.toFixed(2)}</td>
                 <td>₱${item.totalPrice.toFixed(2)}</td>
             </tr>
-        `;
-        tableBody.append(row);
+        `);
     });
 }
     
@@ -600,7 +614,9 @@ $('#verifyVoidPassword').on('click', function() {
 $('#voidPasswordModal').on('hidden.bs.modal', function() {
     $('#voidPassword').val('').removeClass('is-invalid');
     $('#voidPasswordError').hide();
-});$('#confirmVoid').on('click', function() {
+});
+
+$('#confirmVoid').on('click', function() {
     const selectedRow = $('table#table-bold tbody tr.selected');
     const productId = selectedRow.data('product-id'); // Barcode value
     const reason = $('#voidReason').val();
@@ -699,17 +715,104 @@ function updateTransactionDetails() {
 
     $('a[accesskey="F8"]').on('click', function(e) {
         e.preventDefault();
-        if (cart.length > 0) {
-            if (confirm("Are you sure you want to void all items?")) {
-                cart = [];
-                updateCartDisplay();
-                updateTotals();
-                $('.card-header.bg-success').first().text("");
+            $('#voidPasswordAllModal').modal('show');
+    });
+
+
+// Add password verification handler
+$('#verifyVoidPasswordAll').on('click', function() {
+    const password = $('#voidPasswordAll').val();
+    
+    // Verify password against database
+    $.ajax({
+        url: 'verify_void_password.php',
+        method: 'POST',
+        data: {
+            password: password,
+            type: 'POS'
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                // Password is correct, proceed to reason modal
+                $('#voidPasswordAllModal').modal('hide');
+                $('#voidReasonAllModal').modal('show');
+            } else {
+                // Password is incorrect, show error
+                $('#voidPasswordAll').addClass('is-invalid');
+                $('#voidPasswordError').show();
             }
-        } else {
-            alert("Cart is already empty");
+        },
+        error: function() {
+            alert('Server error. Could not verify password.');
         }
     });
+});
+
+// Reset password field when modal is hidden
+$('#voidPasswordAllModal').on('hidden.bs.modal', function() {
+    $('#voidPassword').val('').removeClass('is-invalid');
+    $('#voidPasswordError').hide();
+});
+// Update the void all function to collect products from the table
+$('#confirmVoidAll').on('click', function() {
+    const reason = $('#voidAllReason').val();
+    
+    if (!reason) {
+        $('#voidAllReason').addClass('is-invalid');
+        return;
+    }
+    
+    // Collect all items from the cart array instead of the table
+    // This ensures we have all the necessary data
+    const items = cart.map(item => ({
+        Barcode: item.barcode,
+        ProductName: item.name,
+        Quantity: item.quantity,
+        SRP: item.price
+    }));
+    
+    // If cart is empty, show error or handle accordingly
+    if (items.length === 0) {
+        console.log('No items to void');
+        $('#voidReasonAllModal').modal('hide');
+        return;
+    }
+    
+    // Send request to void all items
+    $.ajax({
+        url: 'void_all.php',
+        method: 'POST',
+        data: {
+            reason: reason,
+            items: JSON.stringify(items)
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                // Close the modal
+                $('#voidReasonAllModal').modal('hide');
+                
+                // Clear the cart array
+                cart = [];
+                
+                // Update the display
+                updateCartDisplay();
+                updateTotals();
+                
+                console.log('Transaction voided successfully:', response.transaction_number);
+            } else {
+                // Log error to console only
+                console.error(response.message);
+                console.error(response.errors);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log(xhr.responseText); // Debugging
+        }
+    });
+});
+
 
     $('a[accesskey="F2"]').on('click', function(e) {
     e.preventDefault();

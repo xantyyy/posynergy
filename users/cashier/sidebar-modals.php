@@ -537,6 +537,31 @@
     </div>
 </div>
 
+<!-- Password Modal for Void Item -->
+<div class="modal fade" id="voidPasswordAllModal" tabindex="-1" aria-labelledby="voidPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="voidPasswordModalLabel">Enter Void Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="voidPassword">Password:</label>
+                    <input type="password" class="form-control" id="voidPasswordAll" placeholder="Enter password">
+                    <div class="invalid-feedback" id="voidPasswordError">
+                        Incorrect password. Please try again.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="verifyVoidPasswordAll">Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Void Reason Modal -->
 <div class="modal fade" id="voidReasonModal" tabindex="-1" aria-labelledby="voidReasonModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -563,8 +588,58 @@
     </div>
 </div>
 
-<script>
+<!-- Void Reason Modal -->
+<div class="modal fade" id="voidReasonAllModal" tabindex="-1" aria-labelledby="voidReasonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="voidReasonModalLabel">Enter Void Reason</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="voidReason">Reason:</label>
+                    <select class="form-control" id="voidAllReason">
+                        <option value="My Reason 1">My Reason 1</option>
+                        <option value="My Reason 2">My Reason 2</option>
+                        <option value="My Reason 3">My Reason 3</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmVoidAll">Void Item</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div id="notification-area" style="position: fixed; top: 80px; right: 20px; z-index: 9999; width: 300px;"></div>
+
+
+<script>
+$(document).ready(function() {
+    $('#voidAllReason').on('change', function() {
+        if ($(this).val() === 'Other') {
+            $('#otherReasonDiv').show();
+        } else {
+            $('#otherReasonDiv').hide();
+        }
+    });
+    
+    // When confirming void with "Other" selected, use the text input value
+    $('#confirmVoidAll').on('click', function() {
+        if ($('#voidAllReason').val() === 'Other') {
+            const otherReason = $('#otherReason').val();
+            if (otherReason) {
+                $('#voidAllReason').val(otherReason);
+            } else {
+                $('#otherReason').addClass('is-invalid');
+                return false;
+            }
+        }
+    });
+});
 $('#pendingTransactionModal .btn-primary').off('click').on('click', function() {
     // Find the selected row
     let selectedRow = $('#pendingTransactionModal tbody tr.table-primary');
