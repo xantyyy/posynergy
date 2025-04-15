@@ -322,334 +322,332 @@
 </div> 
 
 <script>
-    // Add event listener for the "Submit" button
-    document.getElementById('submit-button').addEventListener('click', function() {
-        console.log('Submit button clicked');
+// Add event listener for the "Submit" button
+document.getElementById('submit-button').addEventListener('click', function() {
+    console.log('Submit button clicked');
 
-        // Collect form data
-        let poNumber = document.getElementById('invItem-no').value;
-        let poDate = document.getElementById('invItem-date').value;
-        let supplier = document.getElementById('invItem-supplier').value;
-        let supAddress = document.getElementById('invItem-address').value;
-        let contactPerson = document.getElementById('invItem-contactPerson').value;
-        let contactNo = document.getElementById('invItem-contactNo').value;
-        let shipTo = document.getElementById('invItem-ship').value;
-        let address = document.getElementById('invItem-address2').value;
-        let purpose = document.getElementById('invItem-purpose').value;
-        let remarks = document.getElementById('invItem-remarks').value;
-        let terms = document.getElementById('invItem-terms').value;
-        let tableDiscountBody = document.querySelector('#table-product-discount tbody');
-        let rows = tableDiscountBody.querySelectorAll('tr');
+    // Collect form data
+    let poNumber = document.getElementById('invItem-no').value;
+    let poDate = document.getElementById('invItem-date').value;
+    let supplier = document.getElementById('invItem-supplier').value;
+    let supAddress = document.getElementById('invItem-address').value;
+    let contactPerson = document.getElementById('invItem-contactPerson').value;
+    let contactNo = document.getElementById('invItem-contactNo').value;
+    let shipTo = document.getElementById('invItem-ship').value;
+    let address = document.getElementById('invItem-address2').value;
+    let purpose = document.getElementById('invItem-purpose').value;
+    let remarks = document.getElementById('invItem-remarks').value;
+    let terms = document.getElementById('invItem-terms').value;
+    let tableDiscountBody = document.querySelector('#table-product-discount tbody');
+    let rows = tableDiscountBody.querySelectorAll('tr');
 
-        console.log('Form data collected:', { poNumber, poDate, supplier, purpose, remarks, terms, rows: rows.length });
+    console.log('Form data collected:', { poNumber, poDate, supplier, purpose, remarks, terms, rows: rows.length });
 
-        // Validate required fields
-        if (!supplier || !purpose || !remarks || !terms) {
-            console.log('Validation failed: Missing required fields');
-            alert('Please fill in all required fields (Supplier, Purpose, Remarks, Terms).');
-            return;
-        }
+    // Validate required fields
+    if (!supplier || !purpose || !remarks || !terms) {
+        console.log('Validation failed: Missing required fields');
+        alert('Please fill in all required fields (Supplier, Purpose, Remarks, Terms).');
+        return;
+    }
 
-        // Check if there are items in the table
-        if (rows.length === 0 || tableDiscountBody.querySelector('tr td').textContent === 'No Data Available') {
-            console.log('Validation failed: No items in the table');
-            alert('Please add at least one item to the table.');
-            return;
-        }
+    // Check if there are items in the table
+    if (rows.length === 0 || tableDiscountBody.querySelector('tr td').textContent === 'No Data Available') {
+        console.log('Validation failed: No items in the table');
+        alert('Please add at least one item to the table.');
+        return;
+    }
 
-        // Collect items from the table
-        let items = [];
-        rows.forEach(row => {
-            let barcode = row.cells[0].textContent;
-            let productName = row.cells[1].textContent;
-            let quantity = row.cells[2].textContent;
-            let uom = row.cells[3].textContent;
-            let costPrice = row.cells[4].textContent;
-            let totalCostPrice = row.cells[5].textContent;
+    // Collect items from the table
+    let items = [];
+    rows.forEach(row => {
+        let barcode = row.cells[0].textContent;
+        let productName = row.cells[1].textContent;
+        let quantity = row.cells[2].textContent;
+        let uom = row.cells[3].textContent;
+        let appliedSRP = parseFloat(row.cells[4].textContent);
+        let totalAmount = parseFloat(row.cells[5].textContent);
 
-            items.push({
-                barcode: barcode,
-                category: '',
-                productName: productName,
-                quantity: parseInt(quantity),
-                unit: uom,
-                costPrice: parseFloat(costPrice),
-                totalCostPrice: parseFloat(totalCostPrice),
-                shelf: '',
-                shelfDescription: '',
-                productCode: '',
-                isVat: 'No'
-            });
+        items.push({
+            barcode: barcode,
+            category: '',
+            productName: productName,
+            quantity: parseInt(quantity),
+            unit: uom,
+            appliedSRP: appliedSRP, // Use AppliedSRP instead of costPrice
+            totalCostPrice: totalAmount, // Rename to totalAmount for clarity
+            shelf: '',
+            shelfDescription: '',
+            productCode: '',
+            isVat: 'No'
         });
+    });
 
-        console.log('Items collected:', items);
+    console.log('Items collected:', items);
 
-        // Fetch ProductCode, ProductName, and ShelfDescription for each item
-        let fetchPromises = items.map(item => {
-            console.log('Fetching product details for barcode:', item.barcode);
-            return fetch('getProductDetails.php', {
+    // Fetch ProductCode, ProductName, and ShelfDescription for each item
+    let fetchPromises = items.map(item => {
+        console.log('Fetching product details for barcode:', item.barcode);
+        return fetch('getProductDetails.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'barcode=' + encodeURIComponent(item.barcode)
+        })
+        .then(response => {
+            console.log('Response status for barcode', item.barcode, ':', response.status);
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Product details for barcode', item.barcode, ':', data);
+            if (data.success) {
+                item.productCode = data.productCode || '';
+                item.productName = data.productName || item.productName;
+                item.shelf = data.shelf || '';
+                item.shelfDescription = data.shelfDescription || '';
+                item.category = data.category || '';
+                item.isVat = data.isVat || 'No';
+            } else {
+                throw new Error('Failed to fetch product details for barcode: ' + item.barcode + ' - ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Fetch error for barcode', item.barcode, ':', error);
+            throw error;
+        });
+    });
+
+    // Wait for all fetch requests to complete
+    Promise.all(fetchPromises)
+        .then(() => {
+            console.log('All product details fetched, updated items:', items);
+
+            // Prepare data to send to the backend
+            let data = {
+                poNumber: poNumber,
+                poDate: poDate,
+                supplier: supplier,
+                supAddress: supAddress,
+                contactPerson: contactPerson,
+                contactNo: contactNo,
+                shipTo: shipTo,
+                address: address,
+                purpose: purpose,
+                remarks: remarks,
+                terms: terms,
+                receivingNo: poNumber,
+                user: 'ADMIN',
+                location: '',
+                companyVat: '',
+                items: items
+            };
+
+            console.log('Data to send to backend:', data);
+
+            // Send data to the backend
+            fetch('savePurchasePending.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
-                body: 'barcode=' + encodeURIComponent(item.barcode)
+                body: JSON.stringify(data)
             })
             .then(response => {
-                console.log('Response status for barcode', item.barcode, ':', response.status);
+                console.log('Save response status:', response.status);
                 if (!response.ok) {
                     throw new Error('Network response was not ok: ' + response.statusText);
                 }
                 return response.json();
             })
-            .then(data => {
-                console.log('Product details for barcode', item.barcode, ':', data);
-                if (data.success) {
-                    item.productCode = data.productCode || '';
-                    item.productName = data.productName || item.productName;
-                    item.shelf = data.shelf || '';
-                    item.shelfDescription = data.shelfDescription || '';
-                    item.category = data.category || '';
-                    item.isVat = data.isVat || 'No';
+            .then(result => {
+                console.log('Save result:', result);
+                if (result.success) {
+                    alert('Item successfully submitted!');
+
+                    // Reset the form and table
+                    document.getElementById('invItem-supplier').value = '';
+                    document.getElementById('invItem-address').value = '';
+                    document.getElementById('invItem-contactPerson').value = '';
+                    document.getElementById('invItem-contactNo').value = '';
+                    document.getElementById('invItem-purpose').value = '';
+                    document.getElementById('invItem-remarks').value = '';
+                    document.getElementById('invItem-terms').value = '';
+                    document.getElementById('invItem-barcode').value = '';
+                    document.getElementById('invItem-description').value = '';
+                    document.getElementById('invItem-quantity').value = '';
+                    document.getElementById('total-qty').value = '';
+                    document.getElementById('net-amt').value = '';
+                    tableDiscountBody.innerHTML = '<tr><td colspan="6" class="text-center">No Data Available</td></tr>';
+                    document.querySelector('#table-product-details tbody').innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
                 } else {
-                    throw new Error('Failed to fetch product details for barcode: ' + item.barcode + ' - ' + (data.message || 'Unknown error'));
+                    alert(result.message || 'Failed to submit item. Please try again.');
                 }
             })
             .catch(error => {
-                console.error('Fetch error for barcode', item.barcode, ':', error);
-                throw error;
+                console.error('Error submitting data:', error);
+                alert('Error submitting data: ' + error.message);
             });
-        });
-
-        // Wait for all fetch requests to complete
-        Promise.all(fetchPromises)
-            .then(() => {
-                console.log('All product details fetched, updated items:', items);
-
-                // Prepare data to send to the backend
-                let data = {
-                    poNumber: poNumber,
-                    poDate: poDate,
-                    supplier: supplier,
-                    supAddress: supAddress,
-                    contactPerson: contactPerson,
-                    contactNo: contactNo,
-                    shipTo: shipTo,
-                    address: address,
-                    purpose: purpose,
-                    remarks: remarks,
-                    terms: terms,
-                    receivingNo: poNumber,
-                    user: 'ADMIN',
-                    location: '',
-                    companyVat: '',
-                    items: items
-                };
-
-                console.log('Data to send to backend:', data);
-
-                // Send data to the backend
-                fetch('savePurchasePending.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    
-                    V: 'application/json',
-                    body: JSON.stringify(data)
-                })
-                .then(response => {
-                    console.log('Save response status:', response.status);
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
-                    return response.json();
-                })
-                .then(result => {
-                    console.log('Save result:', result);
-                    if (result.success) {
-                        alert('Item successfully submitted!');
-
-                        // Reset the form and table
-                        document.getElementById('invItem-supplier').value = '';
-                        document.getElementById('invItem-address').value = '';
-                        document.getElementById('invItem-contactPerson').value = '';
-                        document.getElementById('invItem-contactNo').value = '';
-                        document.getElementById('invItem-purpose').value = '';
-                        document.getElementById('invItem-remarks').value = '';
-                        document.getElementById('invItem-terms').value = '';
-                        document.getElementById('invItem-barcode').value = '';
-                        document.getElementById('invItem-description').value = '';
-                        document.getElementById('invItem-quantity').value = '';
-                        document.getElementById('total-qty').value = '';
-                        document.getElementById('net-amt').value = '';
-                        tableDiscountBody.innerHTML = '<tr><td colspan="6" class="text-center">No Data Available</td></tr>';
-                        document.querySelector('#table-product-details tbody').innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
-
-                    } else {
-                        alert(result.message || 'Failed to submit item. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error submitting data:', error);
-                    alert('Error submitting data: ' + error.message);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching product details:', error);
-                alert('Error fetching product details: ' + error.message);
-            });
-    });
-
-    document.getElementById('invItem-barcode').addEventListener('input', function() {
-        let barcode = this.value;
-        let selectedSupplier = document.getElementById('invItem-supplier').value;
-        let quantityField = document.getElementById('invItem-quantity');
-        let addButton = document.getElementById('add-button'); // Reference the Add button
-        let productNameField = document.getElementById('invItem-description');
-        let tableBody = document.querySelector('#table-product-details tbody');
-
-        console.log('Barcode entered:', barcode); // Debug
-        console.log('Selected Supplier:', selectedSupplier); // Debug
-
-        // Reset fields if barcode or supplier is empty
-        if (!barcode || !selectedSupplier) {
-            productNameField.value = '';
-            quantityField.disabled = true;
-            addButton.disabled = true; // Disable the Add button
-            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
-            return;
-        }
-
-        fetch('getProduct.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'barcode=' + encodeURIComponent(barcode)
-        })
-        .then(response => {
-            console.log('Response status:', response.status); // Debug
-            console.log('Response headers:', response.headers.get('Content-Type')); // Debug
-            return response.text().then(text => {
-                console.log('Raw response:', text);
-                try {
-                    return JSON.parse(text);
-                } catch (e) {
-                    console.error('Error parsing JSON:', e);
-                    throw new Error('Invalid JSON response');
-                }
-            });
-        })
-        .then(data => {
-            console.log('Parsed data:', data);
-
-            if (data.success) {
-                productNameField.value = data.productName;
-
-                // Check if the supplier matches
-                if (data.supplier === selectedSupplier) {
-                    // Display product details if supplier matches
-                    tableBody.innerHTML = `
-                        <tr>
-                            <td>${data.shelf || 'N/A'}</td>
-                            <td>${data.category || 'N/A'}</td>
-                            <td>${data.uom || 'N/A'}</td>
-                            <td>${data.cost || 'N/A'}</td>
-                            <td>${data.vatable || 'No'}</td>
-                        </tr>
-                    `;
-                    quantityField.disabled = false;
-                    addButton.disabled = false; // Enable the Add button
-                } else {
-                    // If supplier doesn't match, show "No Data Available" and disable both quantity and Add button
-                    tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
-                    quantityField.disabled = true;
-                    addButton.disabled = true; // Disable the Add button
-                    console.log('Supplier mismatch:', data.supplier, '!=', selectedSupplier);
-                }
-            } else {
-                // If product is not found, reset fields
-                productNameField.value = 'Product not found';
-                quantityField.disabled = true;
-                addButton.disabled = true; // Disable the Add button
-                tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
-            }
         })
         .catch(error => {
-            console.error('Fetch error:', error);
-            productNameField.value = 'Error fetching product';
-            quantityField.disabled = true;
-            addButton.disabled = true; // Disable the Add button
-            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Error loading data</td></tr>';
+            console.error('Error fetching product details:', error);
+            alert('Error fetching product details: ' + error.message);
         });
+});
+
+    document.getElementById('invItem-barcode').addEventListener('input', function() {
+    let barcode = this.value;
+    let selectedSupplier = document.getElementById('invItem-supplier').value;
+    let quantityField = document.getElementById('invItem-quantity');
+    let addButton = document.getElementById('add-button');
+    let productNameField = document.getElementById('invItem-description');
+    let tableBody = document.querySelector('#table-product-details tbody');
+
+    console.log('Barcode entered:', barcode);
+    console.log('Selected Supplier:', selectedSupplier);
+
+    // Reset fields if barcode or supplier is empty
+    if (!barcode || !selectedSupplier) {
+        productNameField.value = '';
+        quantityField.disabled = true;
+        addButton.disabled = true;
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+        return;
+    }
+
+    fetch('getProduct.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'barcode=' + encodeURIComponent(barcode)
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers.get('Content-Type'));
+        return response.text().then(text => {
+            console.log('Raw response:', text);
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Error parsing JSON:', e);
+                throw new Error('Invalid JSON response');
+            }
+        });
+    })
+    .then(data => {
+        console.log('Parsed data:', data);
+
+        if (data.success) {
+            productNameField.value = data.productName;
+
+            // Store AppliedSRP in a data attribute for later use
+            document.getElementById('invItem-barcode').dataset.appliedSRP = data.appliedSRP;
+
+            // Check if the supplier matches
+            if (data.supplier === selectedSupplier) {
+                // Display product details if supplier matches
+                tableBody.innerHTML = `
+                    <tr>
+                        <td>${data.shelf || 'N/A'}</td>
+                        <td>${data.category || 'N/A'}</td>
+                        <td>${data.uom || 'N/A'}</td>
+                        <td>${data.cost || 'N/A'}</td>
+                        <td>${data.vatable || 'No'}</td>
+                    </tr>
+                `;
+                quantityField.disabled = false;
+                addButton.disabled = false;
+            } else {
+                tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+                quantityField.disabled = true;
+                addButton.disabled = true;
+                console.log('Supplier mismatch:', data.supplier, '!=', selectedSupplier);
+            }
+        } else {
+            productNameField.value = 'Product not found';
+            quantityField.disabled = true;
+            addButton.disabled = true;
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        productNameField.value = 'Error fetching product';
+        quantityField.disabled = true;
+        addButton.disabled = true;
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Error loading data</td></tr>';
     });
+});
 
     // Add event listener for the "Add" button
-    document.getElementById('add-button').addEventListener('click', function() {
-        // Get the values
-        let barcode = document.getElementById('invItem-barcode').value;
-        let productName = document.getElementById('invItem-description').value;
-        let quantity = document.getElementById('invItem-quantity').value;
-        let tableBody = document.querySelector('#table-product-details tbody');
-        let tableDiscountBody = document.querySelector('#table-product-discount tbody');
+document.getElementById('add-button').addEventListener('click', function() {
+    // Get the values
+    let barcode = document.getElementById('invItem-barcode').value;
+    let productName = document.getElementById('invItem-description').value;
+    let quantity = document.getElementById('invItem-quantity').value;
+    let tableBody = document.querySelector('#table-product-details tbody');
+    let tableDiscountBody = document.querySelector('#table-product-discount tbody');
 
-        // Get UOM and Cost from the product details table
-        let productDetailsRow = tableBody.querySelector('tr');
-        let uom = productDetailsRow.cells[2].textContent;
-        let cost = parseFloat(productDetailsRow.cells[3].textContent);
+    // Get UOM and AppliedSRP from the fetched product data
+    let productDetailsRow = tableBody.querySelector('tr');
+    let uom = productDetailsRow.cells[2].textContent;
+    let appliedSRP = parseFloat(document.getElementById('invItem-barcode').dataset.appliedSRP || 0);
 
-        // Validate quantity
-        if (!quantity || quantity <= 0) {
-            alert('Please enter a valid quantity greater than 0.');
-            return;
-        }
+    // Validate quantity
+    if (!quantity || quantity <= 0) {
+        alert('Please enter a valid quantity greater than 0.');
+        return;
+    }
 
-        // Calculate the amount (quantity * cost)
-        let amount = quantity * cost;
+    // Calculate the amount (quantity * AppliedSRP)
+    let amount = quantity * appliedSRP;
 
-        // Check if the table currently says "No Data Available"
-        if (tableDiscountBody.querySelector('tr td').textContent === 'No Data Available') {
-            tableDiscountBody.innerHTML = ''; // Clear the "No Data Available" row
-        }
+    // Check if the table currently says "No Data Available"
+    if (tableDiscountBody.querySelector('tr td').textContent === 'No Data Available') {
+        tableDiscountBody.innerHTML = ''; // Clear the "No Data Available" row
+    }
 
-        // Add a new row to the table-product-discount
-        let newRow = document.createElement('tr');
-        newRow.innerHTML = `
-            <td>${barcode}</td>
-            <td>${productName}</td>
-            <td>${quantity}</td>
-            <td>${uom}</td>
-            <td>${cost.toFixed(2)}</td>
-            <td>${amount.toFixed(2)}</td>
-        `;
-        tableDiscountBody.appendChild(newRow);
+    // Add a new row to the table-product-discount
+    let newRow = document.createElement('tr');
+    newRow.innerHTML = `
+        <td>${barcode}</td>
+        <td>${productName}</td>
+        <td>${quantity}</td>
+        <td>${uom}</td>
+        <td>${appliedSRP.toFixed(2)}</td>
+        <td>${amount.toFixed(2)}</td>
+    `;
+    tableDiscountBody.appendChild(newRow);
 
-        // Disable the supplier dropdown after adding an item
-        document.getElementById('invItem-supplier').disabled = true;
+    // Disable the supplier dropdown after adding an item
+    document.getElementById('invItem-supplier').disabled = true;
 
-        // Show success alert
-        alert('Item successfully added!');
+    // Show success alert
+    alert('Item successfully added!');
 
-        // Clear the quantity field after adding
-        document.getElementById('invItem-quantity').value = '';
+    // Clear the quantity field after adding
+    document.getElementById('invItem-quantity').value = '';
 
-        // Update Total Quantity and Net Amount
-        let totalQtyField = document.getElementById('total-qty');
-        let netAmountField = document.getElementById('net-amt');
-        let rows = tableDiscountBody.querySelectorAll('tr');
-        let totalQty = 0;
-        let totalAmount = 0;
+    // Update Total Quantity and Net Amount
+    let totalQtyField = document.getElementById('total-qty');
+    let netAmountField = document.getElementById('net-amt');
+    let rows = tableDiscountBody.querySelectorAll('tr');
+    let totalQty = 0;
+    let totalAmount = 0;
 
-        rows.forEach(row => {
-            let qty = parseInt(row.cells[2].textContent);
-            let amount = parseFloat(row.cells[5].textContent);
-            totalQty += qty;
-            totalAmount += amount;
-        });
-
-        totalQtyField.value = totalQty;
-        netAmountField.value = totalAmount.toFixed(2);
+    rows.forEach(row => {
+        let qty = parseInt(row.cells[2].textContent);
+        let amount = parseFloat(row.cells[5].textContent);
+        totalQty += qty;
+        totalAmount += amount;
     });
+
+    totalQtyField.value = totalQty;
+    netAmountField.value = totalAmount.toFixed(2);
+});
 
     // Function to set current date
     function setCurrentDate() {

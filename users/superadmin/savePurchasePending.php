@@ -58,7 +58,7 @@ try {
             $item['shelfDescription'],
             $item['quantity'],
             $item['unit'],
-            $item['costPrice'],
+            $item['appliedSRP'],
             $discount,
             $item['totalCostPrice'],
             $expirationDate,

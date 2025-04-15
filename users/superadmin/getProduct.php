@@ -1,5 +1,4 @@
 <?php
-
 // Include the config file
 require_once '../../includes/config.php';
 
@@ -18,15 +17,16 @@ try {
         exit;
     }
 
-    // Join the two tables to get all required information
-// Join the tables to get all required information including Supplier
-$query = "SELECT p.ProductName, p.Shelf, p.Category, 
-       c.Measurement AS UOM, c.Cost, 
-       IFNULL(c.IsVAT, 'No') AS Vatable, 
-       c.SupplierName AS Supplier 
-FROM tbl_productprofile p
-LEFT JOIN tbl_productcost c ON p.Barcode = c.Barcode
-WHERE p.Barcode = ?";
+    // Join the tables to get all required information including Supplier and AppliedSRP
+    $query = "SELECT p.ProductName, p.Shelf, p.Category, 
+                     c.Measurement AS UOM, c.Cost, 
+                     IFNULL(c.IsVAT, 'No') AS Vatable, 
+                     c.SupplierName AS Supplier,
+                     pr.AppliedSRP
+              FROM tbl_productprofile p
+              LEFT JOIN tbl_productcost c ON p.Barcode = c.Barcode
+              LEFT JOIN tbl_productprice pr ON p.Barcode = pr.Barcode
+              WHERE p.Barcode = ?";
 
     // Use MySQLi instead of PDO
     $stmt = $conn->prepare($query);
@@ -48,7 +48,8 @@ WHERE p.Barcode = ?";
             'uom' => $row['UOM'],
             'cost' => $row['Cost'],
             'vatable' => $row['Vatable'],
-            'supplier' => $row['Supplier'] // Include supplier in the response
+            'supplier' => $row['Supplier'],
+            'appliedSRP' => $row['AppliedSRP'] // Include AppliedSRP in the response
         ]);
     } else {
         echo json_encode(['success' => false, 'message' => 'No product found']);
