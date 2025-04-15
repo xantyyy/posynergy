@@ -498,6 +498,21 @@
         $('th:contains("Amount:")').next().text(`₱${totalAmount.toFixed(2)}`);
         $('th:contains("TOTAL:")').next().text(`₱${totalAmount.toFixed(2)}`);
     }
+
+    // Handle Edit Quantity button click
+    $('#editQuantityBtn').on('click', function() {
+            const selectedRow = $('table#table-bold tbody tr.selected');
+            if (selectedRow.length > 0) {
+                const productId = selectedRow.data('product-id');
+                const currentQuantity = parseInt(selectedRow.find('td').eq(1).text().trim()) || 1;
+                const newQuantity = prompt("Enter new quantity:", currentQuantity);
+                if (newQuantity !== null) {
+                    updateItemQuantity(productId, parseInt(newQuantity));
+                }
+            } else {
+                alert("Please select an item to edit first");
+            }
+        });
     
     $('a[accesskey="F1"]').on('click', function(e) {
         e.preventDefault();
