@@ -306,142 +306,142 @@
 </div>
 
 <script>
-let cart = []; // Array to store cart items
+    let cart = []; // Array to store cart items
 
-$(document).ready(function() {
-    // Prevent form submission and handle barcode scans in #productSearch
-    $('#productSearch').on('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent form submission
-            const query = $(this).val().trim(); // Get the scanned barcode
-            if (query) {
-                lookupBarcode(query);
+    $(document).ready(function() {
+        // Prevent form submission and handle barcode scans in #productSearch
+        $('#productSearch').on('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission
+                const query = $(this).val().trim(); // Get the scanned barcode
+                if (query) {
+                    lookupBarcode(query);
+                }
             }
-        }
-    });
+        });
 
-    // Handle input for real-time search (for manual typing in #productSearch)
-    $('#productSearch').on('input', function() {
-        var query = $(this).val().trim();
-        
-        if (query.length >= 2) {
+        // Handle input for real-time search (for manual typing in #productSearch)
+        $('#productSearch').on('input', function() {
+            var query = $(this).val().trim();
+            
+            if (query.length >= 2) {
+                $.ajax({
+                    url: 'search_products.php',
+                    method: 'POST',
+                    data: { query: query },
+                    dataType: 'json',
+                    success: function(response) {
+                        const $searchResults = $('#searchResults');
+                        $searchResults.empty();
+                        if (response.status === 'success' && response.products.length > 0) {
+                            response.products.forEach(product => {
+                                const item = `
+                                    <div class="search-item" 
+                                        data-value="${product.Barcode}" 
+                                        data-name="${product.ProductName}" 
+                                        data-price="${product.SRP}" 
+                                        data-barcode="${product.Barcode}">
+                                        <strong>${product.ProductName}</strong><br>
+                                        Barcode: ${product.Barcode} | SRP: ₱${parseFloat(product.SRP).toFixed(2)}
+                                    </div>
+                                `;
+                                $searchResults.append(item);
+                            });
+                            $searchResults.show();
+                        } else {
+                            $searchResults.append('<div class="search-item">No results found</div>');
+                            $searchResults.show();
+                        }
+                    },
+                    error: function() {
+                        $('#searchResults').html('<div class="search-item">Error fetching products</div>').show();
+                    }
+                });
+            } else {
+                $('#searchResults').hide();
+            }
+        });
+
+        // Handle clicking a search result
+        $(document).on('click', '#searchResults .search-item', function() {
+            const productId = $(this).data('value');
+            const productName = $(this).data('name');
+            const productPrice = parseFloat($(this).data('price'));
+            const productBarcode = $(this).data('barcode');
+            addProductToCart(productId, productName, productPrice, productBarcode);
+            $('#productSearch').val('');
+            $('#searchResults').hide();
+        });
+
+        // Global barcode scanner detection
+        let barcodeBuffer = '';
+        let lastKeyTime = 0;
+        const barcodeTimeout = 50; // Time in ms to group keypresses as a barcode
+        const minBarcodeLength = 4; // Minimum length to consider a barcode
+
+        $(document).on('keydown', function(event) {
+            const currentTime = new Date().getTime();
+            const key = event.key;
+
+            // Ignore modifier keys and function keys
+            if (event.ctrlKey || event.altKey || event.metaKey || key.startsWith('F') || key === 'Shift' || key === 'Control' || key === 'Alt') {
+                return;
+            }
+
+            // If an input or textarea is focused, let it handle the input
+            if ($(event.target).is('input, textarea')) {
+                return;
+            }
+
+            // Handle Enter key to process barcode
+            if (key === 'Enter') {
+                event.preventDefault();
+                if (barcodeBuffer.length >= minBarcodeLength) {
+                    lookupBarcode(barcodeBuffer);
+                }
+                barcodeBuffer = ''; // Reset buffer
+                return;
+            }
+
+            // Accumulate printable characters
+            if (key.length === 1) {
+                if (currentTime - lastKeyTime < barcodeTimeout) {
+                    barcodeBuffer += key;
+                } else {
+                    barcodeBuffer = key; // Start new buffer
+                }
+                lastKeyTime = currentTime;
+            }
+        });
+
+        // Function to lookup barcode and add to cart
+        function lookupBarcode(barcode) {
             $.ajax({
                 url: 'search_products.php',
                 method: 'POST',
-                data: { query: query },
+                data: { query: barcode, isBarcode: true },
                 dataType: 'json',
                 success: function(response) {
-                    const $searchResults = $('#searchResults');
-                    $searchResults.empty();
-                    if (response.status === 'success' && response.products.length > 0) {
-                        response.products.forEach(product => {
-                            const item = `
-                                <div class="search-item" 
-                                     data-value="${product.Barcode}" 
-                                     data-name="${product.ProductName}" 
-                                     data-price="${product.SRP}" 
-                                     data-barcode="${product.Barcode}">
-                                    <strong>${product.ProductName}</strong><br>
-                                    Barcode: ${product.Barcode} | SRP: ₱${parseFloat(product.SRP).toFixed(2)}
-                                </div>
-                            `;
-                            $searchResults.append(item);
-                        });
-                        $searchResults.show();
+                    if (response.status === 'success' && response.products && response.products.length > 0) {
+                        const product = response.products[0]; // Assume first product is the match
+                        addProductToCart(
+                            product.Barcode, // Use Barcode as ID
+                            product.ProductName,
+                            parseFloat(product.SRP),
+                            product.Barcode
+                        );
+                        $('#productSearch').val(''); // Clear input if it was used
+                        $('#searchResults').hide(); // Hide any search results
                     } else {
-                        $searchResults.append('<div class="search-item">No results found</div>');
-                        $searchResults.show();
+                        alert('Product not found for barcode: ' + barcode);
                     }
                 },
                 error: function() {
-                    $('#searchResults').html('<div class="search-item">Error fetching products</div>').show();
+                    alert('Error looking up barcode. Please try again.');
                 }
             });
-        } else {
-            $('#searchResults').hide();
         }
     });
-
-    // Handle clicking a search result
-    $(document).on('click', '#searchResults .search-item', function() {
-        const productId = $(this).data('value');
-        const productName = $(this).data('name');
-        const productPrice = parseFloat($(this).data('price'));
-        const productBarcode = $(this).data('barcode');
-        addProductToCart(productId, productName, productPrice, productBarcode);
-        $('#productSearch').val('');
-        $('#searchResults').hide();
-    });
-
-    // Global barcode scanner detection
-    let barcodeBuffer = '';
-    let lastKeyTime = 0;
-    const barcodeTimeout = 50; // Time in ms to group keypresses as a barcode
-    const minBarcodeLength = 4; // Minimum length to consider a barcode
-
-    $(document).on('keydown', function(event) {
-        const currentTime = new Date().getTime();
-        const key = event.key;
-
-        // Ignore modifier keys and function keys
-        if (event.ctrlKey || event.altKey || event.metaKey || key.startsWith('F') || key === 'Shift' || key === 'Control' || key === 'Alt') {
-            return;
-        }
-
-        // If an input or textarea is focused, let it handle the input
-        if ($(event.target).is('input, textarea')) {
-            return;
-        }
-
-        // Handle Enter key to process barcode
-        if (key === 'Enter') {
-            event.preventDefault();
-            if (barcodeBuffer.length >= minBarcodeLength) {
-                lookupBarcode(barcodeBuffer);
-            }
-            barcodeBuffer = ''; // Reset buffer
-            return;
-        }
-
-        // Accumulate printable characters
-        if (key.length === 1) {
-            if (currentTime - lastKeyTime < barcodeTimeout) {
-                barcodeBuffer += key;
-            } else {
-                barcodeBuffer = key; // Start new buffer
-            }
-            lastKeyTime = currentTime;
-        }
-    });
-
-    // Function to lookup barcode and add to cart
-    function lookupBarcode(barcode) {
-        $.ajax({
-            url: 'search_products.php',
-            method: 'POST',
-            data: { query: barcode, isBarcode: true },
-            dataType: 'json',
-            success: function(response) {
-                if (response.status === 'success' && response.products && response.products.length > 0) {
-                    const product = response.products[0]; // Assume first product is the match
-                    addProductToCart(
-                        product.Barcode, // Use Barcode as ID
-                        product.ProductName,
-                        parseFloat(product.SRP),
-                        product.Barcode
-                    );
-                    $('#productSearch').val(''); // Clear input if it was used
-                    $('#searchResults').hide(); // Hide any search results
-                } else {
-                    alert('Product not found for barcode: ' + barcode);
-                }
-            },
-            error: function() {
-                alert('Error looking up barcode. Please try again.');
-            }
-        });
-    }
-});
     
     function addProductToCart(id, name, price, barcode) {
     const existingProductIndex = cart.findIndex(item => item.barcode === barcode); // Use barcode for comparison
@@ -828,35 +828,39 @@ function loadPendingTransactions() {
 $(document).ready(function() {
     // This will attach the click handler to all transaction rows, even ones added dynamically
     $(document).on('click', '.transaction-row', function() {
-        // First remove the selection class from all rows
         $('.transaction-row').removeClass('table-primary');
-        // Then add it to the clicked row
         $(this).addClass('table-primary');
         console.log("Selected transaction:", $(this).attr('data-transaction-no'));
     });
     
     // When the modal is shown, load the transactions
     $('#pendingTransactionModal').on('show.bs.modal', function() {
-    console.log("Modal opened, loading transactions...");
-    loadPendingTransactions();
-});
+        console.log("Modal opened, loading transactions...");
+        loadPendingTransactions();
+    });
     
-    $('#pendingTransactionModal .btn-primary').click(function() {
-    let selectedRow = $('#pendingTransactionModal tbody tr.table-primary');
-    
-    if (selectedRow.length > 0) {
-        let transactionNo = selectedRow.data('transaction-no'); // Use .data() for reliability
-        console.log("Attempting to load transaction:", transactionNo); // Debug log
-        if (transactionNo) {
-            loadTransactionToCart(transactionNo);
-            $('#pendingTransactionModal').modal('hide');
+    $('#pendingTransactionModal .btn-primary').off('click').on('click', function() {
+        let selectedRow = $('#pendingTransactionModal tbody tr.table-primary');
+        
+        if (selectedRow.length > 0) {
+            let transactionNo = selectedRow.data('transaction-no');
+            console.log("Attempting to load transaction:", transactionNo);
+            if (transactionNo) {
+                loadTransactionToCart(transactionNo);
+                $('#pendingTransactionModal').modal('hide');
+            } else {
+                alert('Error: Transaction number not found.');
+            }
         } else {
-            alert('Error: Transaction number not found.');
+            alert('Please select a transaction to load.');
         }
-    } else {
-        alert('Please select a transaction to load.');
-    }
-});
+    });
+
+    // Clean up event listeners when modal is hidden
+    $('#pendingTransactionModal').on('hidden.bs.modal', function() {
+        $('#pendingTransactionModal .btn-primary').off('click');
+        $('#pendingTransactionModal .btn-danger').off('click');
+    });
     
     // Fix the Delete button click handler as well
     $('#pendingTransactionModal .btn-danger').click(function() {
@@ -919,29 +923,29 @@ function loadTransactionToCart(transactionNo) {
         dataType: 'json',
         success: function(response) {
             if (response.status === 'success') {
-                // Do not clear the cart; append instead
+                // Clear the cart
+                cart = [];
+
+                // Load the exact items from the pending transaction
                 response.items.forEach(function(item) {
-                    const existingProductIndex = cart.findIndex(cartItem => cartItem.barcode === item.Barcode);
-                    if (existingProductIndex !== -1) {
-                        // If the item already exists in the cart, update its quantity and totalPrice
-                        cart[existingProductIndex].quantity += parseFloat(item.Quantity);
-                        cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
-                    } else {
-                        // Add the new item to the cart
-                        cart.push({
-                            id: item.Barcode, // Use barcode as the ID for consistency
-                            barcode: item.Barcode,
-                            name: item.ProductName,
-                            price: parseFloat(item.SRP),
-                            quantity: parseFloat(item.Quantity),
-                            totalPrice: parseFloat(item.Amount)
-                        });
-                    }
+                    cart.push({
+                        id: item.Barcode,
+                        barcode: item.Barcode,
+                        name: item.ProductName,
+                        price: parseFloat(item.SRP),
+                        quantity: parseFloat(item.Quantity),
+                        totalPrice: parseFloat(item.Amount)
+                    });
                 });
-                
+
+                // Update the display and totals
                 updateCartDisplay();
                 updateTotals();
-                removePendingTransaction(transactionNo);
+
+                // Remove the pending transaction and show a single alert
+                removePendingTransaction(transactionNo, function() {
+                    alert('Transaction loaded successfully and removed from pending list!');
+                });
             } else {
                 alert('Error: ' + response.message);
             }
@@ -954,7 +958,7 @@ function loadTransactionToCart(transactionNo) {
     });
 }
 
-function removePendingTransaction(transactionNo) {
+function removePendingTransaction(transactionNo, callback) {
     $.ajax({
         url: 'remove_pending_transaction.php',
         method: 'POST',
@@ -965,8 +969,8 @@ function removePendingTransaction(transactionNo) {
         dataType: 'json',
         success: function(response) {
             if (response.status === 'success') {
-                alert('Transaction loaded successfully and removed from pending list!');
-                $('#pendingTransactionModal').modal('hide');
+                // Execute callback to show alert in the parent function
+                if (callback) callback();
             } else {
                 alert('Error: ' + response.message);
             }
