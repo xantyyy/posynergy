@@ -287,7 +287,6 @@
     </div>
 </div>
 
-
 <!-- Customer Points Modal -->
 <div class="modal fade" id="customerPointsModal" tabindex="-1" aria-labelledby="customerPointsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -304,7 +303,7 @@
                     <div class="col-md-6 border-end">
                         <div class="mb-3">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="customerSearchType" id="cardNoRadio" value="cardNo">
+                                <input class="form-check-input" type="radio" name="customerSearchType" id="cardNoRadio" value="cardNo" checked>
                                 <label class="form-check-label" for="cardNoRadio">Card No.</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -313,23 +312,24 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Enter Card No. or Customer Name">
+                            <input type="text" class="form-control" id="customerSearch" placeholder="Enter Card No. or Customer Name" autocomplete="off">
                         </div>
                         <div class="mb-3">
                             <label for="lastName" class="form-label">Last Name:</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name">
+                            <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name" readonly>
                         </div>
                         <div class="mb-3">
                             <label for="firstName" class="form-label">First Name:</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="Enter First Name">
+                            <input type="text" class="form-control" id="firstName" placeholder="Enter First Name" readonly>
                         </div>
                         <div class="mb-3">
                             <label for="middleName" class="form-label">Middle Name:</label>
-                            <input type="text" class="form-control" id="middleName" placeholder="Enter Middle Name">
+                            <input type="text" class="form-control" id="middleName" placeholder="Enter Middle Name" readonly>
                         </div>
                         <div class="border p-3">
                             <label for="currentPoints" class="form-label">Current Points Earned:</label>
                             <input type="text" class="form-control" id="currentPoints" placeholder="0" readonly>
+                            <input type="hidden" id="customerId" value="">
                         </div>
                     </div>
                     <!-- Right Side -->
@@ -340,14 +340,11 @@
                                 <thead class="bg-dark text-white">
                                     <tr>
                                         <th>Customer Name</th>
-                                        <th>Card Name</th>
+                                        <th>Card No.</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Sample Customer 1</td>
-                                        <td>Card 1</td>
-                                    </tr>
+                                    <!-- Customer data will be populated here -->
                                 </tbody>
                             </table>
                         </div>
@@ -362,6 +359,7 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="applyCustomerPoints">Apply Points</button>
             </div>
         </div>
     </div>

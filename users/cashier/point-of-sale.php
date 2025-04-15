@@ -1718,6 +1718,105 @@ $(document).ready(function() {
         updateTotals();
     }
 });
+
+//F9 CARD POINTS
+
+// When document is ready
+$(document).ready(function() {
+    // Set default search type
+    $('#cardNoRadio').prop('checked', true);
+    
+    // Handle the search input keyup event
+    $('#customerSearch').on('keyup', function() {
+        const searchTerm = $(this).val().trim();
+        const searchType = $('input[name="customerSearchType"]:checked').val();
+        
+        if (searchTerm.length >= 3) {
+            searchCustomer(searchTerm, searchType);
+        } else {
+            // Clear the results if search term is too short
+            clearCustomerFields();
+        }
+    });
+    
+    // Function to search for customer
+    function searchCustomer(searchTerm, searchType) {
+        console.log('Searching for:', searchTerm, 'using type:', searchType);
+
+        $.ajax({
+            url: 'search_customer.php',
+            method: 'POST',
+            data: {
+                searchTerm: searchTerm,
+                searchType: searchType
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log('Search response:', response);
+
+                if (response.status === 'success' && response.data) {
+                    // Populate the fields with customer data
+                    $('#lastName').val(response.data.LastName);
+                    $('#firstName').val(response.data.FirstName);
+                    $('#middleName').val(response.data.MiddleName);
+                    $('#currentPoints').val(response.data.PointsEarned);
+                    
+                    // Update customer list if needed
+                    updateCustomerTable(response.customers);
+                } else {
+                    // Clear fields if no matching customer found
+                    clearCustomerFields();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error searching for customer:', error);
+                clearCustomerFields();
+            }
+        });
+    }
+    
+    // Function to update the customer list table
+    function updateCustomerTable(customers) {
+        const tbody = $('.table-bordered tbody');
+        tbody.empty();
+        
+        if (customers && customers.length > 0) {
+            customers.forEach(function(customer) {
+                tbody.append(`
+                    <tr class="customer-row" data-id="${customer.ID}" data-cardno="${customer.CardNumber}">
+                        <td>${customer.LastName}, ${customer.FirstName} ${customer.MiddleName || ''}</td>
+                        <td>${customer.CardNumber}</td>
+                    </tr>
+                `);
+            });
+            
+            // Add click event for customer rows
+            $('.customer-row').on('click', function() {
+                const cardNo = $(this).data('cardno');
+                searchCustomer(cardNo, 'cardNo');
+            });
+        } else {
+            tbody.append('<tr><td colspan="2">No customers found</td></tr>');
+        }
+    }
+    
+    // Function to clear customer fields
+    function clearCustomerFields() {
+        $('#lastName').val('');
+        $('#firstName').val('');
+        $('#middleName').val('');
+        $('#currentPoints').val('0');
+    }
+
+    // Handle clicking on a customer in the table
+    $(document).on('click', '.customer-row', function() {
+        const cardNo = $(this).data('cardno');
+        $('.modal-body input.form-control').first().val(cardNo);
+        $('#cardNoRadio').prop('checked', true);
+        searchCustomer(cardNo, 'cardNo');
+    });
+});
+
 </script>
 
 <style>
