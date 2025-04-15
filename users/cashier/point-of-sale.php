@@ -1357,6 +1357,8 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
     function showSinglePaymentModal() {
         const currentTotal = getCurrentTransactionTotal();
         const formattedTotal = formatCurrency(currentTotal);
+        const totalRetailValue = document.getElementById('totalRetailDisplay').innerText;
+
 
         const singlePaymentModal = $('<div>', {
             class: 'modal single-payment-modal',
@@ -1369,7 +1371,7 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
                     <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
                         <div style="display: flex; align-items: center; background-color: #f3f4f6; padding: 10px; border-radius: 8px;">
                             <div style="font-size: 24px; color: #1f2937; margin-right: 8px;">₱</div>
-                            <div style="font-size: 28px; font-weight: 500; color: #1f2937; flex-grow: 1;">${formattedTotal}</div>
+                            <div style="font-size: 28px; font-weight: 500; color: #1f2937; flex-grow: 1;">${totalRetailValue.replace('₱', '')}</div>
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <p style="margin: 0; font-size: 14px; color: #4b5563;">Press F1 to add Points</p>
@@ -1449,6 +1451,7 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
     function showMultiplePaymentModal() {
         const currentTotal = getCurrentTransactionTotal();
         const formattedTotal = formatCurrency(currentTotal);
+        const totalRetailValue = document.getElementById('totalRetailDisplay').innerText;
 
         const multiplePaymentModal = $('<div>', {
             class: 'modal multiple-payment-modal',
@@ -1461,7 +1464,7 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
                     <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
                         <div style="display: flex; align-items: center; background-color: #f3f4f6; padding: 10px; border-radius: 8px;">
                             <div style="font-size: 24px; color: #1f2937; margin-right: 8px;">₱</div>
-                            <div style="font-size: 28px; font-weight: 500; color: #1f2937; flex-grow: 1;">${formattedTotal}</div>
+                            <div style="font-size: 28px; font-weight: 500; color: #1f2937; flex-grow: 1;">${totalRetailValue.replace('₱', '')}</div>
                         </div>
                         <div style="display: flex; justify    justify-content: space-between; align-items: center;">
                             <p style="margin: 0; font-size: 14px; color: #4b5563;">Press F1 to add Points</p>
