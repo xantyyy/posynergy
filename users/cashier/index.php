@@ -2,62 +2,35 @@
 <?php include 'sidebar-modals.php'; ?>
 
 <?php
-// Add this at the top of cashier/index.php
+require_once '../../includes/config.php'; // Database connection
 
-// Fetch the most recent opening fund record for the current cashier
-function getLatestOpeningFund($username) {
-    global $conn; // Assuming you have a database connection variable
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['opening_fund_amount'])) {
+    $cashier = "CASHIER"; // Hardcoded as per your table
+    $amount = $_POST['opening_fund_amount'];
+    $transDate = date("Y-m-d H:i:s"); // Current date and time
+
+    // Insert into tbl_openingfund
+    $sql = "INSERT INTO tbl_openingfund (Username, Amount, TransDate) VALUES ('$cashier', '$amount', '$transDate')";
     
-    $query = "SELECT * FROM tbl_openingfund WHERE Username = ? ORDER BY TransDate DESC LIMIT 1";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if($result->num_rows > 0) {
-        return $result->fetch_assoc();
+    if ($conn->query($sql) === TRUE) {
+        echo "<script>alert('Opening fund declared successfully!');</script>";
+    } else {
+        echo "<script>alert('Error: " . $conn->error . "');</script>";
     }
-    
-    return null;
 }
 
-// Get current cashier's username (adjust based on your session variable)
-$cashier_username = $_SESSION['username'] ?? 'CASHIER'; 
+// Check if an opening fund entry exists for today
+$today = date("Y-m-d");
+$checkSql = "SELECT * FROM tbl_openingfund WHERE Username = 'CASHIER' AND DATE(TransDate) = '$today'";
+$result = $conn->query($checkSql);
+$showModal = $result->num_rows == 0; // Show modal if no entry exists for today
 
-// Get the latest opening fund
-$latest_fund = getLatestOpeningFund($cashier_username);
+$conn->close();
 ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Opening Fund Modal -->
-<div class="modal fade" id="openingFundModal" tabindex="-1" aria-labelledby="openingFundModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="openingFundModalLabel">Opening Fund Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <?php if($latest_fund): ?>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Current Opening Fund Details</h5>
-                        <p class="card-text"><strong>Amount:</strong> ₱<?php echo number_format($latest_fund['Amount'], 2); ?></p>
-                        <p class="card-text"><strong>Date/Time:</strong> <?php echo date('F d, Y h:i A', strtotime($latest_fund['TransDate'])); ?></p>
-                    </div>
-                </div>
-                <?php else: ?>
-                <div class="alert alert-warning">
-                    No opening fund has been declared yet. Please contact your supervisor.
-                </div>
-                <?php endif; ?>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Acknowledge</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <!--MENU SIDEBAR CONTENT-->
 <nav id="sidebar">
     <div class="sidebar-header">
@@ -72,337 +45,220 @@ $latest_fund = getLatestOpeningFund($cashier_username);
             <a href="point-of-sale.php" class="dashboard"><i class="material-icons">point_of_sale</i><span>Point of Sale</span></a>
         </li>
         <li class="dropdown">
-			<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-			<i class="material-icons">report</i><span>POS Reports</span></a>
-			<ul class="collapse list-unstyled menu" id="homeSubmenu1">
-				<li>
-                <a href="#" onclick="checkPassword('tender-declare.php')">Tender Declaration</a>
-
-				</li>
-				<li>
-                    <a href="#" onclick="checkPassword('shift-reading.php')">Shift Reading</a>
+            <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            <i class="material-icons">report</i><span>POS Reports</span></a>
+            <ul class="collapse list-unstyled menu" id="homeSubmenu1">
+                <li>
+                    <a href="tender-declare.php">Tender Declaration</a>
                 </li>
                 <li>
-					<a href="x-reading.php">X Reading</a>
-				</li>
+                    <a href="shift-reading.php">Shift Reading</a>
+                </li>
                 <li>
-					<a href="z-reading.php">Z Reading</a>
-				</li>
+                    <a href="x-reading.php">X Reading</a>
+                </li>
                 <li>
-					<a href="opening-fund.php">Opening Fund</a>
-				</li>
-			</ul>
-		</li>
+                    <a href="z-reading.php">Z Reading</a>
+                </li>
+                <li>
+                    <a href="opening-fund.php">Opening Fund</a>
+                </li>
+            </ul>
+        </li>
         <li class="logout">
             <a href="?logout='1'"><i class="material-icons">logout</i><span>Logout</span></a>
         </li>
     </ul>
 </nav>
-                <!-- Password Modal -->
-                <div class="modal fade" id="passwordModal" tabindex="-1" aria-labelledby="passwordModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="passwordModalLabel">Input Password..</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+<!--TOP NAVBAR CONTENT-->
+<div class="top-navbar">
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="#">POSynergy</a>
+        <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
+            data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
+            <span class="material-icons">menu</span>
+        </button>        
+    </nav>
+</div>
+
+<div>
+    <img src="../../assets/images/cashierbg.jpg" class="img-fluid" style="border-left: 200px solid black; margin-top: -20px;"/>
+</div>
+
+<!-- Modal for Opening Fund Declaration -->
+<div class="modal fade" id="openingFundModal" tabindex="-1" aria-labelledby="openingFundModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="openingFundModalLabel">Declare Opening Fund</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="">
+                    <div class="mb-3">
+                        <label for="openingFundAmount" class="form-label">Amount</label>
+                        <input type="number" class="form-control" id="openingFundAmount" name="opening_fund_amount" step="0.01" required>
                     </div>
-                    <div class="modal-body">
-                        <input type="password" id="passwordInput" class="form-control" placeholder="Enter password" />
-                        <div id="passwordError" class="text-danger mt-2" style="display: none;">Incorrect password. Try again.</div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" id="submitPassword" class="btn btn-primary">Submit</button>
-                    </div>
-                    </div>
-                </div>
-                </div>
+                    <button type="submit" class="btn btn-primary">Declare</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <!--TOP NAVBAR CONTENT-->
-                <div class="top-navbar">
-                    <nav class="navbar  navbar-expand-lg">
-                        </button>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentUrl = window.location.pathname.split('/').pop();
+        
+        document.querySelectorAll('.list-unstyled a').forEach(link => {
+            const linkHref = link.getAttribute('href');
+            const parentMenu = link.closest('.collapse');
+            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-                        <a class="navbar-brand" href="#">POSynergy</a>
-                        <button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
-                        data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
-                            <span class="material-icons">menu</span>
-                        </button>        
-                    </nav>
-                </div>	  
-                <div>
-                <img src="../../assets/images/cashierbg.jpg" class="img-fluid" style="border-left: 200px solid black; margin-top: -20px;"/>
-
-                        
-                    </div>
-                 </div>
-
-                    <!--DASHBOARD CONTENT-->
-                    <div class="main-content">
-                        <div class="row">
-                            <!-- Left Side - Product Data Entry Form -->
-                            
-
-                            <!-- Right Side - Additional Table -->
-                            <!--<div class="col-md-4" style="margin-top: -15px;">
-                                
-                            </div>-->
-                        </div>
-                    </div>
-                </div>
-
-                     <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            // Initialize and show the opening fund modal
-                            var openingFundModal = new bootstrap.Modal(document.getElementById('openingFundModal'));
-                            openingFundModal.show();
-                            
-                            // Add click event listeners to close the modal
-                            const closeButton = document.querySelector('#openingFundModal .btn-close');
-                            const acknowledgeButton = document.querySelector('#openingFundModal .modal-footer .btn-primary');
-                            
-                            if (closeButton) {
-                                closeButton.addEventListener('click', function() {
-                                    openingFundModal.hide();
-                                });
-                            }
-                            
-                            if (acknowledgeButton) {
-                                acknowledgeButton.addEventListener('click', function() {
-                                    openingFundModal.hide();
-                                });
-                            }
-                        });
-                        let redirectUrl = '';
-
-                            function checkPassword(targetUrl) {
-                                redirectUrl = targetUrl;
-                                const passwordModal = new bootstrap.Modal(document.getElementById('passwordModal'));
-                                passwordModal.show();
-                            }
-
-                            document.addEventListener("DOMContentLoaded", function () {
-                                const submitPasswordBtn = document.getElementById('submitPassword');
-                                const passwordInput = document.getElementById('passwordInput');
-                                const errorMsg = document.getElementById('passwordError');
-
-                                // Click event for the submit button
-                                submitPasswordBtn.addEventListener('click', function () {
-                                    validatePassword(passwordInput, errorMsg);
-                                });
-
-                                // Enter key event for the password input
-                                passwordInput.addEventListener('keypress', function (e) {
-                                    if (e.key === 'Enter') {
-                                        validatePassword(passwordInput, errorMsg);
-                                    }
-                                });
-
-                                // Function to validate password and redirect
-                                function validatePassword(input, error) {
-                                    if (input.value === '123') {
-                                        error.style.display = 'none';
-                                        const passwordModal = bootstrap.Modal.getInstance(document.getElementById('passwordModal'));
-                                        passwordModal.hide();
-                                        window.location.href = redirectUrl;
-                                    } else {
-                                        error.style.display = 'block';
-                                    }
-                                }
-                            });
-
-                            // Second checkPassword function (custom modal)
-                            function checkPassword(redirectUrl) {
-                                const passwordInput = document.createElement('input');
-                                passwordInput.type = 'password';
-                                passwordInput.placeholder = 'Enter password';
-                                const modal = document.createElement('div');
-                                modal.style.position = 'fixed';
-                                modal.style.top = '50%';
-                                modal.style.left = '50%';
-                                modal.style.transform = 'translate(-50%, -50%)';
-                                modal.style.padding = '20px';
-                                modal.style.backgroundColor = 'Gainsboro';
-                                modal.style.boxShadow = '0 4px 6px rgba(99, 225, 245)';
-                                modal.style.zIndex = '1000';
-                                const confirmButton = document.createElement('button');
-                                confirmButton.textContent = 'Submit';
-                                confirmButton.style.marginTop = '10px';
-
-                                // Click event for the submit button
-                                confirmButton.onclick = function () {
-                                    validateCustomPassword(passwordInput, modal, redirectUrl);
-                                };
-
-                                // Enter key event for the custom password input
-                                passwordInput.addEventListener('keypress', function (e) {
-                                    if (e.key === 'Enter') {
-                                        validateCustomPassword(passwordInput, modal, redirectUrl);
-                                    }
-                                });
-
-                                modal.appendChild(passwordInput);
-                                modal.appendChild(confirmButton);
-                                document.body.appendChild(modal);
-                            }
-
-                            // Function to validate password in custom modal
-                            function validateCustomPassword(input, modal, url) {
-                                if (input.value === '123') {
-                                    document.body.removeChild(modal);
-                                    window.location.href = url;
-                                } else {
-                                    alert('Incorrect password. Access denied.');
-                                }
-                            }
-
-                            document.addEventListener("DOMContentLoaded", function () {
-                                const currentUrl = window.location.pathname.split('/').pop();
-
-                                document.querySelectorAll('.list-unstyled a').forEach(link => {
-                                    const linkHref = link.getAttribute('href');
-                                    const parentMenu = link.closest('.collapse');
-                                    const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
-
-                                    // Mark the active link
-                                    if (linkHref === currentUrl) {
-                                        link.classList.add('active');
-                                        if (parentMenu) {
-                                            parentMenu.classList.add('show');
-                                            if (dropdownToggle) {
-                                                dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                                                dropdownToggle.setAttribute('aria-expanded', 'true');
-                                            }
-                                        }
-                                    }
-
-                                    /* Add 'disabled-link' class to Edit Item and Void Item
-                                    if (link.querySelector('span') && link.querySelector('span').textContent.includes('Edit Item') || 
-                                        link.querySelector('span') && link.querySelector('span').textContent.includes('Void Item')) {
-                                            link.classList.add('disabled-link');
-                                    }*/
-                                });
-                            });
-                    </script>
-
-                <style>
-                    /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
-                    .navbar {
-                        background: rgb(65, 165, 232) !important;
+            // Mark the active link
+            if (linkHref === currentUrl) {
+                link.classList.add('active');
+                if (parentMenu) {
+                    parentMenu.classList.add('show');
+                    if (dropdownToggle) {
+                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                        dropdownToggle.setAttribute('aria-expanded', 'true');
                     }
+                }
+            }
+        });
 
-                    /* 🔹 NAVBAR BRAND COLOR (White) */
-                    .navbar-brand {
-                        color: #ffffff !important;
-                    }
+        // Show the modal only if no entry exists for today
+        <?php if ($showModal): ?>
+        var openingFundModal = new bootstrap.Modal(document.getElementById('openingFundModal'), {
+            backdrop: 'static', // Prevent closing by clicking outside
+            keyboard: false // Prevent closing with ESC key
+        });
+        openingFundModal.show();
+        <?php endif; ?>
+    });
+</script>
 
-                    /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
-                    .nav-link,  
-                    .list-unstyled a {
-                        color: #333;
-                        font-size: 16px;
-                        transition: all 0.3s ease-in-out;
-                    }
+<style>
+    /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
+    .navbar {
+        background: rgb(65, 165, 232) !important;
+    }
 
-                    /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
-                    .nav-link:hover,
-                    .list-unstyled a:hover,
-                    .hovered-dropdown, .hover-effect {
-                        background: rgb(65, 165, 232) !important; /* Navy Blue */
-                        color: #ffffff !important; /* White Text */
-                        transform: scale(1.05);
-                    }
+    /* 🔹 NAVBAR BRAND COLOR (White) */
+    .navbar-brand {
+        color: #ffffff !important;
+    }
 
-                    /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
-                    .nav-link.active,
-                    .list-unstyled a.active {
-                        color: rgb(0, 0, 0) !important; /* Black */
-                        font-weight: bold !important;
-                        background: transparent !important;
-                    }
+    /* 🔹 DEFAULT COLOR OF NAV-LINKS & DROPDOWN TOGGLE */
+    .nav-link,  
+    .list-unstyled a {
+        color: #333;
+        font-size: 16px;
+        transition: all 0.3s ease-in-out;
+    }
 
-                    /* 🔹 WHEN DROPDOWN IS EXPANDED */
-                    .list-unstyled a[aria-expanded="true"], 
-                    .list-unstyled a.highlighted-dropdown {
-                        background: rgb(255, 255, 255) !important; /* White Background */
-                        color: rgb(0, 0, 0) !important; /* Black Text */
-                        font-weight: bold;
-                    }
+    /* 🔹 HOVER EFFECT - NAV-LINK, DROPDOWN BUTTON, & DROPDOWN LIST ITEMS */
+    .nav-link:hover,
+    .list-unstyled a:hover,
+    .hovered-dropdown, .hover-effect {
+        background: rgb(65, 165, 232) !important; /* Navy Blue */
+        color: #ffffff !important; /* White Text */
+        transform: scale(1.05);
+    }
 
-                    /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
-                    .collapse.show {
-                        background-color: rgb(255, 255, 255);
-                        border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
-                    }
+    /* 🔹 ACTIVE LINK STYLE (For Clicked Items) */
+    .nav-link.active,
+    .list-unstyled a.active {
+        color: rgb(0, 0, 0) !important; /* Black */
+        font-weight: bold !important;
+        background: transparent !important;
+    }
 
-                    /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
-                    .list-unstyled a:hover, 
-                    .list-unstyled a.highlighted-dropdown:hover {
-                        background: rgb(65, 165, 232) !important; /* Navy Blue */
-                        color: white !important; /* White Text */
-                    }
+    /* 🔹 WHEN DROPDOWN IS EXPANDED */
+    .list-unstyled a[aria-expanded="true"], 
+    .list-unstyled a.highlighted-dropdown {
+        background: rgb(255, 255, 255) !important; /* White Background */
+        color: rgb(0, 0, 0) !important; /* Black Text */
+        font-weight: bold;
+    }
 
-                    /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
-                    .list-unstyled a:hover *, 
-                    .list-unstyled a.highlighted-dropdown:hover * {
-                        color: white !important;
-                    }
+    /* 🔹 BLUE BORDER ON LEFT WHEN DROPDOWN CONTENT IS VISIBLE */
+    .collapse.show {
+        background-color: rgb(255, 255, 255);
+        border-left: 4px solid rgb(65, 165, 232); /* Navy Blue Border */
+    }
 
-                    /* 🔹 SIDEBAR STYLE */
-                    .sidebar {
-                        width: 250px;
-                        background: rgb(65, 165, 232) !important;
-                        overflow: visible !important;
-                    }
+    /* 🔹 HOVER EFFECT FOR DROPDOWN BUTTON (NAVY BLUE BACKGROUND & WHITE TEXT) */
+    .list-unstyled a:hover, 
+    .list-unstyled a.highlighted-dropdown:hover {
+        background: rgb(65, 165, 232) !important; /* Navy Blue */
+        color: white !important; /* White Text */
+    }
 
-                    .sidebar .collapse {
-                        display: none;
-                    }
+    /* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
+    .list-unstyled a:hover *, 
+    .list-unstyled a.highlighted-dropdown:hover * {
+        color: white !important;
+    }
 
-                    .sidebar .collapse.show {
-                        display: block !important;
-                    }
+    /* 🔹 SIDEBAR STYLE */
+    .sidebar {
+        width: 250px;
+        background: rgb(65, 165, 232) !important;
+        overflow: visible !important;
+    }
 
-                    /* 🔹 MAKE Edit Item and Void Item links unclickable */
-                    .list-unstyled a.disabled-link {
-                        pointer-events: none; /* Disable click events */
-                        color: #b0b0b0; /* Gray out the text */
-                        cursor: not-allowed; /* Show the not-allowed cursor */
-                    }
+    .sidebar .collapse {
+        display: none;
+    }
 
-                    /* Optionally, make the background color appear disabled as well */
-                    .list-unstyled a.disabled-link:hover {
-                        background-color: transparent;
-                    }
+    .sidebar .collapse.show {
+        display: block !important;
+    }
 
-                    /* 🔹 STYLE FOR NAVBAR */
-                    .navbar {
-                        background: linear-gradient(to right, rgb(235, 110, 110), rgb(142, 188, 225), rgb(128, 135, 141));
-                        background-size: 1550px 870px;
-                        background-position: center;
-                        background-repeat: no-repeat;
-                    }
+    /* 🔹 MAKE Edit Item and Void Item links unclickable */
+    .list-unstyled a.disabled-link {
+        pointer-events: none; /* Disable click events */
+        color: #b0b0b0; /* Gray out the text */
+        cursor: not-allowed; /* Show the not-allowed cursor */
+    }
 
-                    /* STYLE FOR TABLE HEADER */
-                    #table-bold thead th {
-                        font-weight: bold;
-                        font-style: italic;
-                    }
-                    .disabled-link {
-                        pointer-events: none; /* Disable click interactions */
-                        opacity: 0.7; /* Make the text appear faded */
-                        filter: blur(0.8px); /* Optionally add blur effect */
-                        cursor: not-allowed; /* Change cursor to indicate it's disabled */
-                    }
-                    body {
-                        background-image: url('../../assets/images/cashierbg.jpg');
-                        background-size: cover;
-                        background-position: center;
-                        background-attachment: fixed; /* Para hindi mag-scroll */
-                        background-repeat: no-repeat;
-                        margin: 0;
-                        height: 100vh; /* Full height ng screen */
-                        overflow: hidden; /* Tatanggalin ang scrollbar */
-                    }
-                </style>
+    /* Optionally, make the background color appear disabled as well */
+    .list-unstyled a.disabled-link:hover {
+        background-color: transparent;
+    }
+
+    /* 🔹 STYLE FOR NAVBAR */
+    .navbar {
+        background: linear-gradient(to right, rgb(235, 110, 110), rgb(142, 188, 225), rgb(128, 135, 141));
+        background-size: 1550px 870px;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    /* STYLE FOR TABLE HEADER */
+    #table-bold thead th {
+        font-weight: bold;
+        font-style: italic;
+    }
+    .disabled-link {
+        pointer-events: none; /* Disable click interactions */
+        opacity: 0.7; /* Make the text appear faded */
+        filter: blur(0.8px); /* Optionally add blur effect */
+        cursor: not-allowed; /* Change cursor to indicate it's disabled */
+    }
+    body {
+        background-image: url('../../assets/images/cashierbg.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; /* Para hindi mag-scroll */
+        background-repeat: no-repeat;
+        margin: 0;
+        height: 100vh; /* Full height ng screen */
+        overflow: hidden; /* Tatanggalin ang scrollbar */
+    }
+</style>
 
 <?php include_once 'footer.php'; ?>
