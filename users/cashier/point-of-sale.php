@@ -1250,6 +1250,363 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
                 break;
         }
     });
+    $(document).ready(function() {
+    // Function to handle F10 key press and click on payment type menu item
+    function handlePaymentTypeAction(e) {
+        if (e) e.preventDefault();
+        showPaymentTypeModal();
+    }
+
+    // Attach click handler to the payment type menu item
+    $('.dashboard[accesskey="F10"]').on('click', handlePaymentTypeAction);
+
+    // Attach F10 key handler
+    $(document).on('keydown', function(e) {
+        if (e.which === 121) { // F10 key code
+            handlePaymentTypeAction(e);
+        }
+    });
+
+    // Function to get the current transaction total
+    function getCurrentTransactionTotal() {
+        return parseFloat($('#totalAmount').text().replace(/,/g, '')) || 0.00;
+    }
+
+    // Function to format currency amount
+    function formatCurrency(amount) {
+        return parseFloat(amount).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    // Function to show the Payment Type modal
+    function showPaymentTypeModal() {
+        const paymentTypeModal = $('<div>', {
+            class: 'modal payment-type-modal',
+            html: `
+                <div style="background-color: #ffffff; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); overflow: hidden; animation: slideIn 0.3s ease-out; margin: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
+                        <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #1f2937;">Payment Type</h2>
+                        <span class="close" style="font-size: 24px; color: #6b7280; cursor: pointer; transition: color 0.2s ease;">×</span>
+                    </div>
+                    <div class="payment-options" style="padding: 20px; display: flex; flex-direction: column; gap: 12px;">
+                        <button class="payment-option" id="singlePayment" style="padding: 12px 16px; font-size: 16px; font-weight: 500; color: #ffffff; background-color: #10b981; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">SINGLE PAYMENT</button>
+                        <button class="payment-option" id="multiplePayment" style="padding: 12px 16px; font-size: 16px; font-weight: 500; color: #ffffff; background-color: #3b82f6; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">MULTIPLE PAYMENT</button>
+                    </div>
+                </div>
+            `,
+            style: 'display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;'
+        });
+
+        // Add inline keyframes for animation
+        const styleSheet = $('<style>').html(`
+            @keyframes slideIn {
+                from { transform: translateY(-20px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `);
+        $('head').append(styleSheet);
+
+        // Add hover and active effects using jQuery
+        paymentTypeModal.find('#singlePayment').on('mouseenter', function() {
+            $(this).css({'background-color': '#059669', 'transform': 'translateY(-1px)'});
+        }).on('mouseleave', function() {
+            $(this).css({'background-color': '#10b981', 'transform': 'translateY(0)'});
+        }).on('mousedown', function() {
+            $(this).css('transform', 'translateY(0)');
+        });
+
+        paymentTypeModal.find('#multiplePayment').on('mouseenter', function() {
+            $(this).css({'background-color': '#2563eb', 'transform': 'translateY(-1px)'});
+        }).on('mouseleave', function() {
+            $(this).css({'background-color': '#3b82f6', 'transform': 'translateY(0)'});
+        }).on('mousedown', function() {
+            $(this).css('transform', 'translateY(0)');
+        });
+
+        paymentTypeModal.find('.close').on('mouseenter', function() {
+            $(this).css('color', '#1f2937');
+        }).on('mouseleave', function() {
+            $(this).css('color', '#6b7280');
+        });
+
+        // Add the modal to the body
+        $('body').append(paymentTypeModal);
+        paymentTypeModal.show();
+
+        // Close modal when clicking the X
+        paymentTypeModal.find('.close').on('click', function() {
+            paymentTypeModal.remove();
+        });
+
+        // Handle Single Payment option
+        $('#singlePayment').on('click', function() {
+            paymentTypeModal.remove();
+            showSinglePaymentModal();
+        });
+
+        // Handle Multiple Payment option
+        $('#multiplePayment').on('click', function() {
+            paymentTypeModal.remove();
+            showMultiplePaymentModal();
+        });
+    }
+
+    // Function to show the Single Payment modal
+    function showSinglePaymentModal() {
+        const currentTotal = getCurrentTransactionTotal();
+        const formattedTotal = formatCurrency(currentTotal);
+
+        const singlePaymentModal = $('<div>', {
+            class: 'modal single-payment-modal',
+            html: `
+                <div style="background-color: #ffffff; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); overflow: hidden; animation: slideIn 0.3s ease-out; margin: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
+                        <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #1f2937;">Cash Tender</h2>
+                        <span class="close" style="font-size: 24px; color: #6b7280; cursor: pointer; transition: color 0.2s ease;">×</span>
+                    </div>
+                    <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; background-color: #f3f4f6; padding: 10px; border-radius: 8px;">
+                            <div style="font-size: 24px; color: #1f2937; margin-right: 8px;">₱</div>
+                            <div style="font-size: 28px; font-weight: 500; color: #1f2937; flex-grow: 1;">${formattedTotal}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="margin: 0; font-size: 14px; color: #4b5563;">Press F1 to add Points</p>
+                            <input type="text" class="points-input" style="width: 100px; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; outline: none;">
+                        </div>
+                        <div style="width: 100%;">
+                            <select class="payment-method-select" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 16px; background-color: #ffffff; cursor: pointer;">
+                                <option value="CASH">CASH</option>
+                                <option value="CREDIT CARD">CREDIT CARD</option>
+                                <option value="GIFT CARD">GIFT CARD</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                            <button class="confirm-btn" style="padding: 10px; background-color: #10b981; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">
+                                <i class="material-icons" style="color: #ffffff; font-size: 24px;">check</i>
+                            </button>
+                            <button class="cancel-btn" style="padding: 10px; background-color: #ef4444; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">
+                                <i class="material-icons" style="color: #ffffff; font-size: 24px;">close</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `,
+            style: 'display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;'
+        });
+
+        // Add the modal to the body
+        $('body').append(singlePaymentModal);
+        singlePaymentModal.show();
+
+        // Add hover and active effects
+        singlePaymentModal.find('.close').on('mouseenter', function() {
+            $(this).css('color', '#1f2937');
+        }).on('mouseleave', function() {
+            $(this).css('color', '#6b7280');
+        });
+
+        singlePaymentModal.find('.confirm-btn').on('mouseenter', function() {
+            $(this).css({'background-color': '#059669', 'transform': 'translateY(-1px)'});
+        }).on('mouseleave', function() {
+            $(this).css({'background-color': '#10b981', 'transform': 'translateY(0)'});
+        }).on('mousedown', function() {
+            $(this).css('transform', 'translateY(0)');
+        });
+
+        singlePaymentModal.find('.cancel-btn').on('mouseenter', function() {
+            $(this).css({'background-color': '#dc2626', 'transform': 'translateY(-1px)'});
+        }).on('mouseleave', function() {
+            $(this).css({'background-color': '#ef4444', 'transform': 'translateY(0)'});
+        }).on('mousedown', function() {
+            $(this).css('transform', 'translateY(0)');
+        });
+
+        // Close modal when clicking the X or cancel button
+        singlePaymentModal.find('.close, .cancel-btn').on('click', function() {
+            singlePaymentModal.remove();
+            $(document).off('keydown.pointsHandler');
+        });
+
+        // Confirm button handler
+        singlePaymentModal.find('.confirm-btn').on('click', function() {
+            const paymentMethod = singlePaymentModal.find('.payment-method-select').val();
+            console.log('Processing payment of ' + formattedTotal + ' with ' + paymentMethod);
+            singlePaymentModal.remove();
+            $(document).off('keydown.pointsHandler');
+        });
+
+        // F1 key handler for adding points
+        $(document).on('keydown.pointsHandler', function(e) {
+            if (e.which === 112) { // F1 key code
+                singlePaymentModal.find('.points-input').focus();
+            }
+        });
+    }
+
+    // Function to show the Multiple Payment modal
+    function showMultiplePaymentModal() {
+        const currentTotal = getCurrentTransactionTotal();
+        const formattedTotal = formatCurrency(currentTotal);
+
+        const multiplePaymentModal = $('<div>', {
+            class: 'modal multiple-payment-modal',
+            html: `
+                <div style="background-color: #ffffff; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); overflow: hidden; animation: slideIn 0.3s ease-out; margin: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
+                        <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #1f2937;">Cash Tender</h2>
+                        <span class="close" style="font-size: 24px; color: #6b7280; cursor: pointer; transition: color 0.2s ease;">×</span>
+                    </div>
+                    <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; background-color: #f3f4f6; padding: 10px; border-radius: 8px;">
+                            <div style="font-size: 24px; color: #1f2937; margin-right: 8px;">₱</div>
+                            <div style="font-size: 28px; font-weight: 500; color: #1f2937; flex-grow: 1;">${formattedTotal}</div>
+                        </div>
+                        <div style="display: flex; justify    justify-content: space-between; align-items: center;">
+                            <p style="margin: 0; font-size: 14px; color: #4b5563;">Press F1 to add Points</p>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="confirm-btn small" style="padding: 6px; background-color: #10b981; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">
+                                    <i class="material-icons" style="color: #ffffff; font-size: 18px;">check</i>
+                                </button>
+                                <button class="cancel-btn small" style="padding: 6px; background-color: #ef4444; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">
+                                    <i class="material-icons" style="color: #ffffff; font-size: 18px;">close</i>
+                                </button>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <select style="flex-grow: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 16px; background-color: #ffffff; cursor: pointer;">
+                                    <option value="">Select payment type</option>
+                                    <option value="CASH">Cash</option>
+                                    <option value="CREDIT CARD">Credit Card</option>
+                                    <option value="GIFT CARD">Gift Card</option>
+                                </select>
+                                <button class="add-payment-btn" style="padding: 10px; background-color: #3b82f6; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">
+                                    <i class="material-icons" style="color: #ffffff; font-size: 24px;">add</i>
+                                </button>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <label style="font-size: 14px; color: #4b5563;">Amount:</label>
+                                <input type="text" value="0.00" class="payment-amount" style="flex-grow: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; outline: none;">
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #1f2937;">Payment List</h3>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background-color: #f9fafb;">
+                                        <th style="padding: 8px; text-align: left; font-size: 14px; color: #4b5563; border-bottom: 1px solid #e5e7eb;">Type</th>
+                                        <th style="padding: 8px; text-align: right; font-size: 14px; color: #4b5563; border-bottom: 1px solid #e5e7eb;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 14px; color: #1f2937;"></tbody>
+                            </table>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                                <span style="font-size: 14px; color: #4b5563;">Total Payment:</span>
+                                <span class="total-amount" style="font-size: 16px; font-weight: 500; color: #1f2937;">0.00</span>
+                            </div>
+                            <button class="proceed-btn" style="padding: 12px; background-color: #10b981; border: none; border-radius: 8px; font-size: 16px; font-weight: 500; color: #ffffff; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">PROCEED</button>
+                        </div>
+                    </div>
+                </div>
+            `,
+            style: 'display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;'
+        });
+
+        // Add the modal to the body
+        $('body').append(multiplePaymentModal);
+        multiplePaymentModal.show();
+
+        // Add hover and active effects
+        multiplePaymentModal.find('.close').on('mouseenter', function() {
+            $(this).css('color', '#1f2937');
+        }).on('mouseleave', function() {
+            $(this).css('color', '#6b7280');
+        });
+
+        multiplePaymentModal.find('.add-payment-btn').on('mouseenter', function() {
+            $(this).css({'background-color': '#2563eb', 'transform': 'translateY(-1px)'});
+        }).on('mouseleave', function() {
+            $(this).css({'background-color': '#3b82f6', 'transform': 'translateY(0)'});
+        }).on('mousedown', function() {
+            $(this).css('transform', 'translateY(0)');
+        });
+
+        multiplePaymentModal.find('.proceed-btn').on('mouseenter', function() {
+            $(this).css({'background-color': '#059669', 'transform': 'translateY(-1px)'});
+        }).on('mouseleave', function() {
+            $(this).css({'background-color': '#10b981', 'transform': 'translateY(0)'});
+        }).on('mousedown', function() {
+            $(this).css('transform', 'translateY(0)');
+        });
+
+        multiplePaymentModal.find('.confirm-btn.small').on('mouseenter', function() {
+            $(this).css({'background-color': '#059669', 'transform': 'translateY(-1px)'});
+        }).on('mouseleave', function() {
+            $(this).css({'background-color': '#10b981', 'transform': 'translateY(0)'});
+        }).on('mousedown', function() {
+            $(this).css('transform', 'translateY(0)');
+        });
+
+        multiplePaymentModal.find('.cancel-btn.small').on('mouseenter', function() {
+            $(this).css({'background-color': '#dc2626', 'transform': 'translateY(-1px)'});
+        }).on('mouseleave', function() {
+            $(this).css({'background-color': '#ef4444', 'transform': 'translateY(0)'});
+        }).on('mousedown', function() {
+            $(this).css('transform', 'translateY(0)');
+        });
+
+        // Close modal when clicking the X
+        multiplePaymentModal.find('.close').on('click', function() {
+            multiplePaymentModal.remove();
+            $(document).off('keydown.pointsHandler');
+        });
+
+        // Add payment button handler
+        multiplePaymentModal.find('.add-payment-btn').on('click', function() {
+            const paymentType = multiplePaymentModal.find('select').val();
+            const paymentAmount = multiplePaymentModal.find('.payment-amount').val();
+
+            if (paymentType && paymentAmount && parseFloat(paymentAmount) > 0) {
+                multiplePaymentModal.find('tbody').append(`
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 8px;">${paymentType}</td>
+                        <td style="padding: 8px; text-align: right;">${parseFloat(paymentAmount).toFixed(2)}</td>
+                    </tr>
+                `);
+
+                const currentTotal = parseFloat(multiplePaymentModal.find('.total-amount').text().replace(/,/g, '')) || 0;
+                const newTotal = currentTotal + parseFloat(paymentAmount);
+                multiplePaymentModal.find('.total-amount').text(formatCurrency(newTotal));
+
+                multiplePaymentModal.find('select').val('');
+                multiplePaymentModal.find('.payment-amount').val('0.00');
+            }
+        });
+
+        // Proceed button handler
+        multiplePaymentModal.find('.proceed-btn').on('click', function() {
+            const paidAmount = parseFloat(multiplePaymentModal.find('.total-amount').text().replace(/,/g, '')) || 0;
+            const totalDue = currentTotal;
+
+            if (paidAmount >= totalDue) {
+                console.log('Processing multiple payments totaling: ' + formatCurrency(paidAmount));
+                multiplePaymentModal.remove();
+                $(document).off('keydown.pointsHandler');
+            } else {
+                alert('Payment amount is less than the total due. Please add more payment.');
+            }
+        });
+
+        // F1 key handler for adding points
+        $(document).on('keydown.pointsHandler', function(e) {
+            if (e.which === 112) { // F1 key code
+                console.log('Adding points');
+            }
+        });
+    }
+});
 
     function syncAmountDue() {
     const finalTotal = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
@@ -1820,6 +2177,7 @@ $(document).ready(function() {
 </script>
 
 <style>
+    
     /* 🔹 SEARCH BAR STYLES */
     .search-results {
             position: absolute; 
