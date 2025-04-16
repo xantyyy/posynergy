@@ -257,7 +257,7 @@
                                                     </tr>
                                                 <tr>
                                                     <th style="width: 50%;">Transaction No:</th>
-                                                    <td id="#"> </td>
+                                                    <td id="transactionNo"> </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="width: 50%;"># of Item:</th>
@@ -307,6 +307,7 @@
 
 <script>
     let cart = []; // Array to store cart items
+    let currentTransactionNo = '';
 
     $(document).ready(function() {
         // Prevent form submission and handle barcode scans in #productSearch
@@ -319,6 +320,28 @@
                 }
             }
         });
+        
+        generateTransactionNo();
+
+        // Function to generate a unique Transaction No
+        function generateTransactionNo() {
+            $.ajax({
+                url: 'get_last_transaction_no.php',
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    let lastTransactionNo = response.lastTransactionNo || 'TRX000000';
+                    let number = parseInt(lastTransactionNo.replace('TRX', '')) + 1;
+                    currentTransactionNo = 'TRX' + number.toString().padStart(6, '0');
+                    $('#transactionNo').text(currentTransactionNo);
+                },
+                error: function() {
+                    // Fallback in case of error
+                    currentTransactionNo = 'TRX' + Date.now().toString().slice(-6);
+                    $('#transactionNo').text(currentTransactionNo);
+                }
+            });
+        }
 
         // Handle input for real-time search (for manual typing in #productSearch)
         $('#productSearch').on('input', function() {
@@ -1611,7 +1634,7 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
     }
 });
 
-    function syncAmountDue() {
+function syncAmountDue() {
     const finalTotal = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
     $('#amountDue').val(finalTotal.toFixed(2));
     $('#tenderInput').val('');
@@ -1652,6 +1675,7 @@ $('#cashTenderModal .btn-success').on('click', function() {
     // Call the function to print the receipt
     printReceipt();
 });
+
     document.getElementById('cashTenderModal').addEventListener('shown.bs.modal', function () {
         const totalElement = document.querySelector('.col-md-8.text-right.d-flex.justify-content-end');
         const totalValue = totalElement.textContent.replace('₱', '').trim();
@@ -1755,32 +1779,74 @@ $('#cashTenderModal .btn-success').on('click', function() {
 function printReceipt() {
     // Function to clean and parse numeric values
     const parseNumber = (text) => {
-        if (!text) return 0; // Return 0 if text is empty or undefined
-        // Remove any non-numeric characters except for the decimal point
+        if (!text) return 0;
         const cleanedText = text.replace(/[^0-9.]/g, '');
         const number = parseFloat(cleanedText);
-        return isNaN(number) ? 0 : number; // Return 0 if parsing fails
+        return isNaN(number) ? 0 : number;
     };
 
     // Gather transaction details
     const transactionNo = $('table.table-borderless tbody tr').eq(1).find('td').text().trim(); // Transaction No
-    const itemCount = parseNumber($('table.table-borderless tbody tr').eq(2).find('td').text().trim()); // # of Item
-    const amount = parseNumber($('table.table-borderless tbody tr').eq(3).find('td').text().trim()); // Amount
     const total = parseNumber($('#totalTransactionDisplay').text().trim()); // TOTAL
     const tender = parseNumber($('#tenderDisplay').text().trim()); // Tender
     const change = parseNumber($('#changeDisplay').text().trim()); // Change
+    const terminalNo = $('table.table-borderless tbody tr').eq(0).find('td').text().trim(); // Terminal No
 
-    // Gather items from the table
+    // Gather items from the cart (only for printing the receipt)
     let items = [];
-    $('table#table-bold tbody tr').each(function() {
-        const itemName = $(this).find('td').eq(0).text().trim(); // Items
-        if (itemName !== '') { // Exclude empty rows
-            const qty = parseNumber($(this).find('td').eq(1).text().trim()); // Qty
-            const price = parseNumber($(this).find('td').eq(2).text().trim()); // Price (first Price column)
-            const amount = parseNumber($(this).find('td').eq(4).text().trim()); // Amount
-            items.push({ itemName, qty, price, amount });
+    cart.forEach(item => {
+        items.push({
+            barcode: item.barcode,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            totalPrice: item.totalPrice
+        });
+    });
+
+    // Prepare transaction data to send to the server (only the required fields)
+    const transactionData = {
+        transactionNo: transactionNo,
+        transactionDateTime: new Date().toISOString(), // Current date and time in ISO format
+        cashier: "CASHIER", // Static value as requested
+        totalAmount: total, // Needed for printing receipt
+        tender: tender, // Needed for printing receipt
+        change: change, // Needed for printing receipt
+        items: items, // Needed for printing receipt
+        terminalNo: terminalNo // Needed for printing receipt
+    };
+
+    // Save the transaction to the database via AJAX
+    $.ajax({
+        url: 'save_transaction.php', // The PHP script to handle database insertion
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(transactionData),
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                // Proceed with printing the receipt after successful save
+                printReceiptContent(transactionData);
+
+                // Reset the transaction and reload the page
+                resetTransaction();
+                setTimeout(() => {
+                    location.reload();
+                }, 500); // Delay to ensure print dialog closes
+            } else {
+                alert('Error saving transaction: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error saving transaction:', xhr.responseText);
+            alert('Server error. Could not save transaction.');
         }
     });
+}
+
+// Helper function to handle the actual printing of the receipt
+function printReceiptContent(transactionData) {
+    const { transactionNo, totalAmount, tender, change, items, terminalNo, cashier } = transactionData;
 
     // Function to center text within a 40-character width
     const centerText = (text, width = 40) => {
@@ -1788,7 +1854,7 @@ function printReceipt() {
         return ' '.repeat(padding) + text + ' '.repeat(padding);
     };
 
-    // Format the receipt content with centered sections
+    // Format the receipt content
     let receiptContent = `
 ${centerText('AAA COMPANY')}
 ${centerText('#101 SAN PASCUAL, TALAVERA, N.E.')}
@@ -1803,29 +1869,29 @@ TIN: ___________________________
 `;
 
     // Add items
-    items.forEach((item, index) => {
-        receiptContent += `${item.itemName.padEnd(36, ' ')} ${item.amount.toFixed(2).padStart(7, ' ')}\n`;
-        receiptContent += `SEASONING ${Math.floor(item.qty).toString().padStart(3, '0')}X${item.price.toFixed(2).padStart(5, ' ')} ${item.amount.toFixed(2).padStart(7, ' ')}\n`;
+    items.forEach((item) => {
+        receiptContent += `${item.name.padEnd(36, ' ')} ${item.totalPrice.toFixed(2).padStart(7, ' ')}\n`;
+        receiptContent += `SEASONING ${Math.floor(item.quantity).toString().padStart(3, '0')}X${item.price.toFixed(2).padStart(5, ' ')} ${item.totalPrice.toFixed(2).padStart(7, ' ')}\n`;
     });
 
-    // Add summary and footer with centered sections
+    // Add summary and footer
     receiptContent += `
-No. of Items: ${Math.floor(itemCount).toString().padStart(2, ' ')}
+No. of Items: ${items.length.toString().padStart(2, ' ')}
 ----------------------------------------
-TOTAL                                 P${total.toFixed(2).padStart(7, ' ')}
+TOTAL                                 P${totalAmount.toFixed(2).padStart(7, ' ')}
 CASH                                  P${tender.toFixed(2).padStart(7, ' ')}
 CHANGE                                P${change.toFixed(2).padStart(7, ' ')}
 ----------------------------------------
-Cashier: ADMIN
-Terminal No. 1
-Txn No.: 000-000108
+Cashier: ${cashier}
+Terminal No. ${terminalNo}
+Txn No.: ${transactionNo}
 ----------------------------------------
-VATable Sale                           P0.00
-VAT-Exempt Sale (X)                   P${total.toFixed(2).padStart(7, ' ')}
+VATable Sale                           P${totalAmount.toFixed(2).padStart(7, ' ')}
+VAT-Exempt Sale (X)                   P0.00
 VAT Zero Rated Sale (Z)               P0.00
 VAT                                   P0.00
 ----------------------------------------
-TOTAL                                 P${total.toFixed(2).padStart(7, ' ')}
+TOTAL                                 P${totalAmount.toFixed(2).padStart(7, ' ')}
 ----------------------------------------
 ${centerText('THANK YOU!!!')}
 ${centerText('THIS SERVES AS YOUR INVOICE')}
