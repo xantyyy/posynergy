@@ -306,6 +306,110 @@
 </div>
 
 <script>
+    // Price Check Modal Search Functionality
+$(document).ready(function() {
+    // Handle input for real-time search in #productDetails
+    $('#productDetails').on('input', function() {
+        const query = $(this).val().trim();
+        const $priceCheckResults = $('#priceCheckResults');
+
+        if (query.length >= 2) {
+            $.ajax({
+                url: 'search_products.php',
+                method: 'POST',
+                data: { query: query },
+                dataType: 'json',
+                success: function(response) {
+                    $priceCheckResults.empty();
+                    if (response.status === 'success' && response.products.length > 0) {
+                        response.products.forEach(product => {
+                            const item = `
+                                <div class="search-item" 
+                                     data-price="${product.SRP}" 
+                                     data-name="${product.ProductName}" 
+                                     data-barcode="${product.Barcode}">
+                                    <strong>${product.ProductName}</strong><br>
+                                    Barcode: ${product.Barcode} | SRP: ₱${parseFloat(product.SRP).toFixed(2)}
+                                </div>
+                            `;
+                            $priceCheckResults.append(item);
+                        });
+                        $priceCheckResults.show();
+                    } else {
+                        $priceCheckResults.append('<div class="search-item">No results found</div>');
+                        $priceCheckResults.show();
+                    }
+                },
+                error: function() {
+                    $priceCheckResults.html('<div class="search-item">Error fetching products</div>').show();
+                }
+            });
+        } else {
+            $priceCheckResults.hide();
+            $priceCheckResults.empty();
+            $('#productPrice').val('₱0.00');
+        }
+    });
+
+    // Handle clicking a search result
+    $(document).on('click', '#priceCheckResults .search-item', function() {
+        const price = parseFloat($(this).data('price')) || 0;
+        const productName = $(this).data('name');
+        const barcode = $(this).data('barcode');
+
+        // Update the product details and price fields
+        $('#productDetails').val(`${productName} (Barcode: ${barcode})`);
+        $('#productPrice').val(`₱${price.toFixed(2)}`);
+        $('#priceCheckResults').hide();
+    });
+
+    // Handle barcode scanner input for Price Check Modal
+    $('#productDetails').on('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const query = $(this).val().trim();
+            if (query) {
+                $.ajax({
+                    url: 'search_products.php',
+                    method: 'POST',
+                    data: { query: query, isBarcode: true },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status === 'success' && response.products.length > 0) {
+                            const product = response.products[0];
+                            $('#productDetails').val(`${product.ProductName} (Barcode: ${product.Barcode})`);
+                            $('#productPrice').val(`₱${parseFloat(product.SRP).toFixed(2)}`);
+                            $('#priceCheckResults').hide();
+                        } else {
+                            alert('Product not found for barcode: ' + query);
+                            $('#productPrice').val('₱0.00');
+                        }
+                    },
+                    error: function() {
+                        alert('Error looking up barcode. Please try again.');
+                        $('#productPrice').val('₱0.00');
+                    }
+                });
+            }
+        }
+    });
+
+    // Hide search results when clicking outside
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('#productDetails, #priceCheckResults').length) {
+            $('#priceCheckResults').hide();
+        }
+    });
+
+    // Clear fields when modal is opened
+    $('#priceCheckModal').on('shown.bs.modal', function() {
+        $('#productDetails').val('');
+        $('#productPrice').val('₱0.00');
+        $('#priceCheckResults').hide().empty();
+        $('#productDetails').focus();
+    });
+});
+
     let cart = []; // Array to store cart items
     let currentTransactionNo = '';
 

@@ -492,12 +492,13 @@
                 <div class="row mb-3">
                     <div class="col-12">
                         <label for="productDetails" class="form-label">Product Details:</label>
-                        <input type="text" class="form-control" id="productDetails" placeholder="Enter product details">
+                        <input type="text" class="form-control" id="productDetails" placeholder="Enter product name or barcode" autocomplete="off">
+                        <div id="priceCheckResults" class="search-results"></div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        <label for="productPrice" class="form-label d-block"></label>
+                        <label for="productPrice" class="form-label d-block">Product Price:</label>
                         <input type="text" class="form-control text-center fs-1 fw-bold" id="productPrice" placeholder="₱0.00" readonly>
                     </div>
                 </div>
