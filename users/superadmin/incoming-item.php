@@ -466,6 +466,7 @@ document.getElementById('submit-button').addEventListener('click', function() {
                 console.log('Save result:', result);
                 if (result.success) {
                     alert('Item successfully submitted!');
+                    location.reload();
 
                     // Reset the form and table
                     document.getElementById('invItem-supplier').value = '';

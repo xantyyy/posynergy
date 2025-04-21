@@ -219,7 +219,6 @@
                                         <th style="width: 50%;">Items</th>
                                         <th>Qty</th>
                                         <th>Price</th>
-                                        <th>Price</th>
                                         <th>Amount</th>
                                     </tr>
                                 </thead>
@@ -227,8 +226,7 @@
                                     <tr>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td></td>                                    
                                         <td></td>
                                     </tr>
                                 </tbody>
@@ -603,7 +601,6 @@ function updateCartDisplay() {
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
             </tr>
         `);
         return;
@@ -615,7 +612,6 @@ function updateCartDisplay() {
             <tr data-barcode="${item.barcode}" data-id="${item.id}">
                 <td>${item.name}</td>
                 <td>${item.quantity}</td>
-                <td>₱${item.price.toFixed(2)}</td>
                 <td>₱${item.price.toFixed(2)}</td>
                 <td>₱${item.totalPrice.toFixed(2)}</td>
             </tr>
@@ -776,7 +772,6 @@ $('#confirmVoid').on('click', function() {
                     // Add an empty row to maintain table structure
                     $('table#table-bold tbody').append(`
                         <tr>
-                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
@@ -981,7 +976,6 @@ function updateCartDisplay() {
             <tr data-product-id="${item.barcode}"> <!-- Use barcode as the ID -->
                 <td>${item.name}</td>
                 <td>${item.quantity}</td>
-                <td>₱${item.price.toFixed(2)}</td>
                 <td>₱${item.price.toFixed(2)}</td>
                 <td>₱${item.totalPrice.toFixed(2)}</td>
             </tr>
