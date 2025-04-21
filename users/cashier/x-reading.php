@@ -64,35 +64,35 @@
                         <div class="col-md-6">
                             <div class="receipt-row">
                                 <span class="receipt-label">Report Date:</span>
-                                <span class="receipt-value" id="reportDate"></span>
+                                <input type="text" class="receipt-input" id="reportDate" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">Report Time:</span>
-                                <span class="receipt-value" id="reportTime"></span>
+                                <input type="text" class="receipt-input" id="reportTime" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">Start Date / Time:</span>
-                                <span class="receipt-value"></span>
+                                <input type="text" class="receipt-input" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">End Date / Time:</span>
-                                <span class="receipt-value"></span>
+                                <input type="text" class="receipt-input" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">Cashier:</span>
-                                <span class="receipt-value" id="cashier"></span>
+                                <input type="text" class="receipt-input" id="cashier" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">Beg. SI#:</span>
-                                <span class="receipt-value"></span>
+                                <input type="text" class="receipt-input" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">End. SI#:</span>
-                                <span class="receipt-value"></span>
+                                <input type="text" class="receipt-input" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">Opening Fund:</span>
-                                <span class="receipt-value" id="openingFund"></span>
+                                <input type="text" class="receipt-input" id="openingFund" readonly>
                             </div>
                         </div>
 
@@ -100,23 +100,23 @@
                         <div class="col-md-6">
                             <div class="receipt-row">
                                 <span class="receipt-label">Gross Sales:</span>
-                                <span class="receipt-value" id="grossSales"></span>
+                                <input type="text" class="receipt-input" id="grossSales" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">Less Points Availed:</span>
-                                <span class="receipt-value" id="pointsAvailed"></span>
+                                <input type="text" class="receipt-input" id="pointsAvailed" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">Less Discount:</span>
-                                <span class="receipt-value" id="discount"></span>
+                                <input type="text" class="receipt-input" id="discount" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">Less Sales Return:</span>
-                                <span class="receipt-value" id="salesReturn"></span>
+                                <input type="text" class="receipt-input" id="salesReturn" readonly>
                             </div>
                             <div class="receipt-row">
                                 <span class="receipt-label">NET:</span>
-                                <span class="receipt-value" id="net"></span>
+                                <input type="text" class="receipt-input" id="net" readonly>
                             </div>
                         </div>
                     </div>
@@ -124,9 +124,24 @@
                     <div class="dashed-line"></div>
 
                     <div class="section-title">PAYMENTS RECEIVED</div>
+                    <div class="table-section">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Payment(s)</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2" style="text-align: center;">[No Data]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Total Payments:</span>
-                        <span class="receipt-value" id="totalPayments"></span>
+                        <input type="text" class="receipt-input" id="totalPayments" readonly>
                     </div>
 
                     <div class="dashed-line"></div>
@@ -134,27 +149,27 @@
                     <div class="section-title">DISCOUNT SUMMARY</div>
                     <div class="receipt-row">
                         <span class="receipt-label">SC Disc.:</span>
-                        <span class="receipt-value" id="scDiscount"></span>
+                        <input type="text" class="receipt-input" id="scDiscount" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">PWD Disc.:</span>
-                        <span class="receipt-value" id="pwdDiscount"></span>
+                        <input type="text" class="receipt-input" id="pwdDiscount" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">NAAC Disc.:</span>
-                        <span class="receipt-value" id="naacDiscount"></span>
+                        <input type="text" class="receipt-input" id="naacDiscount" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Solo Parent Disc.:</span>
-                        <span class="receipt-value" id="soloParentDiscount"></span>
+                        <input type="text" class="receipt-input" id="soloParentDiscount" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Medal of Valor Disc.:</span>
-                        <span class="receipt-value" id="medalValorDiscount"></span>
+                        <input type="text" class="receipt-input" id="medalValorDiscount" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Other Disc.:</span>
-                        <span class="receipt-value" id="otherDiscount"></span>
+                        <input type="text" class="receipt-input" id="otherDiscount" readonly>
                     </div>
 
                     <div class="buttons">
@@ -212,28 +227,28 @@
             const reportTime = `${hours}:${minutes} ${ampm}`;
 
             // Populate the fields
-            document.getElementById('reportDate').textContent = reportDate;
-            document.getElementById('reportTime').textContent = reportTime;
-            document.getElementById('cashier').textContent = 'CASHIER';
-            document.getElementById('openingFund').textContent = '0.00';
-            document.getElementById('grossSales').textContent = '0.00';
-            document.getElementById('pointsAvailed').textContent = '0.00';
-            document.getElementById('discount').textContent = '0.00';
-            document.getElementById('salesReturn').textContent = '0.00';
-            document.getElementById('net').textContent = '0.00';
-            document.getElementById('totalPayments').textContent = '0.00';
-            document.getElementById('scDiscount').textContent = '0.00';
-            document.getElementById('pwdDiscount').textContent = '0.00';
-            document.getElementById('naacDiscount').textContent = '0.00';
-            document.getElementById('soloParentDiscount').textContent = '0.00';
-            document.getElementById('medalValorDiscount').textContent = '0.00';
-            document.getElementById('otherDiscount').textContent = '0.00';
+            document.getElementById('reportDate').value = reportDate;
+            document.getElementById('reportTime').value = reportTime;
+            document.getElementById('cashier').value = 'CASHIER';
+            document.getElementById('openingFund').value = '0.00';
+            document.getElementById('grossSales').value = '0.00';
+            document.getElementById('pointsAvailed').value = '0.00';
+            document.getElementById('discount').value = '0.00';
+            document.getElementById('salesReturn').value = '0.00';
+            document.getElementById('net').value = '0.00';
+            document.getElementById('totalPayments').value = '0.00';
+            document.getElementById('scDiscount').value = '0.00';
+            document.getElementById('pwdDiscount').value = '0.00';
+            document.getElementById('naacDiscount').value = '0.00';
+            document.getElementById('soloParentDiscount').value = '0.00';
+            document.getElementById('medalValorDiscount').value = '0.00';
+            document.getElementById('otherDiscount').value = '0.00';
         });
 
         // Handle Print button click
         document.getElementById('printButton').addEventListener('click', function () {
             // Check if the Generate button has been clicked (i.e., fields are populated)
-            const reportDate = document.getElementById('reportDate').textContent;
+            const reportDate = document.getElementById('reportDate').value;
             if (!reportDate) {
                 alert('Please click "Generate" to populate the report before printing.');
                 return;
@@ -404,13 +419,25 @@
     .receipt-row {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 5px;
     }
     .receipt-label {
         font-weight: bold;
+        flex: 1;
     }
-    .receipt-value {
+    .receipt-input {
+        flex: 1;
         text-align: right;
+        border: 1px solid #000;
+        padding: 2px 5px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        background-color: #fff;
+    }
+    .receipt-input:read-only {
+        background-color: #f0f0f0;
+        cursor: not-allowed;
     }
     .dashed-line {
         border-top: 1px dashed #000;
@@ -421,6 +448,19 @@
         font-style: italic;
         text-align: center;
         margin: 10px 0;
+    }
+    .table-section {
+        margin-bottom: 15px;
+    }
+    .table-section table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 5px;
+    }
+    .table-section th, .table-section td {
+        border: 1px solid #000;
+        padding: 5px;
+        text-align: center;
     }
     .buttons {
         text-align: right;

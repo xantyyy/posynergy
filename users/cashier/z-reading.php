@@ -7,7 +7,6 @@
 <nav id="sidebar">
     <div class="sidebar-header">
         <img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
-
         <div class="ml-auto" id="userInfo">
             <p class="text-right">Cashier Staff</p>
         </div>
@@ -62,66 +61,58 @@
 
                     <div class="receipt-row">
                         <span class="receipt-label">Report Date:</span>
-                        <span class="receipt-value" id="reportDate"></span>
+                        <input type="text" class="receipt-input" id="reportDate" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Report Time:</span>
-                        <span class="receipt-value" id="reportTime"></span>
+                        <input type="text" class="receipt-input" id="reportTime" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Start Date / Time:</span>
-                        <span class="receipt-value" id="startDateTime"></span>
+                        <input type="text" class="receipt-input" id="startDateTime" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">End Date / Time:</span>
-                        <span class="receipt-value" id="endDateTime"></span>
+                        <input type="text" class="receipt-input" id="endDateTime" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Beg. SI #:</span>
-                        <span class="receipt-value" id="begSI"></span>
+                        <input type="text" class="receipt-input" id="begSI" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">End. SI #:</span>
-                        <span class="receipt-value" id="endSI"></span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">Beg. VOID #:</span>
-                        <span class="receipt-value" id="begVoid"></span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">End. VOID #:</span>
-                        <span class="receipt-value" id="endVoid"></span>
+                        <input type="text" class="receipt-input" id="endSI" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Beg. RETURN #:</span>
-                        <span class="receipt-value" id="begReturn"></span>
+                        <input type="text" class="receipt-input" id="begReturn" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">End. RETURN #:</span>
-                        <span class="receipt-value" id="endReturn"></span>
+                        <input type="text" class="receipt-input" id="endReturn" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Reset Counter No:</span>
-                        <span class="receipt-value" id="resetCounter"></span>
+                        <input type="text" class="receipt-input" id="resetCounter" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Z Counter No:</span>
-                        <span class="receipt-value" id="zCounter"></span>
+                        <input type="text" class="receipt-input" id="zCounter" readonly>
                     </div>
 
                     <div class="dashed-line"></div>
 
                     <div class="receipt-row">
                         <span class="receipt-label">Present Accumulated Sales:</span>
-                        <span class="receipt-value" id="presentSale"></span>
+                        <input type="text" class="receipt-input" id="presentSale" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Previous Accumulated Sales:</span>
-                        <span class="receipt-value" id="previousSale"></span>
+                        <input type="text" class="receipt-input" id="previousSale" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Sales for the Day:</span>
-                        <span class="receipt-value" id="salesDay"></span>
+                        <input type="text" class="receipt-input" id="salesDay" readonly>
                     </div>
 
                     <div class="dashed-line"></div>
@@ -129,30 +120,38 @@
                     <div class="section-title">BREAKDOWN OF SALES</div>
                     <div class="receipt-row">
                         <span class="receipt-label">Vatable Sales:</span>
-                        <span class="receipt-value" id="vatSales"></span>
+                        <input type="text" class="receipt-input" id="vatSales" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">VAT Amount:</span>
-                        <span class="receipt-value" id="vatAmount"></span>
+                        <input type="text" class="receipt-input" id="vatAmount" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">VAT Exempt Sales:</span>
-                        <span class="receipt-value" id="exemptSales"></span>
+                        <input type="text" class="receipt-input" id="exemptSales" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Zero Rated Sales:</span>
-                        <span class="receipt-value" id="zeroRated"></span>
+                        <input type="text" class="receipt-input" id="zeroRated" readonly>
                     </div>
 
                     <div class="dashed-line"></div>
 
                     <div class="receipt-row">
                         <span class="receipt-label">Gross Amount:</span>
-                        <span class="receipt-value" id="grossAmount"></span>
+                        <input type="text" class="receipt-input" id="grossAmount" readonly>
                     </div>
                     <div class="receipt-row">
                         <span class="receipt-label">Less Discount:</span>
-                        <span class="receipt-value" id="lessDiscount"></span>
+                        <input type="text" class="receipt-input" id="lessDiscount" readonly>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Less Return:</span>
+                        <input type="text" class="receipt-input" id="lessReturn" readonly>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Less Points Availed:</span>
+                        <input type="text" class="receipt-input" id="lessPointsAvailed" readonly>
                     </div>
 
                     <div class="buttons">
@@ -196,7 +195,7 @@
             // Get the current date and time
             const now = new Date();
 
-            // Format the date as "Month DD, YYYY" (e.g., "December 13, 2023")
+            // Format the date as "Month DD, YYYY" (e.g., "April 20, 2025")
             const monthNames = ["January", "February", "March", "April", "May", "June", 
                                 "July", "August", "September", "October", "November", "December"];
             const reportDate = `${monthNames[now.getMonth()]} ${String(now.getDate()).padStart(2, '0')}, ${now.getFullYear()}`;
@@ -210,33 +209,33 @@
             const reportTime = `${hours}:${minutes} ${ampm}`;
 
             // Populate the fields
-            document.getElementById('reportDate').textContent = reportDate;
-            document.getElementById('reportTime').textContent = reportTime;
-            document.getElementById('startDateTime').textContent = '12/13/2023 08:35:22 AM';
-            document.getElementById('endDateTime').textContent = '12/13/2023 08:42:00 AM';
-            document.getElementById('begSI').textContent = '00000000000000000000';
-            document.getElementById('endSI').textContent = '00000000000000000000';
-            document.getElementById('begVoid').textContent = '00000000000000000000';
-            document.getElementById('endVoid').textContent = '';
-            document.getElementById('begReturn').textContent = '';
-            document.getElementById('endReturn').textContent = '';
-            document.getElementById('resetCounter').textContent = '0';
-            document.getElementById('zCounter').textContent = '0';
-            document.getElementById('presentSale').textContent = '27,803.80';
-            document.getElementById('previousSale').textContent = '26,896.42';
-            document.getElementById('salesDay').textContent = '247.50';
-            document.getElementById('vatSales').textContent = '0.00';
-            document.getElementById('vatAmount').textContent = '0.00';
-            document.getElementById('exemptSales').textContent = '22,321.67';
-            document.getElementById('zeroRated').textContent = '0.00';
-            document.getElementById('grossAmount').textContent = '27,834.80';
-            document.getElementById('lessDiscount').textContent = '621.35';
+            document.getElementById('reportDate').value = reportDate;
+            document.getElementById('reportTime').value = reportTime;
+            document.getElementById('startDateTime').value = '12/13/2023 08:35:22 AM';
+            document.getElementById('endDateTime').value = '12/13/2023 08:42:00 AM';
+            document.getElementById('begSI').value = '00000000000000000000';
+            document.getElementById('endSI').value = '00000000000000000000';
+            document.getElementById('begReturn').value = '';
+            document.getElementById('endReturn').value = '';
+            document.getElementById('resetCounter').value = '0';
+            document.getElementById('zCounter').value = '0';
+            document.getElementById('presentSale').value = '27,803.80';
+            document.getElementById('previousSale').value = '26,896.42';
+            document.getElementById('salesDay').value = '247.50';
+            document.getElementById('vatSales').value = '0.00';
+            document.getElementById('vatAmount').value = '0.00';
+            document.getElementById('exemptSales').value = '22,321.67';
+            document.getElementById('zeroRated').value = '0.00';
+            document.getElementById('grossAmount').value = '27,834.80';
+            document.getElementById('lessDiscount').value = '621.35';
+            document.getElementById('lessReturn').value = '621.35';
+            document.getElementById('lessPointsAvailed').value = '621.35';
         });
 
         // Handle Print button click
         document.getElementById('printButton').addEventListener('click', function () {
             // Check if the Generate button has been clicked (i.e., fields are populated)
-            const reportDate = document.getElementById('reportDate').textContent;
+            const reportDate = document.getElementById('reportDate').value;
             if (!reportDate) {
                 alert('Please click "Generate" to populate the report before printing.');
                 return;
@@ -387,13 +386,25 @@
     .receipt-row {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 5px;
     }
     .receipt-label {
         font-weight: bold;
+        flex: 1;
     }
-    .receipt-value {
+    .receipt-input {
+        flex: 1;
         text-align: right;
+        border: 1px solid #000;
+        padding: 2px 5px;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 14px;
+        background-color: #fff;
+    }
+    .receipt-input:read-only {
+        background-color: #f0f0f0;
+        cursor: not-allowed;
     }
     .dashed-line {
         border-top: 1px dashed #000;
