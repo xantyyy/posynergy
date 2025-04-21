@@ -155,20 +155,7 @@
 						</button>
 						
 					</nav>
-				</div>	 	  
-				
-
-				<?php
-					require_once '../../includes/config.php';
-
-					if(isset($_GET['delid'])) {
-						$id = intval($_GET['delid']);
-						$sql = mysqli_query($conn, "DELETE FROM users WHERE user_id = '$id'");
-
-						echo "<script>alert('Record has been successfully deleted!');</script>";
-						echo "<script>window.location='users-manage.php';</script>";
-					}
-				?> 
+				</div>
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 				<div class="container">
@@ -184,19 +171,7 @@
                                     <div class="card-body">
                                         <h6>Search Parameters</h6>
                                         <form class="d-flex align-items-center">
-                                            <input type="text" class="form-control me-3" style="width: 54%;" id="searchInput" placeholder="Search here...">
-                                            <div class="form-check me-3">
-                                                <input class="form-check-input" type="radio" name="searchType" id="searchBarcode" value="barcode" checked>
-                                                <label class="form-check-label" for="searchBarcode">
-                                                    Barcode
-                                                </label>
-                                            </div>
-                                            <div class="form-check me-3">
-                                                <input class="form-check-input" type="radio" name="searchType" id="searchDescription" value="description">
-                                                <label class="form-check-label" for="searchDescription">
-                                                    Description
-                                                </label>
-                                            </div>
+                                            <input type="text" class="form-control me-3" style="width: 85%;" id="searchInput" placeholder="Search here...">
                                             <button type="button" class="btn btn-primary" id="loadAllButton" style="font-size: small;">Load All</button>
                                         </form>
                                     </div>
@@ -217,13 +192,9 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                            <tr onclick="selectRow(this)" style="cursor: pointer;">
-                                                                <td>Sample</td>
-                                                                <td>Sample</td>
-                                                                <td>Sample</td>
-                                                                <td>Sample</td>
-                                                                <td>Sample</td>
-                                                            </tr>
+                                                        <tr>
+                                                            <td class="text-center" colspan="5" style="text-transform: none;">Please search for a Product</td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -235,29 +206,27 @@
                             <!-- Right Side - Additional Table -->
                             <div class="col-md-5">
                                 <div class="card">
-                                    <div class="card-body">
-                                        <h5>Details</h5>
-                                        <h6>Category:</h6>
-                                        <div class="table-responsive" style="height: calc(80vh - 300px); overflow-y: auto;">
-                                            <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-                                                <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
-                                                    <tr>
-                                                        <th>Default</th>
-                                                        <th>Supplier Name</th>
-                                                        <th>Cost</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                            <td>Sample</td>
-                                                            <td>Sample</td>
-                                                            <td>Sample</td>
+                                        <div class="card-body">
+                                            <h5>Details</h5>
+                                            <h6>Category:</h6>
+                                            <div class="table-responsive" style="height: calc(80vh - 300px); overflow-y: auto;">
+                                                <table class="table table-bordered" style="margin-top: 10px;" id="details-table">
+                                                    <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
+                                                        <tr>
+                                                            <th>Default</th>
+                                                            <th>Supplier Name</th>
+                                                            <th>Cost</th>
                                                         </tr>
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-center" colspan="3" style="text-transform: none;">Select a product to view details</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
                                 <div class="card">
                                     <div class="card-body">
@@ -298,53 +267,109 @@
                     </div>
 
                     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
-        
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const currentUrl = window.location.pathname.split('/').pop();
+                            
+                            document.querySelectorAll('.list-unstyled a').forEach(link => {
+                                const linkHref = link.getAttribute('href');
+                                const parentMenu = link.closest('.collapse');
+                                const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            // Mark the active link
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
-                }
-            }
+                                if (linkHref === currentUrl) {
+                                    link.classList.add('active');
+                                    if (parentMenu) {
+                                        parentMenu.classList.add('show');
+                                        if (dropdownToggle) {
+                                            dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                                            dropdownToggle.setAttribute('aria-expanded', 'true');
+                                        }
+                                    }
+                                }
 
-            // Apply hover effect for menu items
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
-            });
+                                link.addEventListener("mouseenter", function () {
+                                    this.classList.add("hover-effect");
+                                });
 
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
-        });
-        
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-            
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
+                                link.addEventListener("mouseleave", function () {
+                                    this.classList.remove("hover-effect");
+                                });
+                            });
+                            
+                            document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+                                const parentMenu = dropdown.nextElementSibling;
+                                if (parentMenu && parentMenu.querySelector('.active')) {
+                                    dropdown.classList.add('highlighted-dropdown', 'active');
+                                    dropdown.setAttribute('aria-expanded', 'true');
+                                }
+                                
+                                dropdown.addEventListener("mouseenter", function () {
+                                    this.classList.add('hovered-dropdown');
+                                });
 
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
-        });
-    });
-</script>
+                                dropdown.addEventListener("mouseleave", function () {
+                                    this.classList.remove("hovered-dropdown");
+                                });
+                            });
+
+                            // Add event listener for search input
+                            document.getElementById('searchInput').addEventListener('input', function () {
+                                const searchTerm = this.value.trim();
+                                if (searchTerm === '') {
+                                    // If search input is empty, show the initial message
+                                    const tbody = document.querySelector('#table-bold tbody');
+                                    tbody.innerHTML = '<tr><td class="text-center" colspan="5">Please search for a product</td></tr>';
+                                } else {
+                                    // Fetch products only if there is a search term
+                                    fetchProducts(searchTerm);
+                                }
+                            });
+
+                            // Add event listener for Load All button
+                            document.getElementById('loadAllButton').addEventListener('click', function () {
+                                document.getElementById('searchInput').value = '';
+                                const tbody = document.querySelector('#table-bold tbody');
+                                tbody.innerHTML = '<tr><td class="text-center" colspan="5" style="text-transform: none;">Please search for a Product</td></tr>';
+                            });
+
+                            // Add event listener for Load All button
+                            document.getElementById('loadAllButton').addEventListener('click', function () {
+                                document.getElementById('searchInput').value = ''; // Clear the search input
+                                fetchProducts(''); // Fetch all products
+                            });
+
+                            function fetchProducts(searchTerm) {
+                                fetch(`search-product.php?search=${encodeURIComponent(searchTerm)}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        const tbody = document.querySelector('#table-bold tbody');
+                                        tbody.innerHTML = '';
+
+                                        if (data.length === 0) {
+                                            tbody.innerHTML = '<tr><td class="text-center" colspan="5">No products found</td></tr>';
+                                        } else {
+                                            data.forEach(product => {
+                                                const row = document.createElement('tr');
+                                                row.style.cursor = 'pointer';
+                                                row.onclick = () => selectRow(row);
+                                                row.innerHTML = `
+                                                    <td>${product.ID}</td>
+                                                    <td>${product.Barcode}</td>
+                                                    <td>${product.ProductName}</td>
+                                                    <td>${product.Shelf}</td>
+                                                    <td>${product.Quantity || '0'}</td>
+                                                `;
+                                                tbody.appendChild(row);
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error fetching products:', error);
+                                        const tbody = document.querySelector('#table-bold tbody');
+                                        tbody.innerHTML = '<tr><td colspan="5">Error loading products</td></tr>';
+                                    });
+                            }
+                        });
+                    </script>
 
                 <style>
                     /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
@@ -427,6 +452,11 @@
                     }
                     
                     #table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
+					}
+
+                    #details-table thead th {
 						font-weight: bold;
 						font-style: italic;
 					}
