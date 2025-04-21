@@ -547,10 +547,64 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="backupModal" tabindex="-1" aria-labelledby="backupModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="backupModalLabel">Back Up</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <label for="backupDir" class="form-label">Custom Backup Directory</label>
+        <div class="input-group mb-3">
+          <input type="text" id="backupDir" class="form-control" placeholder="Select backup directory" readonly>
+          <button class="btn btn-outline-secondary" type="button" onclick="browseFolder()">Browse..</button>
+        </div>
+
+        <div class="form-text mb-3">
+          <strong>Note:</strong> The system saves a backup on a pre-defined directory.<br>
+          Choose a save location if you also wish to save a backup copy elsewhere.
+        </div>
+
+        <button class="btn btn-secondary w-100" id="startBackupBtn" disabled>Start</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 
 <script>
+
+//Function to start the backup process
+async function browseFolder() {
+  try {
+    // Open the directory picker dialog
+    const dirHandle = await window.showDirectoryPicker();
+    
+    // Get the directory path (note: the File System Access API doesn't expose the full path for security reasons)
+    // For display purposes, we can use the directory name or a custom string
+    const dirName = dirHandle.name;
+    document.getElementById('backupDir').value = dirName || 'Selected Directory';
+
+    // Enable the Start button once a directory is selected
+    document.getElementById('startBackupBtn').disabled = false;
+
+    // Store the dirHandle for later use (e.g., during backup)
+    window.selectedDirHandle = dirHandle; // Store globally or in a more structured way as needed
+  } catch (err) {
+    console.error('Error selecting directory:', err);
+    // Handle case where user cancels the dialog
+    if (err.name === 'AbortError') {
+      document.getElementById('backupDir').value = '';
+      document.getElementById('startBackupBtn').disabled = true;
+    }
+  }
+}
+//Function to start the backup process ends here
+
 // Add this to your existing JavaScript file or in a script tag at the bottom of your page
 $(document).ready(function() {
     // Function to load suppliers

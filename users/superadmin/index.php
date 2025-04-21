@@ -128,7 +128,7 @@
 								<a href="#" data-bs-toggle="modal" data-bs-target="#closeInventoryModal"> Close Today's Transaction</a>
 							</li>
 							<li>
-								<a href="#">Data Back-up</a>
+								<a href="#" data-bs-toggle="modal" data-bs-target="#backupModal">Data Back-up</a>
 							</li>
 						</ul>
 					</li>
