@@ -7,7 +7,6 @@
 <nav id="sidebar">
     <div class="sidebar-header">
         <img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
-
         <div class="ml-auto" id="userInfo">
             <p class="text-right">Cashier Staff</p>
         </div>
@@ -60,112 +59,102 @@
                 <div class="receipt-container">
                     <div class="receipt-header">X-Reading</div>
 
-                    <div class="receipt-row">
-                        <span class="receipt-label">Report Date:</span>
-                        <span class="receipt-value" id="reportDate"></span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">Report Time:</span>
-                        <span class="receipt-value" id="reportTime"></span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">Start Date / Time:</span>
-                        <span class="receipt-value"></span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">End Date / Time:</span>
-                        <span class="receipt-value"></span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">Cashier:</span>
-                        <span class="receipt-value" id="cashier"></span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">Beg. SI#:</span>
-                        <span class="receipt-value"></span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">End. SI#:</span>
-                        <span class="receipt-value"></span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">Opening Fund:</span>
-                        <span class="receipt-value" id="openingFund"></span>
+                    <div class="row">
+                        <!-- Left Side -->
+                        <div class="col-md-6">
+                            <div class="receipt-row">
+                                <span class="receipt-label">Report Date:</span>
+                                <span class="receipt-value" id="reportDate"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">Report Time:</span>
+                                <span class="receipt-value" id="reportTime"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">Start Date / Time:</span>
+                                <span class="receipt-value"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">End Date / Time:</span>
+                                <span class="receipt-value"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">Cashier:</span>
+                                <span class="receipt-value" id="cashier"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">Beg. SI#:</span>
+                                <span class="receipt-value"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">End. SI#:</span>
+                                <span class="receipt-value"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">Opening Fund:</span>
+                                <span class="receipt-value" id="openingFund"></span>
+                            </div>
+                        </div>
+
+                        <!-- Right Side -->
+                        <div class="col-md-6">
+                            <div class="receipt-row">
+                                <span class="receipt-label">Gross Sales:</span>
+                                <span class="receipt-value" id="grossSales"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">Less Points Availed:</span>
+                                <span class="receipt-value" id="pointsAvailed"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">Less Discount:</span>
+                                <span class="receipt-value" id="discount"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">Less Sales Return:</span>
+                                <span class="receipt-value" id="salesReturn"></span>
+                            </div>
+                            <div class="receipt-row">
+                                <span class="receipt-label">NET:</span>
+                                <span class="receipt-value" id="net"></span>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="dashed-line"></div>
 
-                    <div class="section-title">PAYMENTS RECEIVED (POS)</div>
-                    <div class="table-section">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Payment(s)</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2" style="text-align: center;">[No Data]</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="section-title">PAYMENTS RECEIVED</div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Total Payments:</span>
+                        <span class="receipt-value" id="totalPayments"></span>
                     </div>
 
-                    <div class="receipt-row">
-                        <span class="receipt-label">TOTAL PAYMENTS:</span>
-                        <span class="receipt-value">0.00</span>
-                    </div>
-                    <div class="dashed-line"></div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">VOID</span>
-                        <span class="receipt-value">0.00</span>
-                    </div>
-                    <div class="dashed-line"></div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">REFUND</span>
-                        <span class="receipt-value">0.00</span>
-                    </div>
-                    <div class="dashed-line"></div>
-                    <div class="receipt-row">
-                        <span class="receipt-label">WITHDRAWAL</span>
-                        <span class="receipt-value">0.00</span>
-                    </div>
                     <div class="dashed-line"></div>
 
-                    <div class="section-title">TRANSACTION SUMMARY (Tender Declared)</div>
-                    <div class="table-section">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Payment(s)</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td colspan="2" style="text-align: center;">[No Data]</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
+                    <div class="section-title">DISCOUNT SUMMARY</div>
                     <div class="receipt-row">
-                        <span class="receipt-label">Opening Fund:</span>
-                        <span class="receipt-value">1,000.00</span>
+                        <span class="receipt-label">SC Disc.:</span>
+                        <span class="receipt-value" id="scDiscount"></span>
                     </div>
                     <div class="receipt-row">
-                        <span class="receipt-label">Less Withdrawal:</span>
-                        <span class="receipt-value">0.00</span>
+                        <span class="receipt-label">PWD Disc.:</span>
+                        <span class="receipt-value" id="pwdDiscount"></span>
                     </div>
                     <div class="receipt-row">
-                        <span class="receipt-label">Payment Received:</span>
-                        <span class="receipt-value">0.00</span>
+                        <span class="receipt-label">NAAC Disc.:</span>
+                        <span class="receipt-value" id="naacDiscount"></span>
                     </div>
-                    <div class="dashed-line"></div>
                     <div class="receipt-row">
-                        <span class="receipt-label">SHORT/OVER:</span>
-                        <span class="receipt-value">0.00</span>
+                        <span class="receipt-label">Solo Parent Disc.:</span>
+                        <span class="receipt-value" id="soloParentDiscount"></span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Medal of Valor Disc.:</span>
+                        <span class="receipt-value" id="medalValorDiscount"></span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Other Disc.:</span>
+                        <span class="receipt-value" id="otherDiscount"></span>
                     </div>
 
                     <div class="buttons">
@@ -209,12 +198,12 @@
             // Get the current date and time
             const now = new Date();
 
-            // Format the date as "Month DD, YYYY" (e.g., "April 06, 2025")
+            // Format the date as "Month DD, YYYY" (e.g., "April 21, 2025")
             const monthNames = ["January", "February", "March", "April", "May", "June", 
                                 "July", "August", "September", "October", "November", "December"];
             const reportDate = `${monthNames[now.getMonth()]} ${String(now.getDate()).padStart(2, '0')}, ${now.getFullYear()}`;
 
-            // Format the time as "HH:MM AM/PM" (e.g., "11:58 AM")
+            // Format the time as "HH:MM AM/PM" (e.g., "11:38 AM")
             let hours = now.getHours();
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -226,7 +215,19 @@
             document.getElementById('reportDate').textContent = reportDate;
             document.getElementById('reportTime').textContent = reportTime;
             document.getElementById('cashier').textContent = 'CASHIER';
-            document.getElementById('openingFund').textContent = '1,000.00';
+            document.getElementById('openingFund').textContent = '0.00';
+            document.getElementById('grossSales').textContent = '0.00';
+            document.getElementById('pointsAvailed').textContent = '0.00';
+            document.getElementById('discount').textContent = '0.00';
+            document.getElementById('salesReturn').textContent = '0.00';
+            document.getElementById('net').textContent = '0.00';
+            document.getElementById('totalPayments').textContent = '0.00';
+            document.getElementById('scDiscount').textContent = '0.00';
+            document.getElementById('pwdDiscount').textContent = '0.00';
+            document.getElementById('naacDiscount').textContent = '0.00';
+            document.getElementById('soloParentDiscount').textContent = '0.00';
+            document.getElementById('medalValorDiscount').textContent = '0.00';
+            document.getElementById('otherDiscount').textContent = '0.00';
         });
 
         // Handle Print button click
@@ -254,24 +255,25 @@
 
 <style>
     @media print {
-    body * {
-        visibility: hidden;
+        body * {
+            visibility: hidden;
+        }
+        .receipt-container, .receipt-container * {
+            visibility: visible;
+        }
+        .receipt-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            box-shadow: none;
+            border: none;
+        }
+        .buttons {
+            display: none; /* Hide buttons during printing */
+        }
     }
-    .receipt-container, .receipt-container * {
-        visibility: visible;
-    }
-    .receipt-container {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        box-shadow: none;
-        border: none;
-    }
-    .buttons {
-        display: none; /* Hide buttons during printing */
-    }
-}
+
     /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
     .navbar {
         background: rgb(65, 165, 232) !important;
@@ -385,7 +387,7 @@
     /* Receipt-specific styles */
     .receipt-container {
         background-color: white;
-        width: 400px;
+        width: 600px;
         margin: 0 auto;
         padding: 20px;
         border: 1px solid #ddd;
@@ -420,21 +422,8 @@
         text-align: center;
         margin: 10px 0;
     }
-    .table-section {
-        margin-bottom: 15px;
-    }
-    .table-section table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 5px;
-    }
-    .table-section th, .table-section td {
-        border: 1px solid #ddd;
-        padding: 5px;
-        text-align: center;
-    }
     .buttons {
-        text-align: center;
+        text-align: right;
         margin-top: 20px;
     }
     .buttons button {
@@ -450,27 +439,6 @@
     .btn-print {
         background-color: #007bff;
         color: white;
-    }
-
-    /* Print-specific styles */
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-        .receipt-container, .receipt-container * {
-            visibility: visible;
-        }
-        .receipt-container {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            box-shadow: none;
-            border: none;
-        }
-        .buttons {
-            display: none; /* Hide buttons during printing */
-        }
     }
 </style>
 
