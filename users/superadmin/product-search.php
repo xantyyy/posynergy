@@ -203,7 +203,7 @@
                                 </div>
                             </div>
 
-                            <!-- Right Side - Additional Table -->
+                            <!-- Right Side - Additional Tables -->
                             <div class="col-md-5">
                                 <div class="card">
                                         <div class="card-body">
@@ -232,7 +232,7 @@
                                     <div class="card-body">
                                         <h5>Selling Price</h5>
                                         <div class="table-responsive" style="height: calc(80vh - 300px); overflow-y: auto;">
-                                            <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
+                                            <table class="table table-bordered" style="margin-top: 10px;" id="selling-price-table">
                                                 <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
                                                     <tr>
                                                         <th>UOM</th>
@@ -243,10 +243,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
-                                                        <td>Sample</td>
+                                                        <td class="text-center" colspan="4" style="text-transform: none;">Select a product to view details</td>
                                                     </tr>
                                                 </tbody>                                            
                                             </table>
@@ -318,6 +315,12 @@
                                     // If search input is empty, show the initial message
                                     const tbody = document.querySelector('#table-bold tbody');
                                     tbody.innerHTML = '<tr><td class="text-center" colspan="5">Please search for a product</td></tr>';
+                                    // Clear the details table
+                                    const detailsTbody = document.querySelector('#details-table tbody');
+                                    detailsTbody.innerHTML = '<tr><td class="text-center" colspan="3" style="text-transform: none;">Select a product to view details</td></tr>';
+                                    // Clear the selling price table
+                                    const sellingPriceTbody = document.querySelector('#selling-price-table tbody');
+                                    sellingPriceTbody.innerHTML = '<tr><td class="text-center" colspan="4" style="text-transform: none;">Select a product to view details</td></tr>';
                                 } else {
                                     // Fetch products only if there is a search term
                                     fetchProducts(searchTerm);
@@ -329,6 +332,12 @@
                                 document.getElementById('searchInput').value = '';
                                 const tbody = document.querySelector('#table-bold tbody');
                                 tbody.innerHTML = '<tr><td class="text-center" colspan="5" style="text-transform: none;">Please search for a Product</td></tr>';
+                                // Clear the details table
+                                const detailsTbody = document.querySelector('#details-table tbody');
+                                detailsTbody.innerHTML = '<tr><td class="text-center" colspan="3" style="text-transform: none;">Select a product to view details</td></tr>';
+                                // Clear the selling price table
+                                const sellingPriceTbody = document.querySelector('#selling-price-table tbody');
+                                sellingPriceTbody.innerHTML = '<tr><td class="text-center" colspan="4" style="text-transform: none;">Select a product to view details</td></tr>';
                             });
 
                             // Add event listener for Load All button
@@ -350,7 +359,7 @@
                                             data.forEach(product => {
                                                 const row = document.createElement('tr');
                                                 row.style.cursor = 'pointer';
-                                                row.onclick = () => selectRow(row);
+                                                row.onclick = () => selectRow(row, product.Barcode);
                                                 row.innerHTML = `
                                                     <td>${product.ID}</td>
                                                     <td>${product.Barcode}</td>
@@ -366,6 +375,61 @@
                                         console.error('Error fetching products:', error);
                                         const tbody = document.querySelector('#table-bold tbody');
                                         tbody.innerHTML = '<tr><td colspan="5">Error loading products</td></tr>';
+                                    });
+                            }
+
+                            function selectRow(row, barcode) {
+                                // Highlight the selected row
+                                document.querySelectorAll('#table-bold tbody tr').forEach(r => r.classList.remove('table-active'));
+                                row.classList.add('table-active');
+
+                                // Fetch combined details for the selected product using barcode
+                                fetch(`fetch-product-details.php?barcode=${encodeURIComponent(barcode)}`)
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Populate the Details table (cost details)
+                                        const detailsTbody = document.querySelector('#details-table tbody');
+                                        detailsTbody.innerHTML = '';
+
+                                        if (data.costDetails.length === 0) {
+                                            detailsTbody.innerHTML = '<tr><td class="text-center" colspan="3">No details found</td></tr>';
+                                        } else {
+                                            data.costDetails.forEach(detail => {
+                                                const detailRow = document.createElement('tr');
+                                                detailRow.innerHTML = `
+                                                    <td>${detail.isDefault ? 'Yes' : 'No'}</td>
+                                                    <td>${detail.SupplierName}</td>
+                                                    <td>${detail.Cost}</td>
+                                                `;
+                                                detailsTbody.appendChild(detailRow);
+                                            });
+                                        }
+
+                                        // Populate the Selling Price table (price details)
+                                        const sellingPriceTbody = document.querySelector('#selling-price-table tbody');
+                                        sellingPriceTbody.innerHTML = '';
+
+                                        if (data.priceDetails.length === 0) {
+                                            sellingPriceTbody.innerHTML = '<tr><td class="text-center" colspan="4">No selling price details found</td></tr>';
+                                        } else {
+                                            data.priceDetails.forEach(price => {
+                                                const priceRow = document.createElement('tr');
+                                                priceRow.innerHTML = `
+                                                    <td>${price.Measurement}</td>
+                                                    <td>${price.PriceType}</td>
+                                                    <td>${price.isVAT ? 'Yes' : 'No'}</td>
+                                                    <td>${price.AppliedSRP}</td>
+                                                `;
+                                                sellingPriceTbody.appendChild(priceRow);
+                                            });
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error fetching combined details:', error);
+                                        const detailsTbody = document.querySelector('#details-table tbody');
+                                        detailsTbody.innerHTML = '<tr><td colspan="3">Error loading details</td></tr>';
+                                        const sellingPriceTbody = document.querySelector('#selling-price-table tbody');
+                                        sellingPriceTbody.innerHTML = '<tr><td colspan="4">Error loading selling price details</td></tr>';
                                     });
                             }
                         });
@@ -460,7 +524,16 @@
 						font-weight: bold;
 						font-style: italic;
 					}
-                </style>
 
+                    #selling-price-table thead th {
+						font-weight: bold;
+						font-style: italic;
+					}
+
+                    /* Highlight selected row */
+                    .table-active {
+                        background-color: #e9ecef !important;
+                    }
+                </style>
 
 <?php include_once 'footer.php'; ?>
