@@ -317,7 +317,7 @@
     </div>
 </div>
 
-<!-- close today's transaction MODAL -->
+<!-- Close Today's Transaction MODAL -->
 <div class="modal fade" id="closeInventoryModal" tabindex="-1" aria-labelledby="closeInventoryModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -335,7 +335,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- ADD NEW SUPPLIER MODAL -->
 <div class="modal fade" id="newSupplierModal" tabindex="-1" aria-labelledby="newSupplierModalLabel" aria-hidden="true">

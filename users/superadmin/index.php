@@ -1,5 +1,22 @@
 <?php include_once 'header.php'; ?>
 <?php include_once 'modals.php'; ?>
+<?php
+	require_once '../../includes/config.php'; // Database connection
+
+	// Check if the transaction is being closed
+	if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['close_transaction'])) {
+		$today = date("Y-m-d");
+		$closeSql = "UPDATE tbl_openingfund SET Closed = 1 WHERE Username = 'CASHIER' AND DATE(TransDate) = '$today'";
+		if ($conn->query($closeSql) === TRUE) {
+			echo "<script>alert('Transaction closed successfully!');</script>";
+		} else {
+			echo "<script>alert('Error: " . $conn->error . "');</script>";
+		}
+	}
+
+	$conn->close();
+?>
+
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
 				<div class="sidebar-header">
@@ -124,7 +141,7 @@
 						<a href="#pageSubmenu7" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
 						<i class="material-icons">build</i><span>Utilities</span></a>
 						<ul class="collapse list-unstyled menu" id="pageSubmenu7">
-						<li>
+							<li>
 								<a href="#" data-bs-toggle="modal" data-bs-target="#closeInventoryModal"> Close Today's Transaction</a>
 							</li>
 							<li>
@@ -205,6 +222,21 @@
 							dropdown.addEventListener("mouseleave", function () {
 								this.classList.remove("hovered-dropdown");
 							});
+						});
+
+						// Handle the close transaction confirmation
+						document.getElementById('confirmCloseInventory')?.addEventListener('click', function () {
+							// Submit a form to close the transaction
+							const form = document.createElement('form');
+							form.method = 'POST';
+							form.action = '';
+							const input = document.createElement('input');
+							input.type = 'hidden';
+							input.name = 'close_transaction';
+							input.value = '1';
+							form.appendChild(input);
+							document.body.appendChild(form);
+							form.submit();
 						});
 					});
 				</script>

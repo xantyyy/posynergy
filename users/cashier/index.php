@@ -4,14 +4,14 @@
 <?php
 require_once '../../includes/config.php'; // Database connection
 
-// Check if the form is submitted
+// Check if the form is submitted for declaring opening fund
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['opening_fund_amount'])) {
     $cashier = "CASHIER"; // Hardcoded as per your table
     $amount = $_POST['opening_fund_amount'];
     $transDate = date("Y-m-d H:i:s"); // Current date and time
 
-    // Insert into tbl_openingfund
-    $sql = "INSERT INTO tbl_openingfund (Username, Amount, TransDate) VALUES ('$cashier', '$amount', '$transDate')";
+    // Insert into tbl_openingfund with Closed set to 0 (open) by default
+    $sql = "INSERT INTO tbl_openingfund (Username, Amount, TransDate, Closed) VALUES ('$cashier', '$amount', '$transDate', 0)";
     
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Opening fund declared successfully!');</script>";
@@ -25,6 +25,25 @@ $today = date("Y-m-d");
 $checkSql = "SELECT * FROM tbl_openingfund WHERE Username = 'CASHIER' AND DATE(TransDate) = '$today'";
 $result = $conn->query($checkSql);
 $showModal = $result->num_rows == 0; // Show modal if no entry exists for today
+
+// Check if the transaction for today is closed
+$isTransactionClosed = false;
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $isTransactionClosed = $row['Closed'] == 1;
+}
+
+// Check if yesterday's transaction is closed to allow opening fund declaration
+$yesterday = date("Y-m-d", strtotime("-1 day"));
+$yesterdaySql = "SELECT Closed FROM tbl_openingfund WHERE Username = 'CASHIER' AND DATE(TransDate) = '$yesterday'";
+$yesterdayResult = $conn->query($yesterdaySql);
+$canDeclareToday = true; // Default to true
+if ($yesterdayResult->num_rows > 0) {
+    $yesterdayRow = $yesterdayResult->fetch_assoc();
+    $canDeclareToday = $yesterdayRow['Closed'] == 1; // Can declare only if yesterday's transaction is closed
+}
+
+$showModal = $showModal && $canDeclareToday; // Show modal only if no entry for today and yesterday's transaction is closed
 
 $conn->close();
 ?>
@@ -42,10 +61,10 @@ $conn->close();
     </div>
     <ul class="list-unstyled components">
         <li class="">
-            <a href="point-of-sale.php" class="dashboard"><i class="material-icons">point_of_sale</i><span>Point of Sale</span></a>
+            <a href="point-of-sale.php" class="dashboard <?php echo $isTransactionClosed ? 'disabled-link' : ''; ?>"><i class="material-icons">point_of_sale</i><span>Point of Sale</span></a>
         </li>
         <li class="dropdown">
-            <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle <?php echo $isTransactionClosed ? 'disabled-link' : ''; ?>">
             <i class="material-icons">report</i><span>POS Reports</span></a>
             <ul class="collapse list-unstyled menu" id="homeSubmenu1">
                 <li>
@@ -129,7 +148,7 @@ $conn->close();
             }
         });
 
-        // Show the modal only if no entry exists for today
+        // Show the modal only if no entry exists for today and yesterday's transaction is closed
         <?php if ($showModal): ?>
         var openingFundModal = new bootstrap.Modal(document.getElementById('openingFundModal'), {
             backdrop: 'static', // Prevent closing by clicking outside
