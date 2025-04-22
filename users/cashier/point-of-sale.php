@@ -1601,8 +1601,7 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <select style="flex-grow: 1; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 16px; background-color: #ffffff; cursor: pointer;">
-                                    <option value="">Select payment type</option>
-                                    <option value="CASH">Cash</option>
+                                    <option value=></option>
                                     <option value="CREDIT CARD">Credit Card</option>
                                     <option value="GIFT CARD">Gift Card</option>
                                 </select>
