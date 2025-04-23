@@ -73,8 +73,8 @@ try {
         // For now, I'm assuming it's the same as cost, but you might need to add shipping, taxes, etc.
         $landedCost = $costing['cost'];
         
-        // Determine VAT value (assuming standard 12% VAT if IsVAT is 'YES')
-        $vatValue = ($costing['isVat'] === 'YES') ? ($costing['cost'] * 0.12) : '0';
+        // Determine VAT value using the correct formula when IsVAT is 'YES'
+        $vatValue = ($costing['isVat'] === 'YES') ? ($costing['cost'] / 1.12 * 0.12) : '0';
         
         // Insert into tbl_productcost
         $stmt = $conn->prepare("INSERT INTO tbl_productcost (DateAdded, isDefault, SupplierName, Cost, Measurement, Barcode, IsVAT, VAT, LandedCost) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");

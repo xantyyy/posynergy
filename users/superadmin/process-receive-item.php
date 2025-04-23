@@ -63,17 +63,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['poNumber'])) {
             $expirationDate = $row['ExpirationDate'] ?? null;
             $quantity = $row['Quantity'] ?? 0;
             $retailCostPrice = $row['CostPrice'] ?? 0;
-            $retailSellingPrice = 0;
+            
+            // Calculate RetailSellingPrice based on isVat
+            $isVat = $row['IsVat'] ?? '';
+            error_log("isVat value for product {$row['ProductName']}: $isVat");
+
+            // Your calculation logic seems correct but might be getting an unexpected value
+            if ($isVat === 'YES') {
+                $vatSellingPrice = $retailCostPrice / 1.12 * 0.12;
+                $retailSellingPrice = $retailCostPrice + $vatSellingPrice;
+            } else {
+                $retailSellingPrice = $retailCostPrice;
+            }
+            
+            // Calculate TotalCostPrice and TotalSellingPrice
             $totalCostPrice = $row['TotalCostPrice'] ?? 0;
-            $totalSellingPrice = 0;
+            $totalSellingPrice = $quantity * $retailSellingPrice;
+            
             $threshold = 0;
             $reference = $row['POnumber'] ?? '';
-            $purpose = $row['Purpose'] ?? ''; // Still needed for tbl_invincoming
+            $purpose = $row['Purpose'] ?? '';
             $tag = $row['Tag'] ?? '';
             $shelf = $row['Shelf'] ?? '';
             $shelfDescription = $row['ShelfDescription'] ?? '';
             $location = $row['Location'] ?? '';
-            $isVat = $row['isVat'] ?? '';
             $companyVat = $row['CompanyVat'] ?? 'NO';
             
             // 3. Insert into tbl_invincoming (includes Purpose)

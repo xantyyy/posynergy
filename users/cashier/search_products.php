@@ -16,20 +16,9 @@ if (empty($search)) {
 }
 
 try {
-    if ($isBarcode) {
-        // Exact match for barcode
-        $sql = "SELECT Barcode, ProductName, RetailCostPrice AS SRP, Quantity 
-                FROM tbl_invprodlist 
-                WHERE Barcode = ?";
-        $stmt = $conn->prepare($sql);
-        if (!$stmt) {
-            throw new Exception('Failed to prepare statement for barcode search');
-        }
-        $stmt->bind_param('s', $search);
-    } else {
         // Fuzzy search for product name or barcode
         $likeSearch = '%' . $search . '%';
-        $sql = "SELECT Barcode, ProductName, RetailCostPrice AS SRP, Quantity 
+        $sql = "SELECT Barcode, ProductName, RetailSellingPrice AS SRP, Quantity 
                 FROM tbl_invprodlist 
                 WHERE Barcode LIKE ? OR ProductName LIKE ?
                 LIMIT 10";
@@ -38,7 +27,7 @@ try {
             throw new Exception('Failed to prepare statement for fuzzy search');
         }
         $stmt->bind_param('ss', $likeSearch, $likeSearch);
-    }
+
 
     $stmt->execute();
     $result = $stmt->get_result();

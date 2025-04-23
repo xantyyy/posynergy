@@ -323,6 +323,96 @@
 
 <script>
 // Add event listener for the "Submit" button
+// First part - Update the barcode input event listener to use the correct vatable value
+document.getElementById('invItem-barcode').addEventListener('input', function() {
+    let barcode = this.value;
+    let selectedSupplier = document.getElementById('invItem-supplier').value;
+    let quantityField = document.getElementById('invItem-quantity');
+    let addButton = document.getElementById('add-button');
+    let productNameField = document.getElementById('invItem-description');
+    let tableBody = document.querySelector('#table-product-details tbody');
+
+    console.log('Barcode entered:', barcode);
+    console.log('Selected Supplier:', selectedSupplier);
+
+    // Reset fields if barcode or supplier is empty
+    if (!barcode || !selectedSupplier) {
+        productNameField.value = '';
+        quantityField.disabled = true;
+        addButton.disabled = true;
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+        return;
+    }
+
+    fetch('getProduct.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'barcode=' + encodeURIComponent(barcode)
+    })
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers.get('Content-Type'));
+        return response.text().then(text => {
+            console.log('Raw response:', text);
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                console.error('Error parsing JSON:', e);
+                throw new Error('Invalid JSON response');
+            }
+        });
+    })
+    .then(data => {
+        console.log('Parsed data:', data);
+
+        if (data.success) {
+            productNameField.value = data.productName;
+
+            // Store AppliedSRP in a data attribute for later use
+            document.getElementById('invItem-barcode').dataset.appliedSRP = data.appliedSRP;
+            
+            // Store the VAT value in a data attribute for later use
+            document.getElementById('invItem-barcode').dataset.vatable = data.vatable || 'No';
+
+            // Check if the supplier matches
+            if (data.supplier === selectedSupplier) {
+                // Display product details if supplier matches
+                tableBody.innerHTML = `
+                    <tr>
+                        <td>${data.shelf || 'N/A'}</td>
+                        <td>${data.category || 'N/A'}</td>
+                        <td>${data.uom || 'N/A'}</td>
+                        <td>${data.cost || 'N/A'}</td>
+                        <td>${data.vatable || 'No'}</td>
+                    </tr>
+                `;
+                quantityField.disabled = false;
+                addButton.disabled = false;
+            } else {
+                tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+                quantityField.disabled = true;
+                addButton.disabled = true;
+                console.log('Supplier mismatch:', data.supplier, '!=', selectedSupplier);
+            }
+        } else {
+            productNameField.value = 'Product not found';
+            quantityField.disabled = true;
+            addButton.disabled = true;
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        productNameField.value = 'Error fetching product';
+        quantityField.disabled = true;
+        addButton.disabled = true;
+        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Error loading data</td></tr>';
+    });
+});
+
+// Second part - Update the submit button event listener to use the correct VAT value from the API response
 document.getElementById('submit-button').addEventListener('click', function() {
     console.log('Submit button clicked');
 
@@ -366,6 +456,8 @@ document.getElementById('submit-button').addEventListener('click', function() {
         let uom = row.cells[3].textContent;
         let appliedSRP = parseFloat(row.cells[4].textContent);
         let totalAmount = parseFloat(row.cells[5].textContent);
+        // Get the vatable value from the data attribute
+        let vatable = row.dataset.vatable || 'No';
 
         items.push({
             barcode: barcode,
@@ -373,12 +465,12 @@ document.getElementById('submit-button').addEventListener('click', function() {
             productName: productName,
             quantity: parseInt(quantity),
             unit: uom,
-            appliedSRP: appliedSRP, // Use AppliedSRP instead of costPrice
-            totalCostPrice: totalAmount, // Rename to totalAmount for clarity
+            appliedSRP: appliedSRP,
+            totalCostPrice: totalAmount,
             shelf: '',
             shelfDescription: '',
             productCode: '',
-            isVat: 'No'
+            isVat: vatable // Use the vatable value from the data attribute
         });
     });
 
@@ -409,7 +501,11 @@ document.getElementById('submit-button').addEventListener('click', function() {
                 item.shelf = data.shelf || '';
                 item.shelfDescription = data.shelfDescription || '';
                 item.category = data.category || '';
-                item.isVat = data.isVat || 'No';
+                // Note: We're already set isVat above, but we can update it here if needed
+                // if the API response has a different value
+                if (data.vatable !== undefined) {
+                    item.isVat = data.vatable;
+                }
             } else {
                 throw new Error('Failed to fetch product details for barcode: ' + item.barcode + ' - ' + (data.message || 'Unknown error'));
             }
@@ -498,92 +594,6 @@ document.getElementById('submit-button').addEventListener('click', function() {
         });
 });
 
-    document.getElementById('invItem-barcode').addEventListener('input', function() {
-    let barcode = this.value;
-    let selectedSupplier = document.getElementById('invItem-supplier').value;
-    let quantityField = document.getElementById('invItem-quantity');
-    let addButton = document.getElementById('add-button');
-    let productNameField = document.getElementById('invItem-description');
-    let tableBody = document.querySelector('#table-product-details tbody');
-
-    console.log('Barcode entered:', barcode);
-    console.log('Selected Supplier:', selectedSupplier);
-
-    // Reset fields if barcode or supplier is empty
-    if (!barcode || !selectedSupplier) {
-        productNameField.value = '';
-        quantityField.disabled = true;
-        addButton.disabled = true;
-        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
-        return;
-    }
-
-    fetch('getProduct.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'barcode=' + encodeURIComponent(barcode)
-    })
-    .then(response => {
-        console.log('Response status:', response.status);
-        console.log('Response headers:', response.headers.get('Content-Type'));
-        return response.text().then(text => {
-            console.log('Raw response:', text);
-            try {
-                return JSON.parse(text);
-            } catch (e) {
-                console.error('Error parsing JSON:', e);
-                throw new Error('Invalid JSON response');
-            }
-        });
-    })
-    .then(data => {
-        console.log('Parsed data:', data);
-
-        if (data.success) {
-            productNameField.value = data.productName;
-
-            // Store AppliedSRP in a data attribute for later use
-            document.getElementById('invItem-barcode').dataset.appliedSRP = data.appliedSRP;
-
-            // Check if the supplier matches
-            if (data.supplier === selectedSupplier) {
-                // Display product details if supplier matches
-                tableBody.innerHTML = `
-                    <tr>
-                        <td>${data.shelf || 'N/A'}</td>
-                        <td>${data.category || 'N/A'}</td>
-                        <td>${data.uom || 'N/A'}</td>
-                        <td>${data.cost || 'N/A'}</td>
-                        <td>${data.vatable || 'No'}</td>
-                    </tr>
-                `;
-                quantityField.disabled = false;
-                addButton.disabled = false;
-            } else {
-                tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
-                quantityField.disabled = true;
-                addButton.disabled = true;
-                console.log('Supplier mismatch:', data.supplier, '!=', selectedSupplier);
-            }
-        } else {
-            productNameField.value = 'Product not found';
-            quantityField.disabled = true;
-            addButton.disabled = true;
-            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No Data Available</td></tr>';
-        }
-    })
-    .catch(error => {
-        console.error('Fetch error:', error);
-        productNameField.value = 'Error fetching product';
-        quantityField.disabled = true;
-        addButton.disabled = true;
-        tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Error loading data</td></tr>';
-    });
-});
-
-    // Add event listener for the "Add" button
 document.getElementById('add-button').addEventListener('click', function() {
     // Get the values
     let barcode = document.getElementById('invItem-barcode').value;
@@ -596,6 +606,9 @@ document.getElementById('add-button').addEventListener('click', function() {
     let productDetailsRow = tableBody.querySelector('tr');
     let uom = productDetailsRow.cells[2].textContent;
     let appliedSRP = parseFloat(document.getElementById('invItem-barcode').dataset.appliedSRP || 0);
+    
+    // Get the vatable value that was stored in the dataset
+    let vatable = document.getElementById('invItem-barcode').dataset.vatable || 'No';
 
     // Validate quantity
     if (!quantity || quantity <= 0) {
@@ -613,6 +626,8 @@ document.getElementById('add-button').addEventListener('click', function() {
 
     // Add a new row to the table-product-discount
     let newRow = document.createElement('tr');
+    // Store the vatable value as a data attribute on the row for later use
+    newRow.dataset.vatable = vatable;
     newRow.innerHTML = `
         <td>${barcode}</td>
         <td>${productName}</td>

@@ -186,7 +186,7 @@
 							
 							// Get all items for this PO
 							$itemsSql = "SELECT Barcode, ProductName, Quantity, Unit, CostPrice, 
-												isVat, Discount, TotalCostPrice, Location, CompanyVat 
+												IsVat, Discount, TotalCostPrice, Location, CompanyVat 
 										FROM tbl_purchasepending 
 										WHERE POnumber = ? AND ProductName IS NOT NULL";
 							$itemsStmt = $conn->prepare($itemsSql);
@@ -303,7 +303,7 @@
 																<td>-</td>
 																<td><?php echo htmlspecialchars($item['Unit'] ?? ''); ?></td>
 																<td><?php echo htmlspecialchars($item['CostPrice'] ?? ''); ?></td>
-																<td><?php echo htmlspecialchars($item['isVat'] ?? ''); ?></td>
+																<td><?php echo htmlspecialchars($item['IsVat'] ?? ''); ?></td>
 																<td><?php echo htmlspecialchars($item['Discount'] ?? ''); ?></td>
 																<td><?php echo htmlspecialchars($item['TotalCostPrice'] ?? ''); ?></td>
 																<td><?php echo htmlspecialchars($item['Location'] ?? ''); ?></td>
