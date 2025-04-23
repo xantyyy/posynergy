@@ -3,90 +3,191 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!--MENU SIDEBAR CONTENT-->
-    <nav id="sidebar">
-        <div class="sidebar-header">
-            <img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
-            <div class="ml-auto" id="userInfo">
-                <p class="text-right">Cashier Staff</p>
+<!--MENU SIDEBAR CONTENT-->
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
+        <div class="ml-auto" id="userInfo">
+            <p class="text-right">Cashier Staff</p>
+        </div>
+    </div>
+    <ul class="list-unstyled components">
+        <li>
+            <a href="#" class="dashboard" accesskey="F1"><i class="material-icons">edit</i><span>Edit Item (F1)</span></a>
+        </li>
+        <li>
+            <a href="#" class="dashboard" accesskey="F2"><i class="material-icons">add</i><span>Add To Pending (F2)</span></a>
+        </li>
+        <li>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#pendingTransactionModal" accesskey="F3">
+                <i class="material-icons">pending</i><span>Pending Transaction (F3)</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#searchProductModal" accesskey="F4">
+                <i class="material-icons">search</i><span>Search Product (F4)</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#returnModal" accesskey="F5">
+                <i class="material-icons">keyboard_return</i><span>Return (F5)</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="dashboard" accesskey="F6"><i class="material-icons">delete</i><span>Void Item (F6)</span></a>
+        </li>
+        <li>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#cashTenderModal" accesskey="F7"><i class="material-icons">attach_money</i><span>Cash Tender (F7)</span></a>
+        </li>
+        <li>
+            <a href="#" class="dashboard" accesskey="F8"><i class="material-icons">delete_forever</i><span>Void All (F8)</span></a>
+        </li>
+        <li>
+            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#customerPointsModal" accesskey="F9">
+                <i class="material-icons">loyalty</i><span>Customer Points (F9)</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" class="dashboard" accesskey="F10"><i class="material-icons">credit_card</i><span>Other Payment Type (F10)</span></a>
+        </li>
+        <li class="dropdown">
+    <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+        <i class="material-icons">discount</i><span>Apply Discount</span>
+    </a>
+    <ul class="collapse list-unstyled menu" id="homeSubmenu1">
+        <li>
+            <a href="#" onclick="applyRegularDiscount()">Regular Discount <span class="shortcut-key">Ctrl+D</span></a>
+        </li>
+        <li>
+            <a href="#" onclick="applySoloParent()">Solo Parent <span class="shortcut-key">Ctrl+S</span></a>
+        </li>
+        <li>
+            <a href="#" onclick="showPWDPasswordPrompt()">PWD <span class="shortcut-key">F12</span></a>
+        </li>
+        <li>
+            <a href="#" onclick="showSeniorPasswordPrompt()">Senior Citizen <span class="shortcut-key">F11</span></a>
+        </li>
+        <li>
+            <a href="#" onclick="applyNAAC()">NAAC <span class="shortcut-key">Ctrl+N</span></a>
+        </li>
+        <li>
+            <a href="#" onclick="applyMedalOfValor()">Medal of Valor <span class="shortcut-key">Ctrl+M</span></a>
+        </li>
+    </ul>
+</li>
+
+<!-- Senior Password Modal -->
+<div class="modal fade" id="seniorPasswordModal" tabindex="-1" aria-labelledby="seniorPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="seniorPasswordModalLabel">Senior Citizen Discount Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Please enter the password to apply the Senior Citizen discount:</p>
+                <input type="password" class="form-control" id="seniorPassword" placeholder="Enter password">
+                <div id="seniorPasswordError" style="color:red; display:none;">Incorrect password!</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="verifySeniorPassword()">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
             </div>
         </div>
-        <ul class="list-unstyled components">
-            <li>
-                <a href="#" class="dashboard" accesskey="F1"><i class="material-icons">edit</i><span>Edit Item (F1)</span></a>
-            </li>
-            <li>
-                <a href="#" class="dashboard" accesskey="F2"><i class="material-icons">add</i><span>Add To Pending (F2)</span></a>
-            </li>
-            <li>
-                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#pendingTransactionModal" accesskey="F3">
-                    <i class="material-icons">pending</i><span>Pending Transaction (F3)</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#searchProductModal" accesskey="F4">
-                    <i class="material-icons">search</i><span>Search Product (F4)</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#returnModal" accesskey="F5">
-                    <i class="material-icons">keyboard_return</i><span>Return (F5)</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="dashboard" accesskey="F6"><i class="material-icons">delete</i><span>Void Item (F6)</span></a>
-            </li>
-            <li>
-                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#cashTenderModal" accesskey="F7"><i class="material-icons">attach_money</i><span>Cash Tender (F7)</span></a>
-            </li>
-            <li>
-                <a href="#" class="dashboard" accesskey="F8"><i class="material-icons">delete_forever</i><span>Void All (F8)</span></a>
-            </li>
-            <li>
-                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#customerPointsModal" accesskey="F9">
-                    <i class="material-icons">loyalty</i><span>Customer Points (F9)</span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="dashboard" accesskey="F10"><i class="material-icons">credit_card</i><span>Other Payment Type (F10)</span></a>
-            </li>
-            <li class="dropdown">
-        <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-            <i class="material-icons">discount</i><span>Apply Discount</span>
-        </a>
-        <ul class="collapse list-unstyled menu" id="homeSubmenu1">
-            <li>
-                <a href="#">
-                    <i class="material-icons">discount</i><span>Regular Discount <span class="shortcut-key">Ctrl+D</span></span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="material-icons">family_restroom</i><span>Solo Parent <span class="shortcut-key">Ctrl+S</span></span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="pwd-discount">
-                    <i class="material-icons">accessible</i><span>PWD <span class="shortcut-key">F12</span></span>
-                </a>
-            </li>
-            <li>
-                <a href="#" class="dashboard senior-discount" accesskey="F11">
-                    <i class="material-icons">elderly</i><span>Senior Citizen <span class="shortcut-key">F11</span></span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="material-icons">sports</i><span>NAAC <span class="shortcut-key">Ctrl+N</span></span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="material-icons">military_tech</i><span>Medal of Valor <span class="shortcut-key">Ctrl+M</span></span>
-                </a>
-            </li>
-        </ul>
-    </li>
+    </div>
+</div>
+
+<!-- Senior Details Modal -->
+<div class="modal fade" id="seniorDetailsModal" tabindex="-1" aria-labelledby="seniorDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="seniorDetailsModalLabel">Senior Citizen Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="seniorForm">
+                    <div class="mb-3">
+                        <label for="seniorName" class="form-label">Full Name:</label>
+                        <input type="text" class="form-control" id="seniorName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="seniorId" class="form-label">Senior Citizen ID Number:</label>
+                        <input type="text" class="form-control" id="seniorId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="seniorAmountAvailed" class="form-label">Amount Availed:</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="text" class="form-control" id="seniorAmountAvailed" readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="submitSeniorDetails()">Apply Discount</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PWD Password Modal -->
+<div class="modal fade" id="pwdPasswordModal" tabindex="-1" aria-labelledby="pwdPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pwdPasswordModalLabel">PWD Discount Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Please enter the password to apply the PWD discount:</p>
+                <input type="password" class="form-control" id="pwdPassword" placeholder="Enter password">
+                <div id="pwdPasswordError" style="color:red; display:none;">Incorrect password!</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="verifyPWDPassword()">Submit</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PWD Details Modal -->
+<div class="modal fade" id="pwdDetailsModal" tabindex="-1" aria-labelledby="pwdDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pwdDetailsModalLabel">PWD Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="pwdForm">
+                    <div class="mb-3">
+                        <label for="pwdName" class="form-label">Full Name:</label>
+                        <input type="text" class="form-control" id="pwdName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwdId" class="form-label">ID Number:</label>
+                        <input type="text" class="form-control" id="pwdId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwdAmountAvailed" class="form-label">Amount Availed:</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="text" class="form-control" id="pwdAmountAvailed" readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="submitPWDDetails()">Apply Discount</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
         <li>
             <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#priceCheckModal" accesskey="F12">
@@ -282,6 +383,60 @@
     </div>
 </div>
 
+<div class="modal fade" id="pwdPasswordModal" tabindex="-1" aria-labelledby="pwdPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pwdPasswordModalLabel">PWD Discount</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Please enter password:</p>
+                <input type="password" class="form-control" id="pwdPassword" placeholder="Enter password">
+                <div id="pwdPasswordError" style="color:red; display:none;">Incorrect password!</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="verifyPWDPassword()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PWD Details Modal -->
+<div class="modal fade" id="pwdDetailsModal" tabindex="-1" aria-labelledby="pwdDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pwdDetailsModalLabel">PWD Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="pwdForm">
+                    <div class="mb-3">
+                        <label for="pwdName" class="form-label">Full Name:</label>
+                        <input type="text" class="form-control" id="pwdName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwdId" class="form-label">ID Number:</label>
+                        <input type="text" class="form-control" id="pwdId" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwdAmountAvailed" class="form-label">Amount Availed:</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="text" class="form-control" id="pwdAmountAvailed" readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="submitPWDDetails()">Apply Discount</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // Price Check Modal Search Functionality
 $(document).ready(function() {
@@ -370,62 +525,6 @@ $(document).ready(function() {
             }
         }
     });
-
-    // Handle PWD Discount click (F12)
-    $('.pwd-discount').on('click', function(e) {
-        e.preventDefault();
-        if (confirm('Apply PWD Discount?')) {
-            $('#pwdPasswordModal').modal('show');
-            $('#pwdPassword').val('').removeClass('is-invalid');
-            $('#pwdPasswordError').hide();
-        }
-    });
-
-    // Handle Senior Citizen Discount click (F11)
-    $('.senior-discount').on('click', function(e) {
-        e.preventDefault();
-        if (confirm('Apply Senior Discount?')) {
-            $('#seniorPasswordModal').modal('show');
-            $('#seniorPassword').val('').removeClass('is-invalid');
-            $('#passwordError').hide();
-        }
-    });
-
-    // Submit Senior Citizen details
-    function submitSeniorDetails() {
-        const name = $('#seniorName').val();
-        const idNumber = $('#seniorId').val();
-        const amountAvailed = parseFloat($('#amountAvailed').val()) || 0;
-
-        if (name && idNumber && amountAvailed > 0) {
-            const discountData = {
-                name: name,
-                idNumber: idNumber,
-                amountAvailed: amountAvailed,
-                discountType: 'Senior Citizen'
-            };
-
-            // Apply discount logic
-            updateTransactionWithDiscount(discountData);
-            $('#seniorDetailsModal').modal('hide');
-            alert(`Senior Citizen discount applied for:\nName: ${name}\nID: ${idNumber}\nAmount Availed: ₱${amountAvailed.toFixed(2)}`);
-        } else {
-            alert('Please fill all required fields with valid values!');
-        }
-    }
-
-    // Update transaction with discount
-    function updateTransactionWithDiscount(discountData) {
-        const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
-        const discountAmount = discountData.amountAvailed * 0.20; // 20% discount
-        const finalTotal = totalAmount - discountAmount;
-
-        // Update transaction details
-        $('th:contains("Discount:")').next().text(`₱${discountAmount.toFixed(2)} (${discountData.discountType})`);
-        $('#totalTransactionDisplay').text(`₱${finalTotal.toFixed(2)}`);
-        $('#totalRetailDisplay').text(`₱${finalTotal.toFixed(2)}`);
-        $('#amountDue').val(finalTotal.toFixed(2));
-    }
 
     // Hide search results when clicking outside
     $(document).on('click', function(e) {
@@ -1278,19 +1377,188 @@ function updatePendingTransactionsTable(transactions) {
         tableBody.append(row);
     });
 }
+// Senior Citizen Discount Functions
+function showSeniorPasswordPrompt() {
+    $('#seniorPasswordModal').modal('show');  // Show the password modal
+    $('#seniorPassword').val('');  // Clear the password input field
+    $('#passwordError').hide();  // Hide the error message initially
+}
+
+function verifySeniorPassword() {
+    const password = $('#seniorPassword').val();  // Get the entered password
+    if (password === '123') {  // Check if the entered password matches the correct one
+        $('#seniorPasswordModal').modal('hide');  // Hide the password modal
+        $('#seniorDetailsModal').modal('show');  // Show the details modal
+    } else {
+        $('#passwordError').show();  // Show the error message if the password is incorrect
+        $('#seniorPassword').addClass('is-invalid');  // Add invalid class to input
+    }
+}
+
+function submitSeniorDetails() {
+    const name = $('#seniorName').val();
+    const idNumber = $('#seniorId').val();
+    const amountAvailed = $('#seniorAmountAvailed').val();
+
+    if (name && idNumber) {
+        const discountData = {
+            name: name,
+            idNumber: idNumber,
+            amountAvailed: amountAvailed,
+            discountType: 'Senior Citizen'
+        };
+
+        console.log('Applying Senior Citizen discount:', discountData);
+        alert(`Senior Citizen discount applied for:\nName: ${name}\nID: ${idNumber}\nAmount Availed: ₱${amountAvailed}`);
+
+        $('#seniorDetailsModal').modal('hide');
+        $('#seniorForm')[0].reset();
+        updateTransactionWithDiscount(discountData);
+    } else {
+        alert('Please fill all required fields!');
+    }
+}
 
 function updateTransactionWithDiscount(discountData) {
     const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
-    const discountAmount = totalAmount * 0.20; 
-    $('th:contains("Discount:")').next().text(`₱${discountAmount.toFixed(2)} (${discountData.discountType})`);
 
-    const finalTotal = totalAmount - discountAmount;
-    $('#totalTransactionDisplay').text(`₱${finalTotal.toFixed(2)}`);
-    $('#totalRetailDisplay').text(`₱${finalTotal.toFixed(2)}`);
-    $('#amountDue').val(finalTotal.toFixed(2));
+    // AJAX call to fetch the SENIORDISCOUNT value from the server
+    $.ajax({
+        url: 'fetch_discount.php', // Replace with your server endpoint
+        method: 'GET',
+        data: { configName: 'SENIORDISCOUNT' },
+        success: function(response) {
+            const discountRate = parseFloat(response) || 0.05; // Fallback to 0.05 if the fetch fails
+            const discountAmount = totalAmount * discountRate;
+
+            // Update the Discount row in Transaction Details
+            $('th:contains("Discount:")').next().text(`₱${discountAmount.toFixed(2)} (${discountData.discountType})`);
+
+            // Calculate the final total after discount
+            const finalTotal = totalAmount - discountAmount;
+
+            // Update the TOTAL in Transaction Details
+            $('#totalTransactionDisplay').text(`₱${finalTotal.toFixed(2)}`);
+            $('#totalRetailDisplay').text(`₱${finalTotal.toFixed(2)}`);
+            $('#amountDue').val(finalTotal.toFixed(2));
+        },
+        error: function() {
+            console.error('Failed to fetch discount rate, using default 0.05');
+            const discountRate = 0.05; // Fallback value
+            const discountAmount = totalAmount * discountRate;
+
+            $('th:contains("Discount:")').next().text(`₱${discountAmount.toFixed(2)} (${discountData.discountType})`);
+            const finalTotal = totalAmount - discountAmount;
+            $('#totalTransactionDisplay').text(`₱${finalTotal.toFixed(2)}`);
+            $('#totalRetailDisplay').text(`₱${finalTotal.toFixed(2)}`);
+            $('#amountDue').val(finalTotal.toFixed(2));
+        }
+    });
 }
 
+function verifySeniorPassword() {
+    const password = $('#seniorPassword').val();
+    if (password === 'cashier') {
+        $('#seniorPasswordModal').modal('hide');
+        $('#seniorDetailsModal').modal('show');
+    } else {
+        $('#passwordError').show();
+        $('#seniorPassword').addClass('is-invalid');
+    }
+}
 
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'F11') {
+        event.preventDefault();
+        showSeniorPasswordPrompt();
+    }
+});
+
+// PWD Discount Functions
+function showPWDPasswordPrompt() {
+    $('#pwdPasswordModal').modal('show');
+    $('#pwdPassword').val('');
+    $('#pwdPasswordError').hide();
+
+    // Calculate Amount Availed based on the transaction total
+    const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
+    
+    // Fetch PWDDISCOUNT from the database
+    $.ajax({
+        url: 'fetch_discount.php', // Same endpoint as Senior Citizen
+        method: 'GET',
+        data: { configName: 'PWDDISCOUNT' },
+        success: function(response) {
+            const discountRate = parseFloat(response) || 0.05; // Fallback to 0.05 if the fetch fails
+            const amountAvailed = totalAmount * discountRate;
+
+            // Set the Amount Availed field when the details modal is about to show
+            $('#pwdDetailsModal').on('show.bs.modal', function () {
+                $('#pwdAmountAvailed').val(amountAvailed.toFixed(2));
+            });
+        },
+        error: function() {
+            console.error('Failed to fetch PWD discount rate, using default 0.05');
+            const discountRate = 0.05; // Fallback value
+            const amountAvailed = totalAmount * discountRate;
+
+            $('#pwdDetailsModal').on('show.bs.modal', function () {
+                $('#pwdAmountAvailed').val(amountAvailed.toFixed(2));
+            });
+        }
+    });
+}
+
+function verifyPWDPassword() {
+    const password = $('#pwdPassword').val();
+    if (password === '1234') {
+        $('#pwdPasswordModal').modal('hide');
+        $('#pwdDetailsModal').modal('show');
+    } else {
+        $('#pwdPasswordError').show();
+        $('#pwdPassword').addClass('is-invalid');
+    }
+}
+
+function submitPWDDetails() {
+    const name = $('#pwdName').val();
+    const idNumber = $('#pwdId').val();
+    const amountAvailed = $('#pwdAmountAvailed').val();
+
+    if (name && idNumber) {
+        const discountData = {
+            name: name,
+            idNumber: idNumber,
+            amountAvailed: amountAvailed,
+            discountType: 'PWD'
+        };
+
+        console.log('Applying PWD discount:', discountData);
+        alert(`PWD discount applied for:\nName: ${name}\nID: ${idNumber}\nAmount Availed: ₱${amountAvailed}`);
+
+        $('#pwdDetailsModal').modal('hide');
+        $('#pwdForm')[0].reset();
+        updateTransactionWithDiscount(discountData);
+    } else {
+        alert('Please fill all required fields!');
+    }
+}
+
+// Add F12 key listener for PWD discount
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'F12') {
+        event.preventDefault();
+        showPWDPasswordPrompt();
+    }
+});
+
+
+
+function applyRegularDiscount() { alert('Regular discount applied'); }
+function applySoloParent() { alert('Solo Parent discount applied'); }
+function applyPWD() { alert('PWD discount applied'); }
+function applyNAAC() { alert('NAAC discount applied'); }
+function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
     document.addEventListener("keydown", function(event) {
         switch (event.key) {
             case "F1":
