@@ -229,7 +229,15 @@
 				</div>
 
 				<script>
-									document.addEventListener("DOMContentLoaded", function () {
+					document.addEventListener("DOMContentLoaded", function () {
+						// Get today's date in YYYY-MM-DD format
+						const today = new Date().toISOString().split('T')[0];
+
+						// Set the default value for both date inputs
+						document.getElementById("from-date").value = today;
+						document.getElementById("to-date").value = today;
+
+						// Existing code for active link and hover effects
 						const currentUrl = window.location.pathname.split('/').pop();
 						
 						document.querySelectorAll('.list-unstyled a').forEach(link => {
@@ -237,7 +245,6 @@
 							const parentMenu = link.closest('.collapse');
 							const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-							// Mark the active link
 							if (linkHref === currentUrl) {
 								link.classList.add('active');
 								if (parentMenu) {
@@ -249,7 +256,6 @@
 								}
 							}
 
-							// Apply hover effect for menu items
 							link.addEventListener("mouseenter", function () {
 								this.classList.add("hover-effect");
 							});
@@ -277,7 +283,7 @@
 					});
 				</script>
 
-<style>
+				<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
 					.navbar {
 						background: rgb(65, 165, 232) !important;

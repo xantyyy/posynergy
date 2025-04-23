@@ -157,8 +157,6 @@
 					</nav>
 				</div>	  
 
-				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
-
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 				<div class="container">
                     <div class="row">
@@ -175,12 +173,12 @@
                                     <form>
 										<div class="form-row">
 											<div class="form-group col-md-12 d-flex align-items-center">
-												<label for="#" class="me-4">From:</label>
-												<input type="date" class="form-control me-2" id="#">
+												<label for="fromDate" class="me-4">From:</label>
+												<input type="date" class="form-control me-2" id="fromDate">
 											</div>
 											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
-												<label for="#" class="me-5">To:</label>
-												<input type="date" class="form-control me-2" id="#">
+												<label for="toDate" class="me-5">To:</label>
+												<input type="date" class="form-control me-2" id="toDate">
 											</div>
 										</div>                                   
                                     </form>
@@ -242,52 +240,58 @@
             
             <script>
 				document.addEventListener("DOMContentLoaded", function () {
-        const currentUrl = window.location.pathname.split('/').pop();
-        
-        document.querySelectorAll('.list-unstyled a').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            const parentMenu = link.closest('.collapse');
-            const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+					// Set today's date for both date inputs
+					const today = new Date().toISOString().split('T')[0];
+					document.getElementById("fromDate").value = today;
+					document.getElementById("toDate").value = today;
 
-            // Mark the active link
-            if (linkHref === currentUrl) {
-                link.classList.add('active');
-                if (parentMenu) {
-                    parentMenu.classList.add('show');
-                    if (dropdownToggle) {
-                        dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                        dropdownToggle.setAttribute('aria-expanded', 'true');
-                    }
-                }
-            }
+					// Existing code for active link and hover effects
+					const currentUrl = window.location.pathname.split('/').pop();
+					
+					document.querySelectorAll('.list-unstyled a').forEach(link => {
+						const linkHref = link.getAttribute('href');
+						const parentMenu = link.closest('.collapse');
+						const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
 
-            // Apply hover effect for menu items
-            link.addEventListener("mouseenter", function () {
-                this.classList.add("hover-effect");
-            });
+						// Mark the active link
+						if (linkHref === currentUrl) {
+							link.classList.add('active');
+							if (parentMenu) {
+								parentMenu.classList.add('show');
+								if (dropdownToggle) {
+									dropdownToggle.classList.add('highlighted-dropdown', 'active');
+									dropdownToggle.setAttribute('aria-expanded', 'true');
+								}
+							}
+						}
 
-            link.addEventListener("mouseleave", function () {
-                this.classList.remove("hover-effect");
-            });
-        });
-        
-        document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-            const parentMenu = dropdown.nextElementSibling;
-            if (parentMenu && parentMenu.querySelector('.active')) {
-                dropdown.classList.add('highlighted-dropdown', 'active');
-                dropdown.setAttribute('aria-expanded', 'true');
-            }
-            
-            dropdown.addEventListener("mouseenter", function () {
-                this.classList.add('hovered-dropdown');
-            });
+						// Apply hover effect for menu items
+						link.addEventListener("mouseenter", function () {
+							this.classList.add("hover-effect");
+						});
 
-            dropdown.addEventListener("mouseleave", function () {
-                this.classList.remove("hovered-dropdown");
-            });
-        });
-    });
-</script>
+						link.addEventListener("mouseleave", function () {
+							this.classList.remove("hover-effect");
+						});
+					});
+					
+					document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+						const parentMenu = dropdown.nextElementSibling;
+						if (parentMenu && parentMenu.querySelector('.active')) {
+							dropdown.classList.add('highlighted-dropdown', 'active');
+							dropdown.setAttribute('aria-expanded', 'true');
+						}
+						
+						dropdown.addEventListener("mouseenter", function () {
+							this.classList.add('hovered-dropdown');
+						});
+
+						dropdown.addEventListener("mouseleave", function () {
+							this.classList.remove("hovered-dropdown");
+						});
+					});
+				});
+			</script>
 
 			<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
@@ -370,9 +374,9 @@
 						display: block !important;
 					}
 
-						#table-bold thead th {
-							font-weight: bold;
-							font-style: italic;
-						}
+					#table-bold thead th {
+						font-weight: bold;
+						font-style: italic;
+					}
 				</style>
 <?php include_once 'footer.php'; ?>
