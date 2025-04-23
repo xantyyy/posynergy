@@ -612,6 +612,64 @@
     </div>
 </div>
 
+<!-- PWD Password Verification Modal -->
+<div class="modal fade" id="pwdPasswordModal" tabindex="-1" aria-labelledby="pwdPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pwdPasswordModalLabel">Password Verification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="pwdPassword">Please enter password:</label>
+                    <input type="password" class="form-control" id="pwdPassword" placeholder="Enter password">
+                    <div id="pwdPasswordError" class="invalid-feedback">Incorrect password!</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="verifyPwdPassword()">Submit</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PWD Details Modal -->
+<div class="modal fade" id="pwdDetailsModal" tabindex="-1" aria-labelledby="pwdDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pwdDetailsModalLabel">PWD Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="pwdForm">
+                    <div class="form-group">
+                        <label for="pwdName">Name:</label>
+                        <input type="text" class="form-control" id="pwdName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwdId">ID No:</label>
+                        <input type="text" class="form-control" id="pwdId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwdAmountAvailed">Amount Availed:</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="number" class="form-control" id="pwdAmountAvailed" step="0.01" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="submitPwdDetails()">OK</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
         $('#voidAllReason').on('change', function() {
@@ -676,6 +734,62 @@
             }
         });
     }
+
+    // Verify the PWD password
+function verifyPwdPassword() {
+    const password = $('#pwdPassword').val();
+
+    $('#pwdPassword').removeClass('is-invalid');
+    $('#pwdPasswordError').hide();
+
+    $.ajax({
+        url: 'verify_pwd_password.php',
+        method: 'POST',
+        data: { password: password },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                $('#pwdPasswordModal').modal('hide');
+                setTimeout(function() {
+                    $('#pwdDetailsModal').modal('show');
+                    $('#pwdForm')[0].reset();
+                    const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
+                    $('#pwdAmountAvailed').val(totalAmount.toFixed(2));
+                }, 500);
+            } else {
+                $('#pwdPassword').addClass('is-invalid');
+                $('#pwdPasswordError').show();
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('Server error. Could not verify password.');
+        }
+    });
+}
+
+// Submit PWD Details
+function submitPwdDetails() {
+    const pwdName = $('#pwdName').val();
+    const pwdId = $('#pwdId').val();
+    const amountAvailed = parseFloat($('#pwdAmountAvailed').val()) || 0;
+
+    if (!pwdName || !pwdId || amountAvailed <= 0) {
+        alert('Please fill in all fields with valid values.');
+        return;
+    }
+
+    const discountData = {
+        name: pwdName,
+        idNumber: pwdId,
+        amountAvailed: amountAvailed,
+        discountType: 'PWD'
+    };
+
+    updateTransactionWithDiscount(discountData);
+
+    $('#pwdDetailsModal').modal('hide');
+    alert(`PWD discount applied for:\nName: ${pwdName}\nID: ${pwdId}\nAmount Availed: ₱${amountAvailed.toFixed(2)}`);
+}
 
     $('#pendingTransactionModal .btn-primary').off('click').on('click', function() {
         // Find the selected row

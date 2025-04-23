@@ -3,80 +3,90 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-<!--MENU SIDEBAR CONTENT-->
-<nav id="sidebar">
-    <div class="sidebar-header">
-        <img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
-        <div class="ml-auto" id="userInfo">
-            <p class="text-right">Cashier Staff</p>
+    <!--MENU SIDEBAR CONTENT-->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
+            <div class="ml-auto" id="userInfo">
+                <p class="text-right">Cashier Staff</p>
+            </div>
         </div>
-    </div>
-    <ul class="list-unstyled components">
-        <li>
-            <a href="#" class="dashboard" accesskey="F1"><i class="material-icons">edit</i><span>Edit Item (F1)</span></a>
-        </li>
-        <li>
-            <a href="#" class="dashboard" accesskey="F2"><i class="material-icons">add</i><span>Add To Pending (F2)</span></a>
-        </li>
-        <li>
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#pendingTransactionModal" accesskey="F3">
-                <i class="material-icons">pending</i><span>Pending Transaction (F3)</span>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#searchProductModal" accesskey="F4">
-                <i class="material-icons">search</i><span>Search Product (F4)</span>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#returnModal" accesskey="F5">
-                <i class="material-icons">keyboard_return</i><span>Return (F5)</span>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="dashboard" accesskey="F6"><i class="material-icons">delete</i><span>Void Item (F6)</span></a>
-        </li>
-        <li>
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#cashTenderModal" accesskey="F7"><i class="material-icons">attach_money</i><span>Cash Tender (F7)</span></a>
-        </li>
-        <li>
-            <a href="#" class="dashboard" accesskey="F8"><i class="material-icons">delete_forever</i><span>Void All (F8)</span></a>
-        </li>
-        <li>
-            <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#customerPointsModal" accesskey="F9">
-                <i class="material-icons">loyalty</i><span>Customer Points (F9)</span>
-            </a>
-        </li>
-        <li>
-            <a href="#" class="dashboard" accesskey="F10"><i class="material-icons">credit_card</i><span>Other Payment Type (F10)</span></a>
-        </li>
-        <li class="dropdown">
-    <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-        <i class="material-icons">discount</i><span>Apply Discount</span>
-    </a>
-    <ul class="collapse list-unstyled menu" id="homeSubmenu1">
-        <li>
-            <a href="#">Regular Discount <span class="shortcut-key">Ctrl+D</span></a>
-        </li>
-        <li>
-            <a href="#">Solo Parent <span class="shortcut-key">Ctrl+S</span></a>
-        </li>
-        <li>
-            <a href="#">PWD <span class="shortcut-key">F12</span></a>
-        </li>
-        <li>
-            <a href="#" class="dashboard senior-discount" data-bs-toggle="modal" accesskey="F11">
-                <i class="material-icons">elderly</i><span>Senior Citizen <span class="shortcut-key">F11</span></span>
-            </a>
-        </li>
-        <li>
-            <a href="#">NAAC <span class="shortcut-key">Ctrl+N</span></a>
-        </li>
-        <li>
-            <a href="#">Medal of Valor <span class="shortcut-key">Ctrl+M</span></a>
-        </li>
-    </ul>
-</li>
+        <ul class="list-unstyled components">
+            <li>
+                <a href="#" class="dashboard" accesskey="F1"><i class="material-icons">edit</i><span>Edit Item (F1)</span></a>
+            </li>
+            <li>
+                <a href="#" class="dashboard" accesskey="F2"><i class="material-icons">add</i><span>Add To Pending (F2)</span></a>
+            </li>
+            <li>
+                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#pendingTransactionModal" accesskey="F3">
+                    <i class="material-icons">pending</i><span>Pending Transaction (F3)</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#searchProductModal" accesskey="F4">
+                    <i class="material-icons">search</i><span>Search Product (F4)</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#returnModal" accesskey="F5">
+                    <i class="material-icons">keyboard_return</i><span>Return (F5)</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="dashboard" accesskey="F6"><i class="material-icons">delete</i><span>Void Item (F6)</span></a>
+            </li>
+            <li>
+                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#cashTenderModal" accesskey="F7"><i class="material-icons">attach_money</i><span>Cash Tender (F7)</span></a>
+            </li>
+            <li>
+                <a href="#" class="dashboard" accesskey="F8"><i class="material-icons">delete_forever</i><span>Void All (F8)</span></a>
+            </li>
+            <li>
+                <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#customerPointsModal" accesskey="F9">
+                    <i class="material-icons">loyalty</i><span>Customer Points (F9)</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="dashboard" accesskey="F10"><i class="material-icons">credit_card</i><span>Other Payment Type (F10)</span></a>
+            </li>
+            <li class="dropdown">
+        <a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+            <i class="material-icons">discount</i><span>Apply Discount</span>
+        </a>
+        <ul class="collapse list-unstyled menu" id="homeSubmenu1">
+            <li>
+                <a href="#">
+                    <i class="material-icons">discount</i><span>Regular Discount <span class="shortcut-key">Ctrl+D</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="material-icons">family_restroom</i><span>Solo Parent <span class="shortcut-key">Ctrl+S</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="pwd-discount">
+                    <i class="material-icons">accessible</i><span>PWD <span class="shortcut-key">F12</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#" class="dashboard senior-discount" accesskey="F11">
+                    <i class="material-icons">elderly</i><span>Senior Citizen <span class="shortcut-key">F11</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="material-icons">sports</i><span>NAAC <span class="shortcut-key">Ctrl+N</span></span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="material-icons">military_tech</i><span>Medal of Valor <span class="shortcut-key">Ctrl+M</span></span>
+                </a>
+            </li>
+        </ul>
+    </li>
 
         <li>
             <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#priceCheckModal" accesskey="F12">
@@ -361,7 +371,16 @@ $(document).ready(function() {
         }
     });
 
-    
+    // Handle PWD Discount click (F12)
+    $('.pwd-discount').on('click', function(e) {
+        e.preventDefault();
+        if (confirm('Apply PWD Discount?')) {
+            $('#pwdPasswordModal').modal('show');
+            $('#pwdPassword').val('').removeClass('is-invalid');
+            $('#pwdPasswordError').hide();
+        }
+    });
+
     // Handle Senior Citizen Discount click (F11)
     $('.senior-discount').on('click', function(e) {
         e.preventDefault();
