@@ -227,66 +227,6 @@
     </div>
 </div>
 
-
-<!-- Senior Citizen Password Modal -->
-<div class="modal fade" id="seniorPasswordModal" tabindex="-1" aria-labelledby="seniorPasswordModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="seniorPasswordModalLabel">Input Password</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <div class="form-group mb-3">
-                    <label for="seniorPassword" class="form-label">Password</label>
-                    <input type="password" id="seniorPassword" class="form-control" placeholder="Enter password">
-                    <div id="passwordError" class="invalid-feedback" style="display:none;">Incorrect password!</div>
-                </div>
-            </div>
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" onclick="verifySeniorPassword()">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<!-- Senior Citizen Details Modal -->
-<div class="modal fade" id="seniorDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Senior Citizen Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="seniorForm">
-                    <div class="form-group mb-3">
-                        <label class="form-label">Full Name</label>
-                        <input type="text" id="seniorName" class="form-control" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label class="form-label">ID Number</label>
-                        <input type="text" id="seniorId" class="form-control" required>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label class="form-label">Birthdate</label>
-                        <input type="date" id="seniorBirthdate" class="form-control" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-success" onclick="submitSeniorDetails()">Apply Discount</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Customer Points Modal -->
 <div class="modal fade" id="customerPointsModal" tabindex="-1" aria-labelledby="customerPointsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -614,96 +554,195 @@
 
 <div id="notification-area" style="position: fixed; top: 80px; right: 20px; z-index: 9999; width: 300px;"></div>
 
+<!-- Senior Citizen Password Verification Modal -->
+<div class="modal fade" id="seniorPasswordModal" tabindex="-1" aria-labelledby="seniorPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="seniorPasswordModalLabel">Password Verification</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="seniorPassword">Please enter password:</label>
+                    <input type="password" class="form-control" id="seniorPassword" placeholder="Enter password">
+                    <div id="passwordError" class="invalid-feedback">Incorrect password!</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="verifySeniorPassword()">Submit</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Senior Citizen Details Modal -->
+<div class="modal fade" id="seniorDetailsModal" tabindex="-1" aria-labelledby="seniorDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="seniorDetailsModalLabel">Senior Citizen Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="seniorForm">
+                    <div class="form-group">
+                        <label for="seniorName">Name:</label>
+                        <input type="text" class="form-control" id="seniorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="seniorId">ID No:</label>
+                        <input type="text" class="form-control" id="seniorId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amountAvailed">Amount Availed:</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            <input type="number" class="form-control" id="amountAvailed" step="0.01" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="submitSeniorDetails()">OK</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-$(document).ready(function() {
-    $('#voidAllReason').on('change', function() {
-        if ($(this).val() === 'Other') {
-            $('#otherReasonDiv').show();
-        } else {
-            $('#otherReasonDiv').hide();
-        }
-    });
-    
-    // When confirming void with "Other" selected, use the text input value
-    $('#confirmVoidAll').on('click', function() {
-        if ($('#voidAllReason').val() === 'Other') {
-            const otherReason = $('#otherReason').val();
-            if (otherReason) {
-                $('#voidAllReason').val(otherReason);
+    $(document).ready(function() {
+        $('#voidAllReason').on('change', function() {
+            if ($(this).val() === 'Other') {
+                $('#otherReasonDiv').show();
             } else {
-                $('#otherReason').addClass('is-invalid');
-                return false;
+                $('#otherReasonDiv').hide();
             }
-        }
-    });
-});
-$('#pendingTransactionModal .btn-primary').off('click').on('click', function() {
-    // Find the selected row
-    let selectedRow = $('#pendingTransactionModal tbody tr.table-primary');
-    
-    if (selectedRow.length > 0) {
-        // Use .attr() instead of .data() to avoid jQuery caching issues
-        let transactionNo = selectedRow.attr('data-transaction-no');
-        console.log("Load button clicked, selected transactionNo:", transactionNo);
+        });
         
-        if (transactionNo) {
-            loadTransactionToCart(transactionNo);
-            $('#pendingTransactionModal').modal('hide');
-        } else {
-            console.error("Transaction number not found on selected row");
-            alert('Error: Transaction number not found.');
-        }
-    } else {
-        console.log("No row selected when Load button was clicked");
-        alert('Please select a transaction to load.');
-    }
-});
-// Function to load a transaction into the cart
-function loadTransactionIntoCart(transactionId) {
-    $.ajax({
-        url: 'get_pending_transaction_details.php',
-        method: 'GET',
-        data: { id: transactionId },
-        success: function(response) {
-            try {
-                const transaction = JSON.parse(response);
-                
-                // Clear current cart
-                cart = [];
-                
-                // Add items from pending transaction to cart
-                transaction.items.forEach(item => {
-                    cart.push({
-                        id: item.id,
-                        name: item.name,
-                        price: parseFloat(item.price),
-                        barcode: item.barcode,
-                        quantity: parseInt(item.quantity),
-                        totalPrice: parseFloat(item.totalPrice)
-                    });
-                });
-                
-                // Update display
-                updateCartDisplay();
-                updateTotals();
-                
-                // Close the modal
-                $('#pendingTransactionModal').modal('hide');
-                
-                // Show success message
-                alert('Transaction loaded successfully!');
-                
-            } catch (e) {
-                console.error('Error parsing transaction details', e);
-                alert('Could not load transaction details');
+        // When confirming void with "Other" selected, use the text input value
+        $('#confirmVoidAll').on('click', function() {
+            if ($('#voidAllReason').val() === 'Other') {
+                const otherReason = $('#otherReason').val();
+                if (otherReason) {
+                    $('#voidAllReason').val(otherReason);
+                } else {
+                    $('#otherReason').addClass('is-invalid');
+                    return false;
+                }
             }
-        },
-        error: function() {
-            alert('Server error. Could not load transaction details.');
+        });
+    });
+
+    function verifySeniorPassword() {
+        const password = $('#seniorPassword').val();
+        console.log('Input password:', password);
+
+        // Reset the error state
+        $('#seniorPassword').removeClass('is-invalid');
+        $('#passwordError').hide();
+
+        $.ajax({
+            url: 'verify_senior_password.php',
+            method: 'POST',
+            data: { password: password },
+            dataType: 'json',
+            success: function(response) {
+                console.log('Response from verify_senior_password.php:', response);
+                if (response.status === 'success') {
+                    console.log('Hiding seniorPasswordModal...');
+                    $('#seniorPasswordModal').modal('hide');
+                    // Add a slight delay to ensure the modal hides before showing the next one
+                    setTimeout(function() {
+                        console.log('Showing seniorDetailsModal...');
+                        $('#seniorDetailsModal').modal('show');
+                        $('#seniorForm')[0].reset();
+                        const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
+                        console.log('Total Amount:', totalAmount);
+                        $('#amountAvailed').val(totalAmount.toFixed(2));
+                    }, 500); // 500ms delay
+                } else {
+                    console.log('Verification failed:', response.message);
+                    $('#seniorPassword').addClass('is-invalid');
+                    $('#passwordError').show();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX error:', status, error);
+                console.error('Response text:', xhr.responseText);
+                alert('Server error. Could not verify password. Check the console for details.');
+            }
+        });
+    }
+
+    $('#pendingTransactionModal .btn-primary').off('click').on('click', function() {
+        // Find the selected row
+        let selectedRow = $('#pendingTransactionModal tbody tr.table-primary');
+        
+        if (selectedRow.length > 0) {
+            // Use .attr() instead of .data() to avoid jQuery caching issues
+            let transactionNo = selectedRow.attr('data-transaction-no');
+            console.log("Load button clicked, selected transactionNo:", transactionNo);
+            
+            if (transactionNo) {
+                loadTransactionToCart(transactionNo);
+                $('#pendingTransactionModal').modal('hide');
+            } else {
+                console.error("Transaction number not found on selected row");
+                alert('Error: Transaction number not found.');
+            }
+        } else {
+            console.log("No row selected when Load button was clicked");
+            alert('Please select a transaction to load.');
         }
     });
-}
+    // Function to load a transaction into the cart
+    function loadTransactionIntoCart(transactionId) {
+        $.ajax({
+            url: 'get_pending_transaction_details.php',
+            method: 'GET',
+            data: { id: transactionId },
+            success: function(response) {
+                try {
+                    const transaction = JSON.parse(response);
+                    
+                    // Clear current cart
+                    cart = [];
+                    
+                    // Add items from pending transaction to cart
+                    transaction.items.forEach(item => {
+                        cart.push({
+                            id: item.id,
+                            name: item.name,
+                            price: parseFloat(item.price),
+                            barcode: item.barcode,
+                            quantity: parseInt(item.quantity),
+                            totalPrice: parseFloat(item.totalPrice)
+                        });
+                    });
+                    
+                    // Update display
+                    updateCartDisplay();
+                    updateTotals();
+                    
+                    // Close the modal
+                    $('#pendingTransactionModal').modal('hide');
+                    
+                    // Show success message
+                    alert('Transaction loaded successfully!');
+                    
+                } catch (e) {
+                    console.error('Error parsing transaction details', e);
+                    alert('Could not load transaction details');
+                }
+            },
+            error: function() {
+                alert('Server error. Could not load transaction details.');
+            }
+        });
+    }
 </script>
 <style>
     #pendingTransactionModal table tbody tr.selected-row {

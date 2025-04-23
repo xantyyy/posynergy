@@ -56,59 +56,28 @@
     </a>
     <ul class="collapse list-unstyled menu" id="homeSubmenu1">
         <li>
-            <a href="#" onclick="applyRegularDiscount()">Regular Discount <span class="shortcut-key">Ctrl+D</span></a>
+            <a href="#">Regular Discount <span class="shortcut-key">Ctrl+D</span></a>
         </li>
         <li>
-            <a href="#" onclick="applySoloParent()">Solo Parent <span class="shortcut-key">Ctrl+S</span></a>
+            <a href="#">Solo Parent <span class="shortcut-key">Ctrl+S</span></a>
         </li>
         <li>
-            <a href="#" onclick="applyPWD()">PWD <span class="shortcut-key">F12</span></a>
+            <a href="#">PWD <span class="shortcut-key">F12</span></a>
         </li>
         <li>
-            <a href="#" onclick="showSeniorPasswordPrompt()">Senior Citizen <span class="shortcut-key">F11</span></a>
+            <a href="#" class="dashboard senior-discount" data-bs-toggle="modal" accesskey="F11">
+                <i class="material-icons">elderly</i><span>Senior Citizen <span class="shortcut-key">F11</span></span>
+            </a>
         </li>
         <li>
-            <a href="#" onclick="applyNAAC()">NAAC <span class="shortcut-key">Ctrl+N</span></a>
+            <a href="#">NAAC <span class="shortcut-key">Ctrl+N</span></a>
         </li>
         <li>
-            <a href="#" onclick="applyMedalOfValor()">Medal of Valor <span class="shortcut-key">Ctrl+M</span></a>
+            <a href="#">Medal of Valor <span class="shortcut-key">Ctrl+M</span></a>
         </li>
     </ul>
 </li>
 
-<div id="passwordModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h3>Senior Citizen Discount</h3>
-        <p>Please enter password:</p>
-        <input type="password" id="seniorPassword" placeholder="Enter password (123)">
-        <button onclick="verifySeniorPassword()">Submit</button>
-        <p id="passwordError" style="color:red; display:none;">Incorrect password!</p>
-    </div>
-</div>
-
-<!-- Client Details Modal -->
-<div id="clientModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h3>Senior Citizen Details</h3>
-        <form id="seniorForm">
-            <div>
-                <label>Full Name:</label>
-                <input type="text" id="seniorName" required>
-            </div>
-            <div>
-                <label>ID Number:</label>
-                <input type="text" id="seniorId" required>
-            </div>
-            <div>
-                <label>Birthdate:</label>
-                <input type="date" id="seniorBirthdate" required>
-            </div>
-            <button type="button" onclick="submitSeniorDetails()">Apply Discount</button>
-        </form>
-    </div>
-</div>
         <li>
             <a href="#" class="dashboard" data-bs-toggle="modal" data-bs-target="#priceCheckModal" accesskey="F12">
                 <i class="material-icons">price_check</i><span>Price Check (F12)</span>
@@ -391,6 +360,53 @@ $(document).ready(function() {
             }
         }
     });
+
+    
+    // Handle Senior Citizen Discount click (F11)
+    $('.senior-discount').on('click', function(e) {
+        e.preventDefault();
+        if (confirm('Apply Senior Discount?')) {
+            $('#seniorPasswordModal').modal('show');
+            $('#seniorPassword').val('').removeClass('is-invalid');
+            $('#passwordError').hide();
+        }
+    });
+
+    // Submit Senior Citizen details
+    function submitSeniorDetails() {
+        const name = $('#seniorName').val();
+        const idNumber = $('#seniorId').val();
+        const amountAvailed = parseFloat($('#amountAvailed').val()) || 0;
+
+        if (name && idNumber && amountAvailed > 0) {
+            const discountData = {
+                name: name,
+                idNumber: idNumber,
+                amountAvailed: amountAvailed,
+                discountType: 'Senior Citizen'
+            };
+
+            // Apply discount logic
+            updateTransactionWithDiscount(discountData);
+            $('#seniorDetailsModal').modal('hide');
+            alert(`Senior Citizen discount applied for:\nName: ${name}\nID: ${idNumber}\nAmount Availed: ₱${amountAvailed.toFixed(2)}`);
+        } else {
+            alert('Please fill all required fields with valid values!');
+        }
+    }
+
+    // Update transaction with discount
+    function updateTransactionWithDiscount(discountData) {
+        const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
+        const discountAmount = discountData.amountAvailed * 0.20; // 20% discount
+        const finalTotal = totalAmount - discountAmount;
+
+        // Update transaction details
+        $('th:contains("Discount:")').next().text(`₱${discountAmount.toFixed(2)} (${discountData.discountType})`);
+        $('#totalTransactionDisplay').text(`₱${finalTotal.toFixed(2)}`);
+        $('#totalRetailDisplay').text(`₱${finalTotal.toFixed(2)}`);
+        $('#amountDue').val(finalTotal.toFixed(2));
+    }
 
     // Hide search results when clicking outside
     $(document).on('click', function(e) {
@@ -1243,47 +1259,6 @@ function updatePendingTransactionsTable(transactions) {
         tableBody.append(row);
     });
 }
-// Senior Citizen Discount Functions
-function showSeniorPasswordPrompt() {
-    $('#seniorPasswordModal').modal('show');  // Show the password modal
-    $('#seniorPassword').val('');  // Clear the password input field
-    $('#passwordError').hide();  // Hide the error message initially
-}
-
-function verifySeniorPassword() {
-    const password = $('#seniorPassword').val();  // Get the entered password
-    if (password === '123') {  // Check if the entered password matches the correct one
-        $('#seniorPasswordModal').modal('hide');  // Hide the password modal
-        $('#seniorDetailsModal').modal('show');  // Show the details modal
-    } else {
-        $('#passwordError').show();  // Show the error message if the password is incorrect
-        $('#seniorPassword').addClass('is-invalid');  // Add invalid class to input
-    }
-}
-
-function submitSeniorDetails() {
-    const name = $('#seniorName').val();  // Get the name value
-    const idNumber = $('#seniorId').val();  // Get the ID number value
-    const birthdate = $('#seniorBirthdate').val();  // Get the birthdate value
-    
-    if (name && idNumber && birthdate) {
-        const discountData = {
-            name: name,
-            idNumber: idNumber,
-            birthdate: birthdate,
-            discountType: 'Senior Citizen'
-        };
-        
-        console.log('Applying discount:', discountData);
-        alert(`Senior Citizen discount applied for:\nName: ${name}\nID: ${idNumber}\nBirthdate: ${birthdate}`);
-        
-        $('#seniorDetailsModal').modal('hide');
-        $('#seniorForm')[0].reset();  
-        updateTransactionWithDiscount(discountData);
-    } else {
-        alert('Please fill all required fields!');  // Alert if any field is missing
-    }
-}
 
 function updateTransactionWithDiscount(discountData) {
     const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
@@ -1296,18 +1271,7 @@ function updateTransactionWithDiscount(discountData) {
     $('#amountDue').val(finalTotal.toFixed(2));
 }
 
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'F11') {
-        event.preventDefault();
-        showSeniorPasswordPrompt();
-    }
-});
 
-function applyRegularDiscount() { alert('Regular discount applied'); }
-function applySoloParent() { alert('Solo Parent discount applied'); }
-function applyPWD() { alert('PWD discount applied'); }
-function applyNAAC() { alert('NAAC discount applied'); }
-function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
     document.addEventListener("keydown", function(event) {
         switch (event.key) {
             case "F1":
