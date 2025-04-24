@@ -151,7 +151,7 @@
 						
 						<a class="navbar-brand" href="#">Product Profile</a>
 						<button class="d-inline-block d-lg-none ml-auto more-button" type="button" data-toggle="collapse"
-						data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Toggle">
+						data-target="#navbarcollapse" aria-controls="navbarcollapse" aria-expanded="false" aria-label="Close">
 							<span class="material-icons">menu</span>
 						</button>
 						
@@ -260,7 +260,7 @@
                                     <button type="button" class="btn addCosting-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productInfoModal" id="addButton">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn edit-btn btn-outline-primary me-2" style="font-size: 13px;" disabled>
+                                    <button type="button" class="btn edit-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#editProductInfoModal" disabled>
                                         <i class="fas fa-save"></i> Edit
                                     </button>
                                     <button type="button" class="btn delete-btn btn-outline-primary" style="font-size: 13px;" disabled>
@@ -386,6 +386,55 @@
                     });
 
                     let shelfData = []; // Store shelf data for dynamic updates
+                    let costingData = []; // Store costing data for editing
+                    let suppliers = []; // Store suppliers for dropdown
+                    let uoms = []; // Store UOMs for dropdown
+
+                    // Get references to Edit and Delete buttons
+                    const editButton = document.querySelector('.edit-btn');
+                    const deleteButton = document.querySelector('.delete-btn');
+                    const costingTableBody = document.getElementById('costingTableBody');
+
+                    // Function to toggle button states
+                    function toggleButtonsState(enabled) {
+                        editButton.disabled = !enabled;
+                        deleteButton.disabled = !enabled;
+                    }
+
+                    // Function to handle row selection
+                    function handleRowSelection(row, index) {
+                        // Remove 'selected' class from all rows
+                        costingTableBody.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
+                        // Add 'selected' class to the clicked row
+                        row.classList.add('selected');
+                        // Store the selected row index
+                        row.dataset.index = index;
+                        // Enable buttons
+                        toggleButtonsState(true);
+                    }
+
+                    // Function to populate dropdowns
+                    function populateDropdowns() {
+                        // Populate Supplier dropdowns
+                        const editSupplierSelect = document.getElementById('editSupplier');
+                        editSupplierSelect.innerHTML;
+                        suppliers.forEach(supplier => {
+                            const option = document.createElement('option');
+                            option.value = supplier;
+                            option.textContent = supplier;
+                            editSupplierSelect.appendChild(option);
+                        });
+
+                        // Populate UOM dropdowns
+                        const editUOMSelect = document.getElementById('editUOM');
+                        editUOMSelect.innerHTML;
+                        uoms.forEach(uom => {
+                            const option = document.createElement('option');
+                            option.value = uom;
+                            option.textContent = uom;
+                            editUOMSelect.appendChild(option);
+                        });
+                    }
 
                     // Fetch product data based on barcode from URL
                     const urlParams = new URLSearchParams(window.location.search);
@@ -403,7 +452,7 @@
                                     document.getElementById('productCode').value = product.ProductCode || '';
                                     document.getElementById('productName').value = product.ProductName || '';
 
-                                    // Populate Category dropdown with options from tbl_invmaintenance
+                                    // Populate Category dropdown with options from tbl_invmaintence
                                     const categorySelect = document.getElementById('category');
                                     categorySelect.innerHTML = '<option value="">Select Category</option>'; // Reset options
                                     data.categories.forEach(category => {
@@ -443,11 +492,11 @@
                                         document.getElementById('shelfTextbox').value = selectedShelf ? selectedShelf.ItemSubName : '';
                                     });
 
-                                    // Populate Costing Details table
-                                    const costingTableBody = document.getElementById('costingTableBody');
+                                    // Store costing data and populate table
+                                    costingData = data.costingDetails;
                                     costingTableBody.innerHTML = ''; // Clear existing rows
-                                    if (data.costingDetails.length > 0) {
-                                        data.costingDetails.forEach(costing => {
+                                    if (costingData.length > 0) {
+                                        costingData.forEach((costing, index) => {
                                             const row = document.createElement('tr');
                                             row.innerHTML = `
                                                 <td>${costing.SupplierName || ''}</td>
@@ -455,6 +504,9 @@
                                                 <td>${costing.Measurement || ''}</td>
                                                 <td>${costing.Barcode || ''}</td>
                                             `;
+                                            // Make row clickable
+                                            row.style.cursor = 'pointer';
+                                            row.addEventListener('click', () => handleRowSelection(row, index));
                                             costingTableBody.appendChild(row);
                                         });
                                     } else {
@@ -480,6 +532,11 @@
                                     } else {
                                         retailTableBody.innerHTML = '<tr><td colspan="6" class="text-center">No Data Available</td></tr>';
                                     }
+
+                                    // Use suppliers and UOMs from the response
+                                    suppliers = data.suppliers;
+                                    uoms = data.uoms;
+                                    populateDropdowns();
                                 } else {
                                     alert(data.message);
                                 }
@@ -490,10 +547,56 @@
                             });
                     }
 
+                    // Handle Edit button click to populate modal
+                    editButton.addEventListener('click', () => {
+                        const selectedRow = costingTableBody.querySelector('tr.selected');
+                        if (selectedRow) {
+                            const index = selectedRow.dataset.index;
+                            const costing = costingData[index];
+                            document.getElementById('editBarcode').value = costing.Barcode || '';
+                            document.getElementById('editSupplier').value = costing.SupplierName || '';
+                            document.getElementById('editUOM').value = costing.Measurement || '';
+                            document.getElementById('editCostPrice').value = costing.Cost || '';
+                            document.getElementById('editVatAble').checked = costing.VatAble || false;
+                        }
+                    });
+
+                    // Handle Save Changes in Edit Modal
+                    document.getElementById('saveEditProductInfo').addEventListener('click', () => {
+                        const selectedRow = costingTableBody.querySelector('tr.selected');
+                        if (selectedRow) {
+                            const index = selectedRow.dataset.index;
+                            const updatedCosting = {
+                                SupplierName: document.getElementById('editSupplier').value,
+                                Cost: document.getElementById('editCostPrice').value,
+                                Measurement: document.getElementById('editUOM').value,
+                                Barcode: document.getElementById('editBarcode').value,
+                                VatAble: document.getElementById('editVatAble').checked
+                            };
+                            costingData[index] = updatedCosting;
+
+                            // Update the table row
+                            selectedRow.innerHTML = `
+                                <td>${updatedCosting.SupplierName || ''}</td>
+                                <td>${updatedCosting.Cost || ''}</td>
+                                <td>${updatedCosting.Measurement || ''}</td>
+                                <td>${updatedCosting.Barcode || ''}</td>
+                            `;
+                            selectedRow.style.cursor = 'pointer';
+                            selectedRow.addEventListener('click', () => handleRowSelection(selectedRow, index));
+
+                            // Close the modal
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('editProductInfoModal'));
+                            modal.hide();
+                        }
+                    });
+
                     // Handle form submission
                     document.getElementById('productForm').addEventListener('submit', function (e) {
                         e.preventDefault();
                         const formData = new FormData(this);
+                        // Include costing data in the form submission
+                        formData.append('costingDetails', JSON.stringify(costingData));
                         fetch('edit-product.php', {
                             method: 'POST',
                             body: formData
@@ -616,6 +719,11 @@
                         background-color: #007bff; /* Blue background */
                         color: #ffffff; /* White text */
                         border-color: #0056b3; /* Darker blue border */
+                    }
+
+                    /* Style for selected row */
+                    #costingTableBody tr.selected {
+                        background-color: #e0e0e0; /* Light gray background for selected row */
                     }
                 </style>
 

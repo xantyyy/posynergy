@@ -2,7 +2,16 @@
 header('Content-Type: application/json');
 require_once '../../includes/config.php'; // Database connection
 
-$response = ['status' => 'error', 'message' => '', 'data' => null, 'shelves' => [], 'categories' => [], 'costingDetails' => [], 'retailDetails' => []];
+$response = [
+    'status' => 'error', 
+    'message' => '', 
+    'data' => null, 
+    'shelves' => [], 
+    'categories' => [], 
+    'costingDetails' => [], 
+    'retailDetails' => [], 
+    'suppliers' => [] // Add suppliers to the response
+];
 
 // Fetch shelf options from tbl_invmaintenance
 $shelfSql = "SELECT ItemName, ItemSubName FROM tbl_invmaintenance WHERE ItemType = 'SHELF'";
@@ -19,6 +28,24 @@ $categoryResult = $conn->query($categorySql);
 if ($categoryResult->num_rows > 0) {
     while ($row = $categoryResult->fetch_assoc()) {
         $response['categories'][] = $row['ItemName'];
+    }
+}
+
+// Fetch suppliers from tbl_suppliers
+$supplierSql = "SELECT Supplier FROM tbl_suppliers";
+$supplierResult = $conn->query($supplierSql);
+if ($supplierResult->num_rows > 0) {
+    while ($row = $supplierResult->fetch_assoc()) {
+        $response['suppliers'][] = $row['Supplier'];
+    }
+}
+
+// Fetch UOMs from tbl_invmaintence where ItemType = 'UNIT'
+$uomSql = "SELECT ItemName FROM tbl_invmaintenance WHERE ItemType = 'UNIT'";
+$uomResult = $conn->query($uomSql);
+if ($uomResult->num_rows > 0) {
+    while ($row = $uomResult->fetch_assoc()) {
+        $response['uoms'][] = $row['ItemName'];
     }
 }
 

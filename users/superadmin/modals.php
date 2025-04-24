@@ -112,6 +112,148 @@
     </div>
 </div>
 
+<!-- Product Info Modal (for Add) -->
+<div class="modal fade" id="add-editInfoModal" tabindex="-1" aria-labelledby="add-editInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-editInfoModalLabel">Add Product Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addProductInfoForm">
+                    <h6>Product Information</h6>
+                    <div class="mb-3">
+                        <label for="addBarcode" class="form-label">Barcode:</label>
+                        <input type="text" class="form-control" id="addBarcode" name="barcode" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addSupplier" class="form-label">Supplier:</label>
+                        <select class="form-select" id="addSupplier" name="supplier">
+                            <option value="">Select Supplier</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addUOM" class="form-label">UOM:</label>
+                        <select class="form-select" id="addUOM" name="uom">
+                            <option value="">Select UOM</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <h6>Cost Details</h6>
+                    <div class="mb-3">
+                        <label for="addCostPrice" class="form-label">Cost Price:</label>
+                        <input type="number" class="form-control" id="addCostPrice" name="costPrice">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="addVatAble" name="vatAble">
+                        <label class="form-check-label" for="addVatAble">VAT-able</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveProductInfo">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Product Info Modal -->
+<div class="modal fade" id="editProductInfoModal" tabindex="-1" aria-labelledby="editProductInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductInfoModalLabel">Edit Product Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductInfoForm">
+                    <h6>Product Information</h6>
+                    <div class="mb-3">
+                        <label for="editBarcode" class="form-label">Barcode:</label>
+                        <input type="text" class="form-control" id="editBarcode" name="barcode" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editSupplier" class="form-label">Supplier:</label>
+                        <select class="form-select" id="editSupplier" name="supplier">
+                            <option selected value="" hidden>Select Supplier</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUOM" class="form-label">UOM:</label>
+                        <select class="form-select" id="editUOM" name="uom">
+                            <option selected value="" hidden>Select UOM</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <h6>Cost Details</h6>
+                    <div class="mb-3">
+                        <label for="editCostPrice" class="form-label">Cost Price:</label>
+                        <input type="number" class="form-control" id="editCostPrice" name="costPrice">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="editVatAble" name="vatAble">
+                        <label class="form-check-label" for="editVatAble">VAT-able</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveEditProductInfo">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Modal Retail (for Add Retail) -->
+<div class="modal fade" id="productModalRetail" tabindex="-1" aria-labelledby="productModalRetailLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="productModalRetailLabel">Add Retail Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addRetailForm">
+                    <div class="mb-3">
+                        <label for="addRetailPriceType" class="form-label">Price Type:</label>
+                        <select class="form-select" id="addRetailPriceType" name="priceType">
+                            <option value="">Select Price Type</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addRetailBarcode" class="form-label">Barcode:</label>
+                        <input type="text" class="form-control" id="addRetailBarcode" name="barcode" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addRetailProductName" class="form-label">Product Name:</label>
+                        <input type="text" class="form-control" id="addRetailProductName" name="productName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addRetailUOM" class="form-label">UOM:</label>
+                        <select class="form-select" id="addRetailUOM" name="uom">
+                            <option value="">Select UOM</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addRetailQuantity" class="form-label">Quantity:</label>
+                        <input type="number" class="form-control" id="addRetailQuantity" name="quantity">
+                    </div>
+                    <div class="mb-3">
+                        <label for="addRetailSellingPrice" class="form-label">Selling Price:</label>
+                        <input type="number" class="form-control" id="addRetailSellingPrice" name="sellingPrice">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveRetailInfo">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--Retails Add Modal -->
 <div class="modal fade" id="productModalRetail" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
     <div class="modal-dialog">
