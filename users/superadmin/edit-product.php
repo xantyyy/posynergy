@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 require_once '../../includes/config.php'; // Database connection
 
-$response = ['status' => 'error', 'message' => '', 'data' => null, 'shelves' => [], 'costingDetails' => [], 'retailDetails' => []];
+$response = ['status' => 'error', 'message' => '', 'data' => null, 'shelves' => [], 'categories' => [], 'costingDetails' => [], 'retailDetails' => []];
 
 // Fetch shelf options from tbl_invmaintenance
 $shelfSql = "SELECT ItemName, ItemSubName FROM tbl_invmaintenance WHERE ItemType = 'SHELF'";
@@ -10,6 +10,15 @@ $shelfResult = $conn->query($shelfSql);
 if ($shelfResult->num_rows > 0) {
     while ($row = $shelfResult->fetch_assoc()) {
         $response['shelves'][] = $row;
+    }
+}
+
+// Fetch category options from tbl_invmaintenance
+$categorySql = "SELECT ItemName FROM tbl_invmaintenance WHERE ItemType = 'CATEGORY'";
+$categoryResult = $conn->query($categorySql);
+if ($categoryResult->num_rows > 0) {
+    while ($row = $categoryResult->fetch_assoc()) {
+        $response['categories'][] = $row['ItemName'];
     }
 }
 

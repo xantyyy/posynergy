@@ -20,7 +20,7 @@
 					</li>
 						
 					<li class="dropdown">
-						<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+						<a href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false Type" class="dropdown-toggle">
 						<i class="material-icons">warehouse</i><span>Inventory</span></a>
 						<ul class="collapse list-unstyled menu" id="homeSubmenu1">
 							<li>
@@ -192,7 +192,7 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-12 mt-2">
                                                 <label for="date">Date:</label>
-                                                <input type="date" class="form-control input-field date-field" id="date" name="transactionDate">
+                                                <input type="date" class="form-control input-field date-field" id="date" readonly name="transactionDate">
                                             </div>
                                             <div class="form-group col-md-12 mt-2">
                                                 <label for="category">Category:</label>
@@ -399,10 +399,22 @@
                                     document.getElementById('barCode').value = product.Barcode || '';
                                     document.getElementById('pluCode').value = product.PLUcode || '';
                                     document.getElementById('date').value = product.TransactionDate || '';
-                                    document.getElementById('category').innerHTML = `<option value="${product.Category || ''}" selected>${product.Category || ''}</option>`;
                                     document.getElementById('productDetails').value = product.ProductDetails || '-';
                                     document.getElementById('productCode').value = product.ProductCode || '';
                                     document.getElementById('productName').value = product.ProductName || '';
+
+                                    // Populate Category dropdown with options from tbl_invmaintenance
+                                    const categorySelect = document.getElementById('category');
+                                    categorySelect.innerHTML = '<option value="">Select Category</option>'; // Reset options
+                                    data.categories.forEach(category => {
+                                        const option = document.createElement('option');
+                                        option.value = category;
+                                        option.textContent = category;
+                                        if (category === product.Category) {
+                                            option.selected = true;
+                                        }
+                                        categorySelect.appendChild(option);
+                                    });
 
                                     // Store shelf data for dynamic updates
                                     shelfData = data.shelves;
