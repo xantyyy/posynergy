@@ -265,13 +265,13 @@
                                                 </tbody>                                            
                                             </table>
                                         </div>
-                                        <button type="button" class="btn" style="background-color: #0056b3; color: white; width: auto; margin-right: 5px; font-size: 13px;" onclick="window.location.href='product-entry.php';">
+                                        <button type="button" class="btn btn-outline-primary me-2" style="font-size: 13px;" onclick="window.location.href='product-entry.php';">
                                             <i class="fas fa-plus"></i> New
                                         </button>
-                                        <button type="button" class="btn" style="background-color: #d48f00; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                        <button type="button" class="btn btn-outline-primary me-2" style="font-size: 13px;" id="editButton" disabled onclick="redirectToEdit()">
                                             <i class="fas fa-save"></i> Edit
                                         </button>
-                                        <button type="button" class="btn" style="background-color: #b30000; color: white; width: auto; margin-right: 5px; font-size: 13px;">
+                                        <button type="button" class="btn btn-outline-primary" style="font-size: 13px;">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                     </div>
@@ -281,6 +281,8 @@
                     </div>
 
                     <script>
+                        let selectedBarcode = null;
+
                         document.addEventListener("DOMContentLoaded", function () {
                             const currentUrl = window.location.pathname.split('/').pop();
                             
@@ -338,6 +340,9 @@
                                     // Clear the selling price table
                                     const sellingPriceTbody = document.querySelector('#selling-price-table tbody');
                                     sellingPriceTbody.innerHTML = '<tr><td class="text-center" colspan="4" style="text-transform: none;">Select a product to view details</td></tr>';
+                                    // Disable Edit button
+                                    document.getElementById('editButton').disabled = true;
+                                    selectedBarcode = null;
                                 } else {
                                     // Fetch products only if there is a search term
                                     fetchProducts(searchTerm);
@@ -361,19 +366,6 @@
 
                             // Add event listener for Load All button
                             document.getElementById('loadAllButton').addEventListener('click', function () {
-                                document.getElementById('searchInput').value = '';
-                                const tbody = document.querySelector('#table-bold tbody');
-                                tbody.innerHTML = '<tr><td class="text-center" colspan="5" style="text-transform: none;">Please search for a Product</td></tr>';
-                                // Clear the details table
-                                const detailsTbody = document.querySelector('#details-table tbody');
-                                detailsTbody.innerHTML = '<tr><td class="text-center" colspan="3" style="text-transform: none;">Select a product to view details</td></tr>';
-                                // Clear the selling price table
-                                const sellingPriceTbody = document.querySelector('#selling-price-table tbody');
-                                sellingPriceTbody.innerHTML = '<tr><td class="text-center" colspan="4" style="text-transform: none;">Select a product to view details</td></tr>';
-                            });
-
-                            // Add event listener for Load All button
-                            document.getElementById('loadAllButton').addEventListener('click', function () {
                                 document.getElementById('searchInput').value = ''; // Clear the search input
                                 fetchProducts(''); // Fetch all products
                             });
@@ -387,6 +379,9 @@
 
                                         if (data.length === 0) {
                                             tbody.innerHTML = '<tr><td class="text-center" colspan="5">No products found</td></tr>';
+                                            // Disable Edit button
+                                            document.getElementById('editButton').disabled = true;
+                                            selectedBarcode = null;
                                         } else {
                                             data.forEach(product => {
                                                 const row = document.createElement('tr');
@@ -407,6 +402,9 @@
                                         console.error('Error fetching products:', error);
                                         const tbody = document.querySelector('#table-bold tbody');
                                         tbody.innerHTML = '<tr><td colspan="5">Error loading products</td></tr>';
+                                        // Disable Edit button
+                                        document.getElementById('editButton').disabled = true;
+                                        selectedBarcode = null;
                                     });
                             }
 
@@ -414,6 +412,12 @@
                                 // Highlight the selected row
                                 document.querySelectorAll('#table-bold tbody tr').forEach(r => r.classList.remove('table-active'));
                                 row.classList.add('table-active');
+
+                                // Store the selected barcode
+                                selectedBarcode = barcode;
+
+                                // Enable the Edit button
+                                document.getElementById('editButton').disabled = false;
 
                                 // Fetch combined details for the selected product using barcode
                                 fetch(`fetch-product-details.php?barcode=${encodeURIComponent(barcode)}`)
@@ -465,6 +469,14 @@
                                     });
                             }
                         });
+
+                        function redirectToEdit() {
+                            if (selectedBarcode) {
+                                window.location.href = `product-edit.php?barcode=${encodeURIComponent(selectedBarcode)}`;
+                            } else {
+                                alert('Please select a product to edit.');
+                            }
+                        }
                     </script>
 
                 <style>
@@ -565,6 +577,21 @@
                     /* Highlight selected row */
                     .table-active {
                         background-color: #e9ecef !important;
+                    }
+
+                    /* Style for disabled Edit button */
+                    .btn:disabled {
+                        border-color: rgb(6, 0, 0); /* Gray border for disabled buttons */
+                        color: rgb(6, 1, 1); /* Light gray text for disabled buttons */
+                        background-color: rgb(241, 201, 201); /* Light gray background for better visibility */
+                        cursor: not-allowed; /* Show "not-allowed" cursor */
+                    }
+
+                    /* Hover styles for enabled buttons */
+                    .btn:not(:disabled):hover {
+                        background-color: #007bff; /* Blue background */
+                        color: #ffffff; /* White text */
+                        border-color: #0056b3; /* Darker blue border */
                     }
                 </style>
 
