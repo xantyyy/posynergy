@@ -18,7 +18,7 @@ if (empty($search)) {
 try {
         // Fuzzy search for product name or barcode
         $likeSearch = '%' . $search . '%';
-        $sql = "SELECT Barcode, ProductName, RetailSellingPrice AS SRP, Quantity 
+        $sql = "SELECT Barcode, ProductName, RetailCostPrice AS SRP, Quantity 
                 FROM tbl_invprodlist 
                 WHERE Barcode LIKE ? OR ProductName LIKE ?
                 LIMIT 10";

@@ -118,9 +118,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['barcode'])) {
         if (isset($_POST['costingDetails'])) {
             $costingDetails = json_decode($_POST['costingDetails'], true);
             if (is_array($costingDetails)) {
-                // Delete existing costing details for this barcode
-                $deleteCostingSql = "DELETE FROM tbl_productcost WHERE Barcode = '$barcode'";
-                $conn->query($deleteCostingSql);
 
                 // Insert updated costing details
                 foreach ($costingDetails as $costing) {
@@ -141,9 +138,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['barcode'])) {
         if (isset($_POST['retailDetails'])) {
             $retailDetails = json_decode($_POST['retailDetails'], true);
             if (is_array($retailDetails)) {
-                // Delete existing retail details for this barcode
-                $deleteRetailSql = "DELETE FROM tbl_productprice WHERE Barcode = '$barcode'";
-                $conn->query($deleteRetailSql);
 
                 // Insert updated retail details
                 foreach ($retailDetails as $retail) {
