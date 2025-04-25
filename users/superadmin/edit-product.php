@@ -10,7 +10,8 @@ $response = [
     'categories' => [], 
     'costingDetails' => [], 
     'retailDetails' => [], 
-    'suppliers' => [] // Add suppliers to the response
+    'suppliers' => [], // Add suppliers to the response
+    'uoms' => [] // Add UOMs to the response
 ];
 
 // Fetch shelf options from tbl_invmaintenance
@@ -40,7 +41,7 @@ if ($supplierResult->num_rows > 0) {
     }
 }
 
-// Fetch UOMs from tbl_invmaintence where ItemType = 'UNIT'
+// Fetch UOMs from tbl_invmaintenance where ItemType = 'UNIT'
 $uomSql = "SELECT ItemName FROM tbl_invmaintenance WHERE ItemType = 'UNIT'";
 $uomResult = $conn->query($uomSql);
 if ($uomResult->num_rows > 0) {
@@ -75,8 +76,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['barcode'])) {
             }
         }
 
-        // Fetch retail details from tbl_productprice
-        $retailSql = "SELECT PriceType, Barcode, ProductName, Measurement, Quantity, AppliedSRP FROM tbl_productprice WHERE Barcode = '$barcode'";
+        // Fetch retail details from tbl_productprice, including Cost, MarkupPercent, and SRP
+        $retailSql = "SELECT PriceType, Barcode, ProductName, Measurement, Quantity, AppliedSRP, Cost, MarkupPercent, SRP FROM tbl_productprice WHERE Barcode = '$barcode'";
         $retailResult = $conn->query($retailSql);
         if ($retailResult->num_rows > 0) {
             while ($retailRow = $retailResult->fetch_assoc()) {
@@ -112,6 +113,56 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['barcode'])) {
     if ($conn->query($updateSql) === TRUE) {
         $response['status'] = 'success';
         $response['message'] = 'Product updated successfully';
+
+        // Update costing details if provided
+        if (isset($_POST['costingDetails'])) {
+            $costingDetails = json_decode($_POST['costingDetails'], true);
+            if (is_array($costingDetails)) {
+                // Delete existing costing details for this barcode
+                $deleteCostingSql = "DELETE FROM tbl_productcost WHERE Barcode = '$barcode'";
+                $conn->query($deleteCostingSql);
+
+                // Insert updated costing details
+                foreach ($costingDetails as $costing) {
+                    $supplierName = $conn->real_escape_string($costing['SupplierName']);
+                    $cost = $conn->real_escape_string($costing['Cost']);
+                    $measurement = $conn->real_escape_string($costing['Measurement']);
+                    $costBarcode = $conn->real_escape_string($costing['Barcode']);
+                    $vatAble = isset($costing['VatAble']) && $costing['VatAble'] ? 1 : 0;
+
+                    $insertCostingSql = "INSERT INTO tbl_productcost (SupplierName, Cost, Measurement, Barcode, VatAble) 
+                        VALUES ('$supplierName', '$cost', '$measurement', '$costBarcode', '$vatAble')";
+                    $conn->query($insertCostingSql);
+                }
+            }
+        }
+
+        // Update retail details if provided
+        if (isset($_POST['retailDetails'])) {
+            $retailDetails = json_decode($_POST['retailDetails'], true);
+            if (is_array($retailDetails)) {
+                // Delete existing retail details for this barcode
+                $deleteRetailSql = "DELETE FROM tbl_productprice WHERE Barcode = '$barcode'";
+                $conn->query($deleteRetailSql);
+
+                // Insert updated retail details
+                foreach ($retailDetails as $retail) {
+                    $priceType = $conn->real_escape_string($retail['PriceType']);
+                    $retailBarcode = $conn->real_escape_string($retail['Barcode']);
+                    $productName = $conn->real_escape_string($retail['ProductName']);
+                    $measurement = $conn->real_escape_string($retail['Measurement']);
+                    $quantity = $conn->real_escape_string($retail['Quantity']);
+                    $appliedSRP = $conn->real_escape_string($retail['AppliedSRP']);
+                    $cost = $conn->real_escape_string($retail['Cost']);
+                    $markupPercent = $conn->real_escape_string($retail['MarkUp']);
+                    $srp = $conn->real_escape_string($retail['SRP']);
+
+                    $insertRetailSql = "INSERT INTO tbl_productprice (PriceType, Barcode, ProductName, Measurement, Quantity, AppliedSRP, Cost, MarkupPercent, SRP) 
+                        VALUES ('$priceType', '$retailBarcode', '$productName', '$measurement', '$quantity', '$appliedSRP', '$cost', '$markupPercent', '$srp')";
+                    $conn->query($insertRetailSql);
+                }
+            }
+        }
     } else {
         $response['message'] = 'Error updating product: ' . $conn->error;
     }

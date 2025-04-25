@@ -159,6 +159,80 @@
     </div>
 </div>
 
+<!-- PRODUCT SEARCH Edit Retail Modal -->
+<div class="modal fade" id="editRetailModal" tabindex="-1" aria-labelledby="editRetailModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editRetailModalLabel">Product Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <h6>Product Information</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="editPriceType" class="form-label">Price Type:</label>
+                                            <select class="form-select" id="editPriceType">
+                                                <option value="RETAIL">RETAIL</option>
+                                                <option value="WHOLESALE">WHOLESALE</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="editCost" class="form-label">Cost:</label>
+                                            <input type="number" class="form-control" id="editCost">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="editRetailBarcode" class="form-label">Barcode:</label>
+                                            <input type="text" class="form-control" id="editRetailBarcode">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="editRetailProductName" class="form-label">Product Name:</label>
+                                            <input type="text" class="form-control" id="editRetailProductName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <h6>Product Details</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="editRetailUOM" class="form-label">UOM:</label>
+                                            <select class="form-select" id="editRetailUOM">
+                                                <option value="PC">PC</option>
+                                                <option value="BOX">BOX</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="editMarkUp" class="form-label">Mark Up:</label>
+                                            <input type="number" class="form-control" id="editMarkUp">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="editSRP" class="form-label">SRP:</label>
+                                            <input type="number" class="form-control" id="editSRP" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="editAppliedSRP" class="form-label">Applied SRP:</label>
+                                            <input type="number" class="form-control" id="editAppliedSRP" placeholder="Enter applied SRP">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="saveEditRetail">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 <!-- Edit Product Info Modal -->
 <div class="modal fade" id="editProductInfoModal" tabindex="-1" aria-labelledby="editProductInfoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -201,54 +275,6 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="saveEditProductInfo">Save Changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Product Modal Retail (for Add Retail) -->
-<div class="modal fade" id="productModalRetail" tabindex="-1" aria-labelledby="productModalRetailLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="productModalRetailLabel">Add Retail Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addRetailForm">
-                    <div class="mb-3">
-                        <label for="addRetailPriceType" class="form-label">Price Type:</label>
-                        <select class="form-select" id="addRetailPriceType" name="priceType">
-                            <option value="">Select Price Type</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="addRetailBarcode" class="form-label">Barcode:</label>
-                        <input type="text" class="form-control" id="addRetailBarcode" name="barcode" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="addRetailProductName" class="form-label">Product Name:</label>
-                        <input type="text" class="form-control" id="addRetailProductName" name="productName" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="addRetailUOM" class="form-label">UOM:</label>
-                        <select class="form-select" id="addRetailUOM" name="uom">
-                            <option value="">Select UOM</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="addRetailQuantity" class="form-label">Quantity:</label>
-                        <input type="number" class="form-control" id="addRetailQuantity" name="quantity">
-                    </div>
-                    <div class="mb-3">
-                        <label for="addRetailSellingPrice" class="form-label">Selling Price:</label>
-                        <input type="number" class="form-control" id="addRetailSellingPrice" name="sellingPrice">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveRetailInfo">Save</button>
             </div>
         </div>
     </div>

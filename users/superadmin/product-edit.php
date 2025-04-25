@@ -289,13 +289,13 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Retail Details</h5>
-                                    <button type="button" class="btn addRetail-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productModalRetail" id="addRetailButton">
+                                    <button type="button" class="btn edit-addRetail-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#productModalRetail" id="addRetailButton">
                                         <i class="fas fa-plus"></i> Add
                                     </button>
-                                    <button type="button" class="btn editRetail-btn btn-outline-primary me-2" style="font-size: 13px;" disabled>
+                                    <button type="button" class="btn edit-editRetail-btn btn-outline-primary me-2" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#editRetailModal" disabled>
                                         <i class="fas fa-save"></i> Edit
                                     </button>
-                                    <button type="button" class="btn deleteRetail-btn btn-outline-primary" style="font-size: 13px;" disabled>
+                                    <button type="button" class="btn edit-deleteRetail-btn btn-outline-primary" style="font-size: 13px;" disabled>
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                     <div class="table-responsive table-container" style="height: calc(81.5vh - 250px); overflow-y: auto;">
@@ -387,22 +387,34 @@
 
                     let shelfData = []; // Store shelf data for dynamic updates
                     let costingData = []; // Store costing data for editing
+                    let retailData = []; // Store retail data for editing
                     let suppliers = []; // Store suppliers for dropdown
                     let uoms = []; // Store UOMs for dropdown
 
-                    // Get references to Edit and Delete buttons
+                    // Get references to Edit and Delete buttons for Costing Details
                     const editButton = document.querySelector('.edit-btn');
                     const deleteButton = document.querySelector('.delete-btn');
                     const costingTableBody = document.getElementById('costingTableBody');
 
-                    // Function to toggle button states
-                    function toggleButtonsState(enabled) {
+                    // Get references to Edit and Delete buttons for Retail Details
+                    const editRetailButton = document.querySelector('.edit-editRetail-btn');
+                    const deleteRetailButton = document.querySelector('.edit-deleteRetail-btn');
+                    const retailTableBody = document.getElementById('retailTableBody');
+
+                    // Function to toggle Costing button states
+                    function toggleCostingButtonsState(enabled) {
                         editButton.disabled = !enabled;
                         deleteButton.disabled = !enabled;
                     }
 
-                    // Function to handle row selection
-                    function handleRowSelection(row, index) {
+                    // Function to toggle Retail button states
+                    function toggleRetailButtonsState(enabled) {
+                        editRetailButton.disabled = !enabled;
+                        deleteRetailButton.disabled = !enabled;
+                    }
+
+                    // Function to handle Costing row selection
+                    function handleCostingRowSelection(row, index) {
                         // Remove 'selected' class from all rows
                         costingTableBody.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
                         // Add 'selected' class to the clicked row
@@ -410,7 +422,19 @@
                         // Store the selected row index
                         row.dataset.index = index;
                         // Enable buttons
-                        toggleButtonsState(true);
+                        toggleCostingButtonsState(true);
+                    }
+
+                    // Function to handle Retail row selection
+                    function handleRetailRowSelection(row, index) {
+                        // Remove 'selected' class from all rows
+                        retailTableBody.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
+                        // Add 'selected' class to the clicked row
+                        row.classList.add('selected');
+                        // Store the selected row index
+                        row.dataset.index = index;
+                        // Enable buttons
+                        toggleRetailButtonsState(true);
                     }
 
                     // Function to populate dropdowns
@@ -434,6 +458,23 @@
                             option.textContent = uom;
                             editUOMSelect.appendChild(option);
                         });
+
+                        // Populate Retail UOM dropdown
+                        const editRetailUOMSelect = document.getElementById('editRetailUOM');
+                        uoms.forEach(uom => {
+                            const option = document.createElement('option');
+                            option.value = uom;
+                            option.textContent = uom;
+                            editRetailUOMSelect.appendChild(option);
+                        });
+                    }
+
+                    // Function to calculate SRP
+                    function calculateSRP(cost, markUp) {
+                        if (cost && markUp) {
+                            return (parseFloat(cost) + (parseFloat(cost) * parseFloat(markUp) / 100)).toFixed(2);
+                        }
+                        return '';
                     }
 
                     // Fetch product data based on barcode from URL
@@ -506,18 +547,18 @@
                                             `;
                                             // Make row clickable
                                             row.style.cursor = 'pointer';
-                                            row.addEventListener('click', () => handleRowSelection(row, index));
+                                            row.addEventListener('click', () => handleCostingRowSelection(row, index));
                                             costingTableBody.appendChild(row);
                                         });
                                     } else {
                                         costingTableBody.innerHTML = '<tr><td colspan="4" class="text-center">No Data Available</td></tr>';
                                     }
 
-                                    // Populate Retail Details table
-                                    const retailTableBody = document.getElementById('retailTableBody');
+                                    // Store retail data and populate table
+                                    retailData = data.retailDetails;
                                     retailTableBody.innerHTML = ''; // Clear existing rows
-                                    if (data.retailDetails.length > 0) {
-                                        data.retailDetails.forEach(retail => {
+                                    if (retailData.length > 0) {
+                                        retailData.forEach((retail, index) => {
                                             const row = document.createElement('tr');
                                             row.innerHTML = `
                                                 <td>${retail.PriceType || ''}</td>
@@ -527,6 +568,9 @@
                                                 <td>${retail.Quantity || ''}</td>
                                                 <td>${retail.AppliedSRP || ''}</td>
                                             `;
+                                            // Make row clickable
+                                            row.style.cursor = 'pointer';
+                                            row.addEventListener('click', () => handleRetailRowSelection(row, index));
                                             retailTableBody.appendChild(row);
                                         });
                                     } else {
@@ -547,7 +591,7 @@
                             });
                     }
 
-                    // Handle Edit button click to populate modal
+                    // Handle Edit button click to populate modal for Costing
                     editButton.addEventListener('click', () => {
                         const selectedRow = costingTableBody.querySelector('tr.selected');
                         if (selectedRow) {
@@ -561,8 +605,39 @@
                         }
                     });
 
-                    // Handle Save Changes in Edit Modal
-                    document.getElementById('saveEditProductInfo').addEventListener('click', () => {
+                    // Handle Edit button click to populate modal for Retail
+                    editRetailButton.addEventListener('click', () => {
+                        const selectedRow = retailTableBody.querySelector('tr.selected');
+                        if (selectedRow) {
+                            const index = selectedRow.dataset.index;
+                            const retail = retailData[index];
+                            document.getElementById('editPriceType').value = retail.PriceType || '';
+                            document.getElementById('editCost').value = retail.Cost || '';
+                            document.getElementById('editRetailBarcode').value = retail.Barcode || '';
+                            document.getElementById('editRetailProductName').value = retail.ProductName || '';
+                            document.getElementById('editRetailUOM').value = retail.Measurement || '';
+                            document.getElementById('editMarkUp').value = retail.MarkupPercent || ''; // Correctly map MarkupPercent to Mark Up
+                            document.getElementById('editSRP').value = retail.SRP || calculateSRP(retail.Cost, retail.MarkupPercent);
+                            document.getElementById('editAppliedSRP').value = retail.AppliedSRP || '';
+
+                            // Add event listeners to update SRP dynamically
+                            const costInput = document.getElementById('editCost');
+                            const markUpInput = document.getElementById('editMarkUp');
+                            const srpInput = document.getElementById('editSRP');
+
+                            function updateSRP() {
+                                const cost = costInput.value;
+                                const markUp = markUpInput.value;
+                                srpInput.value = calculateSRP(cost, markUp);
+                            }
+
+                            costInput.addEventListener('input', updateSRP);
+                            markUpInput.addEventListener('input', updateSRP);
+                        }
+                    });
+
+                    // Handle Save Changes in Edit Modal for Costing
+                    document.getElementById('saveEditProductInfo')?.addEventListener('click', () => {
                         const selectedRow = costingTableBody.querySelector('tr.selected');
                         if (selectedRow) {
                             const index = selectedRow.dataset.index;
@@ -583,10 +658,46 @@
                                 <td>${updatedCosting.Barcode || ''}</td>
                             `;
                             selectedRow.style.cursor = 'pointer';
-                            selectedRow.addEventListener('click', () => handleRowSelection(selectedRow, index));
+                            selectedRow.addEventListener('click', () => handleCostingRowSelection(selectedRow, index));
 
                             // Close the modal
                             const modal = bootstrap.Modal.getInstance(document.getElementById('editProductInfoModal'));
+                            modal.hide();
+                        }
+                    });
+
+                    // Handle Save Changes in Edit Modal for Retail
+                    document.getElementById('saveEditRetail').addEventListener('click', () => {
+                        const selectedRow = retailTableBody.querySelector('tr.selected');
+                        if (selectedRow) {
+                            const index = selectedRow.dataset.index;
+                            const updatedRetail = {
+                                PriceType: document.getElementById('editPriceType').value,
+                                Cost: document.getElementById('editCost').value,
+                                Barcode: document.getElementById('editRetailBarcode').value,
+                                ProductName: document.getElementById('editRetailProductName').value,
+                                Measurement: document.getElementById('editRetailUOM').value,
+                                MarkupPercent: document.getElementById('editMarkUp').value, // Save as MarkupPercent
+                                SRP: document.getElementById('editSRP').value,
+                                AppliedSRP: document.getElementById('editAppliedSRP').value,
+                                Quantity: retailData[index].Quantity // Preserve quantity
+                            };
+                            retailData[index] = updatedRetail;
+
+                            // Update the table row
+                            selectedRow.innerHTML = `
+                                <td>${updatedRetail.PriceType || ''}</td>
+                                <td>${updatedRetail.Barcode || ''}</td>
+                                <td>${updatedRetail.ProductName || ''}</td>
+                                <td>${updatedRetail.Measurement || ''}</td>
+                                <td>${updatedRetail.Quantity || ''}</td>
+                                <td>${updatedRetail.AppliedSRP || ''}</td>
+                            `;
+                            selectedRow.style.cursor = 'pointer';
+                            selectedRow.addEventListener('click', () => handleRetailRowSelection(selectedRow, index));
+
+                            // Close the modal
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('editRetailModal'));
                             modal.hide();
                         }
                     });
@@ -595,8 +706,9 @@
                     document.getElementById('productForm').addEventListener('submit', function (e) {
                         e.preventDefault();
                         const formData = new FormData(this);
-                        // Include costing data in the form submission
+                        // Include costing and retail data in the form submission
                         formData.append('costingDetails', JSON.stringify(costingData));
+                        formData.append('retailDetails', JSON.stringify(retailData));
                         fetch('edit-product.php', {
                             method: 'POST',
                             body: formData

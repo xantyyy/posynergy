@@ -229,7 +229,7 @@
                         <input type="text" class="form-control" id="changeOutput" value="0.00" readonly>
                     </div>
                 </div>
-                <small class="text-danger">Press F7 to add Tender</small>
+                <small class="text-danger">Press F1 to add Points</small>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" onclick="calculateChange()">Submit</button>
