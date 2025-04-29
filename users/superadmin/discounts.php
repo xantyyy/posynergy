@@ -156,8 +156,6 @@
 					</nav>
 				</div>	  
 
-				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
-
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 				<div class="container">
 					<div class="row">
@@ -170,7 +168,7 @@
 					<div class="card p-4 col-md-6">
 						<h4 class="text-center"><b>Discount Report</b></h4>
 						<hr>
-						<form>
+						<form id="discount-report-form">
 							<div class="row mb-3">
 								<div class="col-md-6">
 									<label for="from-date" class="form-label"><b>From:</b></label>
@@ -186,47 +184,67 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-check">
-										<input type="radio" name="discountType" id="senior" class="form-check-input">
+										<input type="radio" name="discountType" id="senior" class="form-check-input" value="senior">
 										<label for="senior" class="form-check-label"><b>Senior Citizen</b></label>
 									</div>
 									<div class="form-check mt-2">
-										<input type="radio" name="discountType" id="pwd" class="form-check-input">
+										<input type="radio" name="discountType" id="pwd" class="form-check-input" value="pwd">
 										<label for="pwd" class="form-check-label"><b>PWD</b></label>
 									</div>
 									<div class="form-check mt-2">
-										<input type="radio" name="discountType" id="naac" class="form-check-input">
+										<input type="radio" name="discountType" id="naac" class="form-check-input" value="naac">
 										<label for="naac" class="form-check-label"><b>NAAC</b></label>
 									</div>
 									<div class="form-check mt-2">
-										<input type="radio" name="discountType" id="medal" class="form-check-input">
+										<input type="radio" name="discountType" id="medal" class="form-check-input" value="medal">
 										<label for="medal" class="form-check-label"><b>Medal of Valor</b></label>
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-check">
-										<input type="radio" name="discountType" id="discounted" class="form-check-input">
+										<input type="radio" name="discountType" id="discounted" class="form-check-input" value="discounted">
 										<label for="discounted" class="form-check-label"><b>Discounted Products</b></label>
 									</div>
 									<div class="form-check mt-2">
-										<input type="radio" name="discountType" id="regular" class="form-check-input">
+										<input type="radio" name="discountType" id="regular" class="form-check-input" value="regular">
 										<label for="regular" class="form-check-label"><b>Regular Discount</b></label>
 									</div>
 									<div class="form-check mt-2">
-										<input type="radio" name="discountType" id="solo" class="form-check-input">
+										<input type="radio" name="discountType" id="solo" class="form-check-input" value="solo">
 										<label for="solo" class="form-check-label"><b>Solo Parent</b></label>
 									</div>
 								</div>
 							</div>
 
 							<div class="mt-3 text-center">
-							<button type="submit" class="btn btn-outline-secondary">
+							<button type="button" id="preview-btn" class="btn btn-outline-secondary">
 								<i class="fa fa-eye"></i> Preview
 							</button>
-
 							</div>
 						</form>
 					</div>
 				</div>
+
+                <!-- Receipt Modal -->
+                <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="receiptModalLabel">Discount Report</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="receipt-content" style="font-family: 'Courier New', monospace;"></div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="print-receipt">Print</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 				<script>
 					document.addEventListener("DOMContentLoaded", function () {
@@ -280,6 +298,323 @@
 								this.classList.remove("hovered-dropdown");
 							});
 						});
+
+                        // Preview button functionality
+                        document.getElementById('preview-btn').addEventListener('click', function() {
+                            const fromDate = document.getElementById('from-date').value;
+                            const toDate = document.getElementById('to-date').value;
+                            
+                            // Get selected discount type
+                            let selectedDiscountType = '';
+                            let discountTypeName = '';
+                            document.querySelectorAll('input[name="discountType"]').forEach(function(radio) {
+                                if (radio.checked) {
+                                    selectedDiscountType = radio.value;
+                                    discountTypeName = radio.nextElementSibling.textContent;
+                                }
+                            });
+                            
+                            if (!selectedDiscountType) {
+                                alert('Please select a discount type');
+                                return;
+                            }
+                            
+                            // Format dates for display
+                            const formatDate = (dateString) => {
+                                const date = new Date(dateString);
+                                return date.toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
+                            };
+                            
+                            // Generate receipt content based on selected discount type
+                            let receiptHTML = '';
+                            
+                            // Common header for all reports
+                            receiptHTML += `
+                                <div class="text-center">
+                                    <h2>AAA COMPANY</h2>
+                                    <p>Owned & Operated By: AAA Company Inc.</p>
+                                    <p>#101 SAN PASCUAL, TALAVERA, N.E.</p>
+                                    <p>Tel no: 000-0000</p>
+                                    <hr>
+                                    <h3>${discountTypeName} Report</h3>
+                                    <p>Period: ${formatDate(fromDate)} to ${formatDate(toDate)}</p>
+                                </div>
+                                <hr>
+                            `;
+                            
+                            // For Discounted Products report (matching the image)
+                            if (selectedDiscountType === 'discounted') {
+                                receiptHTML += `
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Transaction Date</th>
+                                                    <th>Transaction Number</th>
+                                                    <th>Barcode</th>
+                                                    <th>Name</th>
+                                                    <th>Product Name</th>
+                                                    <th>Payment Type</th>
+                                                    <th>Quantity</th>
+                                                    <th>Discount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>2025-04-26</td>
+                                                    <td>TXN-001</td>
+                                                    <td>12345678</td>
+                                                    <td>Juan Dela Cruz</td>
+                                                    <td>Paracetamol 500mg</td>
+                                                    <td>Cash</td>
+                                                    <td>2</td>
+                                                    <td>₱10.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2025-04-26</td>
+                                                    <td>TXN-002</td>
+                                                    <td>87654321</td>
+                                                    <td>Maria Santos</td>
+                                                    <td>Vitamin C 500mg</td>
+                                                    <td>Card</td>
+                                                    <td>1</td>
+                                                    <td>₱15.50</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2025-04-27</td>
+                                                    <td>TXN-003</td>
+                                                    <td>23456789</td>
+                                                    <td>Pedro Reyes</td>
+                                                    <td>Amoxicillin 500mg</td>
+                                                    <td>Cash</td>
+                                                    <td>3</td>
+                                                    <td>₱25.75</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="6" style="text-align:right;"><strong>TOTAL</strong></td>
+                                                    <td>6</td>
+                                                    <td>₱51.25</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                `;
+                            } else if (selectedDiscountType === 'senior') {
+                                // Senior Citizen specific format
+                                receiptHTML += `
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Transaction Date</th>
+                                                    <th>Senior ID</th>
+                                                    <th>Name</th>
+                                                    <th>Product Name</th>
+                                                    <th>Orig. Amount</th>
+                                                    <th>Discount (20%)</th>
+                                                    <th>Final Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>2025-04-26</td>
+                                                    <td>SC-12345</td>
+                                                    <td>Juan Dela Cruz</td>
+                                                    <td>Maintenance Medication</td>
+                                                    <td>₱500.00</td>
+                                                    <td>₱100.00</td>
+                                                    <td>₱400.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2025-04-27</td>
+                                                    <td>SC-67890</td>
+                                                    <td>Maria Santos</td>
+                                                    <td>Multivitamins</td>
+                                                    <td>₱300.00</td>
+                                                    <td>₱60.00</td>
+                                                    <td>₱240.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" style="text-align:right;"><strong>TOTAL</strong></td>
+                                                    <td>₱800.00</td>
+                                                    <td>₱160.00</td>
+                                                    <td>₱640.00</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                `;
+                            } else if (selectedDiscountType === 'pwd') {
+                                // PWD specific format
+                                receiptHTML += `
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Transaction Date</th>
+                                                    <th>PWD ID</th>
+                                                    <th>Name</th>
+                                                    <th>Product Name</th>
+                                                    <th>Orig. Amount</th>
+                                                    <th>Discount (20%)</th>
+                                                    <th>Final Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>2025-04-26</td>
+                                                    <td>PWD-12345</td>
+                                                    <td>Carlos Reyes</td>
+                                                    <td>Prescription Medication</td>
+                                                    <td>₱600.00</td>
+                                                    <td>₱120.00</td>
+                                                    <td>₱480.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2025-04-28</td>
+                                                    <td>PWD-67890</td>
+                                                    <td>Elena Cruz</td>
+                                                    <td>Medical Supplies</td>
+                                                    <td>₱450.00</td>
+                                                    <td>₱90.00</td>
+                                                    <td>₱360.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" style="text-align:right;"><strong>TOTAL</strong></td>
+                                                    <td>₱1,050.00</td>
+                                                    <td>₱210.00</td>
+                                                    <td>₱840.00</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                `;
+                            } else {
+                                // Generic format for other discount types
+                                receiptHTML += `
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Transaction Date</th>
+                                                    <th>ID Number</th>
+                                                    <th>Customer Name</th>
+                                                    <th>Total Amount</th>
+                                                    <th>Discount Amount</th>
+                                                    <th>Final Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>2025-04-26</td>
+                                                    <td>ID-00123</td>
+                                                    <td>Sample Customer 1</td>
+                                                    <td>₱500.00</td>
+                                                    <td>₱50.00</td>
+                                                    <td>₱450.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2025-04-27</td>
+                                                    <td>ID-00124</td>
+                                                    <td>Sample Customer 2</td>
+                                                    <td>₱300.00</td>
+                                                    <td>₱30.00</td>
+                                                    <td>₱270.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2025-04-28</td>
+                                                    <td>ID-00125</td>
+                                                    <td>Sample Customer 3</td>
+                                                    <td>₱700.00</td>
+                                                    <td>₱70.00</td>
+                                                    <td>₱630.00</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3" style="text-align:right;"><strong>TOTAL</strong></td>
+                                                    <td>₱1,500.00</td>
+                                                    <td>₱150.00</td>
+                                                    <td>₱1,350.00</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                `;
+                            }
+                            
+                            // Add footer
+                            receiptHTML += `
+                                <hr>
+                                <div class="text-center">
+                                    <p>*** End of Report ***</p>
+                                    <p>Generated on: ${new Date().toLocaleString()}</p>
+                                </div>
+                            `;
+                            
+                            // Set receipt content and show modal
+                            document.getElementById('receipt-content').innerHTML = receiptHTML;
+                            $('#receiptModal').modal('show');
+                        });
+
+                        // Print functionality
+                        document.getElementById('print-receipt').addEventListener('click', function() {
+                            const receiptContent = document.getElementById('receipt-content').innerHTML;
+                            const printWindow = window.open('', '_blank');
+                            
+                            printWindow.document.write(`
+                                <!DOCTYPE html>
+                                <html>
+                                <head>
+                                    <title>Print Discount Report</title>
+                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
+                                    <style>
+                                        body {
+                                            font-family: 'Courier New', monospace;
+                                            padding: 20px;
+                                        }
+                                        table {
+                                            width: 100%;
+                                            border-collapse: collapse;
+                                        }
+                                        th, td {
+                                            border: 1px solid #ddd;
+                                            padding: 8px;
+                                            text-align: left;
+                                        }
+                                        th {
+                                            background-color: #f2f2f2;
+                                        }
+                                        .text-center {
+                                            text-align: center;
+                                        }
+                                        h2, h3 {
+                                            margin-bottom: 5px;
+                                        }
+                                        p {
+                                            margin: 3px 0;
+                                        }
+                                        hr {
+                                            border-top: 1px dashed #000;
+                                            margin: 10px 0;
+                                        }
+                                    </style>
+                                </head>
+                                <body>
+                                    ${receiptContent}
+                                </body>
+                                </html>
+                            `);
+                            
+                            printWindow.document.close();
+                            printWindow.focus();
+                            setTimeout(function() {
+                                printWindow.print();
+                                printWindow.close();
+                            }, 500);
+                        });
 					});
 				</script>
 
@@ -363,5 +698,20 @@
 						display: block !important;
 					}
 
+                    /* Additional styles for receipt printing */
+                    @media print {
+                        body * {
+                            visibility: hidden;
+                        }
+                        #receipt-content, #receipt-content * {
+                            visibility: visible;
+                        }
+                        #receipt-content {
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
+                        }
+                    }
 				</style>
 <?php include_once 'footer.php'; ?>
