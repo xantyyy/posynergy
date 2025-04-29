@@ -299,9 +299,9 @@
                     <div class="col-md-6">
                         <label for="priceType" class="form-label">Price Type:</label>
                         <select class="form-select" id="retail-priceType" name="retail-priceType">
-                            <option selected value hidden>Select price type</option>
-                            <option value="retail">Retail</option>
-                            <option value="wholesale">Wholesale</option>
+                            <option selected value="" hidden>Select price type</option>
+                            <option value="RETAIL">RETAIL</option>
+                            <option value="WHOLESALE">WHOLESALE</option>
                         </select>
                     </div>
                     <!-- Cost -->
@@ -379,8 +379,8 @@
                         <label for="edit-priceType" class="form-label">Price Type:</label>
                         <select class="form-select" id="edit-priceType">
                             <option selected value hidden>Select price type</option>
-                            <option value="retail">Retail</option>
-                            <option value="wholesale">Wholesale</option>
+                            <option value="retail">RETAIL</option>
+                            <option value="wholesale">WHOLESALE</option>
                         </select>
                     </div>
                     <div class="col-md-6">

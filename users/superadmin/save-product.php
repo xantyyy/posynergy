@@ -178,18 +178,21 @@ try {
 foreach ($retailData as $retail) {
     $currentDate = date('Y/m/d');
     
-    // Get PriceType from form submission, with validation
-    $priceType = isset($_POST['retail-priceType']) && in_array($_POST['retail-priceType'], ['retail', 'wholesale'])
-        ? $_POST['retail-priceType']
-        : 'Retail'; // Default to 'Retail' if invalid or not provided
+    // Use the priceType from the retail data, which will be 'RETAIL' or 'WHOLESALE'
+    $priceType = $retail['priceType'];
     
-    // Calculate markup percentage if not directly provided
+    // Validate priceType
+    if (!in_array($priceType, ['RETAIL', 'WHOLESALE'])) {
+        $priceType = 'RETAIL'; // Fallback to RETAIL if invalid
+    }
+    
+    // Calculate markup percentage
     $cost = (float)($costingData[0]['cost'] ?? 0);
     $appliedSrp = (float)($retail['appliedSrp'] ?? 0);
     $markupPercent = ($cost > 0) ? (($appliedSrp - $cost) / $cost * 100) : 0;
-    $markupPercent = number_format($markupPercent, 2); // Format to 2 decimal places
+    $markupPercent = number_format($markupPercent, 2);
     
-    // Determine VAT value (assuming standard 12% VAT if IsVAT is 'YES')
+    // Determine VAT value
     $isVat = $costingData[0]['isVat'] ?? 'NO';
     $vatValue = ($isVat === 'YES') ? ($cost * 0.12) : '0';
     
@@ -204,7 +207,7 @@ foreach ($retailData as $retail) {
         $retail['quantity'],
         $cost,
         $markupPercent,
-        $retail['appliedSrp'], // Using appliedSrp as SRP
+        $retail['appliedSrp'],
         $isVat,
         $vatValue,
         $retail['appliedSrp']
@@ -212,7 +215,7 @@ foreach ($retailData as $retail) {
     
     $stmt->execute();
     
-    // Debug: Log the values being inserted into tbl_productprice
+    // Debug: Log the values being inserted
     error_log("Inserting into tbl_productprice: " . print_r([
         'DateAdded' => $currentDate,
         'PriceType' => $priceType,

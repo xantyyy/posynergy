@@ -1007,12 +1007,6 @@ if (modalInstance) {
             const quantity = $(this).find('td:eq(4)').text();
             const appliedSrp = $(this).find('td:eq(5)').text();
 
-            if (!priceType || !productName || !uom || !quantity || !appliedSrp) {
-                alert('Please ensure all retail details (Price Type, Product Name, UOM, Quantity, Selling Price) are filled.');
-                saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
-                return;
-            }
-
             retailData.push({
                 priceType: priceType,
                 barcode: barcode,
