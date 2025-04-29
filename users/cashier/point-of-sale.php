@@ -636,122 +636,131 @@ $(document).ready(function() {
         let barcodeBuffer = '';
         let lastKeyTime = 0;
         const barcodeTimeout = 50; // Time in ms to group keypresses as a barcode
-        const minBarcodeLength = 4; // Minimum length to consider a barcode
+        const keyDelayThreshold = 50;
 
-        $(document).on('keydown', function(event) {
+        $(document).on('keydown', function(e) {
             const currentTime = new Date().getTime();
-            const key = event.key;
+            const char = e.key;
 
-            // Ignore modifier keys and function keys
-            if (event.ctrlKey || event.altKey || event.metaKey || key.startsWith('F') || key === 'Shift' || key === 'Control' || key === 'Alt') {
-                return;
+            // Detect barcode scanner input (rapid keypresses)
+            if (currentTime - lastKeyTime > keyDelayThreshold) {
+                barcodeBuffer = '';
             }
+            lastKeyTime = currentTime;
 
-            // If an input or textarea is focused, let it handle the input
-            if ($(event.target).is('input, textarea')) {
-                return;
-            }
-
-            // Handle Enter key to process barcode
-            if (key === 'Enter') {
-                event.preventDefault();
-                if (barcodeBuffer.length >= minBarcodeLength) {
+            if (char === 'Enter') {
+                if (barcodeBuffer) {
+                    console.log('Barcode scanned:', barcodeBuffer);
                     lookupBarcode(barcodeBuffer);
+                    barcodeBuffer = '';
                 }
-                barcodeBuffer = ''; // Reset buffer
-                return;
-            }
-
-            // Accumulate printable characters
-            if (key.length === 1) {
-                if (currentTime - lastKeyTime < barcodeTimeout) {
-                    barcodeBuffer += key;
-                } else {
-                    barcodeBuffer = key; // Start new buffer
-                }
-                lastKeyTime = currentTime;
+            } else if (char.length === 1) {
+                barcodeBuffer += char;
             }
         });
 
         // Function to lookup barcode and add to cart
+        let barcodeProcessing = false;
         function lookupBarcode(barcode) {
+            if (barcodeProcessing) return;
+            barcodeProcessing = true;
+
             $.ajax({
                 url: 'search_products.php',
                 method: 'POST',
                 data: { query: barcode, isBarcode: true },
                 dataType: 'json',
                 success: function(response) {
+                    console.log('lookupBarcode response:', response);
                     if (response.status === 'success' && response.products && response.products.length > 0) {
-                        const product = response.products[0]; // Assume first product is the match
+                        const product = response.products[0];
                         addProductToCart(
-                            product.Barcode, // Use Barcode as ID
+                            product.Barcode,
                             product.ProductName,
                             parseFloat(product.SRP),
                             product.Barcode
                         );
-                        $('#productSearch').val(''); // Clear input if it was used
-                        $('#searchResults').hide(); // Hide any search results
+                        $('#productSearch').val('');
+                        $('#searchResults').hide();
                     } else {
                         alert('Product not found for barcode: ' + barcode);
                     }
                 },
-                error: function() {
+                error: function(xhr, status, error) {
+                    console.error('Error looking up barcode:', status, error);
                     alert('Error looking up barcode. Please try again.');
+                },
+                complete: function() {
+                    barcodeProcessing = false;
                 }
             });
         }
     });
     
-    function addProductToCart(id, name, price, barcode) {
-    const existingProductIndex = cart.findIndex(item => item.barcode === barcode); // Use barcode for comparison
+    function addProductToCart(id, name, price, barcode, quantity = 1) {
+        // Ensure barcode is stored as a string
+        barcode = String(barcode);
+        console.log('Adding product to cart:', { id, name, price, barcode, quantity });
+
+        const existingProductIndex = cart.findIndex(item => String(item.barcode) === barcode);
+
+        if (existingProductIndex !== -1) {
+            // Update existing product
+            cart[existingProductIndex].quantity += quantity;
+            cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
+            console.log('Updated existing item:', cart[existingProductIndex]);
+        } else {
+            // Add new product
+            cart.push({
+                id: barcode,
+                name: name,
+                price: price,
+                barcode: barcode,
+                quantity: quantity,
+                totalPrice: price * quantity
+            });
+            console.log('Added new item:', cart[cart.length - 1]);
+        }
+
+        // Update cart display and totals
+        updateCartDisplay();
+        updateTotals();
+
+        // Automatically select the row for the added/updated product
+        const rowSelector = `table#table-bold tbody tr[data-barcode="${barcode}"]`;
+        $('table#table-bold tbody tr').removeClass('selected');
+        $(rowSelector).addClass('selected');
+        console.log('Selected row:', rowSelector);
+    }
     
-    if (existingProductIndex !== -1) {
-        cart[existingProductIndex].quantity += 1;
-        cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
-    } else {
-        cart.push({
-            id: barcode, // Use barcode as the ID for consistency
-            name: name,
-            price: price,
-            barcode: barcode,
-            quantity: 1,
-            totalPrice: price
+    function updateCartDisplay() {
+        console.log('Updating cart display, cart:', cart);
+        const tableBody = $('table#table-bold tbody');
+        tableBody.empty();
+
+        if (cart.length === 0) {
+            tableBody.append(`
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            `);
+            return;
+        }
+
+        cart.forEach(item => {
+            tableBody.append(`
+                <tr data-barcode="${item.barcode}">
+                    <td>${item.name}</td>
+                    <td>${item.quantity}</td>
+                    <td>₱${item.price.toFixed(2)}</td>
+                    <td>₱${item.totalPrice.toFixed(2)}</td>
+                </tr>
+            `);
         });
     }
-    
-    updateCartDisplay();
-    updateTotals();
-}
-    
-function updateCartDisplay() {
-    const tableBody = $('table#table-bold tbody');
-    tableBody.empty();
-    
-    if (cart.length === 0) {
-        // Add an empty row if cart is empty
-        tableBody.append(`
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        `);
-        return;
-    }
-    
-    // Add each product to the table with barcode as data attribute
-    cart.forEach(item => {
-        tableBody.append(`
-            <tr data-barcode="${item.barcode}" data-id="${item.id}">
-                <td>${item.name}</td>
-                <td>${item.quantity}</td>
-                <td>₱${item.price.toFixed(2)}</td>
-                <td>₱${item.totalPrice.toFixed(2)}</td>
-            </tr>
-        `);
-    });
-}
     
     function updateTotals() {
         let totalAmount = 0;
@@ -785,33 +794,53 @@ function updateCartDisplay() {
             }
         });
     
-    $('a[accesskey="F1"]').on('click', function(e) {
-        e.preventDefault();
-        if ($('table#table-bold tbody tr.selected').length > 0) {
+        $('a[accesskey="F1"]').on('click', function(e) {
+            e.preventDefault();
             const selectedRow = $('table#table-bold tbody tr.selected');
-            const productId = selectedRow.data('product-id');
-            
-            const newQuantity = prompt("Enter new quantity:", "1");
-            if (newQuantity !== null) {
-                updateItemQuantity(productId, parseInt(newQuantity));
+            if (selectedRow.length > 0) {
+                const barcode = String(selectedRow.data('barcode')); // Ensure barcode is a string
+                const currentQuantity = parseInt(selectedRow.find('td').eq(1).text()) || 1;
+                console.log('F1 triggered, selected barcode:', barcode, 'current quantity:', currentQuantity);
+                const newQuantity = prompt("Enter new quantity:", currentQuantity);
+                if (newQuantity !== null && !isNaN(newQuantity) && parseInt(newQuantity) >= 0) {
+                    updateItemQuantity(barcode, parseInt(newQuantity));
+                } else {
+                    console.log('Invalid quantity entered:', newQuantity);
+                }
+            } else {
+                console.log('No row selected for F1');
+                alert("Please select an item to edit first");
             }
-        } else {
-            alert("Please select an item to edit first");
-        }
-    });
+        });
     
-    function updateItemQuantity(productId, newQuantity) {
-        if (newQuantity <= 0) {
-            removeItemFromCart(productId);
-            return;
-        }
-        
-        const itemIndex = cart.findIndex(item => item.id === productId);
+    function updateItemQuantity(barcode, newQuantity) {
+        // Ensure barcode is a string
+        barcode = String(barcode);
+        console.log('Updating item quantity:', { barcode, newQuantity });
+
+        const itemIndex = cart.findIndex(item => String(item.barcode) === barcode);
         if (itemIndex !== -1) {
-            cart[itemIndex].quantity = newQuantity;
-            cart[itemIndex].totalPrice = cart[itemIndex].price * newQuantity;
+            if (newQuantity <= 0) {
+                console.log('Removing item with barcode:', barcode);
+                cart.splice(itemIndex, 1); // Remove item if quantity is 0
+            } else {
+                cart[itemIndex].quantity = newQuantity;
+                cart[itemIndex].totalPrice = cart[itemIndex].price * newQuantity;
+                console.log('Updated item:', cart[itemIndex]);
+            }
             updateCartDisplay();
             updateTotals();
+
+            // Re-select the row after updating
+            if (newQuantity > 0) {
+                const rowSelector = `table#table-bold tbody tr[data-barcode="${barcode}"]`;
+                $('table#table-bold tbody tr').removeClass('selected');
+                $(rowSelector).addClass('selected');
+                console.log('Re-selected row:', rowSelector);
+            }
+        } else {
+            console.error('Item not found in cart:', barcode);
+            alert('Error: Item not found in cart. Please try adding it again.');
         }
     }
     
@@ -1101,39 +1130,52 @@ $('#confirmVoidAll').on('click', function() {
             }
         `)
         .appendTo('head');
-function updateCartDisplay() {
-    const tableBody = $('table#table-bold tbody');
-    tableBody.empty(); // Clear existing rows
-    
-    cart.forEach(item => {
-        const row = `
-            <tr data-product-id="${item.barcode}"> <!-- Use barcode as the ID -->
-                <td>${item.name}</td>
-                <td>${item.quantity}</td>
-                <td>₱${item.price.toFixed(2)}</td>
-                <td>₱${item.totalPrice.toFixed(2)}</td>
-            </tr>
-        `;
-        tableBody.append(row);
-    });
-}
 
-function updateTotals() {
-        let totalAmount = 0;
-        let totalItems = 0;
-        
-        cart.forEach(item => {
-            totalAmount += item.totalPrice;
-            totalItems += item.quantity;
-        });
-        
-        $('#totalRetailDisplay').text(`₱${totalAmount.toFixed(2)}`);
-        $('#totalTransactionDisplay').text(`₱${totalAmount.toFixed(2)}`);
-        
-        $('th:contains("# of Item:")').next().text(totalItems);
-        $('th:contains("Amount:")').next().text(`₱${totalAmount.toFixed(2)}`);
-        $('th:contains("TOTAL:")').next().text(`₱${totalAmount.toFixed(2)}`);
-    }
+        function updateCartDisplay() {
+            const tableBody = $('table#table-bold tbody');
+            tableBody.empty();
+
+            if (cart.length === 0) {
+                tableBody.append(`
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                `);
+                return;
+            }
+
+            cart.forEach(item => {
+                tableBody.append(`
+                    <tr data-barcode="${item.barcode}">
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>₱${item.price.toFixed(2)}</td>
+                        <td>₱${item.totalPrice.toFixed(2)}</td>
+                    </tr>
+                `);
+            });
+        }
+
+        function updateTotals() {
+            console.log('Updating totals, cart:', cart);
+            let totalAmount = 0;
+            let totalItems = 0;
+
+            cart.forEach(item => {
+                totalAmount += item.totalPrice;
+                totalItems += item.quantity;
+            });
+
+            $('#totalRetailDisplay').text(`₱${totalAmount.toFixed(2)}`);
+            $('#totalTransactionDisplay').text(`₱${totalAmount.toFixed(2)}`);
+
+            $('th:contains("# of Item:")').next().text(totalItems);
+            $('th:contains("Amount:")').next().text(`₱${totalAmount.toFixed(2)}`);
+            $('th:contains("TOTAL:")').next().text(`₱${totalAmount.toFixed(2)}`);
+        }
     
 
 function savePendingTransaction(transaction) {
