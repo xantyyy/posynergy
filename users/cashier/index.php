@@ -5,18 +5,35 @@
 require_once '../../includes/config.php'; // Database connection
 
 // Check if the form is submitted for declaring opening fund
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['opening_fund_amount'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['opening_fund_amount']) && isset($_POST['password'])) {
     $cashier = "CASHIER"; // Hardcoded as per your table
     $amount = $_POST['opening_fund_amount'];
+    $password = $_POST['password'];
     $transDate = date("Y-m-d H:i:s"); // Current date and time
 
-    // Insert into tbl_openingfund with Closed set to 0 (open) by default
-    $sql = "INSERT INTO tbl_openingfund (Username, Amount, TransDate, Closed) VALUES ('$cashier', '$amount', '$transDate', 0)";
-    
-    if ($conn->query($sql) === TRUE) {
-        echo "<script>alert('Opening fund declared successfully!');</script>";
+    // Verify the password (assuming passwords are stored in a `tbl_users` table)
+    $sql = "SELECT Password FROM tbl_users WHERE Username = '$cashier'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $storedPassword = $row['Password'];
+
+        // Verify password (assuming passwords are hashed, e.g., using password_hash())
+        if (password_verify($password, $storedPassword)) {
+            // Insert into tbl_openingfund with Closed set to 0 (open) by default
+            $sql = "INSERT INTO tbl_openingfund (Username, Amount, TransDate, Closed) VALUES ('$cashier', '$amount', '$transDate', 0)";
+            
+            if ($conn->query($sql) === TRUE) {
+                echo "<script>alert('Opening fund declared successfully!');</script>";
+            } else {
+                echo "<script>alert('Error: " . $conn->error . "');</script>";
+            }
+        } else {
+            echo "<script>alert('Invalid password. Please try again.');</script>";
+        }
     } else {
-        echo "<script>alert('Error: " . $conn->error . "');</script>";
+        echo "<script>alert('User not found.');</script>";
     }
 }
 
@@ -114,12 +131,16 @@ $conn->close();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="">
+                <form method="POST" action="" id="openingFundForm">
                     <div class="mb-3">
                         <label for="openingFundAmount" class="form-label">Amount</label>
                         <input type="number" class="form-control" id="openingFundAmount" name="opening_fund_amount" step="0.01" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Declare</button>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="declareButton">Declare</button>
                 </form>
             </div>
         </div>
@@ -145,6 +166,27 @@ $conn->close();
                         dropdownToggle.setAttribute('aria-expanded', 'true');
                     }
                 }
+            }
+        });
+
+        const form = document.getElementById('openingFundForm');
+        const declareButton = document.getElementById('declareButton');
+
+        form.addEventListener('submit', function (event) {
+            const amount = document.getElementById('openingFundAmount').value;
+            const password = document.getElementById('password').value;
+
+            // Client-side validation
+            if (!amount || amount <= 0) {
+                event.preventDefault();
+                alert('Please enter a valid amount.');
+                return;
+            }
+
+            if (!password) {
+                event.preventDefault();
+                alert('Please enter your password.');
+                return;
             }
         });
 
