@@ -4,6 +4,9 @@
 <?php
 require_once '../../includes/config.php'; // Database connection
 
+$showReceipt = false; // Flag to determine if the receipt should be shown
+$receiptData = []; // To store receipt data
+
 // Check if the form is submitted for declaring opening fund
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['opening_fund_amount']) && isset($_POST['password'])) {
     $cashier = "CASHIER"; // Hardcoded as per your table
@@ -25,7 +28,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['opening_fund_amount'])
             $sql = "INSERT INTO tbl_openingfund (Username, Amount, TransDate, Closed) VALUES ('$cashier', '$amount', '$transDate', 0)";
             
             if ($conn->query($sql) === TRUE) {
-                echo "<script>alert('Opening fund declared successfully!');</script>";
+                // Set flag to show receipt and store receipt data
+                $showReceipt = true;
+                $receiptData = [
+                    'cashier' => $cashier,
+                    'amount' => $amount,
+                    'transDate' => $transDate
+                ];
             } else {
                 echo "<script>alert('Error: " . $conn->error . "');</script>";
             }
@@ -65,13 +74,12 @@ $showModal = $showModal && $canDeclareToday; // Show modal only if no entry for 
 $conn->close();
 ?>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 <!--MENU SIDEBAR CONTENT-->
 <nav id="sidebar">
     <div class="sidebar-header">
         <img src="../../assets/images/isynergiesinc.png" class="img-fluid"/>
-
         <div class="ml-auto" id="userInfo">
             <p class="text-right">Cashier Staff</p>
         </div>
@@ -147,6 +155,38 @@ $conn->close();
     </div>
 </div>
 
+<!-- Receipt Display (No Modal) -->
+<?php if ($showReceipt): ?>
+    <div id="receiptContainer" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #000; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1050;">
+        <div id="receiptContent" style="font-family: monospace; text-align: center; padding: 20px; width: 300px; margin: 0 auto;">
+            <p style="font-weight: bold; margin-bottom: 5px;">AAA COMPANY</p>
+            <p style="margin: 0;">OWNED & OPERATED BY: AAA Company Inc.</p>
+            <p style="margin: 0;">#101 SAN PASCUAL, TALAVERA, N.E.</p>
+            <p style="margin: 0;">VAT REG - TIN 000-000-000-000</p>
+            <p style="margin: 0;">MIN: 12345678910111213</p>
+            <p style="margin: 0;">--------------------------------</p>
+            <p style="font-weight: bold; margin: 10px 0;">OPENING FUND</p>
+            <p style="margin: 0; text-align: left;">
+                DATE-TIME   : 
+                <?php echo date('m/d/Y h:i:s A', strtotime($receiptData['transDate'])); ?>
+            </p>
+            <p style="margin: 0; text-align: left;">
+                CASHIER NAME : 
+                <?php echo $receiptData['cashier']; ?>
+            </p>
+            <p style="margin: 0; text-align: left;">
+                AMOUNT      : 
+                <?php echo number_format($receiptData['amount'], 2); ?>
+            </p>
+            <p style="margin: 0;">--------------------------------</p>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="button" class="btn btn-primary" onclick="printReceipt()">Print Receipt</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='index.php'">Close</button>
+        </div>
+    </div>
+<?php endif; ?>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const currentUrl = window.location.pathname.split('/').pop();
@@ -172,26 +212,28 @@ $conn->close();
         const form = document.getElementById('openingFundForm');
         const declareButton = document.getElementById('declareButton');
 
-        form.addEventListener('submit', function (event) {
-            const amount = document.getElementById('openingFundAmount').value;
-            const password = document.getElementById('password').value;
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                const amount = document.getElementById('openingFundAmount').value;
+                const password = document.getElementById('password').value;
 
-            // Client-side validation
-            if (!amount || amount <= 0) {
-                event.preventDefault();
-                alert('Please enter a valid amount.');
-                return;
-            }
+                // Client-side validation
+                if (!amount || amount <= 0) {
+                    event.preventDefault();
+                    alert('Please enter a valid amount.');
+                    return;
+                }
 
-            if (!password) {
-                event.preventDefault();
-                alert('Please enter your password.');
-                return;
-            }
-        });
+                if (!password) {
+                    event.preventDefault();
+                    alert('Please enter your password.');
+                    return;
+                }
+            });
+        }
 
-        // Show the modal only if no entry exists for today and yesterday's transaction is closed
-        <?php if ($showModal): ?>
+        // Show the opening fund modal only if no entry exists for today and yesterday's transaction is closed
+        <?php if ($showModal && !$showReceipt): ?>
         var openingFundModal = new bootstrap.Modal(document.getElementById('openingFundModal'), {
             backdrop: 'static', // Prevent closing by clicking outside
             keyboard: false // Prevent closing with ESC key
@@ -199,6 +241,53 @@ $conn->close();
         openingFundModal.show();
         <?php endif; ?>
     });
+
+    // Function to print the receipt
+    function printReceipt() {
+        try {
+            const receiptContent = document.getElementById('receiptContent').innerHTML;
+            if (!receiptContent) {
+                console.error('Receipt content not found');
+                alert('Error: Unable to print receipt. Content not found.');
+                return;
+            }
+
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                console.error('Failed to open print window. Popup blocker might be enabled.');
+                alert('Error: Unable to open print window. Please allow popups and try again.');
+                return;
+            }
+
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Opening Fund Receipt</title>
+                        <style>
+                            body { 
+                                font-family: monospace; 
+                                text-align: center; 
+                                padding: 20px; 
+                                width: 300px; 
+                                margin: 0 auto; 
+                            }
+                            p { margin: 0; }
+                            @media print {
+                                .no-print { display: none; }
+                            }
+                        </style>
+                    </head>
+                    <body onload="window.print(); setTimeout(() => window.close(), 100);">
+                        ${receiptContent}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+        } catch (e) {
+            console.error('Error during printing:', e);
+            alert('Error: Unable to print receipt. Check the console for details.');
+        }
+    }
 </script>
 
 <style>
