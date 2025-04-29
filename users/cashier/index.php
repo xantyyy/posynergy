@@ -1,4 +1,8 @@
-<?php include_once 'header.php'; ?>
+<?php
+// Set the timezone to Asia/Manila
+date_default_timezone_set('Asia/Manila');
+
+include_once 'header.php'; ?>
 <?php include 'sidebar-modals.php'; ?>
 
 <?php
@@ -189,6 +193,12 @@ $conn->close();
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Debug the time
+        <?php if ($showReceipt): ?>
+            console.log('Raw transDate: <?php echo $receiptData['transDate']; ?>');
+            console.log('Formatted time: <?php echo date('m/d/Y h:i:s A', strtotime($receiptData['transDate'])); ?>');
+        <?php endif; ?>
+
         const currentUrl = window.location.pathname.split('/').pop();
         
         document.querySelectorAll('.list-unstyled a').forEach(link => {
