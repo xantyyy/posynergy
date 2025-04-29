@@ -546,6 +546,8 @@ $(document).ready(function() {
     let currentTransactionNo = '';
 
     $(document).ready(function() {
+        toggleSidebarLinks();
+
         // Prevent form submission and handle barcode scans in #productSearch
         $('#productSearch').on('keydown', function(event) {
             if (event.key === 'Enter') {
@@ -725,6 +727,7 @@ $(document).ready(function() {
         // Update cart display and totals
         updateCartDisplay();
         updateTotals();
+        toggleSidebarLinks();
 
         // Automatically select the row for the added/updated product
         const rowSelector = `table#table-bold tbody tr[data-barcode="${barcode}"]`;
@@ -747,19 +750,21 @@ $(document).ready(function() {
                     <td></td>
                 </tr>
             `);
-            return;
+        } else {
+            cart.forEach(item => {
+                tableBody.append(`
+                    <tr data-barcode="${item.barcode}">
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>₱${item.price.toFixed(2)}</td>
+                        <td>₱${item.totalPrice.toFixed(2)}</td>
+                    </tr>
+                `);
+            });
         }
 
-        cart.forEach(item => {
-            tableBody.append(`
-                <tr data-barcode="${item.barcode}">
-                    <td>${item.name}</td>
-                    <td>${item.quantity}</td>
-                    <td>₱${item.price.toFixed(2)}</td>
-                    <td>₱${item.totalPrice.toFixed(2)}</td>
-                </tr>
-            `);
-        });
+        // Enable/Disable sidebar links based on cart state
+        toggleSidebarLinks();
     }
     
     function updateTotals() {
@@ -777,6 +782,22 @@ $(document).ready(function() {
         $('th:contains("# of Item:")').next().text(totalItems);
         $('th:contains("Amount:")').next().text(`₱${totalAmount.toFixed(2)}`);
         $('th:contains("TOTAL:")').next().text(`₱${totalAmount.toFixed(2)}`);
+    }
+
+    // Function to toggle sidebar links based on cart state
+    function toggleSidebarLinks() {
+        const editItemLink = $('a[accesskey="F1"]'); // Edit Item (F1)
+        const voidItemLink = $('a[accesskey="F6"]'); // Void Item (F6)
+
+        if (cart.length === 0) {
+            // Disable links if cart is empty
+            editItemLink.addClass('disabled-link');
+            voidItemLink.addClass('disabled-link');
+        } else {
+            // Enable links if cart has items
+            editItemLink.removeClass('disabled-link');
+            voidItemLink.removeClass('disabled-link');
+        }
     }
 
     // Handle Edit Quantity button click
@@ -948,6 +969,9 @@ $('#confirmVoid').on('click', function() {
 
                 // Update the transaction details
                 updateTransactionDetails();
+
+                // Enable/Disable sidebar links based on cart state
+                toggleSidebarLinks();
             } else {
                 alert('Error: ' + response.message);
             }
@@ -1084,6 +1108,7 @@ $('#confirmVoidAll').on('click', function() {
                 // Update the display
                 updateCartDisplay();
                 updateTotals();
+                toggleSidebarLinks();
                 
                 console.log('Transaction voided successfully:', response.transaction_number);
             } else {
@@ -1193,6 +1218,7 @@ function savePendingTransaction(transaction) {
             updateCartDisplay();
             updateTotals();
             $('.card-header.bg-success').first().text("");
+            toggleSidebarLinks();
         } else {
             alert('Error: ' + response.message);
         }
