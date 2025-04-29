@@ -1,12 +1,40 @@
 <?php
 require_once '../../includes/config.php'; // Database connection
 
-// Fetch Branch Setup Data
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Set JSON header
+header('Content-Type: application/json');
+
+// Map frontend field names to database ConfigName values
+$fieldMapping = [
+    'company' => 'COMPANY',
+    'businessLineTrade' => 'BUSINESSLINE',
+    'branch' => 'BRANCH',
+    'address' => 'ADDRESS',
+    'telephone' => 'TELNO',
+    'tin' => 'TINNO',
+    'permit' => 'PERMITNO',
+    'serial' => 'SERIALNO',
+    'min' => 'MINNO',
+    'vatable' => 'IFVATABLE',
+    'stPerPoint' => 'POINTS',
+    'discountMaxAmount' => 'SENIORDISCOUNTMAXIMUMAMOUNT',
+    'discountScope' => 'DISCOUNTSCOPE',
+    'seniorDiscount' => 'SENIORDISCOUNT',
+    'pwdDiscount' => 'PWDDISCOUNT',
+    'soloParentDiscount' => 'SOLOPARENTDISCOUNT',
+    'naacDiscount' => 'NAACDISCOUNT',
+    'medalOfValorDiscount' => 'MEDALOFVALOR'
+];
+
+// Function to fetch Branch Setup Data
 function fetchBranchSetupData($conn) {
     $data = [];
 
     try {
-        // Query to fetch data from tbl_invconfig
         $query = "
             SELECT ConfigName, Value 
             FROM tbl_invconfig 
@@ -26,18 +54,13 @@ function fetchBranchSetupData($conn) {
         }
 
         if ($result->num_rows > 0) {
-            // Initialize response sections
             $supplierData = [];
             $discountSetup = [];
             $discountData = [];
 
-            // Process each row and map to the appropriate section
             while ($row = $result->fetch_assoc()) {
                 $configName = $row['ConfigName'];
-                $value = $row['Value'];
-
-                // Debug: Log each row (optional, for debugging only)
-                error_log("ConfigName: $configName, Value: $value");
+                $value = $row['Value'] ?: 'N/A'; // Ensure no null values
 
                 switch ($configName) {
                     // Supplier Information
@@ -68,17 +91,14 @@ function fetchBranchSetupData($conn) {
                     case 'MINNO':
                         $supplierData['Min No.'] = $value;
                         break;
-
-                    // Company Value (VAT Status)
+                    // Company Value
                     case 'IFVATABLE':
                         $data['vatable'] = $value;
                         break;
-
                     // Minimum Purchase Points
                     case 'POINTS':
                         $data['st_per_point'] = $value;
                         break;
-
                     // Senior Discount Setup
                     case 'SENIORDISCOUNTMAXIMUMAMOUNT':
                         $discountSetup['max_amount'] = $value;
@@ -86,7 +106,6 @@ function fetchBranchSetupData($conn) {
                     case 'DISCOUNTSCOPE':
                         $discountSetup['scope'] = $value;
                         break;
-
                     // Discount Percentages
                     case 'SENIORDISCOUNT':
                         $discountData['Senior Discount'] = $value;
@@ -106,7 +125,6 @@ function fetchBranchSetupData($conn) {
                 }
             }
 
-            // Assign populated sections to the response
             if (!empty($supplierData)) {
                 $data['supplier'] = $supplierData;
             }
@@ -120,7 +138,6 @@ function fetchBranchSetupData($conn) {
             $data['warning'] = "No data found for BRANCH SETUP configuration.";
             error_log("No data found for BRANCH SETUP configuration.");
         }
-
     } catch (Exception $e) {
         $data['error'] = "An error occurred while fetching data: " . $e->getMessage();
         error_log("Error: " . $e->getMessage());
@@ -129,15 +146,50 @@ function fetchBranchSetupData($conn) {
     return $data;
 }
 
-// Fetch data and encode as JSON for frontend
-$data = fetchBranchSetupData($conn);
+// Function to update Branch Setup Data
+function updateBranchSetupData($conn, $data, $fieldMapping) {
+    try {
+        // Prepare the update query
+        $sql = "UPDATE tbl_invconfig SET Value = ? WHERE ConfigOwner = 'BRANCH SETUP' AND ConfigName = ?";
+        $stmt = $conn->prepare($sql);
+        
+        if (!$stmt) {
+            throw new Exception("Prepare failed: " . $conn->error);
+        }
 
-// Debug: Log the final response (optional)
-error_log("Final Response: " . json_encode($data));
+        // Iterate through the data and update each field
+        foreach ($data as $field => $value) {
+            if (isset($fieldMapping[$field])) {
+                $configName = $fieldMapping[$field];
+                $value = $value === 'N/A' ? '' : $value; // Convert 'N/A' to empty string for DB
+                $stmt->bind_param('ss', $value, $configName);
+                
+                if (!$stmt->execute()) {
+                    throw new Exception("Update failed for $configName: " . $stmt->error);
+                }
+                error_log("Updated $configName to $value");
+            }
+        }
 
-// Set appropriate header for JSON output
-header('Content-Type: application/json');
-echo json_encode($data);
+        $stmt->close();
+        return ['success' => true];
+    } catch (Exception $e) {
+        error_log("Update Error: " . $e->getMessage());
+        return ['success' => false, 'message' => $e->getMessage()];
+    }
+}
+
+// Handle GET or POST request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
+    // Handle update request
+    $newData = $_POST['data'] ?? [];
+    $response = updateBranchSetupData($conn, $newData, $fieldMapping);
+    echo json_encode($response);
+} else {
+    // Handle fetch request (GET or default)
+    $data = fetchBranchSetupData($conn);
+    echo json_encode($data);
+}
 
 // Close database connection
 $conn->close();
