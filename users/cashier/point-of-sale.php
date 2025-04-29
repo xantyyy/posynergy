@@ -335,7 +335,7 @@
                                                     </tr>
                                                 <tr>
                                                     <th style="width: 50%;">Transaction No:</th>
-                                                    <td id="#"> </td>
+                                                    <td id="transactionNo" style="display: none;"> </td>
                                                 </tr>
                                                 <tr>
                                                     <th style="width: 50%;"># of Item:</th>
