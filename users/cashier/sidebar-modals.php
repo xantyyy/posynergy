@@ -42,7 +42,6 @@
     </div>
 </div>
 
-
 <!-- Search Product Modal -->
 <div class="modal fade" id="searchProductModal" tabindex="-1" aria-labelledby="searchProductModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -790,73 +789,6 @@ function submitPwdDetails() {
     $('#pwdDetailsModal').modal('hide');
     alert(`PWD discount applied for:\nName: ${pwdName}\nID: ${pwdId}\nAmount Availed: ₱${amountAvailed.toFixed(2)}`);
 }
-
-    $('#pendingTransactionModal .btn-primary').off('click').on('click', function() {
-        // Find the selected row
-        let selectedRow = $('#pendingTransactionModal tbody tr.table-primary');
-        
-        if (selectedRow.length > 0) {
-            // Use .attr() instead of .data() to avoid jQuery caching issues
-            let transactionNo = selectedRow.attr('data-transaction-no');
-            console.log("Load button clicked, selected transactionNo:", transactionNo);
-            
-            if (transactionNo) {
-                loadTransactionToCart(transactionNo);
-                $('#pendingTransactionModal').modal('hide');
-            } else {
-                console.error("Transaction number not found on selected row");
-                alert('Error: Transaction number not found.');
-            }
-        } else {
-            console.log("No row selected when Load button was clicked");
-            alert('Please select a transaction to load.');
-        }
-    });
-    // Function to load a transaction into the cart
-    function loadTransactionIntoCart(transactionId) {
-        $.ajax({
-            url: 'get_pending_transaction_details.php',
-            method: 'GET',
-            data: { id: transactionId },
-            success: function(response) {
-                try {
-                    const transaction = JSON.parse(response);
-                    
-                    // Clear current cart
-                    cart = [];
-                    
-                    // Add items from pending transaction to cart
-                    transaction.items.forEach(item => {
-                        cart.push({
-                            id: item.id,
-                            name: item.name,
-                            price: parseFloat(item.price),
-                            barcode: item.barcode,
-                            quantity: parseInt(item.quantity),
-                            totalPrice: parseFloat(item.totalPrice)
-                        });
-                    });
-                    
-                    // Update display
-                    updateCartDisplay();
-                    updateTotals();
-                    
-                    // Close the modal
-                    $('#pendingTransactionModal').modal('hide');
-                    
-                    // Show success message
-                    alert('Transaction loaded successfully!');
-                    
-                } catch (e) {
-                    console.error('Error parsing transaction details', e);
-                    alert('Could not load transaction details');
-                }
-            },
-            error: function() {
-                alert('Server error. Could not load transaction details.');
-            }
-        });
-    }
 </script>
 <style>
     #pendingTransactionModal table tbody tr.selected-row {

@@ -1379,9 +1379,13 @@ function loadTransactionToCart(transactionNo) {
                     });
                 });
 
-                // Update the display and totals
+                // Update the display, totals, and sidebar links
                 updateCartDisplay();
                 updateTotals();
+                toggleSidebarLinks(); // Add this line to enable F1 and F6 buttons
+
+                // Update the transaction number display
+                $('#transactionNo').text(transactionNo);
 
                 // Remove the pending transaction and show a single alert
                 removePendingTransaction(transactionNo, function() {
