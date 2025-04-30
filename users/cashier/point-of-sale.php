@@ -2092,21 +2092,56 @@ $('#tenderInput').on('input', function() {
 });
 
 // Function to calculate change in real-time
+// Function to calculate change in real-time and validate tender
 function calculateChange() {
     const amountDue = parseFloat($('#amountDue').val()) || 0; // Get the amount due
     const tender = parseFloat($('#tenderInput').val()) || 0; // Get the tender amount
+    const $changeOutput = $('#changeOutput');
+    const $tenderInput = $('#tenderInput');
+    const $submitButton = $('#cashTenderModal .btn-success');
+    const $errorMessage = $('#tenderErrorMessage');
 
-    // Calculate the change (allow negative values)
+    // Calculate the change
     const change = tender - amountDue;
 
-    // Update the change output field (display even if negative)
-    $('#changeOutput').val(change.toFixed(2)); // Display change with 2 decimal places
+    // Update the change output field
+    $changeOutput.val(change.toFixed(2));
+
+    // Validate tender amount
+    if (tender < amountDue) {
+        // Show error message
+        if ($errorMessage.length === 0) {
+            // Create error message element if it doesn't exist
+            $('#cashTenderModal .modal-body').append(
+                '<div id="tenderErrorMessage" style="color: red; font-size: 12px; margin-top: 5px;">Insufficient tender amount. Please enter at least ₱' +
+                amountDue.toFixed(2) +
+                '.</div>'
+            );
+        }
+        // Style tender input to indicate error
+        $tenderInput.addClass('is-invalid');
+        // Disable submit button
+        $submitButton.prop('disabled', true);
+    } else {
+        // Clear error message and styling
+        $errorMessage.remove();
+        $tenderInput.removeClass('is-invalid');
+        // Enable submit button
+        $submitButton.prop('disabled', false);
+    }
 }
 
 // Event listener for the Submit button to print receipt
 $('#cashTenderModal .btn-success').on('click', function() {
+    const amountDue = parseFloat($('#amountDue').val()) || 0;
     const tender = parseFloat($('#tenderInput').val()) || 0;
     const change = parseFloat($('#changeOutput').val()) || 0;
+
+    // Double-check tender amount
+    if (tender < amountDue) {
+        alert('Error: Insufficient tender amount. Please enter at least ₱' + amountDue.toFixed(2) + '.');
+        return;
+    }
 
     // Update the Transaction Details section with tender and change
     $('#tenderDisplay').text(`₱${tender.toFixed(2)}`);
@@ -2117,6 +2152,16 @@ $('#cashTenderModal .btn-success').on('click', function() {
 
     // Call the function to print the receipt
     printReceipt();
+});
+
+// Sync amount due when modal is shown and initialize fields
+$('#cashTenderModal').on('shown.bs.modal', function() {
+    syncAmountDue();
+    $('#tenderInput').val('').focus();
+    $('#changeOutput').val('0.00');
+    $('#tenderErrorMessage').remove(); // Clear any existing error message
+    $('#tenderInput').removeClass('is-invalid'); // Clear invalid styling
+    $('#cashTenderModal .btn-success').prop('disabled', false); // Ensure submit button is enabled initially
 });
 
     document.getElementById('cashTenderModal').addEventListener('shown.bs.modal', function () {
@@ -2766,7 +2811,26 @@ $(document).ready(function() {
 </script>
 
 <style>
-    
+    /* Styling for invalid tender input */
+        #tenderInput.is-invalid {
+            border-color: #dc3545;
+            background-color: #fff5f5;
+        }
+
+        /* Styling for the error message */
+        #tenderErrorMessage {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Optional: Style for disabled submit button */
+        #cashTenderModal .btn-success:disabled {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.65;
+        }
     /* 🔹 SEARCH BAR STYLES */
     .search-results {
             position: absolute; 
