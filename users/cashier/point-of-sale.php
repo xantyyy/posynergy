@@ -275,7 +275,7 @@
                                 <!-- Left Section: TOTAL and RETAIL -->
                                 <div class="col-md-3">
                                     <div style="font-size: 28px; font-weight: bold; color: yellow; margin-left: 10px;">TOTAL</div>
-                                    <div style="font-size: 28px; font-weight: bold; color: white; margin-top: -15px; margin-left: 10px;">RETAIL</div>
+                                    <div class="retail-label" style="font-size: 25px; font-weight: bold; color: white; margin-top: -15px; margin-left: 10px;">RETAIL</div>
                                 </div>
                                 <!-- Divider -->
                                 <div class="col-md-1" style="border-left: 2px solid white; height: 100%;"></div>
@@ -696,6 +696,22 @@ $(document).ready(function() {
                     barcodeProcessing = false;
                 }
             });
+        }
+    });
+
+     // Toggle between RETAIL and WHOLESALE on Tab key press
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault(); // Prevent default Tab behavior (optional, depending on your needs)
+            const retailLabel = $('div:contains("RETAIL"), div:contains("WHOLESALE")').filter(function() {
+                return $(this).text().trim() === 'RETAIL' || $(this).text().trim() === 'WHOLESALE';
+            });
+            
+            if (retailLabel.length > 0) {
+                const currentText = retailLabel.text().trim();
+                retailLabel.text(currentText === 'RETAIL' ? 'WHOLESALE' : 'RETAIL');
+                console.log('Toggled to:', retailLabel.text());
+            }
         }
     });
     
