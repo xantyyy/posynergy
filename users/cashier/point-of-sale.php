@@ -925,59 +925,66 @@ $('#voidPasswordModal').on('hidden.bs.modal', function() {
 
 $('#confirmVoid').on('click', function() {
     const selectedRow = $('table#table-bold tbody tr.selected');
-    const productId = selectedRow.data('product-id'); // Barcode value
+    if (!selectedRow.length) {
+        alert('Please select an item to void.');
+        return;
+    }
+
+    const barcode = selectedRow.data('barcode'); // Use data-barcode instead of data-product-id
     const reason = $('#voidReason').val();
-    const quantity = selectedRow.find('td').eq(1).text().trim(); // Get quantity from the second column (Qty)
+    const quantity = selectedRow.find('td').eq(1).text().trim();
 
-    console.log("Product ID: " + productId); // Debugging
-    console.log("Reason: " + reason); // Debugging
-    console.log("Quantity: " + quantity); // Debugging
+    // Validate inputs
+    if (!barcode) {
+        alert('Error: Product barcode is missing.');
+        return;
+    }
+    if (!reason) {
+        alert('Please provide a reason for voiding.');
+        return;
+    }
+    if (!quantity || isNaN(quantity) || parseInt(quantity) <= 0) {
+        alert('Invalid quantity.');
+        return;
+    }
 
-    // Log the void and remove item
+    console.log("Barcode: " + barcode);
+    console.log("Reason: " + reason);
+    console.log("Quantity: " + quantity);
+
+    // Send AJAX request to log the void
     $.ajax({
         url: 'log_void_item.php',
         method: 'POST',
         data: {
-            productId: productId,
+            productId: barcode, // Send barcode as productId
             reason: reason,
-            quantity: quantity // Include quantity in the request
+            quantity: quantity
         },
         dataType: 'json',
         success: function(response) {
             if (response.status === 'success') {
+                // Remove the item from the cart
+                const itemIndex = cart.findIndex(item => String(item.barcode) === String(barcode));
+                if (itemIndex !== -1) {
+                    cart.splice(itemIndex, 1); // Remove the item from the cart array
+                }
+
                 // Close the modal
                 $('#voidReasonModal').modal('hide');
 
-                // Remove the selected row from the table
-                selectedRow.remove();
+                // Update the table display
+                updateCartDisplay();
+                updateTotals();
 
-                // Check if the table is empty after removal
-                if ($('table#table-bold tbody tr').length === 0) {
-                    // Add an empty row to maintain table structure
-                    $('table#table-bold tbody').append(`
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    `);
-                }
-
-                // Update the total retail display
-                updateTotalRetail();
-
-                // Update the transaction details
-                updateTransactionDetails();
-
-                // Enable/Disable sidebar links based on cart state
+                // Enable/Disable sidebar links
                 toggleSidebarLinks();
             } else {
                 alert('Error: ' + response.message);
             }
         },
         error: function(xhr, status, error) {
-            console.log(xhr.responseText); // Debugging
+            console.error('AJAX error:', xhr.responseText);
             alert('Server error. Could not log void transaction.');
         }
     });
