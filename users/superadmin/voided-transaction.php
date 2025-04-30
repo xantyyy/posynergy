@@ -375,9 +375,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
 						});
 					});
 
-                    // Add print functionality
+                    // Updated print functionality to print only the table
                     document.getElementById('printBtn').addEventListener('click', function() {
-                        window.print();
+                        // Get the table element
+                        const table = document.querySelector('.table-responsive table').outerHTML;
+                        
+                        // Create a new window for printing
+                        const printWindow = window.open('', '_blank', 'width=800,height=600');
+                        
+                        // Write the HTML structure for printing
+                        printWindow.document.write(`
+                            <html>
+                            <head>
+                                <title>Voided Transactions</title>
+                                <style>
+                                    body { font-family: Arial, sans-serif; margin: 20px; }
+                                    table { width: 100%; border-collapse: collapse; }
+                                    th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+                                    th { background-color: #cbd1d3; font-weight: bold; font-style: italic; }
+                                    @media print {
+                                        @page { margin: 1cm; }
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <h2>Voided Transactions</h2>
+                                ${table}
+                            </body>
+                            </html>
+                        `);
+                        
+                        // Close the document and trigger the print
+                        printWindow.document.close();
+                        printWindow.focus();
+                        printWindow.print();
+                        printWindow.close();
                     });
 				});
 			</script>
