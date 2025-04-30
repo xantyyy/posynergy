@@ -1,6 +1,75 @@
 <?php include_once 'header.php'; ?>
 <?php include_once 'modals.php'; ?>
 
+<?php
+// Database connection
+$servername = "127.0.0.1";
+$username = "root"; // Default XAMPP username
+$password = ""; // Default XAMPP password
+$dbname = "ampcdb";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Initialize variables for the search results
+$voidedTransactions = [];
+$fromDate = date('Y-m-d'); // Default to today
+$toDate = date('Y-m-d'); // Default to today
+
+// Function to fetch voided transactions
+function fetchVoidedTransactions($conn, $fromDate, $toDate) {
+    $transactions = [];
+    
+    // Format dates for SQL query
+    $fromDateFormatted = date('Y-m-d', strtotime($fromDate));
+    $toDateFormatted = date('Y-m-d 23:59:59', strtotime($toDate)); // Include entire day
+    
+    // Prepare SQL query to fetch data from tbl_voidreason
+    $sql = "SELECT 
+                TransactionDate,
+                Cashier,
+                Barcode,
+                ProductName,
+                SRP,
+                Discount,
+                Quantity as Qty,
+                TotalAmount,
+                Reason
+            FROM tbl_voidreason
+            WHERE DATE(TransactionDate) BETWEEN ? AND DATE(?)
+            ORDER BY TransactionDate DESC";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $fromDateFormatted, $toDateFormatted);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    while ($row = $result->fetch_assoc()) {
+        $transactions[] = $row;
+    }
+    
+    $stmt->close();
+    return $transactions;
+}
+
+// Load data on initial page load (today's transactions)
+$voidedTransactions = fetchVoidedTransactions($conn, $fromDate, $toDate);
+
+// Process search request
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['search'])) {
+    $fromDate = $_POST['fromDate'];
+    $toDate = $_POST['toDate'];
+    
+    // Fetch transactions for the selected date range
+    $voidedTransactions = fetchVoidedTransactions($conn, $fromDate, $toDate);
+}
+?>
+
 			<!--MENU SIDEBAR CONTENT-->
 			<nav id="sidebar">
 				<div class="sidebar-header">
@@ -170,23 +239,23 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Transaction Date:</h5>
-                                    <form>
+                                    <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
 										<div class="form-row">
 											<div class="form-group col-md-12 d-flex align-items-center">
 												<label for="fromDate" class="me-4">From:</label>
-												<input type="date" class="form-control me-2" id="fromDate">
+												<input type="date" class="form-control me-2" id="fromDate" name="fromDate" value="<?php echo $fromDate; ?>">
 											</div>
 											<div class="form-group col-md-12 mt-2 d-flex align-items-center">
 												<label for="toDate" class="me-5">To:</label>
-												<input type="date" class="form-control me-2" id="toDate">
+												<input type="date" class="form-control me-2" id="toDate" name="toDate" value="<?php echo $toDate; ?>">
 											</div>
-										</div>                                   
+										</div>
+                                        <div class="d-flex justify-content-end mt-3 me-2">
+                                            <button type="submit" name="search" class="btn btn-outline-secondary" style="font-size: 13px;">
+                                                <i class="fas fa-search"></i> Search
+                                            </button>
+                                        </div>                                   
                                     </form>
-									<div class="d-flex justify-content-end mt-3 me-2">
-										<button type="button" class="btn btn-outline-secondary" style="font-size: 13px;">
-											<i class="fas fa-search"></i> Search
-										</button>
-									</div>
                                 </div>
                             </div>
                         </div>
@@ -212,24 +281,32 @@
 												</tr>
 											</thead>
 											<tbody>
-													<tr>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-													</tr>
+                                                <?php if (empty($voidedTransactions)): ?>
+                                                    <tr>
+                                                        <td colspan="9" class="text-center">No voided transactions found for the selected date range.</td>
+                                                    </tr>
+                                                <?php else: ?>
+                                                    <?php foreach ($voidedTransactions as $transaction): ?>
+                                                        <tr>
+                                                            <td><?php echo htmlspecialchars($transaction['TransactionDate']); ?></td>
+                                                            <td><?php echo htmlspecialchars($transaction['Cashier']); ?></td>
+                                                            <td><?php echo htmlspecialchars($transaction['Barcode']); ?></td>
+                                                            <td><?php echo htmlspecialchars($transaction['ProductName']); ?></td>
+                                                            <td><?php echo htmlspecialchars($transaction['SRP']); ?></td>
+                                                            <td><?php echo htmlspecialchars($transaction['Discount']); ?></td>
+                                                            <td><?php echo htmlspecialchars($transaction['Qty']); ?></td>
+                                                            <td><?php echo htmlspecialchars($transaction['TotalAmount']); ?></td>
+                                                            <td><?php echo htmlspecialchars($transaction['Reason']); ?></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
 											</tbody>
 										</table>
 									</div>
 								</div>
                             </div>
 							<div class="d-flex justify-content-end">
-								<button type="button" class="btn btn-light">
+								<button type="button" class="btn btn-light" id="printBtn">
 									<i class="fas fa-print"></i> Print
 								</button>
 							</div>
@@ -240,10 +317,17 @@
             
             <script>
 				document.addEventListener("DOMContentLoaded", function () {
-					// Set today's date for both date inputs
-					const today = new Date().toISOString().split('T')[0];
-					document.getElementById("fromDate").value = today;
-					document.getElementById("toDate").value = today;
+					// Only set default dates if they are not already set (for preserving search values)
+					const fromDateInput = document.getElementById("fromDate");
+					const toDateInput = document.getElementById("toDate");
+					
+					if (!fromDateInput.value) {
+						fromDateInput.value = new Date().toISOString().split('T')[0];
+					}
+					
+					if (!toDateInput.value) {
+						toDateInput.value = new Date().toISOString().split('T')[0];
+					}
 
 					// Existing code for active link and hover effects
 					const currentUrl = window.location.pathname.split('/').pop();
@@ -290,6 +374,11 @@
 							this.classList.remove("hovered-dropdown");
 						});
 					});
+
+                    // Add print functionality
+                    document.getElementById('printBtn').addEventListener('click', function() {
+                        window.print();
+                    });
 				});
 			</script>
 
@@ -380,3 +469,8 @@
 					}
 				</style>
 <?php include_once 'footer.php'; ?>
+
+<?php
+// Close the database connection
+$conn->close();
+?>
