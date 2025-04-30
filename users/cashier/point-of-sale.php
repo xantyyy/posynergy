@@ -1821,98 +1821,206 @@ function applyMedalOfValor() { alert('Medal of Valor discount applied'); }
     }
 
     // Function to show the Single Payment modal
-    function showSinglePaymentModal() {
-        const currentTotal = getCurrentTransactionTotal();
-        const formattedTotal = formatCurrency(currentTotal);
-        const totalRetailValue = document.getElementById('totalRetailDisplay').innerText;
+    // Function to show the Single Payment modal
+function showSinglePaymentModal() {
+    const currentTotal = getCurrentTransactionTotal();
+    const formattedTotal = formatCurrency(currentTotal);
+    const totalRetailValue = document.getElementById('totalRetailDisplay').innerText;
 
-
-        const singlePaymentModal = $('<div>', {
-            class: 'modal single-payment-modal',
-            html: `
-                <div style="background-color: #ffffff; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); overflow: hidden; animation: slideIn 0.3s ease-out; margin: auto;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
-                        <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #1f2937;">Cash Tender</h2>
-                        <span class="close" style="font-size: 24px; color: #6b7280; cursor: pointer; transition: color 0.2s ease;">×</span>
+    const singlePaymentModal = $('<div>', {
+        class: 'modal single-payment-modal',
+        html: `
+            <div style="background-color: #ffffff; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); overflow: hidden; animation: slideIn 0.3s ease-out; margin: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #e5e7eb; background-color: #f9fafb;">
+                    <h2 style="margin: 0; font-size: 20px; font-weight: 600; color: #1f2937;">Single Payment</h2>
+                    <span class="close" style="font-size: 24px; color: #6b7280; cursor: pointer; transition: color 0.2s ease;">×</span>
+                </div>
+                <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+                    <div style="display: flex; align-items: center; background-color: #f3f4f6; padding: 10px; border-radius: 8px;">
+                        <div style="font-size: 24px; color: #1f2937; margin-right: 8px;">₱</div>
+                        <div style="font-size: 28px; font-weight: 500; color: #1f2937; flex-grow: 1;">${totalRetailValue.replace('₱', '')}</div>
                     </div>
-                    <div style="padding: 20px; display: flex; flex-direction: column; gap: 16px;">
-                        <div style="display: flex; align-items: center; background-color: #f3f4f6; padding: 10px; border-radius: 8px;">
-                            <div style="font-size: 24px; color: #1f2937; margin-right: 8px;">₱</div>
-                            <div style="font-size: 28px; font-weight: 500; color: #1f2937; flex-grow: 1;">${totalRetailValue.replace('₱', '')}</div>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <p style="margin: 0; font-size: 14px; color: #4b5563;">Press F1 to add Points</p>
-                            <input type="text" class="points-input" style="width: 100px; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; outline: none;">
-                        </div>
-                        <div style="width: 100%;">
-                            <select class="payment-method-select" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 16px; background-color: #ffffff; cursor: pointer;">
-                                <option value="CASH">CASH</option>
-                                <option value="CREDIT CARD">CREDIT CARD</option>
-                                <option value="GIFT CARD">GIFT CARD</option>
-                            </select>
-                        </div>
-                        <div style="display: flex; justify-content: flex-end; gap: 8px;">
-                            <button class="confirm-btn" style="padding: 10px; background-color: #10b981; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">
-                                <i class="material-icons" style="color: #ffffff; font-size: 24px;">check</i>
-                            </button>
-                            <button class="cancel-btn" style="padding: 10px; background-color: #ef4444; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">
-                                <i class="material-icons" style="color: #ffffff; font-size: 24px;">close</i>
-                            </button>
-                        </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <p style="margin: 0; font-size: 14px; color: #4b5563;">Press F1 to add Points</p>
+                        <input type="text" class="points-input" style="width: 100px; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; outline: none;">
+                    </div>
+                    <div style="width: 100%;">
+                        <select class="payment-method-select" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 16px; background-color: #ffffff; cursor: pointer;">
+                            <option value="CASH">CASH</option>
+                            <option value="CREDIT CARD">CREDIT CARD</option>
+                            <option value="GIFT CARD">GIFT CARD</option>
+                        </select>
+                    </div>
+                    <div class="payment-details" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                    <div style="display: flex; justify-content: flex-end; gap: 8px;">
+                        <button class="confirm-btn" style="padding: 10px; background-color: #10b981; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">
+                            <i class="material-icons" style="color: #ffffff; font-size: 24px;">check</i>
+                        </button>
+                        <button class="cancel-btn" style="padding: 10px; background-color: #ef4444; border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease;">
+                            <i class="material-icons" style="color: #ffffff; font-size: 24px;">close</i>
+                        </button>
                     </div>
                 </div>
-            `,
-            style: 'display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;'
-        });
+            </div>
+        `,
+        style: 'display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000; display: flex; justify-content: center; align-items: center;'
+    });
 
-        // Add the modal to the body
-        $('body').append(singlePaymentModal);
-        singlePaymentModal.show();
+    // Add the modal to the body
+    $('body').append(singlePaymentModal);
+    singlePaymentModal.show();
 
-        // Add hover and active effects
-        singlePaymentModal.find('.close').on('mouseenter', function() {
-            $(this).css('color', '#1f2937');
-        }).on('mouseleave', function() {
-            $(this).css('color', '#6b7280');
-        });
+    // Add hover and active effects
+    singlePaymentModal.find('.close').on('mouseenter', function() {
+        $(this).css({'color': '#1f2937'});
+    }).on('mouseleave', function() {
+        $(this).css({'color': '#6b7280'});
+    });
 
-        singlePaymentModal.find('.confirm-btn').on('mouseenter', function() {
-            $(this).css({'background-color': '#059669', 'transform': 'translateY(-1px)'});
-        }).on('mouseleave', function() {
-            $(this).css({'background-color': '#10b981', 'transform': 'translateY(0)'});
-        }).on('mousedown', function() {
-            $(this).css('transform', 'translateY(0)');
-        });
+    singlePaymentModal.find('.confirm-btn').on('mouseenter', function() {
+        $(this).css({'background-color': '#059669', 'transform': 'translateY(-1px)'});
+    }).on('mouseleave', function() {
+        $(this).css({'background-color': '#10b981', 'transform': 'translateY(0)'});
+    }).on('mousedown', function() {
+        $(this).css('transform', 'translateY(0)');
+    });
 
-        singlePaymentModal.find('.cancel-btn').on('mouseenter', function() {
-            $(this).css({'background-color': '#dc2626', 'transform': 'translateY(-1px)'});
-        }).on('mouseleave', function() {
-            $(this).css({'background-color': '#ef4444', 'transform': 'translateY(0)'});
-        }).on('mousedown', function() {
-            $(this).css('transform', 'translateY(0)');
-        });
+    singlePaymentModal.find('.cancel-btn').on('mouseenter', function() {
+        $(this).css({'background-color': '#dc2626', 'transform': 'translateY(-1px)'});
+    }).on('mouseleave', function() {
+        $(this).css({'background-color': '#ef4444', 'transform': 'translateY(0)'});
+    }).on('mousedown', function() {
+        $(this).css('transform', 'translateY(0)');
+    });
 
-        // Close modal when clicking the X or cancel button
-        singlePaymentModal.find('.close, .cancel-btn').on('click', function() {
-            singlePaymentModal.remove();
-            $(document).off('keydown.pointsHandler');
-        });
+    // Function to update payment details based on payment method
+    function updatePaymentDetails() {
+        const paymentMethod = singlePaymentModal.find('.payment-method-select').val();
+        const $paymentDetails = singlePaymentModal.find('.payment-details');
+        const amountDue = parseFloat(totalRetailValue.replace('₱', '')) || 0;
 
-        // Confirm button handler
-        singlePaymentModal.find('.confirm-btn').on('click', function() {
-            const paymentMethod = singlePaymentModal.find('.payment-method-select').val();
-            console.log('Processing payment of ' + formattedTotal + ' with ' + paymentMethod);
-            singlePaymentModal.remove();
-            $(document).off('keydown.pointsHandler');
-        });
+        $paymentDetails.empty();
 
-        // F1 key handler for adding points
-        $(document).on('keydown.pointsHandler', function(e) {
-            if (e.which === 112) { // F1 key code
-                singlePaymentModal.find('.points-input').focus();
-            }
-        });
+        if (paymentMethod === 'CREDIT CARD') {
+            $paymentDetails.append(`
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 14px; color: #4b5563;">Card Name:</label>
+                    <input type="text" class="card-name-input" placeholder="Enter cardholder name" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; outline: none;">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 14px; color: #4b5563;">Card Number:</label>
+                    <input type="text" class="card-number-input" placeholder="Enter card number" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; outline: none;">
+                </div>
+            `);
+        } else if (paymentMethod === 'CASH') {
+            $paymentDetails.append(`
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 14px; color: #4b5563;">Tender Amount:</label>
+                    <div style="display: flex; align-items: center;">
+                        <span style="background-color: #e0e0e0; border: 1px solid #d1d5db; border-right: none; padding: 8px; border-radius: 6px 0 0 6px; font-size: 14px; color: #1f2937;">₱</span>
+                        <input type="number" class="tender-amount-input" step="0.01" placeholder="0.00" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-left: none; border-radius: 0 6px 6px 0; font-size: 14px; outline: none; background-color: #ffffff;">
+                    </div>
+                    <div class="tender-error" style="color: #dc3545; font-size: 12px; margin-top: 5px; display: none;">Insufficient tender amount. Please enter at least ₱${amountDue.toFixed(2)}.</div>
+                </div>
+            `);
+
+            // Real-time validation for tender amount
+            singlePaymentModal.find('.tender-amount-input').on('input', function() {
+                const tender = parseFloat($(this).val()) || 0;
+                const $errorMessage = singlePaymentModal.find('.tender-error');
+                const $confirmButton = singlePaymentModal.find('.confirm-btn');
+
+                if (tender < amountDue) {
+                    $errorMessage.show();
+                    $(this).css({'border-color': '#dc3545', 'background-color': '#fff5f5'});
+                    $confirmButton.prop('disabled', true).css({
+                        'background-color': '#6c757d',
+                        'cursor': 'not-allowed',
+                        'opacity': '0.65'
+                    });
+                } else {
+                    $errorMessage.hide();
+                    $(this).css({'border-color': '#d1d5db', 'background-color': '#ffffff'});
+                    $confirmButton.prop('disabled', false).css({
+                        'background-color': '#10b981',
+                        'cursor': 'pointer',
+                        'opacity': '1'
+                    });
+                }
+            });
+        } else if (paymentMethod === 'GIFT CARD') {
+            $paymentDetails.append(`
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 14px; color: #4b5563;">Gift Card Number:</label>
+                    <input type="text" class="gift-card-number-input" placeholder="Enter gift card number" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; outline: none;">
+                </div>
+            `);
+        }
     }
+
+    // Initial call to set up payment details
+    updatePaymentDetails();
+
+    // Update payment details when payment method changes
+    singlePaymentModal.find('.payment-method-select').on('change', updatePaymentDetails);
+
+    // Close modal when clicking the X or cancel button
+    singlePaymentModal.find('.close, .cancel-btn').on('click', function() {
+        singlePaymentModal.remove();
+        $(document).off('keydown.pointsHandler');
+    });
+
+    // Confirm button handler
+    singlePaymentModal.find('.confirm-btn').on('click', function() {
+        const paymentMethod = singlePaymentModal.find('.payment-method-select').val();
+        const amountDue = parseFloat(totalRetailValue.replace('₱', '')) || 0;
+
+        // Validation based on payment method
+        if (paymentMethod === 'CREDIT CARD') {
+            const cardName = singlePaymentModal.find('.card-name-input').val().trim();
+            const cardNumber = singlePaymentModal.find('.card-number-input').val().trim();
+            if (!cardName || !cardNumber) {
+                alert('Please enter both Card Name and Card Number.');
+                return;
+            }
+        } else if (paymentMethod === 'CASH') {
+            const tender = parseFloat(singlePaymentModal.find('.tender-amount-input').val()) || 0;
+            if (tender < amountDue) {
+                alert('Insufficient tender amount. Please enter at least ₱' + amountDue.toFixed(2) + '.');
+                return;
+            }
+            // Update tender and change displays for receipt
+            $('#tenderDisplay').text(`₱${tender.toFixed(2)}`);
+            $('#changeDisplay').text(`₱${(tender - amountDue).toFixed(2)}`);
+        } else if (paymentMethod === 'GIFT CARD') {
+            const giftCardNumber = singlePaymentModal.find('.gift-card-number-input').val().trim();
+            if (!giftCardNumber) {
+                alert('Please enter the Gift Card Number.');
+                return;
+            }
+            // For simplicity, set tender and change to 0 for non-cash payments
+            $('#tenderDisplay').text(`₱0.00`);
+            $('#changeDisplay').text(`₱0.00`);
+        }
+
+        console.log('Processing payment of ' + formattedTotal + ' with ' + paymentMethod);
+        singlePaymentModal.remove();
+        $(document).off('keydown.pointsHandler');
+
+        // Print receipt and reload page
+        printReceipt();
+        setTimeout(() => {
+            location.reload();
+        }, 500); // Delay to ensure print dialog closes
+    });
+
+    // F1 key handler for adding points
+    $(document).on('keydown.pointsHandler', function(e) {
+        if (e.which === 112) { // F1 key code
+            singlePaymentModal.find('.points-input').focus();
+        }
+    });
+}
 
     // Function to show the Multiple Payment modal
     function showMultiplePaymentModal() {
