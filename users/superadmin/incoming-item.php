@@ -283,7 +283,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="submit-button" class="btn btn-outline-primary" data-bs-dismiss="modal" style="font-size: 13px;">
+                <button type="button" id="submit-button" class="btn btn-outline-primary" style="font-size: 13px;">
                     <i class="fas fa-save"></i> Submit
                 </button>
                 <button type="button" class="btn btn-outline-secondary" style="font-size: 13px;" data-bs-dismiss="modal">

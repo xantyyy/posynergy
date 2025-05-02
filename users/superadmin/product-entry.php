@@ -341,93 +341,152 @@
                 </div>
             </div>      
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-			<script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Get references to all needed elements
-                    const costPriceInput = document.getElementById('costPrice');
-                    const retailCostInput = document.getElementById('retail-cost');
-                    const productInfoModal = document.getElementById('productInfoModal');
-                    const productModalRetail = document.getElementById('productModalRetail');
-                    
-                    // For debugging - log if elements are found
-                    console.log('Elements found:', {
-                        costPriceInput: !!costPriceInput,
-                        retailCostInput: !!retailCostInput,
-                        productInfoModal: !!productInfoModal, 
-                        productModalRetail: !!productModalRetail
-                    });
-                    
-                    // Create a global variable to store the cost value between modals
-                    window.sharedCostPrice = '';
-                    
-                    // When cost price changes in the costing modal
-                    if (costPriceInput) {
-                        costPriceInput.addEventListener('input', function() {
-                            window.sharedCostPrice = this.value;
-                            console.log('Updated shared cost price:', window.sharedCostPrice);
-                        });
-                    }
-                    
-                    // When retail cost changes in the retail modal
-                    if (retailCostInput) {
-                        retailCostInput.addEventListener('input', function() {
-                            window.sharedCostPrice = this.value;
-                            console.log('Updated shared cost price from retail:', window.sharedCostPrice);
-                        });
-                    }
-                    
-                    // When opening the retail modal, populate with shared cost
-                    if (productModalRetail) {
-                        productModalRetail.addEventListener('show.bs.modal', function() {
-                            if (retailCostInput && window.sharedCostPrice) {
-                                retailCostInput.value = window.sharedCostPrice;
-                                console.log('Set retail cost to:', window.sharedCostPrice);
-                            }
-                        });
-                    }
-                    
-                    // When opening the costing modal, populate with shared cost
-                    if (productInfoModal) {
-                        productInfoModal.addEventListener('show.bs.modal', function() {
-                            if (costPriceInput && window.sharedCostPrice) {
-                                costPriceInput.value = window.sharedCostPrice;
-                                console.log('Set cost price to:', window.sharedCostPrice);
-                            }
-                        });
-                    }
-                    
-                    // Save buttons - update shared cost when saving
-                    const costingSaveBtn = document.querySelector('#productInfoModal .btn-primary');
-                    if (costingSaveBtn) {
-                        costingSaveBtn.addEventListener('click', function() {
-                            if (costPriceInput && costPriceInput.value) {
-                                window.sharedCostPrice = costPriceInput.value;
-                                console.log('Saved cost price on costing save:', window.sharedCostPrice);
-                            }
-                        });
-                    }
-                    
-                    const retailSaveBtn = document.querySelector('#productModalRetail .btn-primary');
-                    if (retailSaveBtn) {
-                        retailSaveBtn.addEventListener('click', function() {
-                            if (retailCostInput && retailCostInput.value) {
-                                window.sharedCostPrice = retailCostInput.value;
-                                console.log('Saved cost price on retail save:', window.sharedCostPrice);
-                            }
-                        });
-                    }
-                });
-                // RETAIL TABLE
-                document.addEventListener('DOMContentLoaded', function () {
+            <script>
+document.addEventListener('DOMContentLoaded', function () {
+    // ================== ELEMENT REFERENCES ====================
+    const costPriceInput = document.getElementById('costPrice');
+    const retailCostInput = document.getElementById('retail-cost');
+    const retailMarkupInput = document.getElementById('retail-markup');
+    const retailSrpInput = document.getElementById('retail-srp');
+    const retailAppliedSrpInput = document.getElementById('retail-appliedSrp');
+    const productInfoModal = document.getElementById('productInfoModal');
+    const productModalRetail = document.getElementById('productModalRetail');
+    const addRetailButton = document.getElementById('addRetailButton');
     const saveRetailButton = document.querySelector('#productModalRetail .modal-footer .btn-primary');
     const editRetailButton = document.querySelector('#saveEditRetail');
     const tableRetailBody = document.querySelector('#retail-table tbody');
     const editRetailBtn = document.querySelector('.edit-retail-btn');
     const deleteRetailBtn = document.querySelector('.delete-retail-btn');
+    const saveButton = document.querySelector('#productInfoModal .modal-footer .btn-primary');
+    const tableBody = document.querySelector('#table-bold tbody');
+    const editButton = document.querySelector('.edit-btn');
+    const deleteButton = document.querySelector('.delete-btn');
 
-    // Check and update table for empty state
-    checkAndUpdateEmptyRetailTable();
+    // Debugging: Log if elements are found
+    console.log('Elements found:', {
+        costPriceInput: !!costPriceInput,
+        retailCostInput: !!retailCostInput,
+        retailMarkupInput: !!retailMarkupInput,
+        retailSrpInput: !!retailSrpInput,
+        productInfoModal: !!productInfoModal,
+        productModalRetail: !!productModalRetail,
+        saveRetailButton: !!saveRetailButton,
+        tableRetailBody: !!tableRetailBody,
+        tableBody: !!tableBody
+    });
 
+    // ================== SHARED VARIABLES ====================
+    window.sharedCostPrice = ''; // Global variable to store the cost value between modals
+    let savedRetailCost = ''; // Store retail cost for persistence between modal openings
+
+    // ================== MARKUP CALCULATION FUNCTIONS ====================
+    function calculateMarkup() {
+        console.log('Calculating markup...');
+        const cost = parseFloat(retailCostInput.value) || 0;
+        const srp = parseFloat(retailSrpInput.value.replace(/[^0-9.]/g, '')) || 0;
+
+        console.log('Cost:', cost, 'SRP:', srp);
+
+        if (cost > 0 && srp > 0) {
+            const markup = ((srp - cost) / cost) * 100;
+            retailMarkupInput.value = isNaN(markup) ? '' : markup.toFixed(2);
+            console.log('Calculated Markup:', markup.toFixed(2));
+        } else {
+            retailMarkupInput.value = '';
+            console.log('Invalid input: Cost or SRP is zero or invalid');
+        }
+
+        retailAppliedSrpInput.value = srp > 0 ? srp.toFixed(2) : '';
+    }
+
+    function calculateSrpFromMarkup() {
+        const cost = parseFloat(retailCostInput.value) || 0;
+        const markup = parseFloat(retailMarkupInput.value.replace(/[^0-9.]/g, '')) || 0;
+
+        if (cost > 0 && markup >= 0) {
+            const srp = cost + (cost * (markup / 100));
+            retailSrpInput.value = srp.toFixed(2);
+            retailAppliedSrpInput.value = srp.toFixed(2);
+            console.log('Calculated SRP from Markup:', srp.toFixed(2));
+        } else {
+            retailSrpInput.value = '';
+            retailAppliedSrpInput.value = '';
+            console.log('Invalid input: Cost or Markup is zero or invalid');
+        }
+    }
+
+    if (retailSrpInput) {
+        retailSrpInput.addEventListener('input', calculateMarkup);
+    } else {
+        console.error('retail-srp input not found');
+    }
+
+    if (retailMarkupInput) {
+        retailMarkupInput.addEventListener('input', calculateSrpFromMarkup);
+    } else {
+        console.error('retail-markup input not found');
+    }
+
+    // ================== COSTING AND RETAIL COST SYNC ====================
+    if (costPriceInput) {
+        costPriceInput.addEventListener('input', function () {
+            window.sharedCostPrice = this.value;
+            savedRetailCost = this.value;
+            console.log('Updated shared cost price:', window.sharedCostPrice);
+        });
+    }
+
+    if (retailCostInput) {
+        retailCostInput.addEventListener('input', function () {
+            window.sharedCostPrice = this.value;
+            savedRetailCost = this.value;
+            console.log('Updated shared cost price from retail:', window.sharedCostPrice);
+            calculateMarkup();
+        });
+    }
+
+    if (productModalRetail) {
+        productModalRetail.addEventListener('show.bs.modal', function () {
+            if (retailCostInput && window.sharedCostPrice) {
+                retailCostInput.value = window.sharedCostPrice;
+                console.log('Set retail cost to:', window.sharedCostPrice);
+            }
+            if (retailSrpInput.value) {
+                calculateMarkup();
+            }
+        });
+    }
+
+    if (productInfoModal) {
+        productInfoModal.addEventListener('show.bs.modal', function () {
+            if (costPriceInput && window.sharedCostPrice) {
+                costPriceInput.value = window.sharedCostPrice;
+                console.log('Set cost price to:', window.sharedCostPrice);
+            }
+        });
+    }
+
+    if (saveButton) {
+        saveButton.addEventListener('click', function () {
+            if (costPriceInput && costPriceInput.value) {
+                window.sharedCostPrice = costPriceInput.value;
+                savedRetailCost = costPriceInput.value;
+                console.log('Saved cost price on costing save:', window.sharedCostPrice);
+            }
+        });
+    }
+
+    if (saveRetailButton) {
+        saveRetailButton.addEventListener('click', function () {
+            if (retailCostInput && retailCostInput.value) {
+                window.sharedCostPrice = retailCostInput.value;
+                savedRetailCost = retailCostInput.value;
+                console.log('Saved cost price on retail save:', window.sharedCostPrice);
+            }
+        });
+    }
+
+    // ================== RETAIL TABLE FUNCTIONS ====================
     function checkAndUpdateEmptyRetailTable() {
         if (
             tableRetailBody.children.length === 0 ||
@@ -442,172 +501,147 @@
         }
     }
 
-    // Function to clear modal fields
     function clearRetailModal() {
         document.getElementById('retail-priceType').selectedIndex = 0;
         document.getElementById('retail-cost').value = '';
         document.getElementById('retailBarcode').value = '';
         document.getElementById('retailProductName').value = '';
-        document.getElementById('retail-uom').selectedIndex = 0;
+        document.getElementById('retailUOM').value = ''; // Changed from retail-uom to retailUOM
         document.getElementById('retail-markup').value = '';
         document.getElementById('retail-srp').value = '';
         document.getElementById('retail-appliedSrp').value = '';
-        saveRetailButton.removeAttribute('data-editing-row'); // Clear editing state
+        saveRetailButton.removeAttribute('data-editing-row');
     }
 
-    // Save button functionality for Retail Table
-    saveRetailButton.addEventListener('click', function () {
-        const priceType = document.getElementById('retail-priceType').value;
-        const cost = document.getElementById('retail-cost').value;
-        const barcode = document.getElementById('retailBarcode').value;
-        const productName = document.getElementById('retailProductName').value;
-        const uom = document.getElementById('retail-uom').value;
-        const markup = document.getElementById('retail-markup').value;
-        const srp = document.getElementById('retail-srp').value;
-        const appliedSrp = document.getElementById('retail-appliedSrp').value;
+    if (saveRetailButton) {
+        saveRetailButton.addEventListener('click', function () {
+            const priceType = document.getElementById('retail-priceType').value;
+            const cost = document.getElementById('retail-cost').value;
+            const barcode = document.getElementById('retailBarcode').value;
+            const productName = document.getElementById('retailProductName').value;
+            const uom = document.getElementById('retailUOM').value; // Changed from retail-uom to retailUOM
+            const markup = document.getElementById('retail-markup').value;
+            const srp = document.getElementById('retail-srp').value;
+            const appliedSrp = document.getElementById('retail-appliedSrp').value;
 
-        console.log('Retail data to save:', { priceType, cost, barcode, productName, uom, markup, srp, appliedSrp });
+            console.log('Retail data to save:', { priceType, cost, barcode, productName, uom, markup, srp, appliedSrp });
 
-        if (!priceType || !cost || !productName || !uom || !markup || !srp || !appliedSrp) {
-            alert('Please fill in all required fields (Price Type, Cost, Product Name, UOM, Markup, SRP, Applied SRP).');
-            return;
-        }
-
-        const editingRowIndex = saveRetailButton.getAttribute('data-editing-row');
-        if (editingRowIndex !== null) {
-            // Update existing row
-            const editingRow = tableRetailBody.children[editingRowIndex];
-            editingRow.cells[0].textContent = priceType;
-            editingRow.cells[1].textContent = barcode;
-            editingRow.cells[2].textContent = productName;
-            editingRow.cells[3].textContent = uom;
-            editingRow.cells[4].textContent = '1'; // Quantity is hardcoded as 1
-            editingRow.cells[5].textContent = appliedSrp;
-
-            saveRetailButton.removeAttribute('data-editing-row');
-            alert('Data successfully updated!');
-        } else {
-            // Add new row
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${priceType}</td>
-                <td>${barcode}</td>
-                <td>${productName}</td>
-                <td>${uom}</td>
-                <td>1</td>
-                <td>${appliedSrp}</td>
-            `;
-
-            newRow.addEventListener('click', function () {
-                document.querySelectorAll('#retail-table tbody tr').forEach((row) => {
-                    row.classList.remove('selected-row');
-                });
-
-                this.classList.add('selected-row');
-                editRetailBtn.disabled = false;
-                editRetailBtn.classList.remove('opacity-50');
-                deleteRetailBtn.disabled = false;
-                deleteRetailBtn.classList.remove('opacity-50');
-            });
-
-            const noDataRow = tableRetailBody.querySelector('.no-data-row');
-            if (noDataRow) {
-                tableRetailBody.innerHTML = '';
+            if (!priceType || !cost || !productName || !uom || !markup || !srp || !appliedSrp) {
+                alert('Please fill in all required fields (Price Type, Cost, Product Name, UOM, Markup, SRP, Applied SRP).');
+                return;
             }
 
-            tableRetailBody.appendChild(newRow);
-            alert('Data successfully saved!');
-        }
+            const editingRowIndex = saveRetailButton.getAttribute('data-editing-row');
+            if (editingRowIndex !== null) {
+                const editingRow = tableRetailBody.children[editingRowIndex];
+                editingRow.cells[0].textContent = priceType;
+                editingRow.cells[1].textContent = barcode;
+                editingRow.cells[2].textContent = productName;
+                editingRow.cells[3].textContent = uom;
+                editingRow.cells[4].textContent = '1';
+                editingRow.cells[5].textContent = appliedSrp;
 
-        // Clear modal fields and hide modal
-        clearRetailModal();
-        const modalElement = document.getElementById('productModalRetail');
-        const modalInstance = bootstrap.Modal.getInstance(modalElement);
-        if (modalInstance) {
-            modalInstance.hide();
-        } else {
-            console.error('Modal instance not found for productModalRetail');
-        }
-    });
+                saveRetailButton.removeAttribute('data-editing-row');
+                alert('Data successfully updated!');
+            } else {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${priceType}</td>
+                    <td>${barcode}</td>
+                    <td>${productName}</td>
+                    <td>${uom}</td>
+                    <td>1</td>
+                    <td>${appliedSrp}</td>
+                `;
 
-                    // Edit button functionality
-                    editRetailBtn.addEventListener('click', function () {
-                        const selectedRow = document.querySelector('#table-retail tbody tr.selected-row');
-
-                        if (selectedRow) {
-                            // Populate modal fields with the selected row data
-                            document.getElementById('edit-priceType').value = selectedRow.cells[0].textContent;
-                            document.getElementById('edit-cost').value = selectedRow.cells[1].textContent;
-                            document.getElementById('edit-barcode').value = selectedRow.cells[2].textContent;
-                            document.getElementById('edit-productName').value = selectedRow.cells[3].textContent;
-                            document.getElementById('edit-uom').value = selectedRow.cells[4].textContent;
-                            // Add a new field for quantity
-                            document.getElementById('edit-quantity').value = selectedRow.cells[5].textContent;
-                            document.getElementById('edit-appliedSrp').value = selectedRow.cells[6].textContent;
-
-                            // Show the Edit modal
-                            const editModal = document.getElementById('editModalRetail');
-                            const editModalInstance = new bootstrap.Modal(editModal);
-                            editModalInstance.show();
-
-                            // Save changes
-                            editRetailButton.onclick = function () {
-                                // Update table row
-                                selectedRow.cells[0].textContent = document.getElementById('edit-priceType').value;
-                                selectedRow.cells[1].textContent = document.getElementById('edit-cost').value;
-                                selectedRow.cells[2].textContent = document.getElementById('edit-barcode').value;
-                                selectedRow.cells[3].textContent = document.getElementById('edit-productName').value;
-                                selectedRow.cells[4].textContent = document.getElementById('edit-uom').value;
-                                selectedRow.cells[5].textContent = document.getElementById('edit-quantity').value;
-                                selectedRow.cells[6].textContent = document.getElementById('edit-appliedSrp').value;
-
-                                editModalInstance.hide();
-                                alert('Changes saved successfully!');
-                            };
-                        }
+                newRow.addEventListener('click', function () {
+                    document.querySelectorAll('#retail-table tbody tr').forEach((row) => {
+                        row.classList.remove('selected-row');
                     });
 
-                    // Delete button functionality
-                    deleteRetailBtn.addEventListener('click', function () {
-                        const selectedRow = document.querySelector('#table-retail tbody tr.selected-row');
-
-                        if (selectedRow) {
-                            if (confirm('Are you sure you want to delete this item?')) {
-                                selectedRow.remove();
-
-                                editRetailBtn.disabled = true;
-                                editRetailBtn.classList.add('opacity-50');
-                                deleteRetailBtn.disabled = true;
-                                deleteRetailBtn.classList.add('opacity-50');
-
-                                checkAndUpdateEmptyRetailTable();
-                            }
-                        }
-                    });
-
-                    // Clear modal when the modal is closed
-                    const modalElement = document.getElementById('productModalRetail');
-const modalInstance = modalElement ? bootstrap.Modal.getInstance(modalElement) : null;
-if (modalInstance) {
-    modalInstance.hide();
-} else {
-    console.error('Modal instance not found for productModalRetail');
-}
-
-                    checkAndUpdateEmptyRetailTable();
+                    this.classList.add('selected-row');
+                    editRetailBtn.disabled = false;
+                    editRetailBtn.classList.remove('opacity-50');
+                    deleteRetailBtn.disabled = false;
+                    deleteRetailBtn.classList.remove('opacity-50');
                 });
 
+                const noDataRow = tableRetailBody.querySelector('.no-data-row');
+                if (noDataRow) {
+                    tableRetailBody.innerHTML = '';
+                }
 
-                // COSTING TABLE
-                document.addEventListener('DOMContentLoaded', function () {
-    const saveButton = document.querySelector('#productInfoModal .modal-footer .btn-primary');
-    const tableBody = document.querySelector('#table-bold tbody');
-    const editButton = document.querySelector('.edit-btn');
-    const deleteButton = document.querySelector('.delete-btn');
+                tableRetailBody.appendChild(newRow);
+                alert('Data successfully saved!');
+            }
 
-    // Check and update table for empty state
-    checkAndUpdateEmptyTable();
+            clearRetailModal();
+            const modalElement = document.getElementById('productModalRetail');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            } else {
+                console.error('Modal instance not found for productModalRetail');
+            }
+        });
+    }
 
+    if (editRetailBtn) {
+        editRetailBtn.addEventListener('click', function () {
+            const selectedRow = document.querySelector('#retail-table tbody tr.selected-row');
+
+            if (selectedRow) {
+                document.getElementById('edit-priceType').value = selectedRow.cells[0].textContent;
+                document.getElementById('edit-barcode').value = selectedRow.cells[1].textContent;
+                document.getElementById('edit-productName').value = selectedRow.cells[2].textContent;
+                document.getElementById('edit-uom').value = selectedRow.cells[3].textContent;
+                document.getElementById('edit-quantity').value = selectedRow.cells[4].textContent;
+                document.getElementById('edit-appliedSrp').value = selectedRow.cells[5].textContent;
+
+                const editModal = document.getElementById('editModalRetail');
+                const editModalInstance = new bootstrap.Modal(editModal);
+                editModalInstance.show();
+
+                if (editRetailButton) {
+                    editRetailButton.onclick = function () {
+                        selectedRow.cells[0].textContent = document.getElementById('edit-priceType').value;
+                        selectedRow.cells[1].textContent = document.getElementById('edit-barcode').value;
+                        selectedRow.cells[2].textContent = document.getElementById('edit-productName').value;
+                        selectedRow.cells[3].textContent = document.getElementById('edit-uom').value;
+                        selectedRow.cells[4].textContent = document.getElementById('edit-quantity').value;
+                        selectedRow.cells[5].textContent = document.getElementById('edit-appliedSrp').value;
+
+                        editModalInstance.hide();
+                        alert('Changes saved successfully!');
+                    };
+                }
+            }
+        });
+    }
+
+    if (deleteRetailBtn) {
+        deleteRetailBtn.addEventListener('click', function () {
+            const selectedRow = document.querySelector('#retail-table tbody tr.selected-row');
+
+            if (selectedRow) {
+                if (confirm('Are you sure you want to delete this item?')) {
+                    selectedRow.remove();
+
+                    editRetailBtn.disabled = true;
+                    editRetailBtn.classList.add('opacity-50');
+                    deleteRetailBtn.disabled = true;
+                    deleteRetailBtn.classList.add('opacity-50');
+
+                    checkAndUpdateEmptyRetailTable();
+                }
+            }
+        });
+    }
+
+    // Initial check for retail table
+    checkAndUpdateEmptyRetailTable();
+
+    // ================== COSTING TABLE FUNCTIONS ====================
     function checkAndUpdateEmptyTable() {
         if (
             tableBody.children.length === 0 ||
@@ -622,592 +656,500 @@ if (modalInstance) {
         }
     }
 
-    // Function to clear modal and reset state
     function clearModal() {
         document.getElementById('barcode').value = '';
         document.getElementById('supplier').selectedIndex = 0;
         document.getElementById('uom').selectedIndex = 0;
         document.getElementById('costPrice').value = '';
         document.getElementById('vatable').checked = false;
-        saveButton.removeAttribute('data-editing-row'); // Clear editing state
+        saveButton.removeAttribute('data-editing-row');
     }
 
-    // Save button functionality
-    saveButton.addEventListener('click', function () {
-        const barcode = document.getElementById('barcode').value;
-        const supplier = document.getElementById('supplier').value;
-        const uom = document.getElementById('uom').value;
-        const costPrice = document.getElementById('costPrice').value;
-        const vatable = document.getElementById('vatable').checked;
+    if (saveButton) {
+        saveButton.addEventListener('click', function () {
+            const barcode = document.getElementById('barcode').value;
+            const supplier = document.getElementById('supplier').value;
+            const uom = document.getElementById('uom').value;
+            const costPrice = document.getElementById('costPrice').value;
+            const vatable = document.getElementById('vatable').checked;
 
-        console.log('Costing data to save:', { barcode, supplier, uom, costPrice, vatable });
+            console.log('Costing data to save:', { barcode, supplier, uom, costPrice, vatable });
 
-        if (!supplier || !uom || !costPrice) {
-            alert('Please fill in all required fields (Supplier, UOM, Cost Price).');
-            return;
-        }
-
-        const editingRowIndex = saveButton.getAttribute('data-editing-row');
-        if (editingRowIndex !== null) {
-            // Update existing row
-            const editingRow = tableBody.children[editingRowIndex];
-            editingRow.cells[0].textContent = supplier;
-            editingRow.cells[1].textContent = costPrice + (vatable ? ' (VAT-able)' : '');
-            editingRow.cells[2].textContent = uom;
-            editingRow.cells[3].textContent = barcode;
-
-            saveButton.removeAttribute('data-editing-row');
-            alert('Data successfully updated!');
-        } else {
-            // Add new row
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = `
-                <td>${supplier}</td>
-                <td>${costPrice}${vatable ? ' (VAT-able)' : ''}</td>
-                <td>${uom}</td>
-                <td>${barcode}</td>
-            `;
-
-            newRow.addEventListener('click', function () {
-                document.querySelectorAll('#table-bold tbody tr').forEach((row) => {
-                    row.classList.remove('selected-row');
-                });
-
-                this.classList.add('selected-row');
-                editButton.disabled = false;
-                editButton.classList.remove('opacity-50');
-                deleteButton.disabled = false;
-                deleteButton.classList.remove('opacity-50');
-            });
-
-            const noDataRow = tableBody.querySelector('.no-data-row');
-            if (noDataRow) {
-                tableBody.innerHTML = '';
+            if (!supplier || !uom || !costPrice) {
+                alert('Please fill in all required fields (Supplier, UOM, Cost Price).');
+                return;
             }
 
-            tableBody.appendChild(newRow);
-            alert('Data successfully saved!');
-        }
+            const editingRowIndex = saveButton.getAttribute('data-editing-row');
+            if (editingRowIndex !== null) {
+                const editingRow = tableBody.children[editingRowIndex];
+                editingRow.cells[0].textContent = supplier;
+                editingRow.cells[1].textContent = costPrice + (vatable ? ' (VAT-able)' : '');
+                editingRow.cells[2].textContent = uom;
+                editingRow.cells[3].textContent = barcode;
 
-        // Clear modal fields and hide modal
-        clearModal();
-        const modalElement = document.getElementById('productInfoModal');
-        const modalInstance = bootstrap.Modal.getInstance(modalElement);
-        if (modalInstance) {
-            modalInstance.hide();
-        } else {
-            console.error('Modal instance not found for productInfoModal');
-        }
-    });
+                saveButton.removeAttribute('data-editing-row');
+                alert('Data successfully updated!');
+            } else {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td>${supplier}</td>
+                    <td>${costPrice}${vatable ? ' (VAT-able)' : ''}</td>
+                    <td>${uom}</td>
+                    <td>${barcode}</td>
+                `;
 
-                    // Edit button functionality
-                    editButton.addEventListener('click', function () {
-                        const selectedRow = document.querySelector('#table-bold tbody tr.selected-row');
-
-                        if (selectedRow) {
-                            // Populate modal fields with the selected row data
-                            const supplier = selectedRow.cells[0].textContent;
-                            const costText = selectedRow.cells[1].textContent;
-                            const uom = selectedRow.cells[2].textContent;
-                            const barcode = selectedRow.cells[3].textContent;
-
-                            const vatable = costText.includes('(VAT-able)');
-                            const costPrice = vatable ? costText.replace(' (VAT-able)', '') : costText;
-
-                            document.getElementById('edit-barcode').value = barcode;
-                            document.getElementById('edit-supplier').value = supplier;
-                            document.getElementById('edit-uom').value = uom;
-                            document.getElementById('edit-costPrice').value = costPrice;
-                            document.getElementById('edit-vatable').checked = vatable;
-
-                            // Show the Edit modal
-                            const editModal = document.getElementById('editProductModal');
-                            const editModalInstance = new bootstrap.Modal(editModal);
-                            editModalInstance.show();
-
-                            // Save changes
-                            document.getElementById('edit-save-btn').onclick = function () {
-                                // Update table row
-                                selectedRow.cells[0].textContent = document.getElementById('edit-supplier').value;
-                                selectedRow.cells[1].textContent =
-                                    document.getElementById('edit-costPrice').value +
-                                    (document.getElementById('edit-vatable').checked ? ' (VAT-able)' : '');
-                                selectedRow.cells[2].textContent = document.getElementById('edit-uom').value;
-                                selectedRow.cells[3].textContent = document.getElementById('edit-barcode').value;
-
-                                editModalInstance.hide();
-                                alert('Changes saved successfully!');
-                            };
-
-                            // Close button functionality for edit modal
-                            const editCloseButton = editModal.querySelector('.btn-secondary[data-bs-dismiss="modal"]');
-                            if (editCloseButton) {
-                                editCloseButton.addEventListener('click', function() {
-                                    editModalInstance.hide();
-                                });
-                            }
-                        }
+                newRow.addEventListener('click', function () {
+                    document.querySelectorAll('#table-bold tbody tr').forEach((row) => {
+                        row.classList.remove('selected-row');
                     });
 
-                    // Delete button functionality
-                    deleteButton.addEventListener('click', function () {
-                        const selectedRow = document.querySelector('#table-bold tbody tr.selected-row');
-
-                        if (selectedRow) {
-                            if (confirm('Are you sure you want to delete this item?')) {
-                                selectedRow.remove();
-
-                                editButton.disabled = true;
-                                editButton.classList.add('opacity-50');
-                                deleteButton.disabled = true;
-                                deleteButton.classList.add('opacity-50');
-
-                                checkAndUpdateEmptyTable();
-                            }
-                        }
-                    });
-
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // Get elements
-                        const retailCostInput = document.getElementById('retail-cost');
-                        const costPriceInput = document.getElementById('costPrice');
-                        const productInfoModal = document.getElementById('productInfoModal');
-                        const productModalRetail = document.getElementById('productModalRetail');
-                        const saveButton = document.querySelector('#productInfoModal .btn-primary');
-                        
-                        // Store the retail cost value in a variable that persists between modal openings
-                        let savedRetailCost = '';
-                        
-                        // Function to update cost price in the costing modal
-                        function updateCostPrice() {
-                            const retailCostValue = retailCostInput.value;
-                            
-                            if (retailCostValue) {
-                                costPriceInput.value = retailCostValue;
-                                savedRetailCost = retailCostValue; // Save the value for later use
-                            }
-                        }
-                        
-                        // Add event listener to retail cost input for real-time updates
-                        if (retailCostInput) {
-                            retailCostInput.addEventListener('input', function() {
-                                savedRetailCost = this.value;
-                                updateCostPrice();
-                            });
-                        }
-                        
-                        // When opening the costing modal
-                        if (productInfoModal) {
-                            productInfoModal.addEventListener('show.bs.modal', function() {
-                                // Use the saved retail cost value if available
-                                if (savedRetailCost) {
-                                    costPriceInput.value = savedRetailCost;
-                                } else if (retailCostInput && retailCostInput.value) {
-                                    costPriceInput.value = retailCostInput.value;
-                                }
-                            });
-                        }
-                        
-                        // When opening the retail modal
-                        if (productModalRetail) {
-                            productModalRetail.addEventListener('show.bs.modal', function() {
-                                if (costPriceInput && costPriceInput.value && retailCostInput) {
-                                    retailCostInput.value = costPriceInput.value;
-                                    savedRetailCost = costPriceInput.value;
-                                }
-                            });
-                        }
-                        
-                        // Modify the existing save button functionality
-                        if (saveButton) {
-                            saveButton.addEventListener('click', function() {
-                                // Before closing the modal, make sure we have the latest retail cost value
-                                if (retailCostInput && retailCostInput.value) {
-                                    costPriceInput.value = retailCostInput.value;
-                                }
-                                
-                                // The rest of your save button code can remain as is
-                                // This ensures the most up-to-date cost is used when saving
-                            });
-                        }
-                    });
-
-                    // Clear modal when the modal is closed
-                    const modalElement = document.getElementById('productInfoModal');
-                    modalElement.addEventListener('hidden.bs.modal', clearModal);
-
-                    // Add style for selected row
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        .selected-row {
-                            background-color: #e9ecef;
-                        }
-                    `;
-                    document.head.appendChild(style);
-
-                    checkAndUpdateEmptyTable();
+                    this.classList.add('selected-row');
+                    editButton.disabled = false;
+                    editButton.classList.remove('opacity-50');
+                    deleteButton.disabled = false;
+                    deleteButton.classList.remove('opacity-50');
                 });
 
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Function for Retail Modal only
-                    function transferToRetailModal() {
-                        const barcodeValue = document.getElementById('barCode').value;
-                        const productNameValue = document.getElementById('productName').value;
+                const noDataRow = tableBody.querySelector('.no-data-row');
+                if (noDataRow) {
+                    tableBody.innerHTML = '';
+                }
 
-                        document.getElementById('retailBarcode').value = barcodeValue;
-                        document.getElementById('retailProductName').value = productNameValue;
-                    }
+                tableBody.appendChild(newRow);
+                alert('Data successfully saved!');
+            }
 
-                    document.getElementById('addButton')?.addEventListener('click', function() {
-                        const barcodeValue = document.getElementById('barCode').value;
-                        document.getElementById('barcode').value = barcodeValue;
-                    });
-
-                    // Handle the "Add" button for Retail Details
-                    document.getElementById('addRetailButton')?.addEventListener('click', function () {
-                        // Transfer barcode and product name (existing functionality)
-                        const barcodeValue = document.getElementById('barCode').value;
-                        const productNameValue = document.getElementById('productName').value;
-                        document.getElementById('retailBarcode').value = barcodeValue;
-                        document.getElementById('retailProductName').value = productNameValue;
-
-                        // Fetch the UOM from the last row of the Costing Details table
-                        const costingTableBody = document.querySelector('#table-bold tbody');
-                        const lastCostingRow = costingTableBody.querySelector('tr:not(.no-data-row):last-child');
-                        if (lastCostingRow) {
-                            const uom = lastCostingRow.cells[2].textContent; // Column 2 is UOM
-                            document.getElementById('retailUOM').value = uom;
-                        }
-                    });
-                });
-
-                $(document).ready(function () {
-                    // ================== VARIABLES ====================
-                    let lastProductCode = null;
-                    let lastPLUCode = null;
-                    let codesGenerated = false;
-
-                    const discountTypeMapping = {
-                        'SD': 'Senior Citizen',
-                        'SP': 'Solo Parent',
-                        'PWD': 'PWD'
-                    };
-
-                    // ================== FUNCTIONS ====================
-
-                    // Set current date to input field
-                    const setCurrentDate = () => {
-                        const today = new Date().toISOString().split('T')[0];
-                        $('#date').val(today);
-                    };
-
-                    // Initialize form (disable everything except "New" button)
-                    const initializeFormState = () => {
-                        $('.addCosting-btn, .addRetail-btn').prop('disabled', true);
-                        $('.input-field').prop('disabled', true);
-                        $('#category, #shellOptions').prop('disabled', true);
-                        $('.costing-table, .retail-table').css('pointer-events', 'none').find('tbody tr').addClass('disabled-row');
-                    };
-
-                    // Enable form inputs except the date field
-                    const enableFormElements = () => {
-                        $('.addCosting-btn, .addRetail-btn').prop('disabled', false);
-                        $('.input-field').not('.date-field').prop('disabled', false);
-                        $('#category, #shellOptions').prop('disabled', false);
-                        $('.costing-table, .retail-table').css('pointer-events', 'auto').find('tbody tr').removeClass('disabled-row');
-                    };
-
-                    // Generate product and PLU codes
-                    const generateNextCodes = () => {
-                        return fetch('manage-productProfile.php?type=GENERATE_CODES')
-                            .then(response => {
-                                if (!response.ok) throw new Error('Failed to fetch codes');
-                                return response.json();
-                            })
-                            .then(data => {
-                                if (data.productCode && data.pluCode) {
-                                    lastProductCode = data.productCode;
-                                    lastPLUCode = data.pluCode;
-                                    $('#productCode').val(data.productCode);
-                                    $('#pluCode').val(data.pluCode);
-                                    $('#productCodeNo').val(data.productCodeNo);
-                                    $('#pluCodeNo').val(data.pluCodeNo);
-                                    $('.save-btn').prop('disabled', false);
-                                } else {
-                                    throw new Error('Invalid code data');
-                                }
-                            })
-                            .catch(error => console.error('Error generating codes:', error));
-                    };
-
-                    // Fetch and populate dropdown options
-                    const fetchDropdownData = (url, dropdownId, placeholder) => {
-                        return fetch(url)
-                            .then(response => response.json())
-                            .then(data => {
-                                const dropdown = $(dropdownId);
-                                dropdown.empty().append(`<option disabled selected>${placeholder}</option>`);
-                                data.forEach(item => {
-                                    const option = dropdownId === '#shellOptions'
-                                        ? `<option value="${item.ItemName}" data-subname="${item.ItemSubName}">${item.ItemName}</option>`
-                                        : `<option value="${item}">${item}</option>`;
-                                    dropdown.append(option);
-                                });
-                            })
-                            .catch(error => console.error(`Error fetching ${url}:`, error));
-                    };
-
-                    // Handle save button click
-                    const saveCodes = () => {
-    const saveBtn = $('.save-btn');
-    saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
-
-    // Collect form data
-    const formData = {
-        barcode: $('#barCode').val(),
-        pluCode: $('#pluCode').val(),
-        pluCodeNo: $('#pluCodeNo').val(),
-        date: $('#date').val(),
-        category: $('#category').val(),
-        productDetails: $('#productDetails').val(),
-        productCode: $('#productCode').val(),
-        productCodeNo: $('#productCodeNo').val(),
-        productName: $('#productName').val(),
-        shelf: $('#shellOptions').val(),
-        shelfDescription: $('#shelfTextbox').val(),
-    };
-
-    // Validate form data
-    if (!formData.productName || !formData.category || !formData.date) {
-        alert('Please fill in all required fields in the form (Product Name, Category, Date).');
-        saveBtn.prop('disabled', false).prop('disabled', false).html('<i class="fas fa-save"></i> Save');
-                return;
+            clearModal();
+            const modalElement = document.getElementById('productInfoModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            } else {
+                console.error('Modal instance not found for productInfoModal');
+            }
+        });
     }
 
-    // Collect costing details (from the Costing Details table)
-    const costingData = [];
-    $('#table-bold tbody tr').each(function () {
-        if (!$(this).hasClass('no-data-row')) {
-            const supplier = $(this).find('td:eq(0)').text();
-            const cost = $(this).find('td:eq(1)').text().replace(' (VAT-able)', '');
-            const uom = $(this).find('td:eq(2)').text();
-            const barcode = $(this).find('td:eq(3)').text();
-            const isVat = $(this).find('td:eq(1)').text().includes('(VAT-able)') ? 'YES' : 'NO';
+    if (editButton) {
+        editButton.addEventListener('click', function () {
+            const selectedRow = document.querySelector('#table-bold tbody tr.selected-row');
 
-            if (!supplier || !cost || !uom) {
-                alert('Please ensure all costing details (Supplier, Cost, UOM) are filled.');
+            if (selectedRow) {
+                const supplier = selectedRow.cells[0].textContent;
+                const costText = selectedRow.cells[1].textContent;
+                const uom = selectedRow.cells[2].textContent;
+                const barcode = selectedRow.cells[3].textContent;
+
+                const vatable = costText.includes('(VAT-able)');
+                const costPrice = vatable ? costText.replace(' (VAT-able)', '') : costText;
+
+                document.getElementById('edit-barcode').value = barcode;
+                document.getElementById('edit-supplier').value = supplier;
+                document.getElementById('edit-uom').value = uom;
+                document.getElementById('edit-costPrice').value = costPrice;
+                document.getElementById('edit-vatable').checked = vatable;
+
+                const editModal = document.getElementById('editProductModal');
+                const editModalInstance = new bootstrap.Modal(editModal);
+                editModalInstance.show();
+
+                document.getElementById('edit-save-btn').onclick = function () {
+                    selectedRow.cells[0].textContent = document.getElementById('edit-supplier').value;
+                    selectedRow.cells[1].textContent =
+                        document.getElementById('edit-costPrice').value +
+                        (document.getElementById('edit-vatable').checked ? ' (VAT-able)' : '');
+                    selectedRow.cells[2].textContent = document.getElementById('edit-uom').value;
+                    selectedRow.cells[3].textContent = document.getElementById('edit-barcode').value;
+
+                    editModalInstance.hide();
+                    alert('Changes saved successfully!');
+                };
+
+                const editCloseButton = editModal.querySelector('.btn-secondary[data-bs-dismiss="modal"]');
+                if (editCloseButton) {
+                    editCloseButton.addEventListener('click', function () {
+                        editModalInstance.hide();
+                    });
+                }
+            }
+        });
+    }
+
+    if (deleteButton) {
+        deleteButton.addEventListener('click', function () {
+            const selectedRow = document.querySelector('#table-bold tbody tr.selected-row');
+
+            if (selectedRow) {
+                if (confirm('Are you sure you want to delete this item?')) {
+                    selectedRow.remove();
+
+                    editButton.disabled = true;
+                    editButton.classList.add('opacity-50');
+                    deleteButton.disabled = true;
+                    deleteButton.classList.add('opacity-50');
+
+                    checkAndUpdateEmptyTable();
+                }
+            }
+        });
+    }
+
+    // Initial check for costing table
+    checkAndUpdateEmptyTable();
+
+    // Add style for selected row
+    const style = document.createElement('style');
+    style.textContent = `
+        .selected-row {
+            background-color: #e9ecef;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // ================== TRANSFER DATA TO RETAIL MODAL ====================
+    function transferToRetailModal() {
+        const barcodeValue = document.getElementById('barCode').value;
+        const productNameValue = document.getElementById('productName').value;
+
+        document.getElementById('retailBarcode').value = barcodeValue;
+        document.getElementById('retailProductName').value = productNameValue;
+    }
+
+    document.getElementById('addButton')?.addEventListener('click', function () {
+        const barcodeValue = document.getElementById('barCode').value;
+        document.getElementById('barcode').value = barcodeValue;
+    });
+
+    if (addRetailButton) {
+        addRetailButton.addEventListener('click', function () {
+            transferToRetailModal();
+
+            const costingTableBody = document.querySelector('#table-bold tbody');
+            const lastCostingRow = costingTableBody.querySelector('tr:not(.no-data-row):last-child');
+            console.log('Last costing row:', lastCostingRow); // Debug log
+            if (lastCostingRow) {
+                const uom = lastCostingRow.cells[2].textContent; // UOM is in column 2
+                const costText = lastCostingRow.cells[1].textContent.replace(' (VAT-able)', '');
+                const cost = parseFloat(costText) || 0;
+                document.getElementById('retailUOM').value = uom; // Changed to retailUOM
+                retailCostInput.value = cost.toFixed(2);
+                window.sharedCostPrice = cost.toFixed(2);
+                console.log('Set retail cost to:', cost.toFixed(2), 'and UOM to:', uom);
+            } else {
+                console.warn('No valid costing row found to fetch UOM and cost');
+            }
+        });
+    }
+
+    // ================== NAVIGATION AND UI EFFECTS ====================
+    const currentUrl = window.location.pathname.split('/').pop();
+
+    document.querySelectorAll('.list-unstyled a').forEach(link => {
+        const linkHref = link.getAttribute('href');
+        const parentMenu = link.closest('.collapse');
+        const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
+
+        if (linkHref === currentUrl) {
+            link.classList.add('active');
+            if (parentMenu) {
+                parentMenu.classList.add('show');
+                if (dropdownToggle) {
+                    dropdownToggle.classList.add('highlighted-dropdown', 'active');
+                    dropdownToggle.setAttribute('aria-expanded', 'true');
+                }
+            }
+        }
+
+        link.addEventListener("mouseenter", function () {
+            this.classList.add("hover-effect");
+        });
+
+        link.addEventListener("mouseleave", function () {
+            this.classList.remove("hover-effect");
+        });
+    });
+
+    document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
+        const parentMenu = dropdown.nextElementSibling;
+        if (parentMenu && parentMenu.querySelector('.active')) {
+            dropdown.classList.add('highlighted-dropdown', 'active');
+            dropdown.setAttribute('aria-expanded', 'true');
+        }
+
+        dropdown.addEventListener("mouseenter", function () {
+            this.classList.add('hovered-dropdown');
+        });
+
+        dropdown.addEventListener("mouseleave", function () {
+            this.classList.remove("hovered-dropdown");
+        });
+    });
+
+    document.getElementById('confirmCloseInventory')?.addEventListener('click', function () {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '';
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'close_transaction';
+        input.value = '1';
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    });
+
+    // ================== JQUERY SECTION ====================
+    $(document).ready(function () {
+        let lastProductCode = null;
+        let lastPLUCode = null;
+        let codesGenerated = false;
+
+        const discountTypeMapping = {
+            'SD': 'Senior Citizen',
+            'SP': 'Solo Parent',
+            'PWD': 'PWD'
+        };
+
+        const setCurrentDate = () => {
+            const today = new Date().toISOString().split('T')[0];
+            $('#date').val(today);
+        };
+
+        const initializeFormState = () => {
+            $('.addCosting-btn, .addRetail-btn').prop('disabled', true);
+            $('.input-field').prop('disabled', true);
+            $('#category, #shellOptions').prop('disabled', true);
+            $('.costing-table, .retail-table').css('pointer-events', 'none').find('tbody tr').addClass('disabled-row');
+        };
+
+        const enableFormElements = () => {
+            $('.addCosting-btn, .addRetail-btn').prop('disabled', false);
+            $('.input-field').not('.date-field').prop('disabled', false);
+            $('#category, #shellOptions').prop('disabled', false);
+            $('.costing-table, .retail-table').css('pointer-events', 'auto').find('tbody tr').removeClass('disabled-row');
+        };
+
+        const generateNextCodes = () => {
+            return fetch('manage-productProfile.php?type=GENERATE_CODES')
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to fetch codes');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.productCode && data.pluCode) {
+                        lastProductCode = data.productCode;
+                        lastPLUCode = data.pluCode;
+                        $('#productCode').val(data.productCode);
+                        $('#pluCode').val(data.pluCode);
+                        $('#productCodeNo').val(data.productCodeNo);
+                        $('#pluCodeNo').val(data.pluCodeNo);
+                        $('.save-btn').prop('disabled', false);
+                    } else {
+                        throw new Error('Invalid code data');
+                    }
+                })
+                .catch(error => console.error('Error generating codes:', error));
+        };
+
+        const fetchDropdownData = (url, dropdownId, placeholder) => {
+            return fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const dropdown = $(dropdownId);
+                    dropdown.empty().append(`<option disabled selected>${placeholder}</option>`);
+                    data.forEach(item => {
+                        const option = dropdownId === '#shellOptions'
+                            ? `<option value="${item.ItemName}" data-subname="${item.ItemSubName}">${item.ItemName}</option>`
+                            : `<option value="${item}">${item}</option>`;
+                        dropdown.append(option);
+                    });
+                })
+                .catch(error => console.error(`Error fetching ${url}:`, error));
+        };
+
+        const saveCodes = () => {
+            const saveBtn = $('.save-btn');
+            saveBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+
+            const formData = {
+                barcode: $('#barCode').val(),
+                pluCode: $('#pluCode').val(),
+                pluCodeNo: $('#pluCodeNo').val(),
+                date: $('#date').val(),
+                category: $('#category').val(),
+                productDetails: $('#productDetails').val(),
+                productCode: $('#productCode').val(),
+                productCodeNo: $('#productCodeNo').val(),
+                productName: $('#productName').val(),
+                shelf: $('#shellOptions').val(),
+                shelfDescription: $('#shelfTextbox').val(),
+            };
+
+            if (!formData.productName || !formData.category || !formData.date) {
+                alert('Please fill in all required fields in the form (Product Name, Category, Date).');
                 saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
                 return;
             }
 
-            costingData.push({
-                supplier: supplier,
-                cost: cost,
-                uom: uom,
-                barcode: barcode,
-                isVat: isVat
+            const costingData = [];
+            $('#table-bold tbody tr').each(function () {
+                if (!$(this).hasClass('no-data-row')) {
+                    const supplier = $(this).find('td:eq(0)').text();
+                    const cost = $(this).find('td:eq(1)').text().replace(' (VAT-able)', '');
+                    const uom = $(this).find('td:eq(2)').text();
+                    const barcode = $(this).find('td:eq(3)').text();
+                    const isVat = $(this).find('td:eq(1)').text().includes('(VAT-able)') ? 'YES' : 'NO';
+
+                    if (!supplier || !cost || !uom) {
+                        alert('Please ensure all costing details (Supplier, Cost, UOM) are filled.');
+                        saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+                        return;
+                    }
+
+                    costingData.push({
+                        supplier: supplier,
+                        cost: cost,
+                        uom: uom,
+                        barcode: barcode,
+                        isVat: isVat
+                    });
+                }
             });
-        }
-    });
 
-    // Collect retail details (from the Retail Details table)
-    const retailData = [];
-    $('#retail-table tbody tr').each(function () {
-        if (!$(this).hasClass('no-data-row')) {
-            const priceType = $(this).find('td:eq(0)').text();
-            const barcode = $(this).find('td:eq(1)').text();
-            const productName = $(this).find('td:eq(2)').text();
-            const uom = $(this).find('td:eq(3)').text();
-            const quantity = $(this).find('td:eq(4)').text();
-            const appliedSrp = $(this).find('td:eq(5)').text();
+            const retailData = [];
+            $('#retail-table tbody tr').each(function () {
+                if (!$(this).hasClass('no-data-row')) {
+                    const priceType = $(this).find('td:eq(0)').text();
+                    const barcode = $(this).find('td:eq(1)').text();
+                    const productName = $(this).find('td:eq(2)').text();
+                    const uom = $(this).find('td:eq(3)').text();
+                    const quantity = $(this).find('td:eq(4)').text();
+                    const appliedSrp = $(this).find('td:eq(5)').text();
 
-            retailData.push({
-                priceType: priceType,
-                barcode: barcode,
-                productName: productName,
-                uom: uom,
-                quantity: quantity,
-                appliedSrp: appliedSrp
+                    retailData.push({
+                        priceType: priceType,
+                        barcode: barcode,
+                        productName: productName,
+                        uom: uom,
+                        quantity: quantity,
+                        appliedSrp: appliedSrp
+                    });
+                }
             });
-        }
-    });
 
-    // Ensure at least one costing and retail entry exists
-    if (costingData.length === 0) {
-        alert('Please add at least one costing entry.');
-        saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
-        return;
-    }
-    if (retailData.length === 0) {
-        alert('Please add at least one retail entry.');
-        saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
-        return;
-    }
+            if (costingData.length === 0) {
+                alert('Please add at least one costing entry.');
+                saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+                return;
+            }
+            if (retailData.length === 0) {
+                alert('Please add at least one retail entry.');
+                saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+                return;
+            }
 
-    // Combine all data into one object
-    const allData = {
-        form: formData,
-        costing: costingData,
-        retail: retailData
-    };
+            const allData = {
+                form: formData,
+                costing: costingData,
+                retail: retailData
+            };
 
-    // Log the data being sent
-    console.log('Data being sent to save-product.php:', allData);
+            console.log('Data being sent to save-product.php:', allData);
 
-    // Send data to PHP script
-    fetch('save-product.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(allData)
-    })
-    .then(response => {
-        // Log the raw response text
-        return response.text().then(text => {
-            console.log('Raw response from save-product.php:', text);
-            return JSON.parse(text); // Try to parse as JSON
+            fetch('save-product.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(allData)
+            })
+            .then(response => {
+                return response.text().then(text => {
+                    console.log('Raw response from save-product.php:', text);
+                    return JSON.parse(text);
+                });
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Product saved successfully!');
+                    location.reload();
+                } else {
+                    throw new Error(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Save error:', error);
+                alert('Error saving product: ' + error.message);
+                saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+            });
+        };
+
+        const handleNewButton = () => {
+            const newBtn = $('.new-btn');
+            const isCancel = newBtn.data('isCancel') || false;
+
+            if (!isCancel) {
+                newBtn.html('<i class="fas fa-times"></i> Cancel').data('isCancel', true);
+                enableFormElements();
+
+                generateNextCodes();
+                fetchDropdownData('manage-productProfile.php?type=CATEGORY', '#category', 'Select Category');
+                fetchDropdownData('manage-productProfile.php?type=SHELF', '#shellOptions', 'Select Shelf').then(() => {
+                    $('#shellOptions').on('change', function () {
+                        const subName = $(this).find(':selected').data('subname') || '';
+                        $('#shelfTextbox').val(subName);
+                    });
+                });
+            } else {
+                newBtn.html('<i class="fas fa-plus"></i> New').data('isCancel', false);
+                initializeFormState();
+                $('#productCode, #pluCode, #productCodeNo, #pluCodeNo').val('');
+                $('#category, #shellOptions').empty().append('<option disabled selected>Select an option</option>');
+                $('#shelfTextbox').val('');
+                $('.save-btn').prop('disabled', true).html('<i class="fas fa-save"></i> Save');
+            }
+        };
+
+        $('.new-btn').on('click', handleNewButton);
+        $('.save-btn').on('click', saveCodes);
+
+        $('#category').on('change', function () {
+            const selectedCategory = $(this).val();
+            const tableBody = $('#discountTableBody');
+            tableBody.empty();
+
+            if (selectedCategory === 'Select Category') {
+                tableBody.append('<tr><td>No discounts available</td></tr>');
+                return;
+            }
+
+            fetch(`manage-productProfile.php?selectedCategory=${encodeURIComponent(selectedCategory)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        data.forEach(discount => {
+                            const displayName = discountTypeMapping[discount] || discount;
+                            tableBody.append(`<tr><td>${displayName}</td></tr>`);
+                        });
+                    } else {
+                        tableBody.append('<tr><td>No discounts available</td></tr>');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching DiscountType data:', error);
+                    tableBody.append('<tr><td>Error fetching discounts</td></tr>');
+                });
         });
-    })
-    .then(data => {
-        if (data.success) {
-            alert('Product saved successfully!');
-            location.reload();
-        } else {
-            throw new Error(data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Save error:', error);
-        alert('Error saving product: ' + error.message);
-        saveBtn.prop('disabled', false).html('<i class="fas fa-save"></i> Save');
+
+        initializeFormState();
+        setCurrentDate();
     });
-};
-                   
-                    // Handle "New" button click
-                    const handleNewButton = () => {
-                        const newBtn = $('.new-btn');
-                        const isCancel = newBtn.data('isCancel') || false;
 
-                        if (!isCancel) {
-                            newBtn.html('<i class="fas fa-times"></i> Cancel').data('isCancel', true);
-                            enableFormElements();
-
-                            generateNextCodes();
-                            fetchDropdownData('manage-productProfile.php?type=CATEGORY', '#category', 'Select Category');
-                            fetchDropdownData('manage-productProfile.php?type=SHELF', '#shellOptions', 'Select Shelf').then(() => {
-                                $('#shellOptions').on('change', function () {
-                                    const subName = $(this).find(':selected').data('subname') || '';
-                                    $('#shelfTextbox').val(subName);
-                                });
-                            });
-                        } else {
-                            newBtn.html('<i class="fas fa-plus"></i> New').data('isCancel', false);
-                            initializeFormState();
-                            $('#productCode, #pluCode, #productCodeNo, #pluCodeNo').val('');
-                            $('#category, #shellOptions').empty().append('<option disabled selected>Select an option</option>');
-                            $('#shelfTextbox').val('');
-                            $('.save-btn').prop('disabled', true).html('<i class="fas fa-save"></i> Save');
-                        }
-                    };
-
-                    // ================== EVENT LISTENERS ====================
-                    $('.new-btn').on('click', handleNewButton);
-                    $('.save-btn').on('click', saveCodes);
-
-                    $('#category').on('change', function () {
-                        const selectedCategory = $(this).val();
-                        const tableBody = $('#discountTableBody');
-                        tableBody.empty();
-
-                        if (selectedCategory === 'Select Category') {
-                            tableBody.append('<tr><td>No discounts available</td></tr>');
-                            return;
-                        }
-
-                        fetch(`manage-productProfile.php?selectedCategory=${encodeURIComponent(selectedCategory)}`)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.length > 0) {
-                                    data.forEach(discount => {
-                                        const displayName = discountTypeMapping[discount] || discount;
-                                        tableBody.append(`<tr><td>${displayName}</td></tr>`);
-                                    });
-                                } else {
-                                    tableBody.append('<tr><td>No discounts available</td></tr>');
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching DiscountType data:', error);
-                                tableBody.append('<tr><td>Error fetching discounts</td></tr>');
-                            });
-                    });
-
-                    // ================== INITIALIZATION ====================
-                    initializeFormState();
-                    setCurrentDate();
-                });
-
-                document.addEventListener("DOMContentLoaded", function () {
-                    const currentUrl = window.location.pathname.split('/').pop();
-                    
-                    document.querySelectorAll('.list-unstyled a').forEach(link => {
-                        const linkHref = link.getAttribute('href');
-                        const parentMenu = link.closest('.collapse');
-                        const dropdownToggle = parentMenu ? parentMenu.previousElementSibling : null;
-
-                        // Mark the active link
-                        if (linkHref === currentUrl) {
-                            link.classList.add('active');
-                            if (parentMenu) {
-                                parentMenu.classList.add('show');
-                                if (dropdownToggle) {
-                                    dropdownToggle.classList.add('highlighted-dropdown', 'active');
-                                    dropdownToggle.setAttribute('aria-expanded', 'true');
-                                }
-                            }
-                        }
-
-                        // Apply hover effect for menu items
-                        link.addEventListener("mouseenter", function () {
-                            this.classList.add("hover-effect");
-                        });
-
-                        link.addEventListener("mouseleave", function () {
-                            this.classList.remove("hover-effect");
-                        });
-                    });
-                    
-                    document.querySelectorAll('.dropdown-toggle').forEach(dropdown => {
-                        const parentMenu = dropdown.nextElementSibling;
-                        if (parentMenu && parentMenu.querySelector('.active')) {
-                            dropdown.classList.add('highlighted-dropdown', 'active');
-                            dropdown.setAttribute('aria-expanded', 'true');
-                        }
-                        
-                        dropdown.addEventListener("mouseenter", function () {
-                            this.classList.add('hovered-dropdown');
-                        });
-
-                        dropdown.addEventListener("mouseleave", function () {
-                            this.classList.remove("hovered-dropdown");
-                        });
-                    });
-
-                    // Handle the close transaction confirmation
-					document.getElementById('confirmCloseInventory')?.addEventListener('click', function () {
-						// Submit a form to close the transaction
-						const form = document.createElement('form');
-						form.method = 'POST';
-						form.action = '';
-						const input = document.createElement('input');
-						input.type = 'hidden';
-						input.name = 'close_transaction';
-						input.value = '1';
-						form.appendChild(input);
-						document.body.appendChild(form);
-						form.submit();
-					});
-                });
-            </script>
+    // Ensure initial calculation if cost is already set
+    if (retailCostInput && retailCostInput.value) {
+        calculateMarkup();
+    }
+});
+</script>
 
             <style>
                     /* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
