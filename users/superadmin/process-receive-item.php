@@ -62,19 +62,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['poNumber'])) {
             $unit = $row['Unit'] ?? '';
             $expirationDate = $row['ExpirationDate'] ?? null;
             $quantity = $row['Quantity'] ?? 0;
-            $retailCostPriceStart = $row['CostPrice'] ?? 0;
+            $retailCostPrice = $row['CostPrice'] ?? 0;
             
             // Calculate RetailSellingPrice based on isVat
             $isVat = $row['IsVat'] ?? '';
             error_log("isVat value for product {$row['ProductName']}: $isVat");
 
             // Your calculation logic seems correct but might be getting an unexpected value
-            if ($isVat === 'YES') {
+            /*if ($isVat === 'YES') {
                 $vatSellingPrice = $retailCostPriceStart / 1.12 * 0.12;
                 $retailCostPrice = $retailCostPriceStart + $vatSellingPrice;
             } else {
                 $retailCostPrice = $retailCostPriceStart;
-            }
+            }*/
             
             // Calculate TotalCostPrice and TotalSellingPrice
             $totalCostPrice = $row['TotalCostPrice'] ?? 0;
