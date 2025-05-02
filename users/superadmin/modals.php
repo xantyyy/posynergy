@@ -286,7 +286,7 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h5 class="modal-title" id="productModalLabel">Product Information</h5>
+                <h5 class="modal-title" id="productModalLabel">Retail Product Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -319,21 +319,15 @@
                     <label for="productName" class="form-label">Product Name:</label>
                     <input type="text" class="form-control" id="retailProductName" readonly>
                 </div>
-
+                
+                <hr>
                 <!-- Product Details -->
                 <h6>Product Details</h6>
                 <div class="row mb-3">
                     <!-- UOM -->
                     <div class="col-md-6">
                         <label for="uom" class="form-label">UOM:</label>
-                        <select class="form-select" id="retail-uom">
-                            <option selected value="" hidden>Select unit of measure</option>
-                            <?php
-                            foreach ($uoms as $uom) {
-                                echo "<option value='" . htmlspecialchars($uom) . "'>" . htmlspecialchars($uom) . "</option>";
-                            }
-                            ?>
-                        </select>
+                        <input type="text" class="form-control" id="retailUOM" readonly>
                     </div>
                     <!-- Mark Up -->
                     <div class="col-md-6">

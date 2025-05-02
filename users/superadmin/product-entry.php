@@ -863,8 +863,22 @@ if (modalInstance) {
                         document.getElementById('barcode').value = barcodeValue;
                     });
 
-                    // Retail Modal (barcode + product name)
-                    document.getElementById('addRetailButton')?.addEventListener('click', transferToRetailModal);
+                    // Handle the "Add" button for Retail Details
+                    document.getElementById('addRetailButton')?.addEventListener('click', function () {
+                        // Transfer barcode and product name (existing functionality)
+                        const barcodeValue = document.getElementById('barCode').value;
+                        const productNameValue = document.getElementById('productName').value;
+                        document.getElementById('retailBarcode').value = barcodeValue;
+                        document.getElementById('retailProductName').value = productNameValue;
+
+                        // Fetch the UOM from the last row of the Costing Details table
+                        const costingTableBody = document.querySelector('#table-bold tbody');
+                        const lastCostingRow = costingTableBody.querySelector('tr:not(.no-data-row):last-child');
+                        if (lastCostingRow) {
+                            const uom = lastCostingRow.cells[2].textContent; // Column 2 is UOM
+                            document.getElementById('retailUOM').value = uom;
+                        }
+                    });
                 });
 
                 $(document).ready(function () {
