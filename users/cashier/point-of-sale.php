@@ -547,6 +547,7 @@ $(document).ready(function() {
 
     $(document).ready(function() {
         toggleSidebarLinks();
+        generateTransactionNo();
 
         // Prevent form submission and handle barcode scans in #productSearch
         $('#productSearch').on('keydown', function(event) {
@@ -722,15 +723,18 @@ $(document).ready(function() {
     let currentPriceType = 'RETAIL';
 
      // Toggle between RETAIL and WHOLESALE on Tab key press
-    $(document).on('keydown', function(e) {
+     $(document).on('keydown', function(e) {
         if (e.key === 'Tab') {
             e.preventDefault();
             const retailLabel = $('.retail-label');
             if (retailLabel.length > 0) {
+                const oldPriceType = currentPriceType;
                 currentPriceType = currentPriceType === 'RETAIL' ? 'WHOLESALE' : 'RETAIL';
                 retailLabel.text(currentPriceType);
-                console.log('Toggled to:', currentPriceType);
-                cart = [];
+                console.log('Toggled from ' + oldPriceType + ' to:', currentPriceType);
+
+                // Update prices for existing cart items
+                updateCartPricesForPriceType();
                 updateCartDisplay();
                 updateTotals();
                 toggleSidebarLinks();
@@ -739,6 +743,38 @@ $(document).ready(function() {
             }
         }
     });
+
+    function updateCartPricesForPriceType() {
+        if (cart.length === 0) return;
+
+        const barcodes = cart.map(item => item.barcode);
+        $.ajax({
+            url: 'search_products.php',
+            method: 'POST',
+            data: { query: barcodes.join(','), isBarcode: true, priceType: currentPriceType, multiple: true },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status === 'success' && response.products.length > 0) {
+                    const priceMap = {};
+                    response.products.forEach(product => {
+                        priceMap[product.Barcode] = parseFloat(product.SRP);
+                    });
+
+                    cart.forEach(item => {
+                        const newPrice = priceMap[item.barcode] || item.price; // Use new price if available, otherwise keep old price
+                        item.price = newPrice;
+                        item.totalPrice = item.quantity * newPrice;
+                        item.priceType = currentPriceType; // Update price type
+                    });
+                } else {
+                    console.warn('Could not update prices for some items:', response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error updating cart prices:', status, error);
+            }
+        });
+    }
     
     function addProductToCart(id, name, price, barcode, quantity = 1) {
         barcode = String(barcode);

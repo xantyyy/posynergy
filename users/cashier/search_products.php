@@ -9,6 +9,7 @@ $response = ['status' => 'error', 'products' => [], 'message' => ''];
 $search = isset($_POST['query']) ? trim($_POST['query']) : '';
 $isBarcode = isset($_POST['isBarcode']) && $_POST['isBarcode'] === 'true';
 $priceType = isset($_POST['priceType']) ? trim($_POST['priceType']) : 'RETAIL'; // Default to RETAIL if not set
+$multiple = isset($_POST['multiple']) && $_POST['multiple'] === 'true';
 
 if (empty($search)) {
     $response['message'] = 'No search query provided';
@@ -17,25 +18,42 @@ if (empty($search)) {
 }
 
 try {
-    // Join tbl_invprodlist with tbl_productprice to get the correct price based on PriceType
-    $likeSearch = '%' . $search . '%';
-    $sql = "SELECT p.Barcode, p.ProductName, pp.SRP, p.Quantity, pp.PriceType 
-            FROM tbl_invprodlist p
-            LEFT JOIN tbl_productprice pp ON p.Barcode = pp.Barcode AND pp.PriceType = ?
-            WHERE (p.Barcode LIKE ? OR p.ProductName LIKE ?)
-            LIMIT 10";
-    $stmt = $conn->prepare($sql);
-    if (!$stmt) {
-        throw new Exception('Failed to prepare statement for fuzzy search');
+    $products = [];
+    if ($multiple) {
+        // Handle multiple barcodes (comma-separated)
+        $barcodes = explode(',', $search);
+        $placeholders = implode(',', array_fill(0, count($barcodes), '?'));
+        $sql = "SELECT p.Barcode, p.ProductName, pp.SRP, pp.PriceType, p.Quantity 
+                FROM tbl_invprodlist p
+                LEFT JOIN tbl_productprice pp ON p.Barcode = pp.Barcode AND pp.PriceType = ?
+                WHERE p.Barcode IN ($placeholders)";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception('Failed to prepare statement for multiple barcodes');
+        }
+        $params = array_merge([$priceType], $barcodes);
+        $types = str_repeat('s', count($params));
+        $stmt->bind_param($types, ...$params);
+    } else {
+        // Single barcode or fuzzy search
+        $likeSearch = '%' . $search . '%';
+        $sql = "SELECT p.Barcode, p.ProductName, pp.SRP, pp.PriceType, p.Quantity 
+                FROM tbl_invprodlist p
+                LEFT JOIN tbl_productprice pp ON p.Barcode = pp.Barcode AND pp.PriceType = ?
+                WHERE (p.Barcode LIKE ? OR p.ProductName LIKE ?)
+                LIMIT 10";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            throw new Exception('Failed to prepare statement for fuzzy search');
+        }
+        $stmt->bind_param('sss', $priceType, $likeSearch, $likeSearch);
     }
-    $stmt->bind_param('sss', $priceType, $likeSearch, $likeSearch);
 
     $stmt->execute();
     $result = $stmt->get_result();
-    $products = [];
 
     while ($row = $result->fetch_assoc()) {
-        if ($row['SRP'] !== null) { // Only include products with a valid price for the given PriceType
+        if ($row['SRP'] !== null) {
             $products[] = [
                 'Barcode' => $row['Barcode'],
                 'ProductName' => $row['ProductName'],
@@ -56,7 +74,7 @@ try {
     }
 
 } catch (Exception $e) {
-    $response['message'] = 'Server error: ' . $e->getMessage();
+    $response['message'] = 'Server error: ' + $e->getMessage();
 }
 
 $conn->close();
