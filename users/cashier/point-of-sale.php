@@ -552,9 +552,9 @@ $(document).ready(function() {
         $('#productSearch').on('keydown', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault(); // Prevent form submission
-                const query = $(this).val().trim(); // Get the scanned barcode
+                const query = $(this).val().trim();
                 if (query) {
-                    lookupBarcode(query);
+                    lookupBarcode(query, currentPriceType); // Pass currentPriceType
                 }
             }
         });
@@ -589,7 +589,7 @@ $(document).ready(function() {
                 $.ajax({
                     url: 'search_products.php',
                     method: 'POST',
-                    data: { query: query },
+                    data: { query: query, priceType: currentPriceType },
                     dataType: 'json',
                     success: function(response) {
                         const $searchResults = $('#searchResults');
@@ -601,16 +601,17 @@ $(document).ready(function() {
                                         data-value="${product.Barcode}" 
                                         data-name="${product.ProductName}" 
                                         data-price="${product.SRP}" 
-                                        data-barcode="${product.Barcode}">
+                                        data-barcode="${product.Barcode}"
+                                        data-pricetype="${product.PriceType}">
                                         <strong>${product.ProductName}</strong><br>
-                                        Barcode: ${product.Barcode} | SRP: ₱${parseFloat(product.SRP).toFixed(2)}
+                                        Barcode: ${product.Barcode} | SRP: ₱${parseFloat(product.SRP).toFixed(2)} | Type: ${product.PriceType}
                                     </div>
                                 `;
                                 $searchResults.append(item);
                             });
                             $searchResults.show();
                         } else {
-                            $searchResults.append('<div class="search-item">No results found</div>');
+                            $searchResults.append('<div class="search-item">' + (response.message || 'No results found') + '</div>');
                             $searchResults.show();
                         }
                     },
@@ -624,12 +625,18 @@ $(document).ready(function() {
         });
 
         // Handle clicking a search result
+        
         $(document).on('click', '#searchResults .search-item', function() {
-            const productId = $(this).data('value');
+            const productBarcode = $(this).data('barcode');
             const productName = $(this).data('name');
             const productPrice = parseFloat($(this).data('price'));
-            const productBarcode = $(this).data('barcode');
-            addProductToCart(productId, productName, productPrice, productBarcode);
+            const productPriceType = $(this).data('pricetype');
+
+            if (productPriceType === currentPriceType) {
+                addProductToCart(productBarcode, productName, productPrice, productBarcode);
+            } else {
+                alert('Product price type (' + productPriceType + ') does not match current mode (' + currentPriceType + ').');
+            }
             $('#productSearch').val('');
             $('#searchResults').hide();
         });
@@ -663,29 +670,42 @@ $(document).ready(function() {
 
         // Function to lookup barcode and add to cart
         let barcodeProcessing = false;
-        function lookupBarcode(barcode) {
+        function switchPriceType(priceType) {
+            currentPriceType = priceType;
+            $('.retail-label').text(currentPriceType);
+            console.log('Switched to:', currentPriceType);
+            cart = []; // Clear cart when switching price types
+            updateCartDisplay();
+            updateTotals();
+        }
+
+        function lookupBarcode(barcode, priceType) {
             if (barcodeProcessing) return;
             barcodeProcessing = true;
 
             $.ajax({
                 url: 'search_products.php',
                 method: 'POST',
-                data: { query: barcode, isBarcode: true },
+                data: { query: barcode, isBarcode: true, priceType: priceType },
                 dataType: 'json',
                 success: function(response) {
-                    console.log('lookupBarcode response:', response);
                     if (response.status === 'success' && response.products && response.products.length > 0) {
                         const product = response.products[0];
-                        addProductToCart(
-                            product.Barcode,
-                            product.ProductName,
-                            parseFloat(product.SRP),
-                            product.Barcode
-                        );
+                        if (product.PriceType === priceType) {
+                            addProductToCart(
+                                product.Barcode,
+                                product.ProductName,
+                                parseFloat(product.SRP),
+                                product.Barcode,
+                                1
+                            );
+                        } else {
+                            alert('Product price type (' + product.PriceType + ') does not match current mode (' + priceType + ').');
+                        }
                         $('#productSearch').val('');
                         $('#searchResults').hide();
                     } else {
-                        alert('Product not found for barcode: ' + barcode);
+                        alert(response.message || 'Product not found for barcode: ' + barcode);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -699,57 +719,55 @@ $(document).ready(function() {
         }
     });
 
+    let currentPriceType = 'RETAIL';
+
      // Toggle between RETAIL and WHOLESALE on Tab key press
     $(document).on('keydown', function(e) {
         if (e.key === 'Tab') {
-            e.preventDefault(); // Prevent default Tab behavior (optional, depending on your needs)
-            const retailLabel = $('div:contains("RETAIL"), div:contains("WHOLESALE")').filter(function() {
-                return $(this).text().trim() === 'RETAIL' || $(this).text().trim() === 'WHOLESALE';
-            });
-            
+            e.preventDefault();
+            const retailLabel = $('.retail-label');
             if (retailLabel.length > 0) {
-                const currentText = retailLabel.text().trim();
-                retailLabel.text(currentText === 'RETAIL' ? 'WHOLESALE' : 'RETAIL');
-                console.log('Toggled to:', retailLabel.text());
+                currentPriceType = currentPriceType === 'RETAIL' ? 'WHOLESALE' : 'RETAIL';
+                retailLabel.text(currentPriceType);
+                console.log('Toggled to:', currentPriceType);
+                cart = [];
+                updateCartDisplay();
+                updateTotals();
+                toggleSidebarLinks();
+            } else {
+                console.error('retail-label element not found in DOM');
             }
         }
     });
     
     function addProductToCart(id, name, price, barcode, quantity = 1) {
-        // Ensure barcode is stored as a string
         barcode = String(barcode);
         console.log('Adding product to cart:', { id, name, price, barcode, quantity });
 
         const existingProductIndex = cart.findIndex(item => String(item.barcode) === barcode);
 
         if (existingProductIndex !== -1) {
-            // Update existing product
             cart[existingProductIndex].quantity += quantity;
             cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
-            console.log('Updated existing item:', cart[existingProductIndex]);
         } else {
-            // Add new product
             cart.push({
                 id: barcode,
                 name: name,
                 price: price,
                 barcode: barcode,
                 quantity: quantity,
-                totalPrice: price * quantity
+                totalPrice: price * quantity,
+                priceType: currentPriceType
             });
-            console.log('Added new item:', cart[cart.length - 1]);
         }
 
-        // Update cart display and totals
         updateCartDisplay();
         updateTotals();
         toggleSidebarLinks();
 
-        // Automatically select the row for the added/updated product
         const rowSelector = `table#table-bold tbody tr[data-barcode="${barcode}"]`;
         $('table#table-bold tbody tr').removeClass('selected');
         $(rowSelector).addClass('selected');
-        console.log('Selected row:', rowSelector);
     }
     
     function updateCartDisplay() {
