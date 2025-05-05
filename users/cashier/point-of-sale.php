@@ -774,14 +774,17 @@ $(document).ready(function() {
     
     function addProductToCart(id, name, price, barcode, quantity = 1) {
         barcode = String(barcode);
-        console.log('Adding product to cart:', { id, name, price, barcode, quantity });
+        console.log('Adding product to cart:', { id, name, price, barcode, quantity, priceType: currentPriceType });
 
-        const existingProductIndex = cart.findIndex(item => String(item.barcode) === barcode);
+        const compositeKey = `${barcode}_${currentPriceType}`; // Unique key combining barcode and priceType
+        const existingProductIndex = cart.findIndex(item => `${item.barcode}_${item.priceType}` === compositeKey);
 
         if (existingProductIndex !== -1) {
+            // If the product with the same barcode and priceType exists, update its quantity and totalPrice
             cart[existingProductIndex].quantity += quantity;
             cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
         } else {
+            // Add a new item with the current price type
             cart.push({
                 id: barcode,
                 name: name,
@@ -789,7 +792,7 @@ $(document).ready(function() {
                 barcode: barcode,
                 quantity: quantity,
                 totalPrice: price * quantity,
-                priceType: currentPriceType
+                priceType: currentPriceType // Store the price type used when adding the item
             });
         }
 
@@ -797,7 +800,7 @@ $(document).ready(function() {
         updateTotals();
         toggleSidebarLinks();
 
-        const rowSelector = `table#table-bold tbody tr[data-barcode="${barcode}"]`;
+        const rowSelector = `table#table-bold tbody tr[data-barcode="${barcode}"][data-pricetype="${currentPriceType}"]`;
         $('table#table-bold tbody tr').removeClass('selected');
         $(rowSelector).addClass('selected');
     }
@@ -819,8 +822,8 @@ $(document).ready(function() {
         } else {
             cart.forEach(item => {
                 tableBody.append(`
-                    <tr data-barcode="${item.barcode}">
-                        <td>${item.name}</td>
+                    <tr data-barcode="${item.barcode}" data-pricetype="${item.priceType}">
+                        <td>${item.name} (${item.priceType})</td>
                         <td>${item.quantity}</td>
                         <td>₱${item.price.toFixed(2)}</td>
                         <td>₱${item.totalPrice.toFixed(2)}</td>
@@ -899,36 +902,36 @@ $(document).ready(function() {
             }
         });
     
-    function updateItemQuantity(barcode, newQuantity) {
-        // Ensure barcode is a string
-        barcode = String(barcode);
-        console.log('Updating item quantity:', { barcode, newQuantity });
+        function updateItemQuantity(barcode, newQuantity) {
+            barcode = String(barcode);
+            console.log('Updating item quantity:', { barcode, newQuantity });
 
-        const itemIndex = cart.findIndex(item => String(item.barcode) === barcode);
-        if (itemIndex !== -1) {
-            if (newQuantity <= 0) {
-                console.log('Removing item with barcode:', barcode);
-                cart.splice(itemIndex, 1); // Remove item if quantity is 0
+            const compositeKey = `${barcode}_${currentPriceType}`;
+            const itemIndex = cart.findIndex(item => `${item.barcode}_${item.priceType}` === compositeKey);
+            if (itemIndex !== -1) {
+                if (newQuantity <= 0) {
+                    console.log('Removing item with barcode and priceType:', { barcode, priceType: currentPriceType });
+                    cart.splice(itemIndex, 1); // Remove item if quantity is 0
+                } else {
+                    cart[itemIndex].quantity = newQuantity;
+                    cart[itemIndex].totalPrice = cart[itemIndex].price * newQuantity;
+                    console.log('Updated item:', cart[itemIndex]);
+                }
+                updateCartDisplay();
+                updateTotals();
+
+                // Re-select the row after updating
+                if (newQuantity > 0) {
+                    const rowSelector = `table#table-bold tbody tr[data-barcode="${barcode}"][data-pricetype="${currentPriceType}"]`;
+                    $('table#table-bold tbody tr').removeClass('selected');
+                    $(rowSelector).addClass('selected');
+                    console.log('Re-selected row:', rowSelector);
+                }
             } else {
-                cart[itemIndex].quantity = newQuantity;
-                cart[itemIndex].totalPrice = cart[itemIndex].price * newQuantity;
-                console.log('Updated item:', cart[itemIndex]);
+                console.error('Item not found in cart:', { barcode, priceType: currentPriceType });
+                alert('Error: Item not found in cart. Please try adding it again.');
             }
-            updateCartDisplay();
-            updateTotals();
-
-            // Re-select the row after updating
-            if (newQuantity > 0) {
-                const rowSelector = `table#table-bold tbody tr[data-barcode="${barcode}"]`;
-                $('table#table-bold tbody tr').removeClass('selected');
-                $(rowSelector).addClass('selected');
-                console.log('Re-selected row:', rowSelector);
-            }
-        } else {
-            console.error('Item not found in cart:', barcode);
-            alert('Error: Item not found in cart. Please try adding it again.');
         }
-    }
     
     function removeItemFromCart(productId) {
         cart = cart.filter(item => item.id !== productId);
