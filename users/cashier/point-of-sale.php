@@ -723,7 +723,7 @@ $(document).ready(function() {
     let currentPriceType = 'RETAIL';
 
      // Toggle between RETAIL and WHOLESALE on Tab key press
-     $(document).on('keydown', function(e) {
+    $(document).on('keydown', function(e) {
         if (e.key === 'Tab') {
             e.preventDefault();
             const retailLabel = $('.retail-label');
@@ -733,10 +733,6 @@ $(document).ready(function() {
                 retailLabel.text(currentPriceType);
                 console.log('Toggled from ' + oldPriceType + ' to:', currentPriceType);
 
-                // Update prices for existing cart items
-                updateCartPricesForPriceType();
-                updateCartDisplay();
-                updateTotals();
                 toggleSidebarLinks();
             } else {
                 console.error('retail-label element not found in DOM');
@@ -833,7 +829,6 @@ $(document).ready(function() {
             });
         }
 
-        // Enable/Disable sidebar links based on cart state
         toggleSidebarLinks();
     }
     
@@ -2971,25 +2966,36 @@ $(document).ready(function() {
     $('#searchProductModal').on('hidden.bs.modal', resetModal);
 
     // Modified addProductToCart to handle quantity
-    function addProductToCart(id, name, price, barcode, quantity) {
-        const existingProductIndex = cart.findIndex(item => item.barcode === barcode);
-        
+    function addProductToCart(id, name, price, barcode, quantity = 1) {
+        barcode = String(barcode);
+        console.log('Adding product to cart:', { id, name, price, barcode, quantity });
+
+        const existingProductIndex = cart.findIndex(item => String(item.barcode) === barcode);
+
         if (existingProductIndex !== -1) {
+            // If the product already exists in the cart, only update quantity and totalPrice
             cart[existingProductIndex].quantity += quantity;
             cart[existingProductIndex].totalPrice = cart[existingProductIndex].quantity * cart[existingProductIndex].price;
         } else {
+            // Add a new item with the current price type
             cart.push({
                 id: barcode,
                 name: name,
                 price: price,
                 barcode: barcode,
                 quantity: quantity,
-                totalPrice: price * quantity
+                totalPrice: price * quantity,
+                priceType: currentPriceType // Store the price type used when adding the item
             });
         }
-        
+
         updateCartDisplay();
         updateTotals();
+        toggleSidebarLinks();
+
+        const rowSelector = `table#table-bold tbody tr[data-barcode="${barcode}"]`;
+        $('table#table-bold tbody tr').removeClass('selected');
+        $(rowSelector).addClass('selected');
     }
 });
 
