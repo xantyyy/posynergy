@@ -18,6 +18,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['close_transaction'])) 
 $sql = "SELECT ID, Supplier FROM tbl_suppliers";
 $result = $conn->query($sql);
 
+// Fetch purchase pending data for incoming table
+$purchasePendingSql = "SELECT POnumber, POdate, Supplier, TotalCostPrice FROM tbl_purchasepending ORDER BY POdate DESC";
+$purchasePendingResult = $conn->query($purchasePendingSql);
+
 $conn->close();
 ?>
 
@@ -132,7 +136,7 @@ $conn->close();
                                 <h5>Select</h5>
                                 <div class="d-flex align-items-center">
                                     <div class="form-check me-4 mt-3" style="margin-left: 50px;">
-                                        <input class="form-check-input" type="radio" name="recordSearch" id="adjustmentRadio" value="adjustment">
+                                        <input class="form-check-input" type="radio" name="recordSearch" id="adjustmentRadio" value="adjustment" checked>
                                         <label class="form-check-label" for="adjustmentRadio">Adjustment</label>
                                     </div>
                                     <div class="form-check me-4 mt-3" style="margin-left: 10px;">
@@ -141,7 +145,7 @@ $conn->close();
                                     </div>
                                 </div>
                             </div>
-                            <hr>
+                        
                             <div class="form-row mt-3">
                                 <h5>Supplier:</h5>
                                 <div class="form-group col-md-12 me-4">
@@ -214,18 +218,19 @@ $conn->close();
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                        <td>Sample</td>
-                                    </tr>
+                                    <!-- Populated dynamically based on radio selection -->
                                 </tbody>
                             </table>
                         </div>
+                        <button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" data-bs-toggle="modal" data-bs-target="#inventoryModal">
+                            <i class="fas fa-plus"></i> Create
+                        </button>
+                        <button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="openBtn" disabled>
+                            <i class="fas fa-edit"></i> Open
+                        </button>
+                        <button type="button" class="btn me-2 mt-4 new-btn btn-outline-primary" style="font-size: 13px;" id="deleteBtn" disabled>
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
                     </div>
                 </div>
             </div>
@@ -259,17 +264,31 @@ const incomingTable = `
     <table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
         <thead class="fw-bold fs-6 fst-italic card-header" style="background-color: #cbd1d3; color: black; position: sticky; top: 0; z-index: 1;">
             <tr>
-                <th>Inventory Date</th>
-                <th>Inventory #</th>
+                <th>Inventory No.</th>
+                <th>Date Created</th>
+                <th>Supplier</th>
                 <th>Net Amount</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Sample</td>
-                <td>Sample</td>
-                <td>Sample</td>
-            </tr>
+            <?php
+            if ($purchasePendingResult) {
+                if ($purchasePendingResult->num_rows > 0) {
+                    while ($row = $purchasePendingResult->fetch_assoc()) {
+                        echo '<tr class="clickable-row" data-ponumber="' . htmlspecialchars($row['POnumber']) . '">';
+                        echo '<td>' . htmlspecialchars($row['POnumber']) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['POdate']) . '</td>';
+                        echo '<td>' . htmlspecialchars($row['Supplier']) . '</td>';
+                        echo '<td>' . number_format($row['TotalCostPrice'], 2) . '</td>';
+                        echo '</tr>';
+                    }
+                } else {
+                    echo '<tr><td colspan="4" class="text-center">No Data Available</td></tr>';
+                }
+            } else {
+                echo '<tr><td colspan="4" class="text-center">Error: ' . htmlspecialchars($conn->error) . '</td></tr>';
+            }
+            ?>
         </tbody>
     </table>
 `;
@@ -304,6 +323,59 @@ enableAsOfCheckbox.addEventListener('change', function () {
     toDate.disabled = !isChecked;
     quickSearchBtn.disabled = !isChecked;
     printSummaryBtn.disabled = !isChecked;
+});
+
+// Row selection and button functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const rows = document.querySelectorAll('.clickable-row');
+    const openBtn = document.getElementById('openBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
+    let selectedRow = null;
+    let selectedPONumber = null;
+
+    rows.forEach(row => {
+        row.addEventListener('click', function() {
+            // Remove active class from previously selected row
+            if (selectedRow) {
+                selectedRow.classList.remove('table-active');
+            }
+            
+            // Add active class to clicked row
+            this.classList.add('table-active');
+            selectedRow = this;
+            
+            // Enable buttons
+            openBtn.disabled = false;
+            deleteBtn.disabled = false;
+            
+            // Get the PO number from the selected row
+            selectedPONumber = this.getAttribute('data-ponumber');
+            console.log('Selected PO Number:', selectedPONumber);
+        });
+    });
+
+    // Add click event for the Open button
+    openBtn.addEventListener('click', function() {
+        if (selectedPONumber) {
+            // Redirect to incoming-inv.php with the selected PO number
+            window.location.href = 'incoming-inv.php?po=' + encodeURIComponent(selectedPONumber);
+        }
+    });
+
+    // Add click event for the Delete button
+    deleteBtn.addEventListener('click', function() {
+        if (!selectedRow) {
+            alert('Please select an item to delete.');
+            return;
+        }
+        
+        if (confirm('Are you sure you want to delete this item?')) {
+            // Implement delete logic here (e.g., AJAX call to delete from tbl_purchasepending)
+            console.log('Deleting PO Number:', selectedPONumber);
+            // Placeholder for delete action - replace with actual backend call
+            alert('Delete functionality to be implemented.');
+        }
+    });
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -453,6 +525,27 @@ document.addEventListener("DOMContentLoaded", function () {
 #table-bold thead th {
     font-weight: bold;
     font-style: italic;
+}
+
+.clickable-row {
+    cursor: pointer;
+}
+
+.clickable-row:hover {
+    background-color: #f5f5f5;
+}
+
+.btn:disabled {
+    border-color: rgb(6, 0, 0); /* Gray border for disabled buttons */
+    color: rgb(6, 1, 1); /* Light gray text for disabled buttons */
+    background-color: rgb(241, 201, 201); /* Light gray background for better visibility */
+    cursor: not-allowed; /* Show "not-allowed" cursor */
+}
+
+.btn:not(:disabled):hover {
+    background-color: #007bff; /* Blue background */
+    color: #ffffff; /* White text */
+    border-color: #0056b3; /* Darker blue border */
 }
 </style>
 <?php include_once 'footer.php'; ?>
