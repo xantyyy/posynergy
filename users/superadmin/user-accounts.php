@@ -156,7 +156,14 @@
 					</nav>
 				</div>	  
 
-				<!-- PHP FOR ADDING NEW PRODUCT IN THE DATABASE -->
+				<!-- PHP FOR FETCHING USERS FROM DATABASE -->
+				<?php 
+				require_once '../../includes/config.php'; // Include database connection
+
+				// Fetch all columns from tbl_users including TrainingMode
+				$sql = "SELECT ID, Username, Password, Status, Role, Owner, Terminal, TrainingMode FROM tbl_users";
+				$result = $conn->query($sql);
+				?>
 
 				<!--MAIN CONTENT HERE!!!!!!!!-->
 					<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; margin-top: -30px;">
@@ -168,7 +175,7 @@
 											<div class="col-md-12">
 												<h2>User Setup</h2>
 											</div>
-											<form>
+											<form id="userForm">
 												<div class="d-flex align-items-center mt-3">
 													<button type="button" class="btn btn-outline-primary opacity-50 me-2" style="font-size: 13px;" id="newBtn">
 														<i class="fas fa-plus"></i> New
@@ -199,27 +206,30 @@
 														<div class="card-body">
 															<div style="overflow-x: auto; white-space: nowrap;">
 																<table class="table table-bordered" style="margin-top: 10px;" id="table-bold">
-																	<thead class="card-header bg-dark opacity-60 text-white">
+																	<thead class="card-header bg-darkgray opacity-60 text-white">
 																		<tr>
-																			<th>Username</th>
-																			<th>Role</th>
-																			<th>Status</th>
-																			<th>Traning Mode</th>
+																			<th><b>Username</b></th>
+																			<th><b>Role</b></th>
+																			<th><b>Status</b></th>
+																			<th><b>Training Mode</b></th>
 																		</tr>
 																	</thead>
 																	<tbody>
-																			<tr>
-																				<td>ADMIN</td>
-																				<td>ADMIN / IT</td>
-																				<td>Enabled</td>
-																				<td>No</td>
-																			</tr>
-																			<tr>
-																				<td>CASHIER</td>
-																				<td>CASHIER</td>
-																				<td>Enabled</td>
-																				<td>No</td>
-																			</tr>
+																		<?php
+																		if ($result->num_rows > 0) {
+																			while ($row = $result->fetch_assoc()) {
+																				$statusClass = $row['Status'] === 'DISABLED' ? 'text-danger' : 'text-success';
+																				echo "<tr data-id='" . $row['ID'] . "' data-status='" . $row['Status'] . "'>";
+																				echo "<td>" . htmlspecialchars($row['Username']) . "</td>";
+																				echo "<td>" . htmlspecialchars($row['Role']) . "</td>";
+																				echo "<td class='$statusClass'>" . htmlspecialchars($row['Status']) . "</td>";
+																				echo "<td>" . htmlspecialchars($row['TrainingMode']) . "</td>";
+																				echo "</tr>";
+																			}
+																		} else {
+																			echo "<tr><td colspan='4'>No users found</td></tr>";
+																		}
+																		?>
 																	</tbody>
 																</table>
 															</div>
@@ -231,7 +241,7 @@
 											<div class="row">
 												<div class="col-md-12">
 													<h6>User Fullname</h6>
-													<form>
+													<form id="userDetailsForm">
 														<div class="d-flex align-items-center mt-3">
 															<input type="text" class="form-control" style="width: 97%; margin-left: 10px;" id="fullName" disabled>
 														</div>
@@ -242,7 +252,7 @@
 											<div class="row">
 												<div class="col-md-12">
 													<h6>Account Details</h6>
-													<form>
+													<form id="accountDetailsForm">
 													<div class="d-flex align-items-center mt-3">
 														<label for="roleInput" class="me-2">Role:</label>
 														<select class="form-select" style="width: 97%; margin-left: 50px;" id="roleInput" disabled>
@@ -250,6 +260,8 @@
 															<option value="ADMIN/IT">ADMIN/IT</option>
 															<option value="CASHIER">CASHIER</option>
 															<option value="MANAGER">MANAGER</option>
+															<option value="INVENTORY CONTROLLER">INVENTORY CONTROLLER</option>
+															<option value="STORE SUPERVISOR">STORE SUPERVISOR</option>
 														</select>
 													</div>
 
@@ -279,8 +291,6 @@
 					</div>
             	</div>
 
-
-
 			<!--JAVASCRIPT FOR USER ACCOUNTS-->
 			<script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -291,23 +301,18 @@ document.addEventListener("DOMContentLoaded", function () {
     let disableBtn = document.getElementById("disableBtn");
 
     // Form input fields
-    let inputs = document.querySelectorAll(".form-control");
     let userFullName = document.getElementById("fullName");
+    let roleInput = document.getElementById("roleInput");
+    let usernameInput = document.getElementById("usernameInput");
     let passwordInput = document.getElementById("passwordInput");
     let confirmInput = document.getElementById("confirmInput");
 
-    // Account details fields (role, username, password)
-    let accountDetails = [
-        document.getElementById("roleInput"),
-        document.getElementById("usernameInput"),
-        passwordInput,
-        confirmInput
-    ];
-
-    // Table and form elements
-    let userTableBody = document.querySelector("#table-bold tbody");
-    let form = document.getElementById("userForm");
+    // Form elements
+    let userForm = document.getElementById("userForm");
+    let userDetailsForm = document.getElementById("userDetailsForm");
+    let accountDetailsForm = document.getElementById("accountDetailsForm");
     let isAddingNewUser = false;
+    let selectedUserId = null;
 
     // Set password inputs to "password" type for security
     passwordInput.type = "password";
@@ -321,69 +326,81 @@ document.addEventListener("DOMContentLoaded", function () {
      */
     function highlightRow(selectedRow) {
         document.querySelectorAll("#table-bold tbody tr").forEach(row => {
-            row.classList.remove("highlighted-row"); // Remove highlight from all rows
+            row.classList.remove("highlighted-row");
         });
 
-        selectedRow.classList.add("highlighted-row"); // Highlight clicked row
+        selectedRow.classList.add("highlighted-row");
 
-        // Set the editing user index based on clicked row
-        editingUserIndex = selectedRow.getAttribute("data-index");
+        selectedUserId = selectedRow.getAttribute("data-id");
+        let status = selectedRow.getAttribute("data-status");
+        disableBtn.disabled = false;
+        disableBtn.innerHTML = status === "ENABLED" ? '<i class="fas fa-ban"></i> Disable' : '<i class="fas fa-check"></i> Enable';
+        loadUserData(selectedUserId);
     }
 
     /**
-     * Loads users from localStorage and populates the table.
+     * Loads user data into the form fields for editing.
+     * @param {number} userId - The ID of the selected user.
      */
-    function loadUsers() {
-        let users = JSON.parse(localStorage.getItem("users")) || [];
-        userTableBody.innerHTML = "";
+    function loadUserData(userId) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "get_user_data.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                let user = JSON.parse(xhr.responseText);
+                if (user) {
+                    userFullName.value = user.Owner || "";
+                    usernameInput.value = user.Username || "";
+                    roleInput.value = user.Role || "";
+                    passwordInput.value = "";
+                    confirmInput.value = "";
 
-        users.forEach((user, index) => {
-            let newRow = document.createElement("tr");
-            newRow.innerHTML = `
-                <td>${user.username}</td>
-                <td>${user.role}</td>
-                <td>Enabled</td>
-                <td>No</td>
-            `;
-            newRow.setAttribute("data-index", index);
-            newRow.addEventListener("click", function () {
-                if (!isAddingNewUser) {
-                    highlightRow(newRow); // Highlight the clicked row
-                    loadUserData(index); // Load the selected user's data
+                    userFullName.disabled = true;
+                    usernameInput.disabled = true;
+                    roleInput.disabled = true;
+                    passwordInput.disabled = true;
+                    confirmInput.disabled = true;
+
+                    editBtn.disabled = false;
                 }
-            });
-
-            userTableBody.appendChild(newRow);
-        });
-
-        let tableContainer = document.querySelector("#table-container");
-        tableContainer.style.maxHeight = "200px"; 
-        tableContainer.style.overflowY = users.length > 5 ? "auto" : "hidden";
+            }
+        };
+        xhr.send("id=" + userId);
     }
 
     /**
-     * Nagse-save ng mga pagbabago sa isang existing na user sa user list.
-     * @param {string} fullName - Full name ng user.
-     * @param {string} username - Username ng user.
-     * @param {string} role - Role ng user.
+     * Adds a new user to the database.
+     * @param {string} fullName - Full name of the user.
+     * @param {string} username - Username of the user.
+     * @param {string} role - Role of the user.
+     * @param {string} password - Password of the user.
      */
-    function saveUserChanges(fullName, username, role) {
-        let users = JSON.parse(localStorage.getItem("users")) || [];
-        users[editingUserIndex] = { fullName, username, role }; // Update the user at the selected index
-
-        localStorage.setItem("users", JSON.stringify(users));
-        alert("User details updated!");
-
-        location.reload(); // Refresh the page to show updated details
+    function addUser(fullName, username, role, password) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "add_user.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                if (xhr.responseText === "success") {
+                    alert("New user added successfully!");
+                    location.reload(); // Refresh to show the new user in the list
+                } else {
+                    alert("Failed to add user. " + xhr.responseText);
+                }
+            }
+        };
+        xhr.send("fullName=" + encodeURIComponent(fullName) + "&username=" + encodeURIComponent(username) + 
+                 "&role=" + encodeURIComponent(role) + "&password=" + encodeURIComponent(password));
     }
 
     /**
-     * Handles the save button click event to add a new user or save changes to an existing user.
+     * Handles the save button click event to add a new user.
      */
     saveBtn.addEventListener("click", function () {
         let fullName = userFullName.value.trim();
-        let username = document.getElementById("usernameInput").value.trim();
-        let role = document.getElementById("roleInput").value;
+        let username = usernameInput.value.trim();
+        let role = roleInput.value;
         let password = passwordInput.value;
         let confirmPassword = confirmInput.value;
 
@@ -399,35 +416,33 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        if (editingUserIndex !== null) {
-            saveUserChanges(fullName, username, role); // Save changes to the selected user
-        } else {
-            addUser(fullName, username, role); // Add a new user
+        if (isAddingNewUser) {
+            addUser(fullName, username, role, password); // Add new user
+        } else if (selectedUserId !== null) {
+            saveUserChanges(fullName, username, role); // Save changes to existing user
         }
     });
 
     /**
-     * Loads user data into the form fields for editing.
-     * @param {number} index - The index of the selected user in the user list.
+     * Toggles the user status between ENABLED and DISABLED.
      */
-    function loadUserData(index) {
-        let users = JSON.parse(localStorage.getItem("users")) || [];
-        let selectedUser = users[index];
-
-        if (selectedUser) {
-            document.getElementById("fullName").value = selectedUser.fullName;
-            document.getElementById("usernameInput").value = selectedUser.username;
-            document.getElementById("roleInput").value = selectedUser.role;
-
-            document.getElementById("fullName").disabled = true;
-            document.getElementById("usernameInput").disabled = true;
-            document.getElementById("roleInput").disabled = true;
-            document.getElementById("passwordInput").disabled = true;
-            document.getElementById("confirmInput").disabled = true;
-
-            editBtn.disabled = false;
-            disableBtn.disabled = false;
-        }
+    function toggleUserStatus(userId, currentStatus) {
+        let newStatus = currentStatus === "ENABLED" ? "DISABLED" : "ENABLED";
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "update_user_status.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                if (xhr.responseText === "success") {
+                    let action = newStatus === "ENABLED" ? "enabled" : "disabled";
+                    alert("User has been " + action + " successfully!");
+                    location.reload();
+                } else {
+                    alert("Failed to update user status. Please try again.");
+                }
+            }
+        };
+        xhr.send("id=" + userId + "&status=" + newStatus);
     }
 
     /**
@@ -435,13 +450,19 @@ document.addEventListener("DOMContentLoaded", function () {
      * @param {boolean} enable - If true, fields will be enabled; otherwise, they will be disabled.
      */
     function toggleFields(enable) {
-        inputs.forEach(input => {
-            input.disabled = !enable;
-            if (!enable) input.value = "";
-        });
-
         userFullName.disabled = !enable;
-        accountDetails.forEach(input => input.disabled = !enable);
+        usernameInput.disabled = !enable;
+        roleInput.disabled = !enable;
+        passwordInput.disabled = !enable;
+        confirmInput.disabled = !enable;
+
+        if (!enable) {
+            userFullName.value = "";
+            usernameInput.value = "";
+            roleInput.value = "";
+            passwordInput.value = "";
+            confirmInput.value = "";
+        }
 
         saveBtn.disabled = !enable;
         editBtn.disabled = true;
@@ -465,35 +486,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 row.classList.remove("highlighted-row");
             });
 
-            form.reset();
-            userFullName.value = "";
-            passwordInput.value = "";
-            confirmInput.value = "";
-
-            accountDetails.forEach(input => {
-                input.value = "";
-                input.disabled = false;
-            });
-
-            editBtn.disabled = true;
-            disableBtn.disabled = true;
+            selectedUserId = null;
+            toggleFields(true);
+            saveBtn.disabled = false;
         } else {
             isAddingNewUser = false;
             newBtn.innerHTML = '<i class="fas fa-plus"></i> New';
             toggleFields(false);
 
-            form.reset();
-            userFullName.value = "";
-            passwordInput.value = "";
-            confirmInput.value = "";
-
-            accountDetails.forEach(input => {
-                input.value = "";
-                input.disabled = false;
+            document.querySelectorAll("#table-bold tbody tr").forEach(row => {
+                row.classList.remove("highlighted-row");
             });
 
-            editBtn.disabled = true;
-            disableBtn.disabled = true;
+            selectedUserId = null;
+            toggleFields(false);
+            saveBtn.disabled = true;
         }
     });
 
@@ -502,12 +509,12 @@ document.addEventListener("DOMContentLoaded", function () {
      * Allows the user to edit the details of the selected user.
      */
     editBtn.addEventListener("click", function () {
-        if (editingUserIndex !== null) {
-            document.getElementById("fullName").disabled = false;
-            document.getElementById("usernameInput").disabled = false;
-            document.getElementById("roleInput").disabled = false;
-            document.getElementById("passwordInput").disabled = false;
-            document.getElementById("confirmInput").disabled = false;
+        if (selectedUserId !== null) {
+            userFullName.disabled = false;
+            usernameInput.disabled = false;
+            roleInput.disabled = false;
+            passwordInput.disabled = false;
+            confirmInput.disabled = false;
 
             saveBtn.disabled = false;
 
@@ -516,18 +523,27 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Load users when page loads
-    loadUsers();
+    /**
+     * Handles the Disable/Enable button click event.
+     */
+    disableBtn.addEventListener("click", function () {
+        if (selectedUserId !== null) {
+            let selectedRow = document.querySelector(".highlighted-row");
+            let currentStatus = selectedRow.getAttribute("data-status");
+            toggleUserStatus(selectedUserId, currentStatus);
+        }
+    });
+
+    // Add click event listeners to table rows
+    document.querySelectorAll("#table-bold tbody tr").forEach(row => {
+        row.addEventListener("click", function () {
+            if (!isAddingNewUser) {
+                highlightRow(row);
+            }
+        });
+    });
 });
-
-
 </script>
-
-
-
-
-
-
 
 			<style>
 					/* 🔹 NAVBAR BACKGROUND COLOR (Navy Blue) */
@@ -588,7 +604,6 @@ document.addEventListener("DOMContentLoaded", function () {
 						background: rgb(65, 165, 232) !important; /* Navy Blue */
 						color: white !important; /* White Text */
 					}
-
 
 					/* 🔹 MAKE SURE ICONS & TEXT INSIDE DROPDOWN BUTTON TURN WHITE ON HOVER */
 					.dropdown-toggle:hover *, 
@@ -667,17 +682,26 @@ document.addEventListener("DOMContentLoaded", function () {
 }
 
 .btn:disabled {
-                        border-color:rgb(6, 0, 0); /* Gray border for disabled buttons */
-                        color:rgb(6, 1, 1); /* Light gray text for disabled buttons */
-                        background-color:rgb(241, 201, 201); /* Light gray background for better visibility */
-                        cursor: not-allowed; /* Show "not-allowed" cursor */
-                    }
+    border-color: rgb(6, 0, 0); /* Gray border for disabled buttons */
+    color: rgb(6, 1, 1); /* Light gray text for disabled buttons */
+    background-color: rgb(241, 201, 201); /* Light gray background for better visibility */
+    cursor: not-allowed; /* Show "not-allowed" cursor */
+}
 
-                    /* Additional hover styles for enabled buttons */
-                    .btn:not(:disabled):hover {
-                        background-color: #007bff; /* Blue background */
-                        color: #ffffff; /* White text */
-                        border-color: #0056b3; /* Darker blue border */
-                    }
+/* Additional hover styles for enabled buttons */
+.btn:not(:disabled):hover {
+    background-color: #007bff; /* Blue background */
+    color: #ffffff; /* White text */
+    border-color: #0056b3; /* Darker blue border */
+}
+
+/* Status text styling */
+.text-danger {
+    color: #dc3545; /* Red for DISABLED */
+}
+
+.text-success {
+    color: #28a745; /* Green for ENABLED */
+}
 			</style>
 <?php include_once 'footer.php'; ?>

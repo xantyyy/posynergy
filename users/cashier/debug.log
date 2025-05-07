@@ -16,3 +16,125 @@ Array
     [pointsUsed] => 0
     [balance] => 0
 )
+Array
+(
+    [transactionNo] => TRX964285
+    [transactionDateTime] => 2025-05-07T01:42:27.188Z
+    [cashier] => CASHIER
+    [totalAmount] => 792
+    [tender] => 792
+    [change] => 0
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [barcode] => 754767
+                    [name] => MUG-GW-AAA-PURECLR-13oz-NAVY
+                    [quantity] => 22
+                    [price] => 36
+                    [totalPrice] => 792
+                )
+
+        )
+
+    [terminalNo] => 1
+)
+
+Array
+(
+    [transactionNo] => TRX964285
+    [transactionDateTime] => 2025-05-07T01:47:08.204Z
+    [cashier] => CASHIER
+    [totalAmount] => 1306.8
+    [tender] => 2000
+    [change] => 693.2
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [barcode] => 4578976880995
+                    [name] => COWHEAD CHOCOLATE MILK 200ML
+                    [quantity] => 33
+                    [price] => 39.6
+                    [totalPrice] => 1306.8
+                )
+
+        )
+
+    [terminalNo] => 1
+)
+
+Array
+(
+    [transactionNo] => TRX964285
+    [transactionDateTime] => 2025-05-07T01:56:56.398Z
+    [cashier] => CASHIER
+    [totalAmount] => 756
+    [tender] => 800
+    [change] => 44
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [barcode] => 754767
+                    [name] => MUG-GW-AAA-PURECLR-13oz-NAVY
+                    [quantity] => 21
+                    [price] => 36
+                    [totalPrice] => 756
+                )
+
+        )
+
+    [terminalNo] => 1
+)
+
+Array
+(
+    [transactionNo] => TRX964285
+    [transactionDateTime] => 2025-05-07T02:02:35.700Z
+    [cashier] => CASHIER
+    [totalAmount] => 792
+    [tender] => 800
+    [change] => 8
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [barcode] => 754767
+                    [name] => MUG-GW-AAA-PURECLR-13oz-NAVY
+                    [quantity] => 22
+                    [price] => 36
+                    [totalPrice] => 792
+                )
+
+        )
+
+    [terminalNo] => 1
+)
+
+Array
+(
+    [transactionNo] => TRX964285
+    [transactionDateTime] => 2025-05-07T02:04:10.011Z
+    [cashier] => CASHIER
+    [totalAmount] => 1980
+    [tender] => 2000
+    [change] => 20
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [barcode] => 754767
+                    [name] => MUG-GW-AAA-PURECLR-13oz-NAVY
+                    [quantity] => 55
+                    [price] => 36
+                    [totalPrice] => 1980
+                )
+
+        )
+
+    [terminalNo] => 1
+)
+
+Database Error: SQLSTATE[HY000] [1045] Access denied for user 'your_username'@'localhost' (using password: YES)
+Database Error: SQLSTATE[HY000] [1045] Access denied for user 'your_username'@'localhost' (using password: YES)
