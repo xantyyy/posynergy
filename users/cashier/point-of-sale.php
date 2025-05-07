@@ -583,7 +583,7 @@ $(document).ready(function() {
         }
 
         // Handle input for real-time search (for manual typing in #productSearch)
-        $('#productSearch').on('input', function() {
+        /*$('#productSearch').on('input', function() {
             var query = $(this).val().trim();
             
             if (query.length >= 2) {
@@ -623,7 +623,7 @@ $(document).ready(function() {
             } else {
                 $('#searchResults').hide();
             }
-        });
+        });*/
 
         // Handle clicking a search result
         
