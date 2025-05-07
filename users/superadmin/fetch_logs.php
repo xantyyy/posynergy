@@ -1,24 +1,16 @@
 <?php
 require_once '../../includes/config.php';
 
-// Database connection (adjust as per your setup)
-$conn = new mysqli('localhost', 'username', 'password', 'ampcdb');
-if ($conn->connect_error) {
-    error_log("Database connection failed: " . $conn->connect_error);
-    die(json_encode(['status' => 'error', 'message' => 'Database connection failed: ' . $conn->connect_error]));
-}
-
 // Get POST parameters
-$logType = isset($_POST['logType']) ? $_POST['logType'] : '';
-$startDate = isset($_POST['startDate']) ? $_POST['startDate'] : '';
-$endDate = isset($_POST['endDate']) ? $_POST['endDate'] : '';
-$user = isset($_POST['user']) ? $_POST['user'] : 'ADMIN';
+$logType = isset($_POST['logType']) ? trim($_POST['logType']) : '';
+$startDate = isset($_POST['startDate']) ? trim($_POST['startDate']) : '';
+$endDate = isset($_POST['endDate']) ? trim($_POST['endDate']) : '';
+$user = isset($_POST['user']) ? trim($_POST['user']) : 'ADMIN';
 
-// Log the incoming parameters
+// Log the incoming parameters for debugging
 error_log("logType: $logType, startDate: $startDate, endDate: $endDate, user: $user");
 
 // Base query to fetch logs
-// Adjusting for potential case sensitivity and column names
 $query = "SELECT Timestamp, Remarks, Control, User, App AS Application FROM tbl_logs WHERE UPPER(User) = UPPER(?)";
 $params = [$user];
 $types = 's';
@@ -36,11 +28,21 @@ if ($logType && $logType !== 'OVERALL') {
 
 // Filter by date range
 if ($startDate && $endDate) {
-    // Ensure Timestamp is treated as a date, handle potential format issues
-    $query .= " AND DATE(CAST(Timestamp AS DATETIME)) BETWEEN ? AND ?";
-    $params[] = $startDate;
-    $params[] = $endDate;
-    $types .= 'ss';
+    // Validate date format (YYYY-MM-DD)
+    $dateFormat = 'Y-m-d';
+    $startDateTime = DateTime::createFromFormat($dateFormat, $startDate);
+    $endDateTime = DateTime::createFromFormat($dateFormat, $endDate);
+
+    if ($startDateTime && $endDateTime) {
+        $query .= " AND DATE(CAST(Timestamp AS DATETIME)) BETWEEN ? AND ?";
+        $params[] = $startDate;
+        $params[] = $endDate;
+        $types .= 'ss';
+    } else {
+        error_log("Invalid date format: startDate=$startDate, endDate=$endDate");
+        echo json_encode(['status' => 'error', 'message' => 'Invalid date format']);
+        exit;
+    }
 }
 
 // Log the final query and parameters
@@ -51,20 +53,23 @@ error_log("Params: " . json_encode($params));
 $stmt = $conn->prepare($query);
 if ($stmt === false) {
     error_log("Query preparation failed: " . $conn->error);
-    die(json_encode(['status' => 'error', 'message' => 'Query preparation failed: ' . $conn->error]));
+    echo json_encode(['status' => 'error', 'message' => 'Query preparation failed: ' . $conn->error]);
+    exit;
 }
 
 $stmt->bind_param($types, ...$params);
 if (!$stmt->execute()) {
     error_log("Query execution failed: " . $stmt->error);
-    die(json_encode(['status' => 'error', 'message' => 'Query execution failed: ' . $stmt->error]));
+    echo json_encode(['status' => 'error', 'message' => 'Query execution failed: ' . $stmt->error]);
+    exit;
 }
 
 $result = $stmt->get_result();
 $logs = [];
 while ($row = $result->fetch_assoc()) {
+    // Ensure Timestamp is formatted consistently if needed
     $logs[] = $row;
-    error_log("Fetched row: " . json_encode($row)); // Log each row for debugging
+    error_log("Fetched row: " . json_encode($row));
 }
 
 // Log the number of rows fetched
@@ -72,7 +77,7 @@ error_log("Number of logs fetched: " . count($logs));
 
 // If no logs are found, include a message for debugging
 if (empty($logs)) {
-    error_log("No logs found. Check if data exists for User: $user and App: Point of Sale/Inventory");
+    error_log("No logs found for User: $user, App: Point of Sale/Inventory, Date Range: $startDate to $endDate");
     echo json_encode(['status' => 'success', 'logs' => [], 'message' => 'No logs found for the given criteria']);
 } else {
     echo json_encode(['status' => 'success', 'logs' => $logs]);

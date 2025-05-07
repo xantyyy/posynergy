@@ -179,9 +179,9 @@
                     <div class="col-md-3">
                         <label>Date Filter:</label>
                         <div class="input-group">
-                            <input type="date" class="form-control" id="startDate">
+                            <input type="text" class="form-control datepicker" id="startDate" placeholder="MM DD YYYY">
                             <span class="input-group-text">-</span>
-                            <input type="date" class="form-control" id="endDate">
+                            <input type="text" class="form-control datepicker" id="endDate" placeholder="MM DD YYYY">
                         </div>
                     </div>
                     <div class="col-md-3 align-self-end">
@@ -211,6 +211,10 @@
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -259,14 +263,36 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // Initialize flatpickr for date pickers with custom format
+    flatpickr(".datepicker", {
+        dateFormat: "M d Y", // Month Day Year format (e.g., "May 07 2025")
+        allowInput: true,
+        onChange: function(selectedDates, dateStr, instance) {
+            // Ensure the date is in the correct format when changed
+            if (selectedDates.length > 0) {
+                instance.setDate(selectedDates[0], true);
+            }
+        }
+    });
+
     // Fetch and display logs
     function fetchLogs(startDate = '', endDate = '', logType = '') {
+        // Convert date to YYYY-MM-DD for backend compatibility
+        const formatDateForBackend = (dateStr) => {
+            if (!dateStr) return '';
+            const [month, day, year] = dateStr.split(' ');
+            return `${year}-${new Date(Date.parse(month + " 1, " + year)).toLocaleString('default', { month: '2-digit' })}-${day.padStart(2, '0')}`;
+        };
+
+        const startDateBackend = formatDateForBackend(startDate);
+        const endDateBackend = formatDateForBackend(endDate);
+
         $.ajax({
             url: 'fetch_logs.php',
             method: 'POST',
             data: {
-                startDate: startDate,
-                endDate: endDate,
+                startDate: startDateBackend,
+                endDate: endDateBackend,
                 logType: logType,
                 user: 'ADMIN'
             },
@@ -291,7 +317,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             },
             error: function(xhr, status, error) {
-                error_log("AJAX error: " + error);
+                console.log("AJAX error: " + error);
                 $('#logTableBody').html('<tr><td colspan="5">Error fetching logs</td></tr>');
             }
         });
