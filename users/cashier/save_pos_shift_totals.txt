@@ -1,0 +1,64 @@
+<?php
+session_start();
+header('Content-Type: application/json');
+require_once '../../includes/config.php'; // Include your database connection
+// Database connection (adjust with your credentials)
+$servername = "localhost";
+$username = "your_username";
+$password = "your_password";
+$dbname = "your_database";
+
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Get the transaction data from the AJAX request
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    $shift_date = $data['shift_date'];
+    $transaction_no = $data['transaction_no'];
+    $pos_type = $data['pos_type'];
+    $transaction_count = $data['transaction_count'];
+    $pos_amount = $data['pos_amount'];
+    $cashier_amount = $data['cashier_amount'];
+    $short_over = $data['short_over'];
+    $gross = $data['gross'];
+    $total_discount = $data['total_discount'];
+    $total_sales = $data['total_sales'];
+    $sales_return = $data['sales_return'];
+    $net = $data['net'];
+    $cashier_name = $data['cashier_name'];
+    $opening_fund = $data['opening_fund'];
+
+    // Prepare the SQL query to insert the transaction data
+    $sql = "INSERT INTO tbl_posshifttotals (shift_date, transaction_no, pos_type, transaction_count, pos_amount, cashier_amount, short_over, gross, total_discount, total_sales, sales_return, net, cashier_name, opening_fund)
+            VALUES (:shift_date, :transaction_no, :pos_type, :transaction_count, :pos_amount, :cashier_amount, :short_over, :gross, :total_discount, :total_sales, :sales_return, :net, :cashier_name, :opening_fund)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':shift_date', $shift_date);
+    $stmt->bindParam(':transaction_no', $transaction_no);
+    $stmt->bindParam(':pos_type', $pos_type);
+    $stmt->bindParam(':transaction_count', $transaction_count);
+    $stmt->bindParam(':pos_amount', $pos_amount);
+    $stmt->bindParam(':cashier_amount', $cashier_amount);
+    $stmt->bindParam(':short_over', $short_over);
+    $stmt->bindParam(':gross', $gross);
+    $stmt->bindParam(':total_discount', $total_discount);
+    $stmt->bindParam(':total_sales', $total_sales);
+    $stmt->bindParam(':sales_return', $sales_return);
+    $stmt->bindParam(':net', $net);
+    $stmt->bindParam(':cashier_name', $cashier_name);
+    $stmt->bindParam(':opening_fund', $opening_fund);
+
+    // Execute the query
+    $stmt->execute();
+
+    // Send success response
+    echo json_encode(['status' => 'success', 'message' => 'Transaction saved to tbl_posshifttotals']);
+} catch (PDOException $e) {
+    // Send error response
+    echo json_encode(['status' => 'error', 'message' => 'Error saving transaction: ' . $e->getMessage()]);
+}
+
+$conn = null;
+?>

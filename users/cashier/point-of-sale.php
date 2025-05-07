@@ -652,7 +652,6 @@ $(document).ready(function() {
             const currentTime = new Date().getTime();
             const char = e.key;
 
-            // Detect barcode scanner input (rapid keypresses)
             if (currentTime - lastKeyTime > keyDelayThreshold) {
                 barcodeBuffer = '';
             }
@@ -661,7 +660,7 @@ $(document).ready(function() {
             if (char === 'Enter') {
                 if (barcodeBuffer) {
                     console.log('Barcode scanned:', barcodeBuffer);
-                    lookupBarcode(barcodeBuffer);
+                    lookupBarcode(barcodeBuffer, currentPriceType); // Pass currentPriceType
                     barcodeBuffer = '';
                 }
             } else if (char.length === 1) {
@@ -680,9 +679,12 @@ $(document).ready(function() {
             updateTotals();
         }
 
-        function lookupBarcode(barcode, priceType) {
+        function lookupBarcode(barcode, priceType = currentPriceType) {
             if (barcodeProcessing) return;
             barcodeProcessing = true;
+
+            // Ensure priceType has a default value
+            priceType = priceType || 'RETAIL'; // Default to RETAIL if undefined
 
             $.ajax({
                 url: 'search_products.php',
