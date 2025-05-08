@@ -2535,7 +2535,12 @@ $('#cashTenderModal').on('shown.bs.modal', function() {
         document.getElementById('tenderInput').focus();
     });
 
-    function generateReceipt() {
+    window.appliedDiscount = window.appliedDiscount || {
+    type: null,
+    amount: 0
+};
+
+function generateReceipt() {
     const cart = window.cart || []; // Access the cart array (ensure it's globally accessible)
     const totalAmount = parseFloat($('#totalTransactionDisplay').text().replace('₱', '')) || 0;
     const tender = parseFloat(document.getElementById('tenderDisplay').textContent.replace('₱', '')) || 0;
@@ -2547,6 +2552,10 @@ $('#cashTenderModal').on('shown.bs.modal', function() {
         year: 'numeric', month: 'numeric', day: 'numeric', 
         hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true 
     });
+
+    // Calculate original amount before discount
+    const discountAmount = parseFloat($('th:contains("Discount:")').next().text().replace('₱', '')) || window.appliedDiscount?.amount || 0;
+    const originalAmount = parseFloat($('th:contains("Amount:")').next().text().replace('₱', '')) || totalAmount + discountAmount;
 
     let receiptContent = `
         <div style="font-family: monospace; text-align: center; padding: 20px;">
@@ -2573,6 +2582,18 @@ $('#cashTenderModal').on('shown.bs.modal', function() {
             <hr>
             <p style="text-align: left;">No. of Items: ${cart.length}</p>
             <hr>
+            <p style="text-align: left;">SUBTOTAL ₱${originalAmount.toFixed(2)}</p>
+    `;
+
+    // Include discount if applied
+    if (discountAmount > 0) {
+        const discountType = window.appliedDiscount?.type?.toUpperCase() || 'DISCOUNT';
+        receiptContent += `
+            <p style="text-align: left;">${discountType} -₱${discountAmount.toFixed(2)}</p>
+        `;
+    }
+
+    receiptContent += `
             <p style="text-align: left;">TOTAL ₱${totalAmount.toFixed(2)}</p>
             <p style="text-align: left;">CASH ₱${tender.toFixed(2)}</p>
             <p style="text-align: left;">CHANGE ₱${change.toFixed(2)}</p>
@@ -2637,7 +2658,7 @@ function printReceipt() {
 
     // Gather transaction details
     const transactionNo = $('table.table-borderless tbody tr').eq(1).find('td').text().trim(); // Transaction No
-    const total = parseNumber($('#totalTransactionDisplay').text().trim()); // TOTAL
+    const total = parseNumber($('#totalTransactionDisplay').text().trim()); // TOTAL (discounted)
     const tender = parseNumber($('#tenderDisplay').text().trim()); // Tender
     const change = parseNumber($('#changeDisplay').text().trim()); // Change
     const terminalNo = $('table.table-borderless tbody tr').eq(0).find('td').text().trim(); // Terminal No
@@ -2659,7 +2680,7 @@ function printReceipt() {
         transactionNo: transactionNo,
         transactionDateTime: new Date().toISOString(), // Current date and time in ISO format
         cashier: "CASHIER", // Static value as requested
-        totalAmount: total, // Needed for printing receipt
+        totalAmount: total, // Discounted total
         tender: tender, // Needed for printing receipt
         change: change, // Needed for printing receipt
         items: items, // Needed for printing receipt
@@ -2698,6 +2719,10 @@ function printReceipt() {
 function printReceiptContent(transactionData) {
     const { transactionNo, totalAmount, tender, change, items, terminalNo, cashier } = transactionData;
 
+    // Fetch discount amount from UI as a fallback
+    const discountAmount = parseFloat($('th:contains("Discount:")').next().text().replace('₱', '')) || window.appliedDiscount?.amount || 0;
+    const originalAmount = totalAmount + discountAmount;
+
     // Function to center text within a 40-character width
     const centerText = (text, width = 40) => {
         const padding = Math.floor((width - text.length) / 2);
@@ -2727,6 +2752,17 @@ TIN: ___________________________
     // Add summary and footer
     receiptContent += `
 No. of Items: ${items.length.toString().padStart(2, ' ')}
+----------------------------------------
+SUBTOTAL                              P${originalAmount.toFixed(2).padStart(7, ' ')}
+`;
+
+    // Include discount if applied (specific type)
+    if (discountAmount > 0) {
+        const discountType = window.appliedDiscount?.type?.toUpperCase() || 'DISCOUNT';
+        receiptContent += `${discountType.padEnd(36, ' ')} -${discountAmount.toFixed(2).padStart(7, ' ')}\n`;
+    }
+
+    receiptContent += `
 ----------------------------------------
 TOTAL                                 P${totalAmount.toFixed(2).padStart(7, ' ')}
 CASH                                  P${tender.toFixed(2).padStart(7, ' ')}
