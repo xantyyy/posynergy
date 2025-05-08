@@ -583,7 +583,7 @@ $(document).ready(function() {
         }
 
         // Handle input for real-time search (for manual typing in #productSearch)
-        /*$('#productSearch').on('input', function() {
+        $('#productSearch').on('input', function() {
             var query = $(this).val().trim();
             
             if (query.length >= 2) {
@@ -623,7 +623,7 @@ $(document).ready(function() {
             } else {
                 $('#searchResults').hide();
             }
-        });*/
+        });
 
         // Handle clicking a search result
         
@@ -1554,7 +1554,8 @@ function submitSeniorDetails() {
             name: name,
             idNumber: idNumber,
             amountAvailed: amountAvailed,
-            discountType: 'Senior Citizen'
+            discountType: 'Senior Citizen',
+            configName: 'SENIORDISCOUNT'
         };
 
         console.log('Applying Senior Citizen discount:', discountData);
@@ -1575,7 +1576,7 @@ function updateTransactionWithDiscount(discountData) {
     $.ajax({
         url: 'fetch_discount.php', // Replace with your server endpoint
         method: 'GET',
-        data: { configName: 'SENIORDISCOUNT' },
+        data: { configName: discountData.configName },
         success: function(response) {
             const discountRate = parseFloat(response) || 0.05; // Fallback to 0.05 if the fetch fails
             const discountAmount = totalAmount * discountRate;
@@ -1679,7 +1680,8 @@ function submitPWDDetails() {
             name: name,
             idNumber: idNumber,
             amountAvailed: amountAvailed,
-            discountType: 'PWD'
+            discountType: 'PWD',
+            configName: 'PWDDISCOUNT'
         };
 
         console.log('Applying PWD discount:', discountData);
