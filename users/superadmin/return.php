@@ -292,9 +292,7 @@
 											</thead>
 											<tbody>
 													<tr>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
+														<td class="text-center" colspan="3">No Data Available</td>
 													</tr>
 											</tbody>
 										</table>
@@ -323,12 +321,7 @@
 											</thead>
 											<tbody>
 													<tr>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
-														<td>Sample</td>
+														<td class="text-center" colspan="6">No Data Available</td>
 													</tr>
 											</tbody>
 										</table>

@@ -247,9 +247,7 @@
 											<tbody>
 												<!-- Sample rows -->
 												<tr>
-													<td>Sample</td>
-													<td>Sample</td>
-													<td>Sample</td>
+													<td class="text-center" colspan="3">No Data Available</td>
 												</tr>
 											</tbody>
 										</table>
