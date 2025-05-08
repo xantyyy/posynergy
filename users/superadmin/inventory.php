@@ -185,7 +185,10 @@
                                     <select class="form-select" id="typeDropdown" style="width: 320px;" name="type" disabled>
                                         <option value="#" hidden>Select Type</option>
                                         <option value="currentInv">CURRENT INVENTORY</option>
-                                        <option value="expired">EXPIRED PRODUCT</option>
+                                        <option value="expiredInv">EXPIRED PRODUCT</option>
+                                        <option value="incomingInv">INCOMING INVENTORY</option>
+                                        <option value="outgoingInv">OUTGOING INVENTORY</option>
+                                        <option value="previousInv">PREVIOUS INVENTORY</option>
                                     </select>
                                 </div>
                                 <div class="form-group d-flex align-items-center mt-3">
